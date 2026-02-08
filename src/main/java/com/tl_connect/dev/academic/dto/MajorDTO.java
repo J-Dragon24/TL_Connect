@@ -1,4 +1,4 @@
-package com.tl_connect.dev.student.dto;
+package com.tl_connect.dev.academic.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class EmergencyContactDTO {
-    private String name;
-    private String phoneNumber;
-    private String address;
+@NoArgsConstructor
+public class MajorDTO {
+    private String majorName;
+    private String majorCode;
+    private String faculty;
 }

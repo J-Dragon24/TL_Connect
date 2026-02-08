@@ -18,7 +18,7 @@ import com.tl_connect.dev.student_class.StudentClassRepository;
 import com.tl_connect.dev.student_class.dto.StudentClassInfoDTO;
 import com.tl_connect.dev.student_class.dto.StudentInClassDTO;
 import com.tl_connect.dev.student_class.projection.ClassHeaderView;
-import com.tl_connect.dev.student_class.projection.StudentInClassView;
+import com.tl_connect.dev.student_class.projection.StudentInClassRow;
 
 import lombok.RequiredArgsConstructor;
 
@@ -78,7 +78,7 @@ public class StudentInfoService {
         }
         Long classId = header.getClassId();
 
-        List<StudentInClassView> students = studentClassRepository.findStudentsByClassId(classId);
+        List<StudentInClassRow> students = studentClassRepository.findStudentsByClassId(classId);
         return new StudentClassInfoDTO(
                 header.getClassCode(),
                 new LecturerDTO(

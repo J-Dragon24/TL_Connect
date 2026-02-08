@@ -3,6 +3,7 @@ package com.tl_connect.dev.academic;
 import java.util.List;
 import java.util.Optional;
 
+import com.tl_connect.dev.academic.projection.SubjectPrerequisiteRow;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.tl_connect.dev.academic.entity.TrainingProgram;
 import com.tl_connect.dev.academic.projection.TrainingProgramHeaderView;
-import com.tl_connect.dev.academic.projection.TrainingProgramSubjectView;
+import com.tl_connect.dev.academic.projection.TrainingProgramSubjectRow;
 
 @Repository
 public interface TrainingProgramRepository extends JpaRepository<TrainingProgram, Long> {
@@ -37,6 +38,7 @@ public interface TrainingProgramRepository extends JpaRepository<TrainingProgram
             SELECT
                 sem.id AS semesterId,
                 sem.semesterName AS semesterName,
+                sub.id AS subjectId,
                 sub.subjectCode AS subjectCode,
                 sub.subjectName AS subjectName,
                 sub.credits AS credits,
@@ -48,11 +50,24 @@ public interface TrainingProgramRepository extends JpaRepository<TrainingProgram
                 d.departmentName AS department
             FROM TrainingProgramSubject tps
             JOIN Subject sub ON tps.id.subjectId = sub.id
-            JOIN Faculty f ON sub.facultyId = f.id
-            JOIN Department d ON sub.departmentId = d.id
+            LEFT JOIN Faculty f ON sub.facultyId = f.id
+            LEFT JOIN Department d ON sub.departmentId = d.id
             JOIN Semester sem ON tps.semesterId = sem.id
             WHERE tps.id.programId = :programId
             ORDER BY sem.id, sub.subjectCode
             """)
-    List<TrainingProgramSubjectView> findSubjectsByProgramId(@Param("programId") Long programId);
+    Optional<List<TrainingProgramSubjectRow>> findSubjectsByProgramId(@Param("programId") Long programId);
+
+    @Query("""
+            SELECT
+                tps.id.subjectId AS subjectId,
+                sp.id.prerequisiteSubjectId AS prerequisiteSubjectId,
+                s.subjectCode AS prerequisiteSubjectCode,
+                s.subjectName AS prerequisiteSubjectName,
+            FROM TrainingProgramSubject tps
+            JOIN SubjectPrerequisite sp ON tps.id.subjectId = sp.id.subjectId
+            JOIN Subject s ON sp.id.prerequisiteSubjectId = s.id
+            WHERE tps.id.programId = :programId
+            """)
+    Optional<List<SubjectPrerequisiteRow>> findSubjectPrerequisitesByProgramId(@Param("programId") Long programId );
 }

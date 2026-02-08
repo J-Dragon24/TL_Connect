@@ -1,9 +1,11 @@
 package com.tl_connect.dev.academic.projection;
 
-public interface TrainingProgramSubjectView {
+public interface TrainingProgramSubjectRow {
     Long getSemesterId();
 
     String getSemesterName();
+
+    Long getSubjectId();
 
     String getSubjectCode();
 

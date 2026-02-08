@@ -1,4 +1,4 @@
-package com.tl_connect.dev.student.dto;
+package com.tl_connect.dev.academic.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,8 +11,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmergencyContactDTO {
-    private String name;
-    private String phoneNumber;
-    private String address;
+public class SubjectPrerequisiteDTO {
+    private String subjectCode;
+    private String subjectName;
 }

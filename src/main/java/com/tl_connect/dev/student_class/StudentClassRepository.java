@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.tl_connect.dev.student_class.entity.StudentClass;
-import com.tl_connect.dev.student_class.projection.StudentInClassView;
+import com.tl_connect.dev.student_class.projection.StudentInClassRow;
 
 @Repository
 public interface StudentClassRepository extends JpaRepository<StudentClass, Long> {
@@ -22,6 +22,6 @@ public interface StudentClassRepository extends JpaRepository<StudentClass, Long
             JOIN StudentClass c ON s.studentClassId = c.id
             WHERE c.id = :classId
             """)
-    List<StudentInClassView> findStudentsByClassId(@Param("classId") Long classId);
+    List<StudentInClassRow> findStudentsByClassId(@Param("classId") Long classId);
 
 }

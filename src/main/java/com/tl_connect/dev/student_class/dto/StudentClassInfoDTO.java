@@ -5,9 +5,15 @@ import java.util.List;
 import com.tl_connect.dev.dto.res.LecturerDTO;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class StudentClassInfoDTO {
     private String classCode;

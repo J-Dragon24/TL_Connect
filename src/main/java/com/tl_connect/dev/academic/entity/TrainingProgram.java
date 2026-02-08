@@ -28,7 +28,7 @@ public class TrainingProgram {
     @Column(name = "major_id", nullable = false)
     private Long majorId;
 
-    @Column(name = "traning_program_name")
+    @Column(name = "training_program_name")
     private String trainingProgramName;
 
     @Column(name = "year_start", nullable = false)

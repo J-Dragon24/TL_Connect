@@ -1,15 +1,20 @@
 package com.tl_connect.dev.academic.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Builder;
 
-@Data
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TrainingProgramSubjectDTO {
+public class SubjectDTO {
     private String subjectCode;
     private String subjectName;
     private Integer credits;
@@ -17,6 +22,13 @@ public class TrainingProgramSubjectDTO {
     private String electiveGroup;
     private Integer lectureHours;
     private Integer practiceHours;
-    private String faculty;
-    private String department;
+
+    @Builder.Default
+    private List<SubjectPrerequisiteDTO> subjectPrerequisite = new ArrayList<>();
+
+    @Builder.Default
+    private String faculty = "";
+
+    @Builder.Default
+    private String department= "";
 }

@@ -3,9 +3,15 @@ package com.tl_connect.dev.student_class.dto;
 import com.tl_connect.dev.common.enums.Gender;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class StudentInClassDTO {
     private String studentCode;
