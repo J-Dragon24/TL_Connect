@@ -1,5 +1,6 @@
 package com.tl_connect.dev.academic.dto;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -14,7 +15,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SemesterSubjectsDTO {
-    private Long semesterId;
     private String semesterName;
+    private LocalDate semesterStartDate;
+    private LocalDate semesterEndDate;
     private List<SubjectDTO> subjects;
 }

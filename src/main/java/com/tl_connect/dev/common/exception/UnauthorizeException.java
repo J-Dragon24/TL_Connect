@@ -1,11 +1,9 @@
 package com.tl_connect.dev.common.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import com.tl_connect.dev.common.enums.ResponseStatus;
 
-@ResponseStatus(HttpStatus.UNAUTHORIZED)
-public class UnauthorizeException extends RuntimeException {
+public class UnauthorizeException extends BaseException {
     public UnauthorizeException(String message) {
-        super(message);
+        super(ResponseStatus.UNAUTHORIZED, message);
     }
 }

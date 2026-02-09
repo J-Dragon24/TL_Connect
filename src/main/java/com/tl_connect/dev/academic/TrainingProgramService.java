@@ -27,24 +27,18 @@ public class TrainingProgramService {
         private final TrainingProgramRepository trainingProgramRepository;
 
         public TrainingProgramDTO getTrainingProgram(Long studentId) {
-                TrainingProgramHeaderView header = trainingProgramRepository
-                                .findTrainingProgramHeaderByStudentId(studentId)
-                                .orElseThrow(
-                                                () -> new NotFoundException(
-                                                                "Training program not found for student with id: "
-                                                                                + studentId));
+                TrainingProgramHeaderView header = trainingProgramRepository.findTrainingProgramHeaderByStudentId(studentId)
+                                .orElseThrow(() -> new NotFoundException("Training program not found for student with id: " + studentId));
 
-                List<TrainingProgramSubjectRow> trainingProgramSubjects = trainingProgramRepository
-                                .findSubjectsByProgramId(header.getId())
-                                .orElseThrow(() -> new NotFoundException(
-                                                "Training program not found for program with id: " + header.getId()));
+                List<TrainingProgramSubjectRow> trainingProgramSubjects = trainingProgramRepository.findSubjectsByProgramId(header.getId())
+                                .orElseThrow(() -> new NotFoundException("Training program not found for program with id: " + header.getId()));
 
-                List<SubjectPrerequisiteRow> subjectPrerequisitesRows = trainingProgramRepository
-                                .findSubjectPrerequisitesByProgramId(header.getId())
-                                .orElseThrow(() -> new NotFoundException(
-                                                "Subject prerequisites not found for program with id: "
-                                                                + header.getId()));
+                List<SubjectPrerequisiteRow> subjectPrerequisitesRows = trainingProgramRepository.findSubjectPrerequisitesByProgramId(header.getId())
+                                .orElseThrow(() -> new NotFoundException("Subject prerequisites not found for program with id: " + header.getId()));
 
+                return mapTrainingProgram(header, trainingProgramSubjects, subjectPrerequisitesRows);
+        }
+        private TrainingProgramDTO mapTrainingProgram(TrainingProgramHeaderView header, List<TrainingProgramSubjectRow> trainingProgramSubjects, List<SubjectPrerequisiteRow> subjectPrerequisitesRows) {
                 MajorDTO major = MajorDTO.builder()
                                 .majorCode(header.getMajorCode())
                                 .majorName(header.getMajorName())
@@ -65,24 +59,22 @@ public class TrainingProgramService {
 
                 List<SemesterSubjectsDTO> semesterSubjects = groupedBySemester.entrySet().stream()
                                 .map(entry -> {
-                                        Long semesterId = entry.getKey();
-                                        List<TrainingProgramSubjectRow> semesterSubjectRows = entry.getValue();
-                                        String semesterName = semesterSubjectRows.get(0).getSemesterName();
-
-                                        List<SubjectDTO> subjects = trainingProgramSubjects.stream()
+                                        List<TrainingProgramSubjectRow> rows = entry.getValue();
+                                        TrainingProgramSubjectRow first = rows.get(0);
+                                
+                                        List<SubjectDTO> subjects = rows.stream()
                                                         .map(s -> {
-                                                                SubjectDTO.SubjectDTOBuilder builder = SubjectDTO
-                                                                                .builder()
-                                                                                .subjectCode(s.getSubjectCode())
-                                                                                .subjectName(s.getSubjectName())
-                                                                                .credits(s.getCredits())
-                                                                                .isRequired(s.getIsRequired())
-                                                                                .electiveGroup(s.getElectiveGroup())
-                                                                                .lectureHours(s.getLectureHours())
-                                                                                .practiceHours(s.getPracticeHours());
+                                                                SubjectDTO.SubjectDTOBuilder builder = SubjectDTO.builder()
+                                                                        .subjectCode(s.getSubjectCode())
+                                                                        .subjectName(s.getSubjectName())
+                                                                        .credits(s.getCredits())
+                                                                        .isRequired(s.getIsRequired())
+                                                                        .electiveGroup(s.getElectiveGroup())
+                                                                        .lectureHours(s.getLectureHours())
+                                                                        .practiceHours(s.getPracticeHours());
 
-                                                                List<SubjectPrerequisiteDTO> prerequisites = map
-                                                                                .get(s.getSubjectId());
+                                                                List<SubjectPrerequisiteDTO> prerequisites = map.get(s.getSubjectId());
+                                                                
                                                                 if (prerequisites != null) {
                                                                         builder.subjectPrerequisite(prerequisites);
                                                                 }
@@ -97,12 +89,13 @@ public class TrainingProgramService {
                                                         .collect(Collectors.toList());
 
                                         return SemesterSubjectsDTO.builder()
-                                                        .semesterId(semesterId)
-                                                        .semesterName(semesterName)
+                                                        .semesterName(first.getSemesterName())
+                                                        .semesterStartDate(first.getSemesterStartDate())
+                                                        .semesterEndDate(first.getSemesterEndDate())
                                                         .subjects(subjects)
                                                         .build();
                                 })
-                                .sorted((s1, s2) -> s1.getSemesterId().compareTo(s2.getSemesterId()))
+                                .sorted((s1, s2) -> s1.getSemesterStartDate().compareTo(s2.getSemesterStartDate()))
                                 .collect(Collectors.toList());
 
                 TrainingProgramDTO trainingProgram = TrainingProgramDTO.builder()

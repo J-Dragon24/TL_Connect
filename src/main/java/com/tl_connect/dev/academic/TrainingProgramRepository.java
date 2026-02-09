@@ -38,6 +38,8 @@ public interface TrainingProgramRepository extends JpaRepository<TrainingProgram
             SELECT
                 sem.id AS semesterId,
                 sem.semesterName AS semesterName,
+                sem.startDate AS semesterStartDate,
+                sem.endDate AS semesterEndDate,
                 sub.id AS subjectId,
                 sub.subjectCode AS subjectCode,
                 sub.subjectName AS subjectName,

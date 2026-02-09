@@ -1,11 +1,9 @@
 package com.tl_connect.dev.common.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import com.tl_connect.dev.common.enums.ResponseStatus;
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class NotFoundException extends RuntimeException {
+public class NotFoundException extends BaseException {
     public NotFoundException(String message) {
-        super(message);
+        super(ResponseStatus.NOT_FOUND, message);
     }
 }

@@ -17,6 +17,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class StudentClassInfoDTO {
     private String classCode;
-    private LecturerDTO lecturer;
+    private LecturerDTO academicAdvisor;
     private List<StudentInClassDTO> students;
 }

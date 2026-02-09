@@ -1,11 +1,9 @@
 package com.tl_connect.dev.common.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import com.tl_connect.dev.common.enums.ResponseStatus;
 
-@ResponseStatus(HttpStatus.FORBIDDEN)
-public class ForbiddenException extends RuntimeException {
+public class ForbiddenException extends BaseException {
     public ForbiddenException(String message) {
-        super(message);
+        super(ResponseStatus.FORBIDDEN, message);
     }
 }

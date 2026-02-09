@@ -67,6 +67,4 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             WHERE s.id = :studentId
             """)
     ClassHeaderView findClassHeaderById(@Param("studentId") Long studentId);
-
-            
 }
