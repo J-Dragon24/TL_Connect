@@ -1,6 +1,7 @@
 package com.tl_connect.dev.academic;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,18 +28,25 @@ public class TrainingProgramService {
         private final TrainingProgramRepository trainingProgramRepository;
 
         public TrainingProgramDTO getTrainingProgram(Long studentId) {
-                TrainingProgramHeaderView header = trainingProgramRepository.findTrainingProgramHeaderByStudentId(studentId)
-                                .orElseThrow(() -> new NotFoundException("Training program not found for student with id: " + studentId));
+                TrainingProgramHeaderView header = trainingProgramRepository
+                                .findTrainingProgramHeaderByStudentId(studentId)
+                                .orElseThrow(() -> new NotFoundException(
+                                                "Training program not found for student with id: " + studentId));
 
-                List<TrainingProgramSubjectRow> trainingProgramSubjects = trainingProgramRepository.findSubjectsByProgramId(header.getId())
-                                .orElseThrow(() -> new NotFoundException("Training program not found for program with id: " + header.getId()));
+                List<TrainingProgramSubjectRow> trainingProgramSubjects = trainingProgramRepository
+                                .findSubjectsByProgramId(header.getId())
+                                .orElse(Collections.emptyList());
 
-                List<SubjectPrerequisiteRow> subjectPrerequisitesRows = trainingProgramRepository.findSubjectPrerequisitesByProgramId(header.getId())
-                                .orElseThrow(() -> new NotFoundException("Subject prerequisites not found for program with id: " + header.getId()));
+                List<SubjectPrerequisiteRow> subjectPrerequisitesRows = trainingProgramRepository
+                                .findSubjectPrerequisitesByProgramId(header.getId())
+                                .orElse(Collections.emptyList());
 
                 return mapTrainingProgram(header, trainingProgramSubjects, subjectPrerequisitesRows);
         }
-        private TrainingProgramDTO mapTrainingProgram(TrainingProgramHeaderView header, List<TrainingProgramSubjectRow> trainingProgramSubjects, List<SubjectPrerequisiteRow> subjectPrerequisitesRows) {
+
+        private TrainingProgramDTO mapTrainingProgram(TrainingProgramHeaderView header,
+                        List<TrainingProgramSubjectRow> trainingProgramSubjects,
+                        List<SubjectPrerequisiteRow> subjectPrerequisitesRows) {
                 MajorDTO major = MajorDTO.builder()
                                 .majorCode(header.getMajorCode())
                                 .majorName(header.getMajorName())
@@ -61,29 +69,25 @@ public class TrainingProgramService {
                                 .map(entry -> {
                                         List<TrainingProgramSubjectRow> rows = entry.getValue();
                                         TrainingProgramSubjectRow first = rows.get(0);
-                                
+
                                         List<SubjectDTO> subjects = rows.stream()
                                                         .map(s -> {
-                                                                SubjectDTO.SubjectDTOBuilder builder = SubjectDTO.builder()
-                                                                        .subjectCode(s.getSubjectCode())
-                                                                        .subjectName(s.getSubjectName())
-                                                                        .credits(s.getCredits())
-                                                                        .isRequired(s.getIsRequired())
-                                                                        .electiveGroup(s.getElectiveGroup())
-                                                                        .lectureHours(s.getLectureHours())
-                                                                        .practiceHours(s.getPracticeHours());
+                                                                SubjectDTO.SubjectDTOBuilder builder = SubjectDTO
+                                                                                .builder()
+                                                                                .subjectCode(s.getSubjectCode())
+                                                                                .subjectName(s.getSubjectName())
+                                                                                .credits(s.getCredits())
+                                                                                .isRequired(s.getIsRequired())
+                                                                                .electiveGroup(s.getElectiveGroup())
+                                                                                .lectureHours(s.getLectureHours())
+                                                                                .practiceHours(s.getPracticeHours())
+                                                                                .faculty(s.getFaculty())
+                                                                                .department(s.getDepartment());
 
-                                                                List<SubjectPrerequisiteDTO> prerequisites = map.get(s.getSubjectId());
-                                                                
-                                                                if (prerequisites != null) {
-                                                                        builder.subjectPrerequisite(prerequisites);
-                                                                }
-                                                                if (s.getFaculty() != null) {
-                                                                        builder.faculty(s.getFaculty());
-                                                                }
-                                                                if (s.getDepartment() != null) {
-                                                                        builder.department(s.getDepartment());
-                                                                }
+                                                                List<SubjectPrerequisiteDTO> prerequisites = map
+                                                                                .get(s.getSubjectId());
+                                                                builder.subjectPrerequisite(prerequisites);
+
                                                                 return builder.build();
                                                         })
                                                         .collect(Collectors.toList());

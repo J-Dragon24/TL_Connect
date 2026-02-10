@@ -1,4 +1,4 @@
-package com.tl_connect.dev.entity;
+package com.tl_connect.dev.schedule.entity;
 
 import java.time.LocalDateTime;
 
@@ -12,32 +12,27 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "notifications")
+@Table(name = "student_course_classes",
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"student_id", "course_class_id"})
+    }
+)
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Notification {
+public class StudentCourseClass {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "student_id")
+    @Column(name = "student_id", nullable = false)
     private Long studentId;
 
-    @Column(name = "title")
-    private String title;
-
-    @Column(name = "content", columnDefinition = "TEXT")
-    private String content;
-
-    @Column(name = "sender", length = 225)
-    private String sender;
-
-    @Column(name = "is_read")
-    private Boolean isRead;
+    @Column(name = "course_class_id", nullable = false)
+    private Long courseClassId;
 
     @CreationTimestamp
     @Column(name = "created_at")

@@ -1,4 +1,4 @@
-package com.tl_connect.dev.academic.entity;
+package com.tl_connect.dev.result.entity;
 
 import java.time.LocalDateTime;
 
@@ -13,13 +13,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "student_subject_results")
+@Table(name = "student_semester_summaries")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class StudentSubjectResult {
+public class StudentSemesterSummary {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,26 +28,20 @@ public class StudentSubjectResult {
     @Column(name = "student_id", nullable = false)
     private Long studentId;
 
-    @Column(name = "subject_id", nullable = false)
-    private Long subjectId;
-
     @Column(name = "semester_id", nullable = false)
     private Long semesterId;
 
-    @Column(name = "credits", nullable = false)
-    private Integer credits;
+    @Column(name = "credits_registered")
+    private Integer creditsRegistered;
 
-    @Column(name = "score_10")
-    private Double score10;
+    @Column(name = "credits_passed")
+    private Integer creditsPassed;
 
-    @Column(name = "score_4")
-    private Double score4;
+    @Column(name = "semester_gpa")
+    private Double semesterGpa;
 
-    @Column(name = "letter_grade", length = 2)
-    private String letterGrade;
-
-    @Column(name = "is_pass")
-    private Boolean isPass;
+    @Column(name = "conduct_score")
+    private Integer conductScore;
 
     @CreationTimestamp
     @Column(name = "created_at")

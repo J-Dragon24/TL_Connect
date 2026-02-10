@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.Builder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -22,13 +21,7 @@ public class SubjectDTO {
     private String electiveGroup;
     private Integer lectureHours;
     private Integer practiceHours;
-
-    @Builder.Default
-    private List<SubjectPrerequisiteDTO> subjectPrerequisite = new ArrayList<>();
-
-    @Builder.Default
-    private String faculty = "";
-
-    @Builder.Default
-    private String department= "";
+    private List<SubjectPrerequisiteDTO> subjectPrerequisite;
+    private String faculty;
+    private String department;
 }

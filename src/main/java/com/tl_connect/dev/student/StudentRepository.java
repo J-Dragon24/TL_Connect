@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.tl_connect.dev.student.entity.Student;
 import com.tl_connect.dev.student.projection.StudentInfoView;
+import com.tl_connect.dev.student.projection.HealthInsuranceView;
 import com.tl_connect.dev.student_class.projection.ClassHeaderView;
 
 @Repository
@@ -67,4 +68,24 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             WHERE s.id = :studentId
             """)
     ClassHeaderView findClassHeaderById(@Param("studentId") Long studentId);
+
+    @Query("""
+            SELECT
+                s.studentCode AS studentCode,
+                s.fullName AS fullName,
+                s.dateOfBirth AS dateOfBirth,
+                sc.phoneNumber AS phoneNumber,
+                sc.emailPersonal AS email,
+                hi.insuranceNumber AS insuranceNumber,
+                hi.provider AS provider,
+                hi.status AS status,
+                hi.validFrom AS validFrom,
+                hi.validTo AS validTo,
+                hi.registeredHospital AS registeredHospital
+            FROM Student s
+            LEFT JOIN StudentContact sc ON s.id = sc.studentId
+            LEFT JOIN HealthInsurance hi ON s.id = hi.studentId
+            WHERE s.id = :studentId
+            """)
+    HealthInsuranceView findHealthInsuranceById(@Param("studentId") Long studentId);
 }
