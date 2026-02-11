@@ -1,4 +1,4 @@
-package com.tl_connect.dev.dto.res;
+package com.tl_connect.dev.student_class.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

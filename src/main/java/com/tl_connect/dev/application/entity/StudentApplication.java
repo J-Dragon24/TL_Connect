@@ -1,4 +1,4 @@
-package com.tl_connect.dev.entity;
+package com.tl_connect.dev.application.entity;
 
 import java.time.LocalDateTime;
 
@@ -6,7 +6,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.tl_connect.dev.common.enums.ApplicationStatus;
-import com.tl_connect.dev.common.enums.ApplicationType;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -31,15 +30,8 @@ public class StudentApplication {
     @Column(name = "student_id", nullable = false)
     private Long studentId;
 
-    @Column(name = "related_exam_id")
-    private Long relatedExamId;
-
-    @Column(name = "related_subject_id")
-    private Long relatedSubjectId;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "application_type")
-    private ApplicationType applicationType;
+    @Column(name = "application_type_id")
+    private Long applicationTypeId;
 
     @Column(name = "evidence_file")
     private String evidenceFile;

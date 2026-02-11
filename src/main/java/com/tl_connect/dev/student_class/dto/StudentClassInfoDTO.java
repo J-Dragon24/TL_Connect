@@ -2,8 +2,6 @@ package com.tl_connect.dev.student_class.dto;
 
 import java.util.List;
 
-import com.tl_connect.dev.dto.res.LecturerDTO;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

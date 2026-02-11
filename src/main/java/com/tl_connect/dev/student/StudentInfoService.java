@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import com.tl_connect.dev.common.exception.NotFoundException;
-import com.tl_connect.dev.dto.res.LecturerDTO;
 import com.tl_connect.dev.student.dto.AcademicInfoDTO;
 import com.tl_connect.dev.student.dto.ContactDTO;
 import com.tl_connect.dev.student.dto.EmergencyContactDTO;
@@ -16,6 +15,7 @@ import com.tl_connect.dev.student.dto.MajorDTO;
 import com.tl_connect.dev.student.dto.StudentInfoDTO;
 import com.tl_connect.dev.student.projection.StudentInfoView;
 import com.tl_connect.dev.student_class.StudentClassRepository;
+import com.tl_connect.dev.student_class.dto.LecturerDTO;
 import com.tl_connect.dev.student_class.dto.StudentClassInfoDTO;
 import com.tl_connect.dev.student_class.dto.StudentInClassDTO;
 import com.tl_connect.dev.student_class.projection.ClassHeaderView;

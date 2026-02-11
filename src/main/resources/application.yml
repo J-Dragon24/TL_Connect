@@ -1,10 +1,14 @@
 spring:
+    servlet:
+        multipart:
+            max-file-size: 5MB
+            max-request-size: 5MB
     application:
         name: TL_Connect
     datasource:
         url: jdbc:postgresql://localhost:5432/postgres
-        username: postgres
-        password: 123456
+        username: ${DB_USERNAME}
+        password: ${DB_PASSWORD}
     jpa:
         database-platform: org.hibernate.dialect.PostgreSQLDialect
     security:
@@ -12,15 +16,19 @@ spring:
             client:
                 provider:
                     azure:
-                        issuer-uri: https://login.microsoftonline.com/aec003eb-c537-4e8a-b0f3-1144a93a60bc/v2.0
+                        issuer-uri: https://login.microsoftonline.com/${TENANT_ID}/v2.0
                         user-name-attribute: name
                 registration:
                     azure-dev:
                         provider: azure
-                        client-id: 77df993d-e728-4b8e-9770-6b409aa99552
-                        client-secret: Ato8Q~g_FXr69xCkejOH2EZ2d4cIH1MxarOiGavX
+                        client-id: ${CLIENT_ID}
+                        client-secret: ${CLIENT_SECRET}
                         scope:
                             - openid
                             - email
                             - profile
-        
+    b2:
+        aws_access_key_id: ${B2_BUCKET_ID   }
+        aws_secret_access_key: ${B2_APPLICATION_KEY}
+        end_point: https://s3.us-east-005.backblazeb2.com
+        bucket_name: ${B2_BUCKET_NAME}
