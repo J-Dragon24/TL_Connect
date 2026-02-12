@@ -10,37 +10,40 @@ import com.tl_connect.dev.result.projection.SemesterSummaryView;
 import com.tl_connect.dev.result.projection.SubjectResultRow;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface ResultRepository extends JpaRepository<StudentSubjectResult, Long> {
-    @Query("""
+    @Query(value = """
             SELECT
-                s.semesterName AS semester,
-                sub.subjectCode AS subjectCode,
-                sub.subjectName AS subjectName,
+                sem.semester_name AS semester,
+                sub.subject_code AS subjectCode,
+                sub.subject_name AS subjectName,
                 ssr.credits AS credits,
                 ssr.score10 AS score10,
                 ssr.score4 AS score4,
-                ssr.letterGrade AS letterGrade,
-                ssr.isPass AS isPass
-            FROM StudentSubjectResult ssr
-            JOIN Subject sub ON ssr.subjectId = sub.id
-            JOIN Semester s ON ssr.semesterId = s.id
-            WHERE ssr.studentId = :studentId
-            """)
-    Optional<List<SubjectResultRow>> findSubjectResult(@Param("studentId") Long studentId);
+                ssr.letter_grade AS letterGrade,
+                ssr.is_pass AS isPass
+            FROM student_subject_results ssr
+            JOIN subjects sub ON ssr.subject_id = sub.id
+            JOIN semesters sem ON ssr.semester_id = sem.id
+            WHERE ssr.student_id = :studentId
+            ORDER BY sem.id, sub.subject_code
+            """, nativeQuery = true)
+    List<SubjectResultRow> findSubjectResult(@Param("studentId") Long studentId);
 
-    @Query("""
+
+
+    @Query(value = """
             SELECT
-                s.semesterName AS semester,
-                ssr.creditsRegistered AS credits,
-                ssr.creditsPassed AS creditsPassed,
-                ssr.semesterGpa AS semesterGpa,
-                ssr.conductScore AS conductScore
-            FROM StudentSemesterSummary sss 
-            JOIN Semester s ON sss.semesterId = s.id
-            WHERE sss.studentId = :studentId
-            """)
-    Optional<List<SemesterSummaryView>> findSemesterSummary(@Param("studentId") Long studentId);
+                sem.semester_name AS semester,
+                sss.credits_registered AS credits,
+                sss.credits_passed AS creditsPassed,
+                sss.semester_gpa AS semesterGpa,
+                sss.conduct_score AS conductScore
+            FROM student_semester_summaries sss
+            JOIN semesters sem ON sss.semester_id = sem.id
+            WHERE sss.student_id = :studentId
+            ORDER BY sem.id
+            """, nativeQuery = true)
+    List<SemesterSummaryView> findSemesterSummary(@Param("studentId") Long studentId);
 }

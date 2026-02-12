@@ -11,7 +11,6 @@ import com.tl_connect.dev.result.dto.SubjectResultDTO;
 import com.tl_connect.dev.result.projection.SemesterSummaryView;
 import com.tl_connect.dev.result.projection.SubjectResultRow;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,10 +23,9 @@ public class ResultService {
     private final ResultRepository resultRepository;
 
     public AcademicResultDTO getSubjectResult(Long studentId, String trainingProgram) {
-        List<SubjectResultRow> subjectResultsRows = resultRepository.findSubjectResult(studentId)
-                .orElse(Collections.emptyList());
-        List<SemesterSummaryView> semesterSummaries = resultRepository.findSemesterSummary(studentId)
-                .orElse(Collections.emptyList());
+        List<SubjectResultRow> subjectResultsRows = resultRepository.findSubjectResult(studentId);
+        List<SemesterSummaryView> semesterSummaries = resultRepository.findSemesterSummary(studentId);
+        
         Map<String, List<SubjectResultRow>> groupedBySemester = subjectResultsRows.stream()
                 .collect(Collectors.groupingBy(SubjectResultRow::getSemester));
 

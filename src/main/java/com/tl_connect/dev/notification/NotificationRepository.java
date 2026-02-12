@@ -12,27 +12,32 @@ import java.util.Optional;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
-    @Query("""
+    @Query(value = """
             SELECT
-                n.id,
-                n.title,
-                n.sender,
-                n.isRead,
-                n.targetType,
-                n.createdAt,
-                n.deadline
-            FROM Notification n
-            LEFT JOIN StudentClass sc ON n.targetId = sc.id
-            LEFT JOIN Student s ON s.id = :studentId
-            LEFT JOIN StudentCourseClass scc ON n.targetId = scc.courseClassId
+                n.id AS id,
+                n.title AS title,
+                n.sender AS sender,
+                n.is_read AS isRead,
+                n.target_type AS targetType,
+                n.created_at AS createdAt,
+                n.deadline AS deadline
+            FROM notifications n
+            LEFT JOIN student_classes sc 
+                ON n.target_id = sc.id
+            LEFT JOIN student_course_classes scc 
+                ON n.target_id = scc.course_class_id
             WHERE 
-                n.targetType = 'ALL'
-                OR (n.targetType = 'STUDENT' AND n.targetId = :studentId)
-                OR (n.targetType = 'STUDENT_CLASS' AND sc.id = s.studentClassId)
-                OR (n.targetType = 'COURSE_CLASS' AND scc.studentId = :studentId)
-            ORDER BY n.createdAt DESC
-            """)
-    Optional<List<NotificationRow>> findAllNotification(@Param("studentId") Long studentId);
+                n.target_type = 'ALL'
+                OR (n.target_type = 'STUDENT' AND n.target_id = :studentId)
+                OR (n.target_type = 'STUDENT_CLASS' AND n.target_id = (
+                    SELECT student_class_id 
+                    FROM students 
+                    WHERE id = :studentId
+                ))
+                OR (n.target_type = 'COURSE_CLASS' AND scc.student_id = :studentId)
+            ORDER BY n.created_at DESC
+            """, nativeQuery = true)
+    List<NotificationRow> findAllNotification(@Param("studentId") Long studentId);
 
     Optional<Notification> findById(Long id);
 }

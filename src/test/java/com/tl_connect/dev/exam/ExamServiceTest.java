@@ -81,7 +81,7 @@ class ExamServiceTest {
         when(view.getExamStatus()).thenReturn(ExamStatus.DONE);
 
         when(semesterRepository.findSemesterByName(semesterName)).thenReturn(Optional.of(semester));
-        when(examRepository.findExamSchedule(studentId, semester.getId())).thenReturn(Optional.of(List.of(view)));
+        when(examRepository.findExamSchedule(studentId, semester.getId())).thenReturn(List.of(view));
 
         // Act
         ExamScheduleDTO result = examService.getExamSchedule(studentId, semesterName);
@@ -109,7 +109,7 @@ class ExamServiceTest {
         semester.setSemesterName(semesterName);
 
         when(semesterRepository.findSemesterByName(semesterName)).thenReturn(Optional.of(semester));
-        when(examRepository.findExamSchedule(studentId, semester.getId())).thenReturn(Optional.empty()); // Or
+        when(examRepository.findExamSchedule(studentId, semester.getId())).thenReturn(List.of()); // Or
                                                                                                          // Collections.emptyList()
                                                                                                          // wrapped
 

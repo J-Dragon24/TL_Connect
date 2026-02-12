@@ -51,7 +51,7 @@ class ResultServiceTest {
         when(row2.getScore10()).thenReturn(8.0);
         when(row2.getCredits()).thenReturn(4);
 
-        when(resultRepository.findSubjectResult(studentId)).thenReturn(Optional.of(List.of(row1, row2)));
+        when(resultRepository.findSubjectResult(studentId)).thenReturn(List.of(row1, row2));
 
         // Mock SemesterSummaryView
         SemesterSummaryView summary1 = mock(SemesterSummaryView.class);
@@ -62,7 +62,7 @@ class ResultServiceTest {
         when(summary2.getSemester()).thenReturn(semester2);
         when(summary2.getSemesterGpa()).thenReturn(3.5);
 
-        when(resultRepository.findSemesterSummary(studentId)).thenReturn(Optional.of(List.of(summary1, summary2)));
+        when(resultRepository.findSemesterSummary(studentId)).thenReturn(List.of(summary1, summary2));
 
         // Act
         AcademicResultDTO result = resultService.getSubjectResult(studentId, trainingProgram);
@@ -91,8 +91,8 @@ class ResultServiceTest {
         // Arrange
         Long studentId = 1L;
         String trainingProgram = "Software Engineering";
-        when(resultRepository.findSubjectResult(studentId)).thenReturn(Optional.empty());
-        when(resultRepository.findSemesterSummary(studentId)).thenReturn(Optional.empty());
+        when(resultRepository.findSubjectResult(studentId)).thenReturn(List.of());
+        when(resultRepository.findSemesterSummary(studentId)).thenReturn(List.of());
 
         // Act
         AcademicResultDTO result = resultService.getSubjectResult(studentId, trainingProgram);

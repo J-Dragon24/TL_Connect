@@ -35,11 +35,11 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2Login(oauth -> oauth
                         .successHandler(successHandler))
-                .exceptionHandling(ex -> ex.authenticationEntryPoint((req, res, ex2) -> {
-                    res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    res.setContentType("application/json");
-                    res.getWriter().write("{\"error\":\"Unauthorized\"}");
-                }))
+                // .exceptionHandling(ex -> ex.authenticationEntryPoint((req, res, ex2) -> {
+                //     res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                //     res.setContentType("application/json");
+                //     res.getWriter().write("{\"error\":\"Unauthorized\"}");
+                // }))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

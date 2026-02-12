@@ -13,15 +13,15 @@ import com.tl_connect.dev.student_class.projection.StudentInClassRow;
 @Repository
 public interface StudentClassRepository extends JpaRepository<StudentClass, Long> {
 
-    @Query("""
+    @Query(value = """
             SELECT
-                s.studentCode AS studentCode,
-                s.fullName AS fullName,
+                s.student_code AS studentCode,
+                s.full_name AS fullName,
                 s.gender AS gender
-            FROM Student s
-            JOIN StudentClass c ON s.studentClassId = c.id
+            FROM students s
+            JOIN student_classes c ON s.student_class_id = c.id
             WHERE c.id = :classId
-            """)
+            """, nativeQuery = true)
     List<StudentInClassRow> findStudentsByClassId(@Param("classId") Long classId);
 
 }

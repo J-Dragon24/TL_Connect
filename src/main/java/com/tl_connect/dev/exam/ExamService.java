@@ -10,7 +10,6 @@ import com.tl_connect.dev.exam.projection.ExamScheduleView;
 import com.tl_connect.dev.schedule.SemesterRepository;
 import com.tl_connect.dev.common.exception.NotFoundException;
 import com.tl_connect.dev.academic.entity.Semester;
-import java.util.Collections;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,8 +23,7 @@ public class ExamService {
         Semester semester = semesterRepository.findSemesterByName(semesterName)
                 .orElseThrow(() -> new NotFoundException("Semester not found"));
 
-        List<ExamScheduleView> examSchedules = examRepository.findExamSchedule(studentId, semester.getId())
-                .orElse(Collections.emptyList());
+        List<ExamScheduleView> examSchedules = examRepository.findExamSchedule(studentId, semester.getId());
 
         List<ExamScheduleDetailDTO> examScheduleDetails = examSchedules.stream()
                 .map(examSchedule -> ExamScheduleDetailDTO.builder()

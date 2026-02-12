@@ -14,80 +14,80 @@ import com.tl_connect.dev.student_class.projection.ClassHeaderView;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
-    @Query("""
+    @Query(value = """
             SELECT
-                s.studentCode AS studentCode,
-                s.fullName AS fullName,
+                s.student_code AS studentCode,
+                s.full_name AS fullName,
                 s.gender AS gender,
-                s.dateOfBirth AS dateOfBirth,
-                c.classCode AS classCode,
-                l.fullName AS academicAdvisor,
-                m.majorCode AS majorCode,
-                m.majorName AS majorName,
-                f.facultyName AS faculty,
-                i.cardNumber AS idCardNumber,
-                i.cardType AS idCardType,
-                i.issuedDate AS issuedDate,
-                i.issuedPlace AS issuedPlace,
-                sc.phoneNumber AS phoneNumber,
+                s.date_of_birth AS dateOfBirth,
+                c.class_code AS classCode,
+                l.full_name AS academicAdvisor,
+                m.major_code AS majorCode,
+                m.major_name AS majorName,
+                f.faculty_name AS faculty,
+                i.card_number AS idCardNumber,
+                i.card_type AS idCardType,
+                i.issued_date AS issuedDate,
+                i.issued_place AS issuedPlace,
+                sc.phone_number AS phoneNumber,
                 sc.address AS adress,
-                sc.emailPersonal AS email,
+                sc.email_personal AS email,
                 ai.cohort AS cohort,
                 ai.position AS position,
-                ai.educationMode AS educationMode,
-                ec.fullName AS emergencyContactName,
-                ec.phoneNumber AS emergencyContactPhoneNumber,
+                ai.education_mode AS educationMode,
+                ec.full_name AS emergencyContactName,
+                ec.phone_number AS emergencyContactPhoneNumber,
                 ec.address AS emergencyContactAdress
-            FROM Student s
-            LEFT JOIN StudentClass c ON s.studentClassId = c.id
-            LEFT JOIN Major m ON c.majorId = m.id
-            LEFT JOIN Faculty f ON m.facultyId = f.id
-            LEFT JOIN IdentityCard i ON s.id = i.studentId
-            LEFT JOIN StudentContact sc ON s.id = sc.studentId
-            LEFT JOIN AcademicInfo ai ON s.id = ai.studentId
-            LEFT JOIN EmergencyContact ec ON s.id = ec.studentId
-            LEFT JOIN AcademicAdvisor aa ON c.id = aa.studentClassId
-            LEFT JOIN Lecturer l ON aa.lecturerId = l.id
+            FROM students s
+            LEFT JOIN student_classes c ON s.student_class_id = c.id
+            LEFT JOIN majors m ON c.major_id = m.id
+            LEFT JOIN faculties f ON m.faculty_id = f.id
+            LEFT JOIN identity_cards i ON s.id = i.student_id
+            LEFT JOIN student_contacts sc ON s.id = sc.student_id
+            LEFT JOIN academic_infos ai ON s.id = ai.student_id
+            LEFT JOIN emergency_contacts ec ON s.id = ec.student_id
+            LEFT JOIN academic_advisors aa ON c.id = aa.student_class_id
+            LEFT JOIN lecturers l ON aa.lecturer_id = l.id
             WHERE s.id = :id
-            """)
+            """, nativeQuery = true)
     Optional<StudentInfoView> findStudentInfoById(@Param("id") Long id);
 
 
-    @Query("""
+    @Query(value = """
             SELECT
                 c.id AS classId,
-                c.classCode AS classCode,
-                l.lecturerCode AS lecturerCode,
-                l.fullName AS academicAdvisor,
-                m.majorName AS major,
-                l.phoneNumber AS phoneNumber,
+                c.class_code AS classCode,
+                l.lecturer_code AS lecturerCode,
+                l.full_name AS academicAdvisor,
+                m.major_name AS major,
+                l.phone_number AS phoneNumber,
                 l.email AS email
-            FROM Student s
-            JOIN StudentClass c On s.studentClassId = c.id
-            JOIN Major m ON c.majorId = m.id
-            JOIN AcademicAdvisor aa ON c.id = aa.studentClassId
-            JOIN Lecturer l ON aa.lecturerId = l.id
+            FROM students s
+            JOIN student_classes c ON s.student_class_id = c.id
+            JOIN majors m ON c.major_id = m.id
+            JOIN academic_advisors aa ON c.id = aa.student_class_id
+            JOIN lecturers l ON aa.lecturer_id = l.id
             WHERE s.id = :studentId
-            """)
+            """, nativeQuery = true)
     Optional<ClassHeaderView> findClassHeaderById(@Param("studentId") Long studentId);
 
-    @Query("""
+    @Query(value = """
             SELECT
-                s.studentCode AS studentCode,
-                s.fullName AS fullName,
-                s.dateOfBirth AS dateOfBirth,
-                sc.phoneNumber AS phoneNumber,
-                sc.emailPersonal AS email,
-                hi.insuranceNumber AS insuranceNumber,
+                s.student_code AS studentCode,
+                s.full_name AS fullName,
+                s.date_of_birth AS dateOfBirth,
+                sc.phone_number AS phoneNumber,
+                sc.email_personal AS email,
+                hi.insurance_number AS insuranceNumber,
                 hi.provider AS provider,
                 hi.status AS status,
-                hi.validFrom AS validFrom,
-                hi.validTo AS validTo,
-                hi.registeredHospital AS registeredHospital
-            FROM Student s
-            LEFT JOIN StudentContact sc ON s.id = sc.studentId
-            LEFT JOIN HealthInsurance hi ON s.id = hi.studentId
+                hi.valid_from AS validFrom,
+                hi.valid_to AS validTo,
+                hi.registered_hospital AS registeredHospital
+            FROM students s
+            LEFT JOIN student_contacts sc ON s.id = sc.student_id
+            LEFT JOIN health_insurances hi ON s.id = hi.student_id
             WHERE s.id = :studentId
-            """)
+            """, nativeQuery = true)
     Optional<HealthInsuranceView> findHealthInsuranceById(@Param("studentId") Long studentId);
 }

@@ -1,7 +1,6 @@
 package com.tl_connect.dev.academic;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,12 +33,10 @@ public class TrainingProgramService {
                                                 "Training program not found for student with id: " + studentId));
 
                 List<TrainingProgramSubjectRow> trainingProgramSubjects = trainingProgramRepository
-                                .findSubjectsByProgramId(header.getId())
-                                .orElse(Collections.emptyList());
+                                .findSubjectsByProgramId(header.getId());
 
                 List<SubjectPrerequisiteRow> subjectPrerequisitesRows = trainingProgramRepository
-                                .findSubjectPrerequisitesByProgramId(header.getId())
-                                .orElse(Collections.emptyList());
+                                .findSubjectPrerequisitesByProgramId(header.getId());
 
                 return mapTrainingProgram(header, trainingProgramSubjects, subjectPrerequisitesRows);
         }

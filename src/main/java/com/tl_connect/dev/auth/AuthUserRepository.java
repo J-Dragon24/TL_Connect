@@ -11,16 +11,16 @@ import com.tl_connect.dev.auth.projection.JwtUserInfoView;
 
 @Repository
 public interface AuthUserRepository extends JpaRepository<AuthUser, Long> {
-    @Query("""
+    @Query(value = """
             SELECT
-                a.microsoftId AS microsoftId,
+                a.microsoft_id AS microsoftId,
                 s.id AS studentId,
                 r.code AS role
-            FROM AuthUser a
-            JOIN Student s ON a.id = s.authUserId
-            JOIN UserRole ur ON a.id = ur.id.userId
-            JOIN Role r ON ur.id.roleId = r.id
-            WHERE a.microsoftId = :microsoftId
-            """)
+            FROM auth_users a
+            JOIN students s ON a.id = s.auth_user_id
+            JOIN user_roles ur ON a.id = ur.id.user_id
+            JOIN roles r ON ur.id.role_id = r.id
+            WHERE a.microsoft_id = :microsoftId
+            """, nativeQuery = true)
     Optional<JwtUserInfoView> findStudentByMicrosoftId(String microsoftId);
 }

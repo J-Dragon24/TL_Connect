@@ -1,6 +1,5 @@
 package com.tl_connect.dev.notification;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,8 +18,7 @@ public class NotificationService {
 
     public List<SummaryNotifyDTO> getAllNotification(Long studentId) {
 
-        List<NotificationRow> notificationRows = notificationRepository.findAllNotification(studentId)
-        .orElse(Collections.emptyList());
+        List<NotificationRow> notificationRows = notificationRepository.findAllNotification(studentId);
 
         return notificationRows.stream()
                 .map(notificationRow -> SummaryNotifyDTO.builder()

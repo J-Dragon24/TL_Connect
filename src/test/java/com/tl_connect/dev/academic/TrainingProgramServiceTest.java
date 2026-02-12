@@ -64,7 +64,7 @@ class TrainingProgramServiceTest {
         when(subjectRow.getIsRequired()).thenReturn(true);
 
         when(trainingProgramRepository.findSubjectsByProgramId(programId))
-                .thenReturn(Optional.of(List.of(subjectRow)));
+                .thenReturn(List.of(subjectRow));
 
         SubjectPrerequisiteRow prereqRow = mock(SubjectPrerequisiteRow.class);
         when(prereqRow.getSubjectId()).thenReturn(100L);
@@ -72,7 +72,7 @@ class TrainingProgramServiceTest {
         when(prereqRow.getPrerequisiteSubjectName()).thenReturn("Calculus 1");
 
         when(trainingProgramRepository.findSubjectPrerequisitesByProgramId(programId))
-                .thenReturn(Optional.of(List.of(prereqRow)));
+                .thenReturn(List.of(prereqRow));
 
         // Act
         TrainingProgramDTO result = trainingProgramService.getTrainingProgram(studentId);
@@ -113,7 +113,7 @@ class TrainingProgramServiceTest {
         when(trainingProgramRepository.findTrainingProgramHeaderByStudentId(studentId))
                 .thenReturn(Optional.of(header));
         when(trainingProgramRepository.findSubjectsByProgramId(programId))
-                .thenReturn(Optional.empty());
+                .thenReturn(List.of());
 
         // Act & Assert
         NotFoundException exception = assertThrows(NotFoundException.class,
@@ -129,9 +129,9 @@ class TrainingProgramServiceTest {
         when(trainingProgramRepository.findTrainingProgramHeaderByStudentId(studentId))
                 .thenReturn(Optional.of(header));
         when(trainingProgramRepository.findSubjectsByProgramId(programId))
-                .thenReturn(Optional.of(List.of(mock(TrainingProgramSubjectRow.class))));
+                .thenReturn(List.of(mock(TrainingProgramSubjectRow.class)));
         when(trainingProgramRepository.findSubjectPrerequisitesByProgramId(programId))
-                .thenReturn(Optional.empty());
+                .thenReturn(List.of());
 
         // Act & Assert
         NotFoundException exception = assertThrows(NotFoundException.class,
