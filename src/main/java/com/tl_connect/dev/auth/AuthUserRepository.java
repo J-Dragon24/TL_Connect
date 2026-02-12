@@ -18,8 +18,8 @@ public interface AuthUserRepository extends JpaRepository<AuthUser, Long> {
                 r.code AS role
             FROM AuthUser a
             JOIN Student s ON a.id = s.authUserId
-            JOIN UserRole ur ON a.id = ur.userId
-            JOIN Role r ON ur.roleId = r.id
+            JOIN UserRole ur ON a.id = ur.id.userId
+            JOIN Role r ON ur.id.roleId = r.id
             WHERE a.microsoftId = :microsoftId
             """)
     Optional<JwtUserInfoView> findStudentByMicrosoftId(String microsoftId);

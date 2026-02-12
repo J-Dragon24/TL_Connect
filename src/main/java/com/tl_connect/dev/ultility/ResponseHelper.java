@@ -1,9 +1,10 @@
-package com.tl_connect.dev.common.dto;
+package com.tl_connect.dev.ultility;
 
 import java.time.Instant;
 
 import org.springframework.http.ResponseEntity;
 
+import com.tl_connect.dev.common.dto.ResponseWrapper;
 import com.tl_connect.dev.common.enums.ResponseStatus;
 
 public class ResponseHelper {

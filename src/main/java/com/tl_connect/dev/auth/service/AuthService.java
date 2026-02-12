@@ -1,17 +1,16 @@
-package com.tl_connect.dev.auth;
+package com.tl_connect.dev.auth.service;
 
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
 
+import com.tl_connect.dev.auth.AuthUserRepository;
 import com.tl_connect.dev.auth.projection.JwtUserInfoView;
 
 @Service
 public class AuthService {
     private final AuthUserRepository authUserRepository;
     private JwtDecoder jwtDecoder;
-    private final String issuer = "https://login.microsoftonline.com/{TENANT_ID}/v2.0";
-    private static final String SECRET = "MY_SUPER_SECRET_KEY_123456789_MY_SUPER_SECRET";
-    private static final long EXPIRATION = 60 * 60 * 1000;
+    private final String issuer = "https://login.microsoftonline.com/${TENANT_ID}/v2.0";
 
     public Jwt microsoftTokenVerify(String token) {
         jwtDecoder = JwtDecoders.fromIssuerLocation(issuer);

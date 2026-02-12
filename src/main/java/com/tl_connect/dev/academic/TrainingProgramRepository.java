@@ -65,11 +65,11 @@ public interface TrainingProgramRepository extends JpaRepository<TrainingProgram
                 tps.id.subjectId AS subjectId,
                 sp.id.prerequisiteSubjectId AS prerequisiteSubjectId,
                 s.subjectCode AS prerequisiteSubjectCode,
-                s.subjectName AS prerequisiteSubjectName,
+                s.subjectName AS prerequisiteSubjectName
             FROM TrainingProgramSubject tps
             JOIN SubjectPrerequisite sp ON tps.id.subjectId = sp.id.subjectId
             JOIN Subject s ON sp.id.prerequisiteSubjectId = s.id
             WHERE tps.id.programId = :programId
             """)
-    Optional<List<SubjectPrerequisiteRow>> findSubjectPrerequisitesByProgramId(@Param("programId") Long programId );
+    Optional<List<SubjectPrerequisiteRow>> findSubjectPrerequisitesByProgramId(@Param("programId") Long programId);
 }

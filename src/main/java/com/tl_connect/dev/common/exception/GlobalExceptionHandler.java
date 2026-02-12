@@ -1,5 +1,6 @@
 package com.tl_connect.dev.common.exception;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -25,15 +26,14 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ResponseWrapper<?>> handle(ForbiddenException e) {
-        ResponseStatus status = e.getStatus();
+    public ResponseEntity<ResponseWrapper<?>> handle(Exception e) {
         return ResponseEntity
-        .status(status.getHttpStatus())
-        .body(ResponseWrapper.builder()
-                .code(status.getCode())
-                .message(e.getMessage())
-                .data(e.getData())
-                .build());
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ResponseWrapper.builder()
+                        .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                        .message(e.getMessage())
+                        .data(null)
+                        .build());
     }
 
 }

@@ -47,6 +47,9 @@ public class Notification {
     @Column(name = "target_id")
     private Long targetId;
 
+    @Column(name = "deadline")
+    private LocalDateTime deadline;
+
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;

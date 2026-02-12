@@ -6,6 +6,8 @@ import static org.mockito.Mockito.*;
 import java.time.LocalDate;
 import java.util.List;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -48,7 +50,7 @@ class StudentInfoServiceTest {
     @Test
     void getStudentInfo_WhenStudentExists_ShouldReturnStudentInfoDTO() {
         // Arrange
-        when(studentRepository.findStudentInfoById(studentId)).thenReturn(studentInfoView);
+        when(studentRepository.findStudentInfoById(studentId)).thenReturn(Optional.of(studentInfoView));
         when(studentInfoView.getStudentCode()).thenReturn("ST001");
         when(studentInfoView.getFullName()).thenReturn("John Doe");
         when(studentInfoView.getDateOfBirth()).thenReturn(LocalDate.of(2000, 1, 1));
@@ -102,7 +104,7 @@ class StudentInfoServiceTest {
         // Arrange
         ClassHeaderView header = mock(ClassHeaderView.class);
         Long classId = 10L;
-        when(studentRepository.findClassHeaderById(studentId)).thenReturn(header);
+        when(studentRepository.findClassHeaderById(studentId)).thenReturn(Optional.of(header));
         when(header.getClassId()).thenReturn(classId);
         when(header.getClassCode()).thenReturn("CL001");
         when(header.getLecturerCode()).thenReturn("L001");

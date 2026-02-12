@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
-import com.tl_connect.dev.common.dto.ResponseHelper;
 import com.tl_connect.dev.common.exception.InvalidInputException;
+import com.tl_connect.dev.ultility.ResponseHelper;
 
 import lombok.RequiredArgsConstructor;
 

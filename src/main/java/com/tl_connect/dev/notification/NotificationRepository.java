@@ -19,7 +19,8 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
                 n.sender,
                 n.isRead,
                 n.targetType,
-                n.createdAt
+                n.createdAt,
+                n.deadline
             FROM Notification n
             LEFT JOIN StudentClass sc ON n.targetId = sc.id
             LEFT JOIN Student s ON s.id = :studentId

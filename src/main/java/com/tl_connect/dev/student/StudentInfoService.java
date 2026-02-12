@@ -32,10 +32,8 @@ public class StudentInfoService {
         private final StudentClassRepository studentClassRepository;
 
         public StudentInfoDTO getStudentInfo(Long id) {
-                StudentInfoView student = studentRepository.findStudentInfoById(id);
-                if (student == null) {
-                        throw new NotFoundException("Student not found with id: " + id);
-                }
+                StudentInfoView student = studentRepository.findStudentInfoById(id)
+                        .orElseThrow(() -> new NotFoundException("Student not found with id: " + id));
                 return StudentInfoDTO.builder()
                                 .studentCode(student.getStudentCode())
                                 .fullName(student.getFullName())
@@ -73,10 +71,8 @@ public class StudentInfoService {
         }
 
         public StudentClassInfoDTO getStudentClassInfo(Long id) {
-                ClassHeaderView header = studentRepository.findClassHeaderById(id);
-                if (header == null) {
-                        throw new NotFoundException("Student class not found for student id: " + id);
-                }
+                ClassHeaderView header = studentRepository.findClassHeaderById(id)
+                        .orElseThrow(() -> new NotFoundException("Student class not found for student id: " + id));
                 Long classId = header.getClassId();
 
                 List<StudentInClassRow> students = studentClassRepository.findStudentsByClassId(classId);
@@ -98,10 +94,8 @@ public class StudentInfoService {
         }
 
         public HealthInsDTO getHealthInsurance(Long id) {
-                HealthInsuranceView healthInsurance = studentRepository.findHealthInsuranceById(id);
-                if (healthInsurance == null) {
-                        throw new NotFoundException("Health insurance not found for student id: " + id);
-                }
+                HealthInsuranceView healthInsurance = studentRepository.findHealthInsuranceById(id)
+                        .orElseThrow(() -> new NotFoundException("Health insurance not found for student id: " + id));
                 HealthInsDetailDTO healthInsDetail = HealthInsDetailDTO.builder()
                                 .insuranceNumber(healthInsurance.getInsuranceNumber())
                                 .provider(healthInsurance.getProvider())

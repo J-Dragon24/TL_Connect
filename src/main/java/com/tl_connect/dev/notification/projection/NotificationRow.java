@@ -11,4 +11,5 @@ public interface NotificationRow {
     Boolean getIsRead();
     TargetType getTargetType();
     LocalDateTime getCreatedAt();
+    LocalDateTime getDeadline();
 }

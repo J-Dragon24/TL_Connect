@@ -1,5 +1,7 @@
 package com.tl_connect.dev.student;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -48,7 +50,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             LEFT JOIN Lecturer l ON aa.lecturerId = l.id
             WHERE s.id = :id
             """)
-    StudentInfoView findStudentInfoById(@Param("id") Long id);
+    Optional<StudentInfoView> findStudentInfoById(@Param("id") Long id);
 
 
     @Query("""
@@ -67,7 +69,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             JOIN Lecturer l ON aa.lecturerId = l.id
             WHERE s.id = :studentId
             """)
-    ClassHeaderView findClassHeaderById(@Param("studentId") Long studentId);
+    Optional<ClassHeaderView> findClassHeaderById(@Param("studentId") Long studentId);
 
     @Query("""
             SELECT
@@ -87,5 +89,5 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             LEFT JOIN HealthInsurance hi ON s.id = hi.studentId
             WHERE s.id = :studentId
             """)
-    HealthInsuranceView findHealthInsuranceById(@Param("studentId") Long studentId);
+    Optional<HealthInsuranceView> findHealthInsuranceById(@Param("studentId") Long studentId);
 }

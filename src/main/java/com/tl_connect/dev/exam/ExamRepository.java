@@ -34,7 +34,5 @@ public interface ExamRepository extends JpaRepository<ExamSchedule, Long> {
             JOIN Subject s ON cc.subjectId = s.id
             WHERE ser.studentId = :studentId AND es.semesterId = :semesterId
             """)
-    Optional<List<ExamScheduleView>> 
-    
-    findExamSchedule(@Param("studentId") Long studentId, @Param("semesterId") Long semesterId);
+    Optional<List<ExamScheduleView>> findExamSchedule(@Param("studentId") Long studentId, @Param("semesterId") Long semesterId);
 }

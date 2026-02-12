@@ -25,8 +25,8 @@ public interface ResultRepository extends JpaRepository<StudentSubjectResult, Lo
                 ssr.letterGrade AS letterGrade,
                 ssr.isPass AS isPass
             FROM StudentSubjectResult ssr
-            JOIN subjects sub ON ssr.subjectId = sub.id
-            JOIN semesters s ON ssr.semesterId = s.id
+            JOIN Subject sub ON ssr.subjectId = sub.id
+            JOIN Semester s ON ssr.semesterId = s.id
             WHERE ssr.studentId = :studentId
             """)
     Optional<List<SubjectResultRow>> findSubjectResult(@Param("studentId") Long studentId);
@@ -39,7 +39,7 @@ public interface ResultRepository extends JpaRepository<StudentSubjectResult, Lo
                 ssr.semesterGpa AS semesterGpa,
                 ssr.conductScore AS conductScore
             FROM StudentSemesterSummary sss 
-            JOIN semesters s ON sss.semesterId = s.id
+            JOIN Semester s ON sss.semesterId = s.id
             WHERE sss.studentId = :studentId
             """)
     Optional<List<SemesterSummaryView>> findSemesterSummary(@Param("studentId") Long studentId);

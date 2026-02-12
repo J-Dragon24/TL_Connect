@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,8 +30,7 @@ public class SubjectPrerequisite {
     private LocalDateTime createdAt;
 
     @Embeddable
-    @Getter
-    @Setter
+    @Data
     @NoArgsConstructor
     @AllArgsConstructor
     public static class SubjectPrerequisiteId implements Serializable {
