@@ -18,11 +18,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.tl_connect.dev.academic.entity.Semester;
-import com.tl_connect.dev.common.exception.NotFoundException;
-import com.tl_connect.dev.schedule.dto.SemesterScheduleDTO;
-import com.tl_connect.dev.schedule.dto.WeeklyScheduleDTO;
-import com.tl_connect.dev.schedule.projection.ScheduleRow;
+import com.tl_connect.dev.core.common.exception.NotFoundException;
+import com.tl_connect.dev.modules.schedule.ScheduleRepository;
+import com.tl_connect.dev.modules.schedule.ScheduleService;
+import com.tl_connect.dev.modules.schedule.SemesterRepository;
+import com.tl_connect.dev.modules.schedule.dto.SemesterScheduleDTO;
+import com.tl_connect.dev.modules.schedule.dto.WeeklyScheduleDTO;
+import com.tl_connect.dev.modules.schedule.projection.ScheduleRow;
+import com.tl_connect.dev.modules.training_program.entity.Semester;
 
 @ExtendWith(MockitoExtension.class)
 class ScheduleServiceTest {
@@ -71,7 +74,7 @@ class ScheduleServiceTest {
         when(row.getEndTime()).thenReturn(LocalTime.of(11, 30));
 
         when(scheduleRepository.findScheduleByStudentId(studentId, semester.getId()))
-                .thenReturn(Optional.of(List.of(row)));
+                .thenReturn(List.of(row));
 
         // Act
         WeeklyScheduleDTO result = scheduleService.getWeeklySchedule(studentId, startDate, endDate);
@@ -122,7 +125,7 @@ class ScheduleServiceTest {
         when(row.getSubjectName()).thenReturn("Physics");
 
         when(scheduleRepository.findScheduleByStudentId(studentId, semester.getId()))
-                .thenReturn(Optional.of(List.of(row)));
+                .thenReturn(List.of(row));
 
         // Act
         SemesterScheduleDTO result = scheduleService.getSemesterSchedule(studentId, semesterName);

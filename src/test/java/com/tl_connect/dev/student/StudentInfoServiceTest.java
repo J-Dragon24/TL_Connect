@@ -15,16 +15,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.tl_connect.dev.common.enums.EducationMode;
-import com.tl_connect.dev.common.enums.Gender;
-import com.tl_connect.dev.common.enums.IdCardType;
-import com.tl_connect.dev.common.exception.NotFoundException;
-import com.tl_connect.dev.student.dto.StudentInfoDTO;
-import com.tl_connect.dev.student.projection.StudentInfoView;
-import com.tl_connect.dev.student_class.StudentClassRepository;
-import com.tl_connect.dev.student_class.dto.StudentClassInfoDTO;
-import com.tl_connect.dev.student_class.projection.ClassHeaderView;
-import com.tl_connect.dev.student_class.projection.StudentInClassRow;
+import com.tl_connect.dev.core.common.enums.EducationMode;
+import com.tl_connect.dev.core.common.enums.Gender;
+import com.tl_connect.dev.core.common.enums.IdCardType;
+import com.tl_connect.dev.core.common.exception.NotFoundException;
+import com.tl_connect.dev.modules.student.StudentInfoService;
+import com.tl_connect.dev.modules.student.StudentRepository;
+import com.tl_connect.dev.modules.student.dto.StudentInfoDTO;
+import com.tl_connect.dev.modules.student.projection.StudentInfoView;
+import com.tl_connect.dev.modules.student_class.StudentClassRepository;
+import com.tl_connect.dev.modules.student_class.dto.StudentClassInfoDTO;
+import com.tl_connect.dev.modules.student_class.projection.ClassHeaderView;
+import com.tl_connect.dev.modules.student_class.projection.StudentInClassRow;
 
 @ExtendWith(MockitoExtension.class)
 class StudentInfoServiceTest {

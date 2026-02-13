@@ -14,11 +14,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.tl_connect.dev.academic.dto.TrainingProgramDTO;
-import com.tl_connect.dev.academic.projection.SubjectPrerequisiteRow;
-import com.tl_connect.dev.academic.projection.TrainingProgramHeaderView;
-import com.tl_connect.dev.academic.projection.TrainingProgramSubjectRow;
-import com.tl_connect.dev.common.exception.NotFoundException;
+import com.tl_connect.dev.core.common.exception.NotFoundException;
+import com.tl_connect.dev.modules.training_program.TrainingProgramRepository;
+import com.tl_connect.dev.modules.training_program.TrainingProgramService;
+import com.tl_connect.dev.modules.training_program.dto.TrainingProgramDTO;
+import com.tl_connect.dev.modules.training_program.projection.SubjectPrerequisiteRow;
+import com.tl_connect.dev.modules.training_program.projection.TrainingProgramHeaderView;
+import com.tl_connect.dev.modules.training_program.projection.TrainingProgramSubjectRow;
 
 @ExtendWith(MockitoExtension.class)
 class TrainingProgramServiceTest {

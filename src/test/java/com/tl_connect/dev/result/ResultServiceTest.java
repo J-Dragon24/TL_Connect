@@ -7,7 +7,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,18 +15,20 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.tl_connect.dev.result.dto.AcademicResultDTO;
-import com.tl_connect.dev.result.projection.SemesterSummaryView;
-import com.tl_connect.dev.result.projection.SubjectResultRow;
+import com.tl_connect.dev.modules.academic_result.AcademicResultRepository;
+import com.tl_connect.dev.modules.academic_result.AcademicResultService;
+import com.tl_connect.dev.modules.academic_result.dto.AcademicResultDTO;
+import com.tl_connect.dev.modules.academic_result.projection.SemesterSummaryView;
+import com.tl_connect.dev.modules.academic_result.projection.SubjectResultRow;
 
 @ExtendWith(MockitoExtension.class)
 class ResultServiceTest {
 
     @Mock
-    private ResultRepository resultRepository;
+    private AcademicResultRepository resultRepository;
 
     @InjectMocks
-    private ResultService resultService;
+    private AcademicResultService resultService;
 
     @Test
     @DisplayName("getSubjectResult: Success -> Returns DTO with grouped results")

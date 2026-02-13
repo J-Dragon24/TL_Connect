@@ -22,13 +22,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.tl_connect.dev.academic.entity.Semester;
-import com.tl_connect.dev.common.enums.AttendanceStatus;
-import com.tl_connect.dev.common.enums.ExamStatus;
-import com.tl_connect.dev.common.exception.NotFoundException;
-import com.tl_connect.dev.exam.dto.ExamScheduleDTO;
-import com.tl_connect.dev.exam.projection.ExamScheduleView;
-import com.tl_connect.dev.schedule.SemesterRepository;
+import com.tl_connect.dev.core.common.enums.AttendanceStatus;
+import com.tl_connect.dev.core.common.enums.ExamStatus;
+import com.tl_connect.dev.core.common.exception.NotFoundException;
+import com.tl_connect.dev.modules.exam.ExamRepository;
+import com.tl_connect.dev.modules.exam.ExamService;
+import com.tl_connect.dev.modules.exam.dto.ExamScheduleDTO;
+import com.tl_connect.dev.modules.exam.projection.ExamScheduleView;
+import com.tl_connect.dev.modules.schedule.SemesterRepository;
+import com.tl_connect.dev.modules.training_program.entity.Semester;
 
 @ExtendWith(MockitoExtension.class)
 class ExamServiceTest {
