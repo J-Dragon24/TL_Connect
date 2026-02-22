@@ -31,6 +31,9 @@ public class TrainingProgram {
     @Column(name = "training_program_name")
     private String trainingProgramName;
 
+    @Column(name = "training_program_code")
+    private String trainingProgramCode;
+
     @Column(name = "year_start", nullable = false)
     private Integer yearStart;
 

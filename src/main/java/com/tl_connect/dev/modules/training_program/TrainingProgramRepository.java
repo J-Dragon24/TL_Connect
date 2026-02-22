@@ -15,6 +15,7 @@ import com.tl_connect.dev.modules.training_program.projection.TrainingProgramSub
 
 @Repository
 public interface TrainingProgramRepository extends JpaRepository<TrainingProgram, Long> {
+    
 
     @Query(value = """
             SELECT

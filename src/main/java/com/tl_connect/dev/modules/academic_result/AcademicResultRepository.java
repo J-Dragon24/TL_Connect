@@ -26,12 +26,13 @@ public interface AcademicResultRepository extends JpaRepository<StudentSubjectRe
             FROM student_subject_results ssr
             JOIN subjects sub ON ssr.subject_id = sub.id
             JOIN semesters sem ON ssr.semester_id = sem.id
+            JOIN training_program_subjects tps ON tps.subject_id = ssr.subject_id
+            JOIN training_programs tp ON tps.program_id = tp.id
             WHERE ssr.student_id = :studentId
-            ORDER BY sem.id, sub.subject_code
+            AND tp.training_program_code = :trainingProgramCode
             """, nativeQuery = true)
-    List<SubjectResultRow> findSubjectResult(@Param("studentId") Long studentId);
-
-
+    List<SubjectResultRow> findSubjectResult(@Param("studentId") Long studentId,
+            @Param("trainingProgramCode") String trainingProgramCode);
 
     @Query(value = """
             SELECT
@@ -48,8 +49,10 @@ public interface AcademicResultRepository extends JpaRepository<StudentSubjectRe
                 AS cumulativeGpa
             FROM student_semester_summaries sss
             JOIN semesters sem ON sss.semester_id = sem.id
+            JOIN training_programs tp ON sss.training_program_id = tp.id
             WHERE sss.student_id = :studentId
-            ORDER BY sem.id
+            AND tp.training_program_code = :trainingProgramCode
             """, nativeQuery = true)
-    List<SemesterSummaryView> findSemesterSummary(@Param("studentId") Long studentId);
+    List<SemesterSummaryView> findSemesterSummary(@Param("studentId") Long studentId,
+            @Param("trainingProgramCode") String trainingProgramCode);
 }

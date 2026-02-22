@@ -15,18 +15,18 @@ import com.tl_connect.dev.modules.academic_result.dto.AcademicResultDTO;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1/student/academic-results")
+@RequestMapping("/api/v1/student/marks")
 @RequiredArgsConstructor
 public class AcademicResultController {
     private final AcademicResultService resultService;
 
-    @GetMapping("/")
-    public ResponseEntity<?> getAcademicResult(Authentication authentication, @RequestParam String trainingProgram) {
+    @GetMapping
+    public ResponseEntity<?> getMarks(Authentication authentication, @RequestParam String trainingProgramCode) {
         if(authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo userInfo)){
             throw new UnauthorizeException("Authentication required");
         }
         Long studentId = userInfo.userId();
-        AcademicResultDTO academicResult = resultService.getSubjectResult(studentId, trainingProgram);
+        AcademicResultDTO academicResult = resultService.getSubjectResult(studentId, trainingProgramCode);
         return ResponseHelper.success("Academic result fetched successfully", academicResult);
     }
 }

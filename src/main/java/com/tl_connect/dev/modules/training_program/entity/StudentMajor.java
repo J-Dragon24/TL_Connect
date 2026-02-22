@@ -1,5 +1,7 @@
 package com.tl_connect.dev.modules.training_program.entity;
 
+import com.tl_connect.dev.core.common.enums.StudentMajorStatus;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,4 +36,8 @@ public class StudentMajor {
 
     @Column(name = "end_year")
     private Integer endYear;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private StudentMajorStatus status;
 }

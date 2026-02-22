@@ -18,7 +18,6 @@ import com.tl_connect.dev.modules.auth.OAuth2LoginSuccessHandler;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final CustomLogoutHandler logoutHandler;
     private final JwtAuthenticationFilter jwtFilter;
     private final OAuth2LoginSuccessHandler successHandler;
 
