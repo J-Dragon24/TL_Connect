@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.training_program.dto;
+package com.tl_connect.dev.modules.study_program.dto;
 
 import java.time.LocalDate;
 import java.util.List;

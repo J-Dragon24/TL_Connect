@@ -1,8 +1,8 @@
-package com.tl_connect.dev.modules.training_program.projection;
+package com.tl_connect.dev.modules.study_program.projection;
 
 import java.time.LocalDate;
 
-public interface TrainingProgramSubjectRow {
+public interface StudyProgramSubjectRow {
     Long getSemesterId();
 
     String getSemesterName();

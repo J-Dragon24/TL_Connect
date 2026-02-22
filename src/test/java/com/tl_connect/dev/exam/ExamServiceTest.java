@@ -30,7 +30,7 @@ import com.tl_connect.dev.modules.exam.ExamService;
 import com.tl_connect.dev.modules.exam.dto.ExamScheduleDTO;
 import com.tl_connect.dev.modules.exam.projection.ExamScheduleView;
 import com.tl_connect.dev.modules.schedule.SemesterRepository;
-import com.tl_connect.dev.modules.training_program.entity.Semester;
+import com.tl_connect.dev.modules.study_program.entity.Semester;
 
 @ExtendWith(MockitoExtension.class)
 class ExamServiceTest {
@@ -112,8 +112,8 @@ class ExamServiceTest {
 
         when(semesterRepository.findSemesterByName(semesterName)).thenReturn(Optional.of(semester));
         when(examRepository.findExamSchedule(studentId, semester.getId())).thenReturn(List.of()); // Or
-                                                                                                         // Collections.emptyList()
-                                                                                                         // wrapped
+                                                                                                  // Collections.emptyList()
+                                                                                                  // wrapped
 
         // Act
         ExamScheduleDTO result = examService.getExamSchedule(studentId, semesterName);

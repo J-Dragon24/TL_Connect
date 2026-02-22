@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.training_program.entity;
+package com.tl_connect.dev.modules.study_program.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -15,16 +15,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "training_program_subjects")
+@Table(name = "study_program_subjects")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TrainingProgramSubject {
+public class StudyProgramSubject {
 
     @EmbeddedId
-    private TrainingProgramSubjectId id;
+    private StudyProgramSubjectId id;
 
     @Column(name = "semester_id", nullable = false)
     private Long semesterId;
@@ -47,9 +47,9 @@ public class TrainingProgramSubject {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class TrainingProgramSubjectId implements Serializable {
-        @Column(name = "program_id")
-        private Long programId;
+    public static class StudyProgramSubjectId implements Serializable {
+        @Column(name = "study_program_id")
+        private Long studyProgramId;
 
         @Column(name = "subject_id")
         private Long subjectId;

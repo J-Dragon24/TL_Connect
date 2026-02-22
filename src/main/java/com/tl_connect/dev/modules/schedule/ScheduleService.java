@@ -14,7 +14,7 @@ import com.tl_connect.dev.modules.schedule.dto.DayOfWeekScheduleDTO;
 import com.tl_connect.dev.modules.schedule.dto.SemesterScheduleDTO;
 import com.tl_connect.dev.modules.schedule.dto.WeeklyScheduleDTO;
 import com.tl_connect.dev.modules.schedule.projection.ScheduleRow;
-import com.tl_connect.dev.modules.training_program.entity.Semester;
+import com.tl_connect.dev.modules.study_program.entity.Semester;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,7 +29,8 @@ public class ScheduleService {
                 Semester semester = semesterRepository.findSemesterByDate(startDate)
                                 .orElseThrow(() -> new NotFoundException("Semester not found"));
 
-                List<ScheduleRow> scheduleRows = scheduleRepository.findScheduleByStudentId(studentId, semester.getId());
+                List<ScheduleRow> scheduleRows = scheduleRepository.findScheduleByStudentId(studentId,
+                                semester.getId());
 
                 Map<Integer, List<ScheduleRow>> groupedByDayOfWeek = scheduleRows.stream()
                                 .collect(Collectors.groupingBy(ScheduleRow::getDayOfWeek));
@@ -74,7 +75,8 @@ public class ScheduleService {
                 Semester semester = semesterRepository.findSemesterByName(semesterName)
                                 .orElseThrow(() -> new NotFoundException("Semester not found"));
 
-                List<ScheduleRow> scheduleRows = scheduleRepository.findScheduleByStudentId(studentId, semester.getId());
+                List<ScheduleRow> scheduleRows = scheduleRepository.findScheduleByStudentId(studentId,
+                                semester.getId());
 
                 List<CourseClassDTO> courseClasses = scheduleRows.stream()
                                 .map(row -> CourseClassDTO.builder()
@@ -113,7 +115,8 @@ public class ScheduleService {
                 Semester semester = semesterRepository.findSemesterByDate(today)
                                 .orElseThrow(() -> new NotFoundException("Semester not found"));
 
-                List<ScheduleRow> scheduleRows = scheduleRepository.findDayOfWeekSchedule(studentId, semester.getId(), dayOfWeek);
+                List<ScheduleRow> scheduleRows = scheduleRepository.findDayOfWeekSchedule(studentId, semester.getId(),
+                                dayOfWeek);
 
                 List<CourseClassDTO> courseClasses = scheduleRows.stream()
                                 .map(row -> CourseClassDTO.builder()

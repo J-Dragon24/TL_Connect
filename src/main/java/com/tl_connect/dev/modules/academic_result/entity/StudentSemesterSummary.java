@@ -28,8 +28,8 @@ public class StudentSemesterSummary {
     @Column(name = "student_id", nullable = false)
     private Long studentId;
 
-    @Column(name = "training_program_id", nullable = false)
-    private Long trainingProgramId;
+    @Column(name = "study_program_id", nullable = false)
+    private Long studyProgramId;
 
     @Column(name = "semester_id", nullable = false)
     private Long semesterId;

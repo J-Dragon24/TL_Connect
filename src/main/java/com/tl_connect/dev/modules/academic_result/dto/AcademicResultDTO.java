@@ -14,6 +14,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class AcademicResultDTO {
-    private String trainingProgram;
+    private String studyProgram;
     private List<SemesterResultDTO> semesterResults;
 }

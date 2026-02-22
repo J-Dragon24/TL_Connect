@@ -21,12 +21,12 @@ public class AcademicResultController {
     private final AcademicResultService resultService;
 
     @GetMapping
-    public ResponseEntity<?> getMarks(Authentication authentication, @RequestParam String trainingProgramCode) {
-        if(authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo userInfo)){
+    public ResponseEntity<?> getMarks(Authentication authentication, @RequestParam String studyProgramCode) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo userInfo)) {
             throw new UnauthorizeException("Authentication required");
         }
         Long studentId = userInfo.userId();
-        AcademicResultDTO academicResult = resultService.getSubjectResult(studentId, trainingProgramCode);
+        AcademicResultDTO academicResult = resultService.getSubjectResult(studentId, studyProgramCode);
         return ResponseHelper.success("Academic result fetched successfully", academicResult);
     }
 }

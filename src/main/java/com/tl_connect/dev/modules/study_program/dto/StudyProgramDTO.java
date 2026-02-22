@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.training_program.dto;
+package com.tl_connect.dev.modules.study_program.dto;
 
 import java.util.List;
 
@@ -13,8 +13,8 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TrainingProgramDTO {
-    private String trainingProgramName;
+public class StudyProgramDTO {
+    private String studyProgramName;
     private Integer yearStart;
     private Integer totalCredits;
     private MajorDTO major;

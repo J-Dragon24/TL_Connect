@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.training_program.entity;
+package com.tl_connect.dev.modules.study_program.entity;
 
 import com.tl_connect.dev.core.common.enums.StudentMajorStatus;
 
@@ -24,6 +24,9 @@ public class StudentMajor {
 
     @Column(name = "student_id", nullable = false)
     private Long studentId;
+
+    @Column(name = "study_program_id", nullable = false)
+    private Long studyProgramId;
 
     @Column(name = "major_id", nullable = false)
     private Long majorId;

@@ -1,5 +1,6 @@
-package com.tl_connect.dev.modules.training_program.entity;
+package com.tl_connect.dev.modules.study_program.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -13,26 +14,26 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "departments")
+@Table(name = "semesters")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Department {
+public class Semester {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "faculty_id", nullable = false)
-    private Long facultyId;
+    @Column(name = "semester_name", length = 50)
+    private String semesterName;
 
-    @Column(name = "department_code", unique = true, length = 20)
-    private String departmentCode;
+    @Column(name = "start_date")
+    private LocalDate startDate;
 
-    @Column(name = "department_name", length = 255)
-    private String departmentName;
+    @Column(name = "end_date")
+    private LocalDate endDate;
 
     @CreationTimestamp
     @Column(name = "created_at")

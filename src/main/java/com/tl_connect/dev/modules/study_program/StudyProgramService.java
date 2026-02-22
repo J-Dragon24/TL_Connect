@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.training_program;
+package com.tl_connect.dev.modules.study_program;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,40 +9,56 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.tl_connect.dev.core.common.exception.NotFoundException;
-import com.tl_connect.dev.modules.training_program.dto.MajorDTO;
-import com.tl_connect.dev.modules.training_program.dto.SemesterSubjectsDTO;
-import com.tl_connect.dev.modules.training_program.dto.SubjectDTO;
-import com.tl_connect.dev.modules.training_program.dto.SubjectPrerequisiteDTO;
-import com.tl_connect.dev.modules.training_program.dto.TrainingProgramDTO;
-import com.tl_connect.dev.modules.training_program.projection.SubjectPrerequisiteRow;
-import com.tl_connect.dev.modules.training_program.projection.TrainingProgramHeaderView;
-import com.tl_connect.dev.modules.training_program.projection.TrainingProgramSubjectRow;
+import com.tl_connect.dev.modules.study_program.projection.StudyProgramRow;
+import com.tl_connect.dev.modules.study_program.dto.StudyProgramListItemDTO;
+import com.tl_connect.dev.modules.study_program.dto.MajorDTO;
+import com.tl_connect.dev.modules.study_program.dto.SemesterSubjectsDTO;
+import com.tl_connect.dev.modules.study_program.dto.SubjectDTO;
+import com.tl_connect.dev.modules.study_program.dto.SubjectPrerequisiteDTO;
+import com.tl_connect.dev.modules.study_program.dto.StudyProgramDTO;
+import com.tl_connect.dev.modules.study_program.projection.SubjectPrerequisiteRow;
+import com.tl_connect.dev.modules.study_program.projection.StudyProgramHeaderView;
+import com.tl_connect.dev.modules.study_program.projection.StudyProgramSubjectRow;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class TrainingProgramService {
+public class StudyProgramService {
 
-        private final TrainingProgramRepository trainingProgramRepository;
+        private final StudyProgramRepository studyProgramRepository;
 
-        public TrainingProgramDTO getTrainingProgram(Long studentId) {
-                TrainingProgramHeaderView header = trainingProgramRepository
-                                .findTrainingProgramHeaderByStudentId(studentId)
-                                .orElseThrow(() -> new NotFoundException(
-                                                "Training program not found for student with id: " + studentId));
-
-                List<TrainingProgramSubjectRow> trainingProgramSubjects = trainingProgramRepository
-                                .findSubjectsByProgramId(header.getId());
-
-                List<SubjectPrerequisiteRow> subjectPrerequisitesRows = trainingProgramRepository
-                                .findSubjectPrerequisitesByProgramId(header.getId());
-
-                return mapTrainingProgram(header, trainingProgramSubjects, subjectPrerequisitesRows);
+        public List<StudyProgramListItemDTO> getAllStudyProgram(Long studentId) {
+                List<StudyProgramRow> studyPrograms = studyProgramRepository.findAllStudyProgram(studentId);
+                return studyPrograms.stream().map(
+                                studyProgram -> StudyProgramListItemDTO.builder()
+                                                .id(studyProgram.getId())
+                                                .studentCode(studyProgram.getStudentCode())
+                                                .studyProgramCode(studyProgram.getStudyProgramCode())
+                                                .studyProgramName(studyProgram.getStudyProgramName())
+                                                .isPrimary(studyProgram.getIsPrimary())
+                                                .build())
+                                .collect(Collectors.toList());
         }
 
-        private TrainingProgramDTO mapTrainingProgram(TrainingProgramHeaderView header,
-                        List<TrainingProgramSubjectRow> trainingProgramSubjects,
+        public StudyProgramDTO getStudyProgram(Long studyProgramId) {
+                StudyProgramHeaderView header = studyProgramRepository
+                                .findStudyProgramHeader(studyProgramId)
+                                .orElseThrow(() -> new NotFoundException(
+                                                "Study program not found for study program with id: "
+                                                                + studyProgramId));
+
+                List<StudyProgramSubjectRow> studyProgramSubjects = studyProgramRepository
+                                .findSubjectsByProgramId(studyProgramId);
+
+                List<SubjectPrerequisiteRow> subjectPrerequisitesRows = studyProgramRepository
+                                .findSubjectPrerequisitesByProgramId(studyProgramId);
+
+                return mapStudyProgram(header, studyProgramSubjects, subjectPrerequisitesRows);
+        }
+
+        private StudyProgramDTO mapStudyProgram(StudyProgramHeaderView header,
+                        List<StudyProgramSubjectRow> studyProgramSubjects,
                         List<SubjectPrerequisiteRow> subjectPrerequisitesRows) {
                 MajorDTO major = MajorDTO.builder()
                                 .majorCode(header.getMajorCode())
@@ -59,13 +75,13 @@ public class TrainingProgramService {
                                                         .build());
                 }
 
-                Map<Long, List<TrainingProgramSubjectRow>> groupedBySemester = trainingProgramSubjects.stream()
-                                .collect(Collectors.groupingBy(TrainingProgramSubjectRow::getSemesterId));
+                Map<Long, List<StudyProgramSubjectRow>> groupedBySemester = studyProgramSubjects.stream()
+                                .collect(Collectors.groupingBy(StudyProgramSubjectRow::getSemesterId));
 
                 List<SemesterSubjectsDTO> semesterSubjects = groupedBySemester.entrySet().stream()
                                 .map(entry -> {
-                                        List<TrainingProgramSubjectRow> rows = entry.getValue();
-                                        TrainingProgramSubjectRow first = rows.get(0);
+                                        List<StudyProgramSubjectRow> rows = entry.getValue();
+                                        StudyProgramSubjectRow first = rows.get(0);
 
                                         List<SubjectDTO> subjects = rows.stream()
                                                         .map(s -> {
@@ -99,13 +115,13 @@ public class TrainingProgramService {
                                 .sorted((s1, s2) -> s1.getSemesterStartDate().compareTo(s2.getSemesterStartDate()))
                                 .collect(Collectors.toList());
 
-                TrainingProgramDTO trainingProgram = TrainingProgramDTO.builder()
-                                .trainingProgramName(header.getTrainingProgramName())
-                                .yearStart(header.getYearStart())
+                StudyProgramDTO studyProgram = StudyProgramDTO.builder()
+                                .studyProgramName(header.getStudyProgramName())
+                                .yearStart(header.getStartYear())
                                 .totalCredits(header.getTotalCredits())
                                 .major(major)
                                 .semesters(semesterSubjects)
                                 .build();
-                return trainingProgram;
+                return studyProgram;
         }
 }

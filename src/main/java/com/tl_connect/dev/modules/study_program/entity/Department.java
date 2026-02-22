@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.training_program.entity;
+package com.tl_connect.dev.modules.study_program.entity;
 
 import java.time.LocalDateTime;
 
@@ -13,26 +13,26 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "majors")
+@Table(name = "departments")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Major {
+public class Department {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "major_code", unique = true, length = 20)
-    private String majorCode;
-
-    @Column(name = "major_name", length = 100)
-    private String majorName;
-
     @Column(name = "faculty_id", nullable = false)
     private Long facultyId;
+
+    @Column(name = "department_code", unique = true, length = 20)
+    private String departmentCode;
+
+    @Column(name = "department_name", length = 255)
+    private String departmentName;
 
     @CreationTimestamp
     @Column(name = "created_at")

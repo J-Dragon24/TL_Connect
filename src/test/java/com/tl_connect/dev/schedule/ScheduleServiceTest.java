@@ -25,7 +25,7 @@ import com.tl_connect.dev.modules.schedule.SemesterRepository;
 import com.tl_connect.dev.modules.schedule.dto.SemesterScheduleDTO;
 import com.tl_connect.dev.modules.schedule.dto.WeeklyScheduleDTO;
 import com.tl_connect.dev.modules.schedule.projection.ScheduleRow;
-import com.tl_connect.dev.modules.training_program.entity.Semester;
+import com.tl_connect.dev.modules.study_program.entity.Semester;
 
 @ExtendWith(MockitoExtension.class)
 class ScheduleServiceTest {

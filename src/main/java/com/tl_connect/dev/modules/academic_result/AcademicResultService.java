@@ -22,9 +22,11 @@ import lombok.RequiredArgsConstructor;
 public class AcademicResultService {
         private final AcademicResultRepository resultRepository;
 
-        public AcademicResultDTO getSubjectResult(Long studentId, String trainingProgramCode) {
-                List<SubjectResultRow> subjectResultsRows = resultRepository.findSubjectResult(studentId, trainingProgramCode);
-                List<SemesterSummaryView> semesterSummaries = resultRepository.findSemesterSummary(studentId, trainingProgramCode);
+        public AcademicResultDTO getSubjectResult(Long studentId, String studyProgramCode) {
+                List<SubjectResultRow> subjectResultsRows = resultRepository.findSubjectResult(studentId,
+                                studyProgramCode);
+                List<SemesterSummaryView> semesterSummaries = resultRepository.findSemesterSummary(studentId,
+                                studyProgramCode);
 
                 Map<String, List<SubjectResultRow>> groupedBySemester = subjectResultsRows.stream()
                                 .collect(Collectors.groupingBy(SubjectResultRow::getSemester));
@@ -62,7 +64,7 @@ public class AcademicResultService {
                 }).collect(Collectors.toList());
 
                 return AcademicResultDTO.builder()
-                                .trainingProgram(trainingProgramCode)
+                                .studyProgram(studyProgramCode)
                                 .semesterResults(semesterResults)
                                 .build();
         }
