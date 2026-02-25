@@ -2,11 +2,14 @@ package com.tl_connect.dev.modules.auth.service;
 
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
 
+import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.auth.AuthUserRepository;
 import com.tl_connect.dev.modules.auth.projection.JwtUserInfoView;
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
     private final AuthUserRepository authUserRepository;
     private JwtDecoder jwtDecoder;
@@ -17,12 +20,8 @@ public class AuthService {
         return jwtDecoder.decode(token);
     }
 
-    public AuthService(AuthUserRepository authUserRepository) {
-        this.authUserRepository = authUserRepository;
-    }
-
     public JwtUserInfoView getUserInfo(String microsoftId) {
         return authUserRepository.findStudentByMicrosoftId(microsoftId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new NotFoundException("User not found"));
     }
 }

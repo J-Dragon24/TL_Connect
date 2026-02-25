@@ -9,12 +9,12 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.core.common.types.JwtUserInfo;
 import com.tl_connect.dev.modules.auth.projection.JwtUserInfoView;
+import com.tl_connect.dev.modules.auth.service.AuthService;
 import com.tl_connect.dev.modules.auth.service.JWTService;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     
     private final JWTService jwtService;
-    private final AuthUserRepository authUserRepository;
+    private final AuthService authService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -31,8 +31,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         String micrsoftId = oidcUser.getAttributes().get("oid").toString();
 
-        JwtUserInfoView jwtUserInfoView = authUserRepository.findStudentByMicrosoftId(micrsoftId)
-        .orElseThrow(() -> new NotFoundException("User not found"));
+        JwtUserInfoView jwtUserInfoView = authService.getUserInfo(micrsoftId);
 
         JwtUserInfo jwtUserInfo = JwtUserInfo.builder()
         .userId(jwtUserInfoView.getStudentId())
@@ -41,12 +40,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         
         String token = jwtService.generateToken(jwtUserInfo);
         
-        response.setContentType("application/json");
-        response.getWriter().write("{\"token\": \"" + token + "\"}");
-
-        HttpSession session = request.getSession(false);
-        if(session != null) {
-            session.invalidate();
-        }
+        String redirectUrl = "myapp://login-success?token=" + token;
+        response.sendRedirect(redirectUrl);
     }
 }

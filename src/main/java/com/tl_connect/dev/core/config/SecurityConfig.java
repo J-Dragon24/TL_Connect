@@ -28,9 +28,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         auth -> auth
                                 .requestMatchers("/oauth2/**", "/login").permitAll()
-                                .anyRequest().permitAll())
-                .logout(
-                        logout -> logout.logoutSuccessUrl("/"))
+                                .anyRequest().authenticated())
+                // .logout(
+                //         logout -> logout.logoutSuccessUrl("/"))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .oauth2Login(oauth -> oauth
                         .successHandler(successHandler))

@@ -2,6 +2,8 @@ package com.tl_connect.dev.modules.application.entity;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,12 +32,16 @@ public class ApplicationAttachment {
     @Column(name = "application_id", nullable = false)
     private Long applicationId;
 
-    @Column(name = "file_ref", nullable = false)
-    private String fileRef;
+    @Column(name = "file_key", nullable = false)
+    private String fileKey;
 
-    @Column(name = "file_name", nullable = false)
-    private String fileName;
+    @Column(name = "original_filename", nullable = false)
+    private String originalFilename;
 
+    @Column(name = "file_size", nullable = false)
+    private Long fileSize;
+
+    @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 }

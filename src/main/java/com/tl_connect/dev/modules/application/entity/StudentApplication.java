@@ -33,8 +33,8 @@ public class StudentApplication {
     @Column(name = "application_type_id")
     private Long applicationTypeId;
 
-    @Column(name = "evidence_file")
-    private String evidenceFile;
+    @Column(name = "content")
+    private String content;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")

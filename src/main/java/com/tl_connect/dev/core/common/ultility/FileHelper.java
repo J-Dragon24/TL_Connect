@@ -27,5 +27,6 @@ public abstract class FileHelper {
 
     public abstract String uploadFile(MultipartFile file) throws IOException;
 
+    public abstract void deleteFile(String key);
     
 }

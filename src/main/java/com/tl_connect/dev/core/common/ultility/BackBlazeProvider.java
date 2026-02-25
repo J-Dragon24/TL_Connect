@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @Component
@@ -20,14 +21,22 @@ public class BackBlazeProvider extends FileHelper {
     private String bucketName;
 
     public String uploadFile(MultipartFile file) throws IOException {
-        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-        String pathToFile = "./" + fileName;
+        String key ="uploads/" + System.currentTimeMillis() + "_" + file.getOriginalFilename();
         PutObjectRequest request = PutObjectRequest.builder()
             .bucket(bucketName)
-            .key(pathToFile)
+            .key(key)
             .contentType(file.getContentType())
             .build();
         s3Client.putObject(request, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
-        return fileName;
+        return key;
+    }
+
+    @Override
+    public void deleteFile(String key) {
+        DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+            .bucket(bucketName)
+            .key(key)
+            .build();
+        s3Client.deleteObject(deleteObjectRequest);
     }
 }
