@@ -3,6 +3,7 @@ package com.tl_connect.dev.modules.auth.entity;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import com.tl_connect.dev.core.common.enums.UserStatus;
 
@@ -20,14 +21,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AuthUser {
+public class OAuthUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "microsoft_id", nullable = false, unique = true)
-    private String microsoftId;
+    @Column(name = "user_uuid", nullable = false, unique = true)
+    private String userUuid;
 
     @Column(name = "display_name")
     private String displayName;
@@ -43,6 +44,7 @@ public class AuthUser {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @Column(name = "last_login_at")
-    private LocalDateTime lastLoginAt;
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 }

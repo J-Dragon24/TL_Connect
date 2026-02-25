@@ -6,21 +6,21 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.tl_connect.dev.modules.auth.entity.AuthUser;
+import com.tl_connect.dev.modules.auth.entity.OAuthUser;
 import com.tl_connect.dev.modules.auth.projection.JwtUserInfoView;
 
 @Repository
-public interface AuthUserRepository extends JpaRepository<AuthUser, Long> {
+public interface AuthUserRepository extends JpaRepository<OAuthUser, Long> {
     @Query(value = """
             SELECT
-                a.microsoft_id AS microsoftId,
+                a.user_uuid AS userUuid,
                 s.id AS studentId,
                 r.code AS role
-            FROM auth_users a
-            JOIN students s ON a.id = s.auth_user_id
+            FROM oauth_users a
+            JOIN students s ON a.id = s.oauth_user_id
             JOIN user_roles ur ON a.id = ur.user_id
             JOIN roles r ON ur.role_id = r.id
-            WHERE a.microsoft_id = :microsoftId
+            WHERE a.user_uuid = :userUuid
             """, nativeQuery = true)
-    Optional<JwtUserInfoView> findStudentByMicrosoftId(String microsoftId);
+    Optional<JwtUserInfoView> findStudentByUserUuid(String userUuid);
 }

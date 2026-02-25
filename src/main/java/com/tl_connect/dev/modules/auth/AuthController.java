@@ -1,23 +1,28 @@
 package com.tl_connect.dev.modules.auth;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.tl_connect.dev.core.common.ultility.AuthHelper;
+import com.tl_connect.dev.core.common.exception.InvalidInputException;
+import com.tl_connect.dev.core.common.ultility.ResponseHelper;
+import com.tl_connect.dev.modules.auth.dto.OAuthUserInfoDTO;
+import com.tl_connect.dev.modules.auth.service.OAuthService;
+
+import lombok.RequiredArgsConstructor;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/api/v1/oauth2")
+@RequiredArgsConstructor
 public class AuthController {
 
-    private String hydrateUI(Model model, String fragment) {
-        model.addAttribute("bodyContent", String.format("content/%s.html", fragment));
-        return "base"; // base.html in /templates folder
-    }
+    private final OAuthService oauthService;
 
     @GetMapping
     public String index(Model model, Authentication user) {
@@ -25,9 +30,14 @@ public class AuthController {
         return "index";
     }
 
-    @GetMapping("/token_details")
-    public String tokenDetails(Model model, @AuthenticationPrincipal OidcUser principal) {
-        model.addAttribute("claims", AuthHelper.filterClaims(principal));
-        return hydrateUI(model, "token");
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody String idToken) {
+        if(idToken == null || idToken.isEmpty()){
+            throw new InvalidInputException("token is required and must be non-empty string");
+        }
+
+        OAuthUserInfoDTO userInfo = oauthService.loginWithMicrosoft(idToken);
+
+        return ResponseHelper.success("Login success", userInfo);    
     }
 }

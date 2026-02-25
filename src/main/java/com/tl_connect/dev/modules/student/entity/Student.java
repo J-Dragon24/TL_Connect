@@ -29,8 +29,8 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "auth_user_id", nullable = false, unique = true)
-    private Long authUserId;
+    @Column(name = "oauth_user_id", nullable = false, unique = true)
+    private Long oauthUserId;
 
     @Column(name = "student_class_id", nullable = false)
     private Long studentClassId;

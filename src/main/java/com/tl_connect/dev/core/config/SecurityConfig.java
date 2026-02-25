@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.tl_connect.dev.modules.auth.JwtAuthenticationFilter;
-import com.tl_connect.dev.modules.auth.OAuth2LoginSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -19,7 +18,6 @@ import com.tl_connect.dev.modules.auth.OAuth2LoginSuccessHandler;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtFilter;
-    private final OAuth2LoginSuccessHandler successHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -31,9 +29,7 @@ public class SecurityConfig {
                                 .anyRequest().authenticated())
                 // .logout(
                 //         logout -> logout.logoutSuccessUrl("/"))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
-                .oauth2Login(oauth -> oauth
-                        .successHandler(successHandler))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

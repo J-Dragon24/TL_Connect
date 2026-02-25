@@ -1,28 +1,56 @@
 package com.tl_connect.dev.core.common.ultility;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
+import org.springframework.security.oauth2.core.OAuth2Error;
+import org.springframework.security.oauth2.core.OAuth2TokenValidator;
+import org.springframework.security.oauth2.core.OAuth2TokenValidatorResult;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtDecoders;
+import org.springframework.security.oauth2.jwt.JwtException;
+import org.springframework.security.oauth2.jwt.JwtValidators;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.stereotype.Component;
 
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import com.tl_connect.dev.core.common.exception.UnauthorizeException;
 
+import jakarta.annotation.PostConstruct;
+
+@Component
 public class AuthHelper {
 
-    private AuthHelper() {
-        throw new IllegalStateException("Utility class");
+    @Value("${microsoft.tenant-id}")
+    private String tenantId;
+
+    @Value("${microsoft.client-id}")
+    private String clientId;
+
+    private JwtDecoder jwtDecoder;
+
+    @PostConstruct
+    public void init() {
+        String issuer = "https://login.microsoftonline.com/" + tenantId + "/v2.0";
+        NimbusJwtDecoder decoder = (NimbusJwtDecoder) JwtDecoders.fromIssuerLocation(issuer);
+
+        OAuth2TokenValidator<Jwt> audienceValidator = token ->
+            token.getAudience().contains(clientId)
+                ? OAuth2TokenValidatorResult.success()
+                : OAuth2TokenValidatorResult.failure(new OAuth2Error("invalid_token", "Invalid audience", null));
+
+        decoder.setJwtValidator(new DelegatingOAuth2TokenValidator<>(
+            JwtValidators.createDefaultWithIssuer(issuer),
+            audienceValidator
+        ));
+
+        this.jwtDecoder = decoder;
     }
 
-    public static Map<String, String> filterClaims(OidcUser principal) {
-        final String[] claimKeys = {"sub", "aud", "ver", "iss", "name", "oid", "preferred_username"};
-        final List<String> includeClaims = Arrays.asList(claimKeys);
-
-        Map<String,String> filteredClaims = new HashMap<>();
-        includeClaims.forEach(claim -> {
-            if (principal.getIdToken().getClaims().containsKey(claim)) {
-                filteredClaims.put(claim, principal.getIdToken().getClaims().get(claim).toString());
-            }
-        });
-        return filteredClaims;
+    public Jwt verify(String idToken) {
+        try {
+            return jwtDecoder.decode(idToken);
+        } catch (JwtException e) {
+            throw new UnauthorizeException("Invalid token");
+        }
     }
 }

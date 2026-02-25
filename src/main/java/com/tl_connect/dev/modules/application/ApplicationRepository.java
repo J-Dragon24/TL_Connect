@@ -11,7 +11,7 @@ import com.tl_connect.dev.modules.application.entity.StudentApplication;
 
 @Repository
 public interface ApplicationRepository extends JpaRepository<StudentApplication, Long> {
-    @Query(value = "SELECT * FROM application_type", nativeQuery = true)
+    @Query(value = "SELECT * FROM application_types", nativeQuery = true)
     List<ApplicationType> findAllApplicationType();
 
 }
