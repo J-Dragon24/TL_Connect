@@ -1,5 +1,6 @@
 package com.tl_connect.dev.modules.academic_result.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -41,7 +42,7 @@ public class StudentSemesterSummary {
     private Integer creditsPassed;
 
     @Column(name = "semester_gpa")
-    private Double semesterGpa;
+    private BigDecimal semesterGpa;
 
     @Column(name = "conduct_score")
     private Integer conductScore;

@@ -1,5 +1,6 @@
 package com.tl_connect.dev.core.common.ultility;
 
+import java.io.Console;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -21,14 +22,21 @@ public class BackBlazeProvider extends FileHelper {
     private String bucketName;
 
     public String uploadFile(MultipartFile file) throws IOException {
-        String key ="uploads/" + System.currentTimeMillis() + "_" + file.getOriginalFilename();
-        PutObjectRequest request = PutObjectRequest.builder()
-            .bucket(bucketName)
-            .key(key)
-            .contentType(file.getContentType())
-            .build();
-        s3Client.putObject(request, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
-        return key;
+        System.out.println("Uploading file: " + file.getOriginalFilename());
+        try{
+            String key ="uploads/" + System.currentTimeMillis() + "_" + file.getOriginalFilename();
+            PutObjectRequest request = PutObjectRequest.builder()
+                .bucket(bucketName)
+                .key(key)
+                .contentType(file.getContentType())
+                .build();
+            s3Client.putObject(request, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+            return key;
+        }catch(Exception e){
+            e.printStackTrace();
+            throw e;
+        }
+
     }
 
     @Override

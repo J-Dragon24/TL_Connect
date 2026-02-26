@@ -19,7 +19,7 @@ public class SummaryNotifyDTO {
     private Long id;
     private String title;
     private String sender;
-    private Boolean isRead;
     private TargetType targetType;
+    private LocalDateTime deadLine;
     private LocalDateTime createdAt;
 }

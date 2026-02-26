@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.tl_connect.dev.core.common.enums.LecturerStatus;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,8 +27,8 @@ public class Lecturer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "auth_user_id", nullable = false, unique = true)
-    private Long authUserId;
+    @Column(name = "oauth_user_id", nullable = false, unique = true)
+    private Long oauthUserId;
 
     @Column(name = "department_id")
     private Long departmentId;
@@ -42,6 +44,10 @@ public class Lecturer {
 
     @Column(name = "email")
     private String email;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private LecturerStatus status;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)

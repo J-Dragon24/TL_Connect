@@ -46,6 +46,9 @@ public class Subject {
     @Column(name = "practice_hours", nullable = false)
     private Integer practiceHours;
 
+    @Column(name = "is_active")
+    private Boolean isActive;
+
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;

@@ -26,9 +26,6 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "student_id")
-    private Long studentId;
-
     @Column(name = "title")
     private String title;
 
@@ -38,9 +35,6 @@ public class Notification {
     @Column(name = "sender", length = 225)
     private String sender;
 
-    @Column(name = "is_read")
-    private Boolean isRead;
-
     @Column(name = "target_type")
     @Enumerated(EnumType.STRING)
     private TargetType targetType;
@@ -48,8 +42,8 @@ public class Notification {
     @Column(name = "target_id")
     private Long targetId;
 
-    @Column(name = "deadline")
-    private LocalDateTime deadline;
+    @Column(name = "dead_line")
+    private LocalDateTime deadLine;
 
     @CreationTimestamp
     @Column(name = "created_at")

@@ -1,10 +1,12 @@
 package com.tl_connect.dev.modules.academic_result.projection;
 
+import java.math.BigDecimal;
+
 public interface SemesterSummaryView {
     String getSemester();
     Integer getCreditsRegistered();
     Integer getCreditsPassed();
-    Double getSemesterGpa();
+    BigDecimal getSemesterGpa();
     Integer getConductScore();
-    Double getCumulativeGpa();
+    BigDecimal getCumulativeGpa();
 }

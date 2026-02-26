@@ -8,8 +8,7 @@ public interface NotificationRow {
     Long getId();
     String getTitle();
     String getSender();
-    Boolean getIsRead();
     TargetType getTargetType();
     LocalDateTime getCreatedAt();
-    LocalDateTime getDeadline();
+    LocalDateTime getDeadLine();
 }

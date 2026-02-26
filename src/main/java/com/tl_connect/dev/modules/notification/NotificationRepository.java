@@ -17,10 +17,9 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
                 n.id AS id,
                 n.title AS title,
                 n.sender AS sender,
-                n.is_read AS isRead,
                 n.target_type AS targetType,
                 n.created_at AS createdAt,
-                n.deadline AS deadline
+                n.dead_line AS deadLine
             FROM notifications n
             LEFT JOIN student_classes sc 
                 ON n.target_id = sc.id

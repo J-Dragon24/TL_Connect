@@ -27,7 +27,8 @@ public class ScheduleController {
 
     @GetMapping("/weekly")
     public ResponseEntity<?> getWeeklySchedule(Authentication authentication,
-            @RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate) {
+            @RequestParam(name = "start_date", required = false) String startDate,
+            @RequestParam(name = "end_date", required = false) String endDate) {
         if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo userInfo)) {
             throw new UnauthorizeException("Authentication required");
         }
@@ -50,7 +51,7 @@ public class ScheduleController {
     }
 
     @GetMapping("/semester")
-    public ResponseEntity<?> getSemesterSchedule(Authentication authentication, @RequestParam String semesterName) {
+    public ResponseEntity<?> getSemesterSchedule(Authentication authentication, @RequestParam("semester_name") String semesterName) {
         if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo userInfo)) {
             throw new UnauthorizeException("Authentication required");
         }
@@ -61,7 +62,7 @@ public class ScheduleController {
 
     @GetMapping("/day-of-week")
     public ResponseEntity<?> getDayOfWeekSchedule(Authentication authentication,
-            @RequestParam(required = false) Integer dayOfWeek) {
+            @RequestParam(name = "day_of_week", required = false) Integer dayOfWeek) {
         if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo userInfo)) {
             throw new UnauthorizeException("Authentication required");
         }

@@ -10,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.tl_connect.dev.modules.auth.JwtAuthenticationFilter;
-
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -27,10 +25,13 @@ public class SecurityConfig {
                         auth -> auth
                                 .requestMatchers("/oauth2/**", "/login").permitAll()
                                 .anyRequest().authenticated())
-                // .logout(
-                //         logout -> logout.logoutSuccessUrl("/"))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }
+
+
+
+
+

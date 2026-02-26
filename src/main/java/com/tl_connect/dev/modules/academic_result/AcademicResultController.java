@@ -19,9 +19,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AcademicResultController {
     private final AcademicResultService resultService;
+    
 
     @GetMapping
-    public ResponseEntity<?> getMarks(Authentication authentication, @RequestParam String studyProgramCode) {
+    public ResponseEntity<?> getMarks(Authentication authentication,
+            @RequestParam(name = "ctdt") String studyProgramCode) {
         if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo userInfo)) {
             throw new UnauthorizeException("Authentication required");
         }

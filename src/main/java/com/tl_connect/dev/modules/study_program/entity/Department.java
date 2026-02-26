@@ -34,6 +34,9 @@ public class Department {
     @Column(name = "department_name", length = 255)
     private String departmentName;
 
+    @Column(name = "is_active")
+    private Boolean isActive;
+
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;

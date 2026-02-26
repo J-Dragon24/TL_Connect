@@ -19,7 +19,7 @@ public class DetailNotifyDTO {
     private String title;
     private String content;
     private String sender;
-    private Boolean isRead;
     private TargetType targetType;
+    private LocalDateTime deadLine;
     private LocalDateTime createdAt;
 }

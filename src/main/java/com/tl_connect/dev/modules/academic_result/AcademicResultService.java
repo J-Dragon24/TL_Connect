@@ -11,6 +11,7 @@ import com.tl_connect.dev.modules.academic_result.dto.SubjectResultDTO;
 import com.tl_connect.dev.modules.academic_result.projection.SemesterSummaryView;
 import com.tl_connect.dev.modules.academic_result.projection.SubjectResultRow;
 
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -54,7 +55,7 @@ public class AcademicResultService {
                                         .creditsPassed(semesterSummary.getCreditsPassed())
                                         .semesterGpa(semesterSummary.getSemesterGpa())
                                         .conductScore(semesterSummary.getConductScore())
-                                        .cumulativeGpa(semesterSummary.getCumulativeGpa())
+                                        .cumulativeGpa(semesterSummary.getCumulativeGpa().setScale(2, RoundingMode.HALF_UP))
                                         .build();
                         return SemesterResultDTO.builder()
                                         .semester(semester)

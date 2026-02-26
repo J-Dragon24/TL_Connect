@@ -8,29 +8,27 @@ spring:
     application:
         name: TL_Connect
     datasource:
-        url: jdbc:postgresql://localhost:5432/postgres
-        username: ${DB_USERNAME}
-        password: ${DB_PASSWORD}
+        url: jdbc:postgresql://localhost:5432/ThangLong
+        username: postgres
+        password: 123456
     jpa:
         database-platform: org.hibernate.dialect.PostgreSQLDialect
-    security:
-        oauth2:
-            client:
-                provider:
-                    azure:
-                        issuer-uri: https://login.microsoftonline.com/${TENANT_ID}/v2.0
-                        user-name-attribute: name
-                registration:
-                    azure-dev:
-                        provider: azure
-                        client-id: ${CLIENT_ID}
-                        client-secret: ${CLIENT_SECRET}
-                        scope:
-                            - openid
-                            - email
-                            - profile
-    b2:
-        aws_access_key_id: ${B2_BUCKET_ID   }
-        aws_secret_access_key: ${B2_APPLICATION_KEY}
-        end_point: https://s3.us-east-005.backblazeb2.com
-        bucket_name: ${B2_BUCKET_NAME}
+        properties:
+            hibernate:
+                default_schema: public
+        hibernate:
+            ddl-auto: validate
+        show-sql: true
+microsoft:
+    tenant-id: aec003eb-c537-4e8a-b0f3-1144a93a60bc
+    client-id: 77df993d-e728-4b8e-9770-6b409aa99552
+    client-secret: Ato8Q~g_FXr69xCkejOH2EZ2d4cIH1MxarOiGavX
+
+jwt:
+  secret: xBdqwDtJ6DuRJNtPLZESNWtvrWi4nBWwfT9Y8ma5PSj
+
+b2:
+    aws_access_key_id: 005ae5cc2083fe60000000002
+    aws_secret_access_key: K005fYW2dznJytAJBvPsA4NICbisFEM
+    end_point: https://s3.us-east-005.backblazeb2.com
+    bucket_name: student-application

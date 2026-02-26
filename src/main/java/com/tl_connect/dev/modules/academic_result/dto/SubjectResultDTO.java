@@ -1,5 +1,7 @@
 package com.tl_connect.dev.modules.academic_result.dto;
 
+import java.math.BigDecimal;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,8 +17,8 @@ public class SubjectResultDTO {
     private String subjectCode;
     private String subjectName;
     private Integer credits;
-    private Double score10;
-    private Double score4;
+    private BigDecimal score10;
+    private BigDecimal score4;
     private String letterGrade;
     private Boolean isPass;
 }

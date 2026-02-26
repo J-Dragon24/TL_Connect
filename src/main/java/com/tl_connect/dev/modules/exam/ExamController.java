@@ -20,8 +20,8 @@ import lombok.RequiredArgsConstructor;
 public class ExamController {
     private final ExamService examService;
 
-    @GetMapping("/")
-    public ResponseEntity<?> getExamSchedule(Authentication authentication, @RequestParam String semesterName) {
+    @GetMapping
+    public ResponseEntity<?> getExamSchedule(Authentication authentication, @RequestParam(name = "HocKy", required = true) String semesterName) {
         if(authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo userInfo)){
             throw new UnauthorizeException("Authentication required");
         }

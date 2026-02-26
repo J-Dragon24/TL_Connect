@@ -1,6 +1,5 @@
 package com.tl_connect.dev.core.common.ultility;
 
-import java.time.Instant;
 
 import org.springframework.http.ResponseEntity;
 
@@ -17,7 +16,6 @@ public class ResponseHelper {
             .code(responseStatus.getCode())
             .message(message)
             .data(data)
-            .timestamp(Instant.now())
             .build()
         );
     }

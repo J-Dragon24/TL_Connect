@@ -25,8 +25,8 @@ public class NotificationService {
                         .id(notificationRow.getId())
                         .title(notificationRow.getTitle())
                         .sender(notificationRow.getSender())
-                        .isRead(notificationRow.getIsRead())
                         .targetType(notificationRow.getTargetType())
+                        .deadLine(notificationRow.getDeadLine())
                         .createdAt(notificationRow.getCreatedAt())
                         .build())
                 .collect(Collectors.toList());
@@ -39,8 +39,8 @@ public class NotificationService {
                 .title(notification.getTitle())
                 .content(notification.getContent())
                 .sender(notification.getSender())
-                .isRead(notification.getIsRead())
                 .targetType(notification.getTargetType())
+                .deadLine(notification.getDeadLine())
                 .createdAt(notification.getCreatedAt())
                 .build();
     }

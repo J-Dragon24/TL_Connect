@@ -34,6 +34,9 @@ public class Major {
     @Column(name = "faculty_id", nullable = false)
     private Long facultyId;
 
+    @Column(name = "is_active")
+    private Boolean isActive;
+
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;

@@ -35,7 +35,7 @@ public class NotificationController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getDetailNotification(Authentication authentication, @PathVariable Long id) {
+    public ResponseEntity<?> getDetailNotification(Authentication authentication, @PathVariable("id") Long id) {
         if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo)) {
             throw new UnauthorizeException("Authentication is required");
         }

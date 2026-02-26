@@ -1,5 +1,6 @@
 package com.tl_connect.dev.modules.academic_result.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -38,10 +39,10 @@ public class StudentSubjectResult {
     private Integer credits;
 
     @Column(name = "score_10")
-    private Double score10;
+    private BigDecimal score10;
 
     @Column(name = "score_4")
-    private Double score4;
+    private BigDecimal score4;
 
     @Column(name = "letter_grade", length = 2)
     private String letterGrade;

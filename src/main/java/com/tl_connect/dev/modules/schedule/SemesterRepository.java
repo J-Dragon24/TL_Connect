@@ -13,23 +13,16 @@ import com.tl_connect.dev.modules.study_program.entity.Semester;
 @Repository
 public interface SemesterRepository extends JpaRepository<Semester, Long> {
     @Query(value = """
-            SELECT
-                sem.id AS id,
-                sem.semester_name AS semesterName,
-                sem.start_date AS startDate,
-                sem.end_date AS endDate
-            FROM semesters sem
-            WHERE :date BETWEEN sem.start_date AND sem.end_date
+            SELECT *
+            FROM semesters
+            WHERE :date BETWEEN start_date AND end_date
             """, nativeQuery = true)
-    Optional<Semester> findSemesterByDate(LocalDate date);
+    Optional<Semester> findSemesterByDate(@Param("date") LocalDate date);
 
     @Query(value = """
-            SELECT
-                sem.id AS id,
-                sem.start_date AS startDate,
-                sem.end_date AS endDate
-            FROM semesters sem
-            WHERE sem.semester_name = :semesterName
+            SELECT *
+            FROM semesters
+            WHERE semester_name = :semesterName
             """, nativeQuery = true)
     Optional<Semester> findSemesterByName(@Param("semesterName") String semesterName);
 }

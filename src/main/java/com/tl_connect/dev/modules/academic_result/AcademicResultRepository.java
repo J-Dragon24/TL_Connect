@@ -19,8 +19,8 @@ public interface AcademicResultRepository extends JpaRepository<StudentSubjectRe
                             sub.subject_code AS subjectCode,
                             sub.subject_name AS subjectName,
                             ssr.credits AS credits,
-                            ssr.score10 AS score10,
-                            ssr.score4 AS score4,
+                            ssr.score_10 AS score10,
+                            ssr.score_4 AS score4,
                             ssr.letter_grade AS letterGrade,
                             ssr.is_pass AS isPass
                         FROM student_subject_results ssr

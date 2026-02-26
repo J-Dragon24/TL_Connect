@@ -26,71 +26,74 @@ DROP TABLE IF EXISTS class_schedules CASCADE;
 DROP TABLE IF EXISTS course_classes CASCADE;
 DROP TABLE IF EXISTS students CASCADE;
 DROP TABLE IF EXISTS roles CASCADE;
-DROP TABLE IF EXISTS auth_users CASCADE;
+DROP TABLE IF EXISTS oauth_users CASCADE;
 DROP TABLE IF EXISTS notifications CASCADE;
 DROP TABLE IF EXISTS lecturers CASCADE;
 DROP TABLE IF EXISTS student_subject_results CASCADE;
 
-CREATE TABLE auth_users (
-  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  microsoft_id VARCHAR(255) UNIQUE NOT NULL,
+CREATE TABLE oauth_users (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  user_uuid VARCHAR(255) UNIQUE NOT NULL,
   display_name VARCHAR(255),
   email VARCHAR(255) UNIQUE NOT NULL,
   status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE' CHECK (status IN ('ACTIVE', 'BLOCKED')),
   created_at TIMESTAMP DEFAULT now(),
-  last_login_at TIMESTAMP
+  updated_at TIMESTAMP DEFAULT now()
 );
 
 CREATE TABLE roles (
-  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   code VARCHAR(50) UNIQUE NOT NULL,
   name VARCHAR(100),
-  status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE' CHECK (status IN ('ACTIVE','INACTIVE')),
+  is_active BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMP DEFAULT now(),
-  update_at TIMESTAMP DEFAULT now()
+  updated_at TIMESTAMP DEFAULT now()
 );
 
 CREATE TABLE user_roles (
-  user_id INT NOT NULL,
-  role_id INT NOT NULL,
+  user_id BIGINT NOT NULL,
+  role_id BIGINT NOT NULL,
   assigned_at TIMESTAMP DEFAULT now(),
   PRIMARY KEY (user_id, role_id),
-  FOREIGN KEY (user_id) REFERENCES auth_users(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES oauth_users(id) ON DELETE CASCADE,
   FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
 );
 
 CREATE TABLE faculties (
-  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   faculty_code VARCHAR(20) UNIQUE NOT NULL,
   faculty_name VARCHAR(255),
+  is_active BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now()
 );
 
 CREATE TABLE departments (
-  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  faculty_id INT NOT NULL,
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  faculty_id BIGINT NOT NULL,
   department_code VARCHAR(20) UNIQUE NOT NULL,
   department_name VARCHAR(255),
+  is_active BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
   FOREIGN KEY (faculty_id) REFERENCES faculties(id)
 );
 
 CREATE TABLE majors (
-  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   major_code VARCHAR(20) UNIQUE NOT NULL,
   major_name VARCHAR(100),
-  faculty_id INT NOT NULL,
+  faculty_id BIGINT NOT NULL,
+  is_active BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
   FOREIGN KEY (faculty_id) REFERENCES faculties(id)
 );
 
 CREATE TABLE student_classes (
-  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   class_code VARCHAR(20) UNIQUE NOT NULL,
-  major_id INT NOT NULL,
+  major_id BIGINT NOT NULL,
   start_year INT,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
@@ -98,38 +101,39 @@ CREATE TABLE student_classes (
 );
 
 CREATE TABLE lecturers (
-  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  auth_user_id INT UNIQUE NOT NULL,
-  department_id INT,
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  oauth_user_id BIGINT UNIQUE NOT NULL,
+  department_id BIGINT,
   full_name VARCHAR(100),
   lecturer_code VARCHAR(20) UNIQUE NOT NULL,
   phone_number VARCHAR(20),
   email VARCHAR(255),
+  status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE' CHECK (status IN ('ACTIVE', 'INACTIVE')),
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
-  FOREIGN KEY (auth_user_id) REFERENCES auth_users(id),
+  FOREIGN KEY (oauth_user_id) REFERENCES oauth_users(id),
   FOREIGN KEY (department_id) REFERENCES departments(id)
 );
 
 CREATE TABLE students (
-  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  auth_user_id INT UNIQUE NOT NULL,
-  student_class_id INT NOT NULL,
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  oauth_user_id BIGINT UNIQUE NOT NULL,
+  student_class_id BIGINT NOT NULL,
   full_name VARCHAR(255),
   student_code VARCHAR(20) UNIQUE NOT NULL,
   gender VARCHAR(20) NOT NULL DEFAULT 'NAM' CHECK (gender IN ('NAM', 'NU')),
-  date_of_birth TIMESTAMP,
+  date_of_birth DATE,
   status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE' CHECK (status IN ('ACTIVE','SUSPENDED','GRADUATED','DROPPED_OUT','DELETED')),
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
-  FOREIGN KEY (auth_user_id) REFERENCES auth_users(id),
+  FOREIGN KEY (oauth_user_id) REFERENCES oauth_users(id),
   FOREIGN KEY (student_class_id) REFERENCES student_classes(id)
 );
 
 CREATE TABLE academic_advisors (
-  id INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
-  lecturer_id int NOT NULL,
-  student_class_id int NOT NULL,
+  id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  lecturer_id BIGINT NOT NULL,
+  student_class_id BIGINT NOT NULL,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
   FOREIGN KEY (lecturer_id) REFERENCES lecturers(id),
@@ -137,8 +141,8 @@ CREATE TABLE academic_advisors (
 );
 
 CREATE TABLE student_contacts (
-  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  student_id INT UNIQUE NOT NULL,
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  student_id BIGINT UNIQUE NOT NULL,
   phone_number VARCHAR(20),
   address VARCHAR(255),
   email_personal VARCHAR(255),
@@ -149,8 +153,8 @@ CREATE TABLE student_contacts (
 );
 
 CREATE TABLE emergency_contacts (
-  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  student_id INT UNIQUE NOT NULL,
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  student_id BIGINT UNIQUE NOT NULL,
   full_name VARCHAR(100),
   phone_number VARCHAR(20),
   address VARCHAR(255),
@@ -160,8 +164,8 @@ CREATE TABLE emergency_contacts (
 );
 
 CREATE TABLE identity_cards (
-  id INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
-  student_id INT UNIQUE NOT NULL,
+  id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  student_id BIGINT UNIQUE NOT NULL,
   card_number VARCHAR(20) UNIQUE NOT NULL,
   card_type VARCHAR(20) NOT NULL DEFAULT 'CCCD' CHECK (card_type IN ('CCCD','CMND')),
   issued_date DATE,
@@ -172,8 +176,8 @@ CREATE TABLE identity_cards (
 );
 
 CREATE TABLE health_insurances (
-  id INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
-  student_id INT NOT NULL,
+  id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  student_id BIGINT NOT NULL,
   insurance_number VARCHAR(20) UNIQUE,
   provider VARCHAR(100),
   valid_from DATE,
@@ -186,8 +190,8 @@ CREATE TABLE health_insurances (
 );
 
 CREATE TABLE academic_infos (
-  id INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
-  student_id INT NOT NULL,
+  id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  student_id BIGINT NOT NULL,
   cohort VARCHAR(20),
   position VARCHAR(50),
   education_mode VARCHAR(20) NOT NULL DEFAULT 'CHINH_QUY' CHECK (education_mode IN ('CHINH_QUY','LIEN_THONG')),
@@ -196,11 +200,24 @@ CREATE TABLE academic_infos (
   FOREIGN KEY (student_id) REFERENCES students(id)
 );
 
+CREATE TABLE study_programs (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  major_id BIGINT NOT NULL,
+  study_program_code VARCHAR(20),
+  study_program_name VARCHAR(255),
+  total_credits INT,
+  start_year INT NOT NULL,
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now(),
+
+  FOREIGN KEY (major_id) REFERENCES majors(id)
+);
+
 CREATE TABLE student_majors (
-  id INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
-  student_id INT NOT NULL,
-  major_id INT NOT NULL,
-  study_program_id INT NOT NULL,
+  id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  student_id BIGINT NOT NULL,
+  major_id BIGINT NOT NULL,
+  study_program_id BIGINT NOT NULL,
   is_primary BOOLEAN,
   start_year INT,
   end_year INT,
@@ -211,14 +228,15 @@ CREATE TABLE student_majors (
 );
 
 CREATE TABLE subjects (
-  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  faculty_id INT,
-  department_id INT,
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  faculty_id BIGINT,
+  department_id BIGINT,
   subject_code VARCHAR(20) UNIQUE NOT NULL,
   subject_name VARCHAR(255) NOT NULL,
   credits INT NOT NULL,
   lecture_hours INT,
   practice_hours INT,
+  is_active BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
   FOREIGN KEY (faculty_id) REFERENCES faculties(id),
@@ -226,8 +244,8 @@ CREATE TABLE subjects (
 );
 
 CREATE TABLE subject_prerequisites (
-  subject_id INT NOT NULL,
-  prerequisite_subject_id INT NOT NULL,
+  subject_id BIGINT NOT NULL,
+  prerequisite_subject_id BIGINT NOT NULL,
   created_at TIMESTAMP DEFAULT now(),
   PRIMARY KEY (subject_id, prerequisite_subject_id),
   FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE,
@@ -235,7 +253,7 @@ CREATE TABLE subject_prerequisites (
 );
 
 CREATE TABLE semesters (
-  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   semester_name VARCHAR(50),
   start_date DATE,
   end_date DATE,
@@ -243,23 +261,10 @@ CREATE TABLE semesters (
   updated_at TIMESTAMP DEFAULT now()
 );
 
-CREATE TABLE study_programs (
-  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  major_id INT NOT NULL,
-  traing_program_code VARCHAR(20),
-  study_program_name VARCHAR(255),
-  total_credits INT,
-  start_year INT NOT NULL,
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now(),
-
-  FOREIGN KEY (major_id) REFERENCES majors(id)
-);
-
 CREATE TABLE study_program_subjects (
-  study_program_id INT NOT NULL,
-  subject_id INT NOT NULL,
-  semester_id INT NOT NULL,
+  study_program_id BIGINT NOT NULL,
+  subject_id BIGINT NOT NULL,
+  semester_id BIGINT NOT NULL,
 
   elective_group VARCHAR(50),
   is_required BOOLEAN,
@@ -275,10 +280,10 @@ CREATE TABLE study_program_subjects (
 );
 
 CREATE TABLE course_classes (
-  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  lecturer_id INT,
-  subject_id INT NOT NULL,
-  semester_id INT NOT NULL,
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  lecturer_id BIGINT,
+  subject_id BIGINT NOT NULL,
+  semester_id BIGINT NOT NULL,
   class_code VARCHAR(20),
   class_name VARCHAR(100),
   created_at TIMESTAMP DEFAULT now(),
@@ -289,9 +294,9 @@ CREATE TABLE course_classes (
 );
 
 CREATE TABLE student_course_classes (
-  id INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
-  student_id INT NOT NULL,
-  course_class_id INT NOT NULL,
+  id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  student_id BIGINT NOT NULL,
+  course_class_id BIGINT NOT NULL,
   created_at TIMESTAMP DEFAULT now(),
   UNIQUE (student_id, course_class_id),
   FOREIGN KEY (student_id) REFERENCES students(id),
@@ -299,8 +304,8 @@ CREATE TABLE student_course_classes (
 );
 
 CREATE TABLE class_schedules (
-  id INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
-  course_class_id INT NOT NULL,
+  id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  course_class_id BIGINT NOT NULL,
   day_of_week INT NOT NULL CHECK (day_of_week BETWEEN 2 AND 8),
   start_period INT,
   end_period INT NOT NULL CHECK (end_period >= start_period),
@@ -313,10 +318,10 @@ CREATE TABLE class_schedules (
 );
 
 CREATE TABLE student_subject_results (
-  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  student_id INT NOT NULL,
-  subject_id INT NOT NULL,
-  semester_id INT NOT NULL,
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  student_id BIGINT NOT NULL,
+  subject_id BIGINT NOT NULL,
+  semester_id BIGINT NOT NULL,
   credits INT NOT NULL,
   score_10 DECIMAL(4,2),
   score_4 DECIMAL(3,2),
@@ -330,10 +335,10 @@ CREATE TABLE student_subject_results (
 );
 
 CREATE TABLE student_semester_summaries (
-  id INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
-  student_id INT NOT NULL,
-  study_program_id INT NOT NULL,
-  semester_id INT NOT NULL,
+  id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  student_id BIGINT NOT NULL,
+  study_program_id BIGINT NOT NULL,
+  semester_id BIGINT NOT NULL,
   credits_registered INT,
   credits_passed INT,
   semester_gpa DECIMAL(4,2),
@@ -346,9 +351,9 @@ CREATE TABLE student_semester_summaries (
 );
 
 CREATE TABLE exam_schedules (
-  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  course_class_id INT NOT NULL,
-  semester_id INT NOT NULL,
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  course_class_id BIGINT NOT NULL,
+  semester_id BIGINT NOT NULL,
   exam_date DATE NOT NULL,
   start_time TIME NOT NULL,
   end_time TIME NOT NULL CHECK (end_time > start_time),
@@ -364,9 +369,9 @@ CREATE TABLE exam_schedules (
 );
 
 CREATE TABLE student_exam_registrations (
-  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  student_id INT NOT NULL,
-  exam_schedule_id INT NOT NULL,
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  student_id BIGINT NOT NULL,
+  exam_schedule_id BIGINT NOT NULL,
   exam_attempt INT NOT NULL,
   attendance_status VARCHAR(20) NOT NULL DEFAULT 'UPCOMING' CHECK (attendance_status IN ('ATTENDED','ABSENT','UPCOMING')),
   exam_status VARCHAR(20) NOT NULL DEFAULT 'NOT_YET' CHECK (exam_status IN ('NOT_YET','DONE')),
@@ -380,41 +385,43 @@ CREATE TABLE student_exam_registrations (
 );
 
 CREATE TABLE application_types (
-  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   code VARCHAR(100) UNIQUE NOT NULL,
   name VARCHAR(255),
   created_at TIMESTAMP DEFAULT now()
 );
 
 CREATE TABLE student_applications (
-  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  student_id INT NOT NULL,
-  application_type_id INT NOT NULL,
-  context TEXT,
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  student_id BIGINT NOT NULL,
+  application_type_id BIGINT NOT NULL,
+  content TEXT,
   status VARCHAR(20) NOT NULL DEFAULT 'PENDING' CHECK (status IN ('PENDING','APPROVED','REJECTED')),
   created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now(),
 
   FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
   FOREIGN KEY (application_type_id) REFERENCES application_types(id)
 );
 
 CREATE TABLE application_attachments (
-  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  application_id INT NOT NULL,
-  file_ref VARCHAR(255),
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  application_id BIGINT NOT NULL,
+  file_key VARCHAR(255),
   original_filename VARCHAR(255),
+  file_size BIGINT,
   created_at TIMESTAMP DEFAULT now(),
 
   FOREIGN KEY (application_id) REFERENCES student_applications(id) ON DELETE CASCADE
 );
 
 CREATE TABLE notifications (
-  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
   content TEXT NOT NULL,
   sender VARCHAR(255),
   target_type VARCHAR(20) NOT NULL DEFAULT 'ALL' CHECK (target_type IN ('ALL','CLASS','STUDENT')),
-  target_id INT,
+  target_id BIGINT,
   dead_line TIMESTAMP,
   created_at TIMESTAMP DEFAULT now()
 );

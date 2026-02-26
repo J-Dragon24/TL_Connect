@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.tl_connect.dev.core.common.enums.ApplicationStatus;
 import com.tl_connect.dev.core.common.ultility.FileHelper;
 import com.tl_connect.dev.modules.application.dto.ApplicationSubmitDTO;
 import com.tl_connect.dev.modules.application.dto.ApplicationTypeDTO;
@@ -43,6 +44,7 @@ public class ApplicationService {
         List<String> fileKeys = new ArrayList<>();
 
         try {
+            System.out.println("Uploading files...");
             for (MultipartFile file : files) {
                 fileKeys.add(fileHelper.uploadFile(file));
             }
@@ -57,6 +59,7 @@ public class ApplicationService {
             .studentId(studentId)
             .applicationTypeId(applicationTypeId)
             .content(content)
+            .status(ApplicationStatus.PENDING)
             .build()
         );
 

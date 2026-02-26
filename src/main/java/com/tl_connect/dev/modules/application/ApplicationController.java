@@ -38,7 +38,7 @@ public class ApplicationController {
     public ResponseEntity<?> submit(
             Authentication authentication,
             @RequestParam("file") List<MultipartFile> files,
-            @RequestParam("applicationType") Long applicationType,
+            @RequestParam("application-type") Long applicationType,
             @RequestParam("content") String content) throws IOException {
         if (files == null || files.isEmpty()) {
             throw new InvalidInputException("File is empty");
