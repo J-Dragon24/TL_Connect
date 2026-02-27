@@ -32,7 +32,6 @@ public class StudyProgramService {
                 List<StudyProgramRow> studyPrograms = studyProgramRepository.findAllStudyProgram(studentId);
                 return studyPrograms.stream().map(
                                 studyProgram -> StudyProgramListItemDTO.builder()
-                                                .id(studyProgram.getId())
                                                 .studentCode(studyProgram.getStudentCode())
                                                 .studyProgramCode(studyProgram.getStudyProgramCode())
                                                 .studyProgramName(studyProgram.getStudyProgramName())
@@ -41,18 +40,18 @@ public class StudyProgramService {
                                 .collect(Collectors.toList());
         }
 
-        public StudyProgramDTO getStudyProgram(Long studyProgramId) {
+        public StudyProgramDTO getStudyProgram(String studyProgramCode) {
                 StudyProgramHeaderView header = studyProgramRepository
-                                .findStudyProgramHeader(studyProgramId)
+                                .findStudyProgramHeader(studyProgramCode)
                                 .orElseThrow(() -> new NotFoundException(
-                                                "Study program not found for study program with id: "
-                                                                + studyProgramId));
+                                                "Study program not found for study program with code: "
+                                                                + studyProgramCode));
 
                 List<StudyProgramSubjectRow> studyProgramSubjects = studyProgramRepository
-                                .findSubjectsByProgramId(studyProgramId);
+                                .findSubjectsByProgramId(header.getId());
 
                 List<SubjectPrerequisiteRow> subjectPrerequisitesRows = studyProgramRepository
-                                .findSubjectPrerequisitesByProgramId(studyProgramId);
+                                .findSubjectPrerequisitesByProgramId(header.getId());
 
                 return mapStudyProgram(header, studyProgramSubjects, subjectPrerequisitesRows);
         }

@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tl_connect.dev.core.common.exception.InvalidInputException;
+import com.tl_connect.dev.core.common.exception.UnauthorizeException;
 import com.tl_connect.dev.core.common.types.JwtPayload;
 import com.tl_connect.dev.core.common.types.JwtUserInfo;
 
@@ -77,7 +79,7 @@ public class JWTService {
         try{
             String[] parts = token.split("\\.");
             if (parts.length != 3) {
-                throw new RuntimeException("Invalid JWT format");
+                throw new InvalidInputException("Invalid JWT format");
             }
 
             String headerBase64 = parts[0];
@@ -89,7 +91,7 @@ public class JWTService {
             String expectedEncodedSignature = base64UrlEncode(expectedSignature);
 
             if (!expectedEncodedSignature.equals(signatureBase64)) {
-                throw new RuntimeException("Invalid JWT signature");
+                throw new UnauthorizeException("Invalid JWT signature");
             }
 
             return objectMapper.readValue(base64UrlDecode(payloadBase64), JwtPayload.class);

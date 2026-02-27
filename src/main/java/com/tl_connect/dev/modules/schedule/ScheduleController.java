@@ -51,7 +51,7 @@ public class ScheduleController {
     }
 
     @GetMapping("/semester")
-    public ResponseEntity<?> getSemesterSchedule(Authentication authentication, @RequestParam("semester_name") String semesterName) {
+    public ResponseEntity<?> getSemesterSchedule(Authentication authentication, @RequestParam(name = "HocKy", required = true) String semesterName) {
         if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo userInfo)) {
             throw new UnauthorizeException("Authentication required");
         }

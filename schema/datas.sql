@@ -125,8 +125,8 @@ INSERT INTO semesters (semester_name, start_date, end_date) VALUES
 ('HK2 2021-2022', '2022-02-01', '2022-06-30'),
 ('HK1 2022-2023', '2022-09-01', '2023-01-15'),
 ('HK2 2022-2023', '2023-02-01', '2023-06-30'),
-('HK1 2023-2024', '2023-09-01', '2024-01-15'),
-('HK2 2023-2024', '2024-02-01', '2024-06-30');
+('HK1 2025-2026', '2025-09-01', '2026-01-15'),
+('HK2 2025-2026', '2025-02-01', '2026-06-30');
 
 -- study_programs
 INSERT INTO study_programs (major_id, study_program_code, study_program_name, total_credits, start_year) VALUES
@@ -345,5 +345,17 @@ INSERT INTO notifications (title, content, sender, target_type, target_id, dead_
 ('Lich bao ve do an cuoi ky',
  'Sinh vien lop KTPM2022 xem lich bao ve do an mon Lap trinh web.',
  'Giang vien Tran Thi Bich', 'CLASS', 4, '2023-06-20 17:00:00');
+
+INSERT INTO grade_scale (min_score, max_score, letter_grade) VALUES
+(9.50, 10.00, 'A+'),
+(9.00, 9.50,  'A'),
+(8.50, 9.00,  'A-'),
+(8.00, 8.50,  'B+'),
+(7.50, 8.00,  'B'),
+(7.00, 7.50,  'B-'),
+(6.50, 7.00,  'C'),
+(6.00, 7.50,  'D'),
+(5.00, 6.00,  'E'),
+(0.00, 5.00,  'F');
 
  COMMIT;

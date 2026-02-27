@@ -19,7 +19,6 @@ public interface StudyProgramRepository extends JpaRepository<StudyProgram, Long
 
     @Query(value = """
             SELECT
-                sp.id AS id,
                 s.student_code AS studentCode,
                 sp.study_program_code AS studyProgramCode,
                 sp.study_program_name AS studyProgramName,
@@ -33,6 +32,7 @@ public interface StudyProgramRepository extends JpaRepository<StudyProgram, Long
 
     @Query(value = """
             SELECT
+                sp.id AS id,
                 sp.study_program_name AS studyProgramName,
                 sp.start_year AS startYear,
                 sp.total_credits AS totalCredits,
@@ -42,9 +42,9 @@ public interface StudyProgramRepository extends JpaRepository<StudyProgram, Long
             FROM study_programs sp
             JOIN majors m ON sp.major_id = m.id
             JOIN faculties f ON m.faculty_id = f.id
-            WHERE sp.id = :studyProgramId
+            WHERE sp.study_program_code = :studyProgramCode
             """, nativeQuery = true)
-    Optional<StudyProgramHeaderView> findStudyProgramHeader(@Param("studyProgramId") Long studyProgramId);
+    Optional<StudyProgramHeaderView> findStudyProgramHeader(@Param("studyProgramCode") String studyProgramCode);
 
     @Query(value = """
             SELECT

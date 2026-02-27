@@ -38,6 +38,6 @@ public class AuthController {
 
         OAuthUserInfoDTO userInfo = oauthService.loginWithMicrosoft(idToken);
 
-        return ResponseHelper.success("Login success", userInfo);    
+        return ResponseHelper.success("Login successful", userInfo);    
     }
 }

@@ -1,6 +1,5 @@
 package com.tl_connect.dev.core.common.ultility;
 
-import java.io.Console;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +11,7 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import com.tl_connect.dev.core.common.exception.ExternalException;
 
 @Component
 @RequiredArgsConstructor
@@ -33,8 +33,7 @@ public class BackBlazeProvider extends FileHelper {
             s3Client.putObject(request, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
             return key;
         }catch(Exception e){
-            e.printStackTrace();
-            throw e;
+            throw new ExternalException("Upload file failed");
         }
 
     }

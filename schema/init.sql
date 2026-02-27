@@ -30,6 +30,7 @@ DROP TABLE IF EXISTS oauth_users CASCADE;
 DROP TABLE IF EXISTS notifications CASCADE;
 DROP TABLE IF EXISTS lecturers CASCADE;
 DROP TABLE IF EXISTS student_subject_results CASCADE;
+DROP TABLE IF EXISTS grade_scale CASCADE;
 
 CREATE TABLE oauth_users (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -342,7 +343,12 @@ CREATE TABLE student_semester_summaries (
   credits_registered INT,
   credits_passed INT,
   semester_gpa DECIMAL(4,2),
+  letter_gpa VARCHAR(2),
   conduct_score INT,
+  activity_score DECIMAL(4,2),
+  letter_activity_score VARCHAR(2),
+  group_contribution DECIMAL(4,2),
+  letter_group_contribution VARCHAR(2),
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
   FOREIGN KEY (study_program_id) REFERENCES study_programs(id),
@@ -388,7 +394,8 @@ CREATE TABLE application_types (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   code VARCHAR(100) UNIQUE NOT NULL,
   name VARCHAR(255),
-  created_at TIMESTAMP DEFAULT now()
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
 );
 
 CREATE TABLE student_applications (
@@ -424,6 +431,15 @@ CREATE TABLE notifications (
   target_id BIGINT,
   dead_line TIMESTAMP,
   created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE grade_scale (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  min_score DECIMAL(4,2) NOT NULL,
+  max_score DECIMAL(4,2) NOT NULL,
+  letter_grade VARCHAR(2) NOT NULL UNIQUE,
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
 );
 
 

@@ -36,9 +36,9 @@ public class StudyProgramController {
         return ResponseHelper.success("Study programs retrieved successfully", result);
     }
 
-    @GetMapping("/{studyProgramId}")
-    public ResponseEntity<?> getStudyProgram(@PathVariable("studyProgramId") Long studyProgramId) {
-        StudyProgramDTO result = studyProgramService.getStudyProgram(studyProgramId);
+    @GetMapping("/{studyProgramCode}")
+    public ResponseEntity<?> getStudyProgram(@PathVariable("studyProgramCode") String studyProgramCode) {
+        StudyProgramDTO result = studyProgramService.getStudyProgram(studyProgramCode);
         return ResponseHelper.success("Study program retrieved successfully", result);
     }
 }
