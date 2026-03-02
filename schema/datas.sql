@@ -1,7 +1,41 @@
 BEGIN;
 SET CONSTRAINTS ALL DEFERRED;
 
-TRUNCATE TABLE oauth_users RESTART IDENTITY CASCADE;
+TRUNCATE TABLE 
+  application_attachments,
+  student_applications,
+  application_types,
+  notifications,
+  student_exam_registrations,
+  exam_schedules,
+  student_semester_summaries,
+  student_subject_results,
+  class_schedules,
+  student_course_classes,
+  course_classes,
+  study_program_subjects,
+  subject_prerequisites,
+  subjects,
+  academic_infos,
+  health_insurances,
+  identity_cards,
+  emergency_contacts,
+  student_contacts,
+  academic_advisors,
+  students,
+  lecturers,
+  user_roles,
+  roles,
+  student_majors,
+  study_programs,
+  student_classes,
+  majors,
+  departments,
+  faculties,
+  semesters,
+  grade_scale,
+  oauth_users
+RESTART IDENTITY CASCADE;
 
 -- oauth_users
 INSERT INTO oauth_users (user_uuid, display_name, email, status) VALUES
@@ -111,14 +145,6 @@ INSERT INTO health_insurances (student_id, insurance_number, provider, valid_fro
 (4, 'HS4010004444', 'BHXH ĐN',  '2023-01-01', '2023-12-31', 'BV C Đà Nẵng', 'EXPIRED'),
 (5, 'HS4010005555', 'BHXH HCM', '2024-06-01', '2025-05-31', 'BV Nhân dân 115', 'ACTIVE');
 
--- academic_infos
-INSERT INTO academic_infos (student_id, cohort, position, education_mode) VALUES
-(1, 'K2021', 'Lớp trưởng', 'CHINH_QUY'),
-(2, 'K2021', NULL,          'CHINH_QUY'),
-(3, 'K2022', 'Lớp phó',    'CHINH_QUY'),
-(4, 'K2021', NULL,          'LIEN_THONG'),
-(5, 'K2022', NULL,          'CHINH_QUY');
-
 -- semesters
 INSERT INTO semesters (semester_name, start_date, end_date) VALUES
 ('HK1 2021-2022', '2021-09-01', '2022-01-15'),
@@ -144,6 +170,15 @@ INSERT INTO student_majors (student_id, major_id, study_program_id, is_primary, 
 (5, 3, 4, TRUE,  2022, NULL, 'STUDYING'),
 -- sinh vien 1 học thêm ngành 2
 (1, 2, 3, FALSE, 2022, NULL, 'STUDYING');
+
+-- academic_infos
+INSERT INTO academic_infos (student_major_id, cohort, position, education_mode) VALUES
+(1, 'K2021', 'Lớp trưởng', 'CHINH_QUY'),
+(2, 'K2021', NULL,          'CHINH_QUY'),
+(3, 'K2022', 'Lớp phó',    'CHINH_QUY'),
+(4, 'K2021', NULL,          'LIEN_THONG'),
+(5, 'K2021', NULL,          'LIEN_THONG'),
+(6, 'K2022', NULL,          'CHINH_QUY');
 
 -- subjects
 INSERT INTO subjects (faculty_id, department_id, subject_code, subject_name, credits, lecture_hours, practice_hours, is_active) VALUES
@@ -222,7 +257,7 @@ INSERT INTO class_schedules (course_class_id, day_of_week, start_period, end_per
 (8, 7, 1, 3,  '07:00', '09:30', 'B203'); -- thứ 7
 
 -- exam_schedules
-INSERT INTO exam_schedules (course_class_id, semester_id, exam_date, start_time, end_time, exam_room, exam_location, exam_format, exam_type, note) VALUES
+INSERT INTO exam_schedules (subject_id, semester_id, exam_date, start_time, end_time, exam_room, exam_location, exam_format, exam_type, note) VALUES
 (1, 1, '2022-01-10', '07:30', '09:30', 'P101', 'Co so 1', 'TRAC_NGHIEM', 'GIUA_KY',  NULL),
 (2, 1, '2022-01-10', '07:30', '09:30', 'P102', 'Co so 1', 'TRAC_NGHIEM', 'GIUA_KY',  NULL),
 (3, 2, '2022-06-15', '07:30', '09:30', 'P201', 'Co so 1', 'TU_LUAN',     'CUOI_KY',  NULL),
@@ -233,22 +268,22 @@ INSERT INTO exam_schedules (course_class_id, semester_id, exam_date, start_time,
 (8, 4, '2023-06-11', '07:30', '09:30', 'P102', 'Co so 1', 'TU_LUAN',     'CUOI_KY',  NULL);
 
 -- student_exam_registrations
-INSERT INTO student_exam_registrations (student_id, exam_schedule_id, exam_attempt, attendance_status, exam_status) VALUES
-(1, 1, 1, 'ATTENDED', 'DONE'),
-(2, 2, 1, 'ATTENDED', 'DONE'),
-(3, 1, 1, 'ATTENDED', 'DONE'),
-(1, 3, 1, 'ATTENDED', 'DONE'),
-(2, 3, 1, 'ABSENT',   'DONE'),
-(3, 3, 1, 'ATTENDED', 'DONE'),
-(1, 4, 1, 'ATTENDED', 'DONE'),
-(2, 4, 1, 'ATTENDED', 'DONE'),
-(1, 5, 1, 'ATTENDED', 'DONE'),
-(2, 5, 1, 'ATTENDED', 'DONE'),
+INSERT INTO student_exam_registrations (student_id, exam_schedule_id, exam_attempt, attendance_status) VALUES
+(1, 1, 1, 'ATTENDED'),
+(2, 2, 1, 'ATTENDED'),
+(3, 1, 1, 'ATTENDED'),
+(1, 3, 1, 'ATTENDED'),
+(2, 3, 1, 'ABSENT'),
+(3, 3, 1, 'ATTENDED'),
+(1, 4, 1, 'ATTENDED'),
+(2, 4, 1, 'ATTENDED'),
+(1, 5, 1, 'ATTENDED'),
+(2, 5, 1, 'ATTENDED'),
 -- thi lan 2
-(2, 3, 2, 'ATTENDED', 'DONE'),
+(2, 3, 2, 'ATTENDED'),
 -- upcoming
-(5, 7, 1, 'UPCOMING', 'NOT_YET'),
-(5, 8, 1, 'UPCOMING', 'NOT_YET');
+(5, 7, 1, 'UPCOMING'),
+(5, 8, 1, 'UPCOMING');
 
 -- student_subject_results
 INSERT INTO student_subject_results (student_id, subject_id, semester_id, credits, score_10, score_4, letter_grade, is_pass) VALUES
@@ -275,21 +310,21 @@ INSERT INTO student_subject_results (student_id, subject_id, semester_id, credit
 (5, 2, 2, 3, 7.5,  3.0,  'B',  TRUE);
 
 -- student_semester_summaries
-INSERT INTO student_semester_summaries (student_id, study_program_id, semester_id, credits_registered, credits_passed, semester_gpa, conduct_score) VALUES
+INSERT INTO student_semester_summaries (student_id, study_program_id, semester_id, credits_registered, credits_passed, semester_gpa, conduct_score, activity_score, group_contribution) VALUES
 -- SV Duc
-(1, 1, 1, 3,  3,  3.5,  85),
-(1, 1, 2, 6,  6,  3.2,  88),
-(1, 1, 3, 6,  6,  2.8,  80),
+(1, 1, 1, 3,  3,  3.5,  85, 5.0, 5.0),
+(1, 1, 2, 6,  6,  3.2,  88, 5.0, 5.0),
+(1, 1, 3, 6,  6,  2.8,  80, 5.0, 5.0),
 -- SV Em
-(2, 1, 1, 3,  0,  1.0,  75),
-(2, 1, 2, 9,  9,  2.7,  78),
-(2, 1, 3, 6,  6,  2.1,  76),
+(2, 1, 1, 3,  0,  1.0,  75, 5.0, 5.0),
+(2, 1, 2, 9,  9,  2.7,  78, 5.0, 5.0),
+(2, 1, 3, 6,  6,  2.1,  76, 5.0, 5.0),
 -- SV Hung
-(3, 2, 1, 3,  3,  4.0,  90),
-(3, 2, 2, 6,  6,  3.4,  92),
+(3, 2, 1, 3,  3,  4.0,  90, 5.0, 5.0),
+(3, 2, 2, 6,  6,  3.4,  92, 5.0, 5.0),
 -- SV Minh
-(5, 4, 1, 3,  3,  3.5,  83),
-(5, 4, 2, 3,  3,  3.0,  85);
+(5, 4, 1, 3,  3,  3.5,  83, 5.0, 5.0),
+(5, 4, 2, 3,  3,  3.0,  85, 5.0, 5.0);
 
 -- application_types
 INSERT INTO application_types (code, name) VALUES

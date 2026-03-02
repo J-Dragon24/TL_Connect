@@ -23,7 +23,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.tl_connect.dev.core.common.enums.AttendanceStatus;
-import com.tl_connect.dev.core.common.enums.ExamStatus;
+
 import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.exam.ExamRepository;
 import com.tl_connect.dev.modules.exam.ExamService;
@@ -80,7 +80,6 @@ class ExamServiceTest {
         when(view.getExamType()).thenReturn("Final");
         when(view.getExamAttempt()).thenReturn(1);
         when(view.getAttendanceStatus()).thenReturn(AttendanceStatus.ATTENDED);
-        when(view.getExamStatus()).thenReturn(ExamStatus.DONE);
 
         when(semesterRepository.findSemesterByName(semesterName)).thenReturn(Optional.of(semester));
         when(examRepository.findExamSchedule(studentId, semester.getId())).thenReturn(List.of(view));

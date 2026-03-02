@@ -33,7 +33,7 @@ public class ApplicationType {
     @Column(name = "code", nullable = false)
     private String code;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     private String name;
 
     @CreationTimestamp

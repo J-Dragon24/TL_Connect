@@ -34,7 +34,7 @@ public class StudentMajor {
     @Column(name = "is_primary")
     private Boolean isPrimary;
 
-    @Column(name = "start_year")
+    @Column(name = "start_year", nullable = false)
     private Integer startYear;
 
     @Column(name = "end_year")

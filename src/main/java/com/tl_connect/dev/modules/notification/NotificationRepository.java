@@ -13,28 +13,34 @@ import java.util.Optional;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
     @Query(value = """
-            SELECT
-                n.id AS id,
-                n.title AS title,
-                n.sender AS sender,
-                n.target_type AS targetType,
-                n.created_at AS createdAt,
-                n.dead_line AS deadLine
+            SELECT n.id, n.title, n.sender, n.target_type, n.created_at, n.dead_line
             FROM notifications n
-            LEFT JOIN student_classes sc 
-                ON n.target_id = sc.id
-            LEFT JOIN student_course_classes scc 
-                ON n.target_id = scc.course_class_id
-            WHERE 
-                n.target_type = 'ALL'
-                OR (n.target_type = 'STUDENT' AND n.target_id = :studentId)
-                OR (n.target_type = 'STUDENT_CLASS' AND n.target_id = (
-                    SELECT student_class_id 
-                    FROM students 
-                    WHERE id = :studentId
-                ))
-                OR (n.target_type = 'COURSE_CLASS' AND scc.student_id = :studentId)
-            ORDER BY n.created_at DESC
+            WHERE n.target_type = 'ALL'
+
+            UNION ALL
+
+            SELECT n.id, n.title, n.sender, n.target_type, n.created_at, n.dead_line
+            FROM notifications n
+            WHERE n.target_type = 'STUDENT' AND n.target_id = :studentId
+
+            UNION ALL
+
+            SELECT n.id, n.title, n.sender, n.target_type, n.created_at, n.dead_line
+            FROM notifications n
+            WHERE n.target_type = 'STUDENT_CLASS' AND n.target_id = (
+                SELECT student_class_id FROM students WHERE id = :studentId
+            )
+
+            UNION ALL
+
+            SELECT n.id, n.title, n.sender, n.target_type, n.created_at, n.dead_line
+            FROM notifications n
+            JOIN student_course_classes scc 
+                ON n.target_id = scc.course_class_id 
+                AND scc.student_id = :studentId
+            WHERE n.target_type = 'COURSE_CLASS'
+
+            ORDER BY created_at DESC
             """, nativeQuery = true)
     List<NotificationRow> findAllNotification(@Param("studentId") Long studentId);
 

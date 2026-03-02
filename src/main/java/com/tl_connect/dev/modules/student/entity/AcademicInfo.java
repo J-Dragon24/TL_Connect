@@ -27,13 +27,13 @@ public class AcademicInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "student_id", nullable = false)
-    private Long studentId;
+    @Column(name = "student_major_id", nullable = false)
+    private Long studentMajorId;
 
-    @Column(name = "cohort", length = 20)
+    @Column(name = "cohort", nullable = false)
     private String cohort;
 
-    @Column(name = "position", length = 50)
+    @Column(name = "position")
     private String position;
 
     @Enumerated(EnumType.STRING)

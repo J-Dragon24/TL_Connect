@@ -40,11 +40,12 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
                 ec.address AS emergencyContactAdress
             FROM students s
             LEFT JOIN student_classes c ON s.student_class_id = c.id
-            LEFT JOIN majors m ON c.major_id = m.id
+            LEFT JOIN student_majors sm ON s.id = sm.student_id AND sm.is_primary = true
+            LEFT JOIN majors m ON sm.major_id = m.id
             LEFT JOIN faculties f ON m.faculty_id = f.id
             LEFT JOIN identity_cards i ON s.id = i.student_id
             LEFT JOIN student_contacts sc ON s.id = sc.student_id
-            LEFT JOIN academic_infos ai ON s.id = ai.student_id
+            LEFT JOIN academic_infos ai ON sm.id = ai.student_major_id
             LEFT JOIN emergency_contacts ec ON s.id = ec.student_id
             LEFT JOIN academic_advisors aa ON c.id = aa.student_class_id
             LEFT JOIN lecturers l ON aa.lecturer_id = l.id
@@ -86,7 +87,10 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
                 hi.registered_hospital AS registeredHospital
             FROM students s
             LEFT JOIN student_contacts sc ON s.id = sc.student_id
-            LEFT JOIN health_insurances hi ON s.id = hi.student_id
+            LEFT JOIN (
+                SELECT *, ROW_NUMBER() OVER (PARTITION BY student_id ORDER BY created_at DESC) AS rn
+                FROM health_insurances
+            ) hi ON s.id = hi.student_id AND hi.rn = 1
             WHERE s.id = :studentId
             """, nativeQuery = true)
     Optional<HealthInsuranceView> findHealthInsuranceById(@Param("studentId") Long studentId);

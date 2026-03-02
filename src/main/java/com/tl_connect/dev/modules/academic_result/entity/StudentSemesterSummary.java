@@ -41,11 +41,26 @@ public class StudentSemesterSummary {
     @Column(name = "credits_passed")
     private Integer creditsPassed;
 
-    @Column(name = "semester_gpa")
+    @Column(name = "semester_gpa", nullable = false)
     private BigDecimal semesterGpa;
+
+    @Column(name = "letter_gpa")
+    private String letterGpa;
 
     @Column(name = "conduct_score")
     private Integer conductScore;
+
+    @Column(name = "activity_score", nullable = false)
+    private BigDecimal activityScore;
+
+    @Column(name = "letter_activity_score")
+    private String letterActivityScore;
+
+    @Column(name = "group_contribution", nullable = false)
+    private BigDecimal groupContribution;
+
+    @Column(name = "letter_group_contribution")
+    private String letterGroupContribution;
 
     @CreationTimestamp
     @Column(name = "created_at")

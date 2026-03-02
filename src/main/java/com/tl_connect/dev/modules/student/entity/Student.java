@@ -38,7 +38,7 @@ public class Student {
     @Column(name = "full_name")
     private String fullName;
 
-    @Column(name = "student_code", length = 20)
+    @Column(name = "student_code", nullable = false, unique = true)
     private String studentCode;
 
     @Enumerated(EnumType.STRING)

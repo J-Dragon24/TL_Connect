@@ -28,10 +28,10 @@ public class EmergencyContact {
     @Column(name = "student_id", nullable = false)
     private Long studentId;
 
-    @Column(name = "full_name", length = 100)
+    @Column(name = "full_name")
     private String fullName;
 
-    @Column(name = "phone_number", length = 20)
+    @Column(name = "phone_number")
     private String phoneNumber;
 
     @Column(name = "address")

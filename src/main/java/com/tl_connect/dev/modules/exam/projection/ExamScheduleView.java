@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import com.tl_connect.dev.core.common.enums.AttendanceStatus;
-import com.tl_connect.dev.core.common.enums.ExamStatus;
 
 public interface ExamScheduleView {
     String getSubjectCode();
@@ -31,5 +30,4 @@ public interface ExamScheduleView {
 
     AttendanceStatus getAttendanceStatus();
 
-    ExamStatus getExamStatus();
 }

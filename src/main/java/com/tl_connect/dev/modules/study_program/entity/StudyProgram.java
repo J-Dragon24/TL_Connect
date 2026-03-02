@@ -28,10 +28,10 @@ public class StudyProgram {
     @Column(name = "major_id", nullable = false)
     private Long majorId;
 
-    @Column(name = "study_program_name")
+    @Column(name = "study_program_name", nullable = false)
     private String studyProgramName;
 
-    @Column(name = "study_program_code")
+    @Column(name = "study_program_code", nullable = false)
     private String studyProgramCode;
 
     @Column(name = "start_year", nullable = false)

@@ -28,7 +28,7 @@ public class StudentContact {
     @Column(name = "student_id", nullable = false, unique = true)
     private Long studentId;
 
-    @Column(name = "phone_number", length = 20)
+    @Column(name = "phone_number")
     private String phoneNumber;
 
     @Column(name = "address")

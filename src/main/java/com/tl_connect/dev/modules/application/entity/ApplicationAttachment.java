@@ -35,10 +35,10 @@ public class ApplicationAttachment {
     @Column(name = "file_key", nullable = false)
     private String fileKey;
 
-    @Column(name = "original_filename", nullable = false)
+    @Column(name = "original_filename")
     private String originalFilename;
 
-    @Column(name = "file_size", nullable = false)
+    @Column(name = "file_size")
     private Long fileSize;
 
     @CreationTimestamp

@@ -39,7 +39,6 @@ public class ExamService {
                                                 .examType(examSchedule.getExamType())
                                                 .examAttempt(examSchedule.getExamAttempt())
                                                 .attendanceStatus(examSchedule.getAttendanceStatus())
-                                                .examStatus(examSchedule.getExamStatus())
                                                 .build())
                                 .toList();
                 return ExamScheduleDTO.builder()

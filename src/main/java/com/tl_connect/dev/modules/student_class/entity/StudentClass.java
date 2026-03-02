@@ -31,7 +31,7 @@ public class StudentClass {
     @Column(name = "major_id", nullable = false)
     private Long majorId;
 
-    @Column(name = "start_year")
+    @Column(name = "start_year", nullable = false)
     private Integer startYear;
 
     @CreationTimestamp

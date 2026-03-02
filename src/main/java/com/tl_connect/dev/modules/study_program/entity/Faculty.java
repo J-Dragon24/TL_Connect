@@ -25,10 +25,10 @@ public class Faculty {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "faculty_code", unique = true, length = 20)
+    @Column(name = "faculty_code", unique = true, nullable = false)
     private String facultyCode;
 
-    @Column(name = "faculty_name", length = 255)
+    @Column(name = "faculty_name", nullable = false)
     private String facultyName;
 
     @Column(name = "is_active")

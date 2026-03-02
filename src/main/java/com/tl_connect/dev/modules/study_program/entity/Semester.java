@@ -26,13 +26,13 @@ public class Semester {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "semester_name", length = 50)
+    @Column(name = "semester_name", nullable = false)
     private String semesterName;
 
-    @Column(name = "start_date")
+    @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
 
-    @Column(name = "end_date")
+    @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
     @CreationTimestamp

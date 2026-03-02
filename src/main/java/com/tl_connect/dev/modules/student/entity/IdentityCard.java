@@ -31,7 +31,7 @@ public class IdentityCard {
     @Column(name = "student_id", nullable = false, unique = true)
     private Long studentId;
 
-    @Column(name = "card_number", nullable = false, unique = true, length = 20)
+    @Column(name = "card_number", nullable = false, unique = true)
     private String cardNumber;
 
     @Enumerated(EnumType.STRING)

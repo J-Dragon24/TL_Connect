@@ -26,12 +26,12 @@ public interface ExamRepository extends JpaRepository<ExamSchedule, Long> {
                 es.exam_format AS examFormat,
                 es.exam_type AS examType,
                 ser.exam_attempt AS examAttempt,
-                ser.attendance_status AS attendanceStatus,
-                ser.exam_status AS examStatus
+                ser.attendance_status AS attendanceStatus
             FROM student_exam_registrations ser
             JOIN exam_schedules es ON ser.exam_schedule_id = es.id
-            JOIN course_classes cc ON es.course_class_id = cc.id
-            JOIN subjects s ON cc.subject_id = s.id
+            JOIN subjects s ON es.subject_id = s.id
+            JOIN student_course_classes scc ON ser.student_id = scc.student_id
+            JOIN course_classes cc ON scc.course_class_id = cc.id AND cc.subject_id = s.id AND cc.semester_id = es.semester_id
             WHERE ser.student_id = :studentId
             AND es.semester_id = :semesterId
             """, nativeQuery = true)

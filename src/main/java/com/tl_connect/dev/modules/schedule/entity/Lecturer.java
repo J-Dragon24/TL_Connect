@@ -33,13 +33,13 @@ public class Lecturer {
     @Column(name = "department_id")
     private Long departmentId;
 
-    @Column(name = "full_name", length = 100)
+    @Column(name = "full_name")
     private String fullName;
 
-    @Column(name = "lecturer_code", length = 20)
+    @Column(name = "lecturer_code", nullable = false)
     private String lecturerCode;
 
-    @Column(name = "phone_number", length = 20)
+    @Column(name = "phone_number")
     private String phoneNumber;
 
     @Column(name = "email")
@@ -50,10 +50,10 @@ public class Lecturer {
     private LecturerStatus status;
 
     @CreationTimestamp
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 }

@@ -6,7 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.tl_connect.dev.core.common.enums.AttendanceStatus;
-import com.tl_connect.dev.core.common.enums.ExamStatus;
+
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -40,10 +40,6 @@ public class StudentExamRegistration {
     @Enumerated(EnumType.STRING)
     @Column(name = "attendance_status")
     private AttendanceStatus attendanceStatus;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "exam_status")
-    private ExamStatus examStatus;
 
     @CreationTimestamp
     @Column(name = "created_at")

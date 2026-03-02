@@ -28,10 +28,10 @@ public class Department {
     @Column(name = "faculty_id", nullable = false)
     private Long facultyId;
 
-    @Column(name = "department_code", unique = true, length = 20)
+    @Column(name = "department_code", unique = true, nullable = false)
     private String departmentCode;
 
-    @Column(name = "department_name", length = 255)
+    @Column(name = "department_name", nullable = false)
     private String departmentName;
 
     @Column(name = "is_active")

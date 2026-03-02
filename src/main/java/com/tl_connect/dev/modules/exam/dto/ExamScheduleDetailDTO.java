@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import com.tl_connect.dev.core.common.enums.AttendanceStatus;
-import com.tl_connect.dev.core.common.enums.ExamStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,5 +29,4 @@ public class ExamScheduleDetailDTO {
     private String examType;
     private Integer examAttempt;
     private AttendanceStatus attendanceStatus;
-    private ExamStatus examStatus;
 }

@@ -31,10 +31,10 @@ public class HealthInsurance {
     @Column(name = "student_id", nullable = false)
     private Long studentId;
 
-    @Column(name = "insurance_number", unique = true, length = 20)
+    @Column(name = "insurance_number", unique = true)
     private String insuranceNumber;
 
-    @Column(name = "provider", length = 100)
+    @Column(name = "provider")
     private String provider;
 
     @Column(name = "valid_from")
@@ -43,11 +43,11 @@ public class HealthInsurance {
     @Column(name = "valid_to")
     private LocalDate validTo;
 
-    @Column(name = "registered_hospital", length = 255)
+    @Column(name = "registered_hospital")
     private String registeredHospital;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private HealthInsuranceStatus status;
 
     @CreationTimestamp

@@ -34,10 +34,10 @@ public class CourseClass {
     @Column(name = "semester_id", nullable = false)
     private Long semesterId;
 
-    @Column(name = "class_code", length = 20)
+    @Column(name = "class_code", nullable = false)
     private String classCode;
 
-    @Column(name = "class_name", length = 100)
+    @Column(name = "class_name", nullable = false)
     private String className;
 
     @CreationTimestamp

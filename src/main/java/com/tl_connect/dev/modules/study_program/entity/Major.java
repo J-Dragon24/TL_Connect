@@ -25,10 +25,10 @@ public class Major {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "major_code", unique = true, length = 20)
+    @Column(name = "major_code", unique = true, nullable = false)
     private String majorCode;
 
-    @Column(name = "major_name", length = 100)
+    @Column(name = "major_name", nullable = false)
     private String majorName;
 
     @Column(name = "faculty_id", nullable = false)

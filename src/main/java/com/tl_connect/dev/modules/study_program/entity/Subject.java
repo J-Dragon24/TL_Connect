@@ -31,19 +31,19 @@ public class Subject {
     @Column(name = "department_id")
     private Long departmentId;
 
-    @Column(name = "subject_code", nullable = false, unique = true, length = 20)
+    @Column(name = "subject_code", nullable = false, unique = true)
     private String subjectCode;
 
-    @Column(name = "subject_name", nullable = false, length = 255)
+    @Column(name = "subject_name", nullable = false)
     private String subjectName;
 
     @Column(name = "credits", nullable = false)
     private Integer credits;
 
-    @Column(name = "lecture_hours", nullable = false)
+    @Column(name = "lecture_hours")
     private Integer lectureHours;
 
-    @Column(name = "practice_hours", nullable = false)
+    @Column(name = "practice_hours")
     private Integer practiceHours;
 
     @Column(name = "is_active")

@@ -28,7 +28,7 @@ public class Role {
     @Column(name = "code", unique = true, length = 50)
     private String code;
 
-    @Column(name = "name", length = 100)
+    @Column(name = "name")
     private String name;
 
     @Column(name = "is_active")
