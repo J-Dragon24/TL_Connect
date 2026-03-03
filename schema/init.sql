@@ -432,7 +432,7 @@ CREATE TABLE application_attachments (
 
 CREATE TABLE notifications (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  title VARCHAR(255) NOT NULL,
+  title TEXT NOT NULL,
   content TEXT NOT NULL,
   sender VARCHAR(255),
   target_type VARCHAR(20) NOT NULL DEFAULT 'ALL' CHECK (target_type IN ('ALL','CLASS','STUDENT')),
@@ -448,6 +448,17 @@ CREATE TABLE grade_scale (
   letter_grade VARCHAR(2) NOT NULL UNIQUE,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE news (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  title TEXT,
+  excerpt TEXT,
+  image_url VARCHAR(255),
+  source TEXT,
+  publish_date DATE,
+  news_url VARCHAR(255),
+  created_at TIMESTAMP DEFAULT now(),
 );
 
 
