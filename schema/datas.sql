@@ -39,7 +39,7 @@ RESTART IDENTITY CASCADE;
 
 -- oauth_users
 INSERT INTO oauth_users (user_uuid, display_name, email, status) VALUES
-('uuid-lecturer-001', 'Nguyen Van An', 'an.nguyen@university.edu.vn', 'ACTIVE'),
+('1deb00a9-835c-4ab7-a50f-57c12a56c7bd', 'Nguyen Van An', 'nhokthanh3211@gmail.com', 'ACTIVE'),
 ('uuid-lecturer-002', 'Tran Thi Bich', 'bich.tran@university.edu.vn', 'ACTIVE'),
 ('uuid-lecturer-003', 'Le Van Cuong', 'cuong.le@university.edu.vn', 'BLOCKED'),
 ('uuid-student-001', 'Pham Minh Duc', 'duc.pm@student.edu.vn', 'ACTIVE'),
@@ -56,7 +56,7 @@ INSERT INTO roles (code, name, is_active) VALUES
 ('ADVISOR', 'Cố vấn học tập', TRUE);
 
 -- user_roles
-INSERT INTO user_roles (user_id, role_id) VALUES
+INSERT INTO user_roles (oauth_user_id, role_id) VALUES
 (1, 2), -- an.nguyen → LECTURER
 (2, 2), -- bich.tran → LECTURER
 (2, 4), -- bich.tran → ADVISOR
@@ -107,7 +107,7 @@ INSERT INTO academic_advisors (lecturer_id, student_class_id) VALUES
 
 -- students
 INSERT INTO students (oauth_user_id, student_class_id, full_name, student_code, gender, date_of_birth, status) VALUES
-(4, 1, 'Pham Minh Duc',   'SV2021001', 'NAM', '2003-05-10', 'ACTIVE'),
+(1, 1, 'Pham Minh Duc',   'SV2021001', 'NAM', '2003-05-10', 'ACTIVE'),
 (5, 1, 'Hoang Thi Em',    'SV2021002', 'NU',  '2003-08-22', 'ACTIVE'),
 (6, 2, 'Nguyen Quoc Hung','SV2022001', 'NAM', '2004-01-15', 'ACTIVE'),
 (7, 3, 'Vo Thi Lan',      'SV2021003', 'NU',  '2003-11-30', 'SUSPENDED'),

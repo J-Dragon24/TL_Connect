@@ -23,8 +23,8 @@ public class OAuthService {
 
     private final JWTService jwtService;
 
-    public OAuthUserInfoDTO loginWithMicrosoft(String idToken){
-        Jwt jwt = authHelper.verify(idToken);
+    public OAuthUserInfoDTO loginWithMicrosoft(String accessToken){
+        Jwt jwt = authHelper.verify(accessToken);
         String microsoftId = jwt.getClaimAsString("oid");
         String email = jwt.getClaimAsString("preferred_username");
         String name = jwt.getClaimAsString("name");
@@ -36,6 +36,11 @@ public class OAuthService {
         if(email == null || email.isEmpty()){
             throw new InvalidInputException("email not found in ID token");
         }
+
+        System.out.println("microsoftId: " + microsoftId);
+        System.out.println("email: " + email);
+        System.out.println("name: " + name);
+        System.out.println("roles: " + roles);
 
         JwtUserInfoView jwtUserInfoView = authUserRepository.findStudentByUserUuid(microsoftId)
                 .orElseThrow(() -> new NotFoundException("User not found"));

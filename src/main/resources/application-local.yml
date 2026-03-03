@@ -20,8 +20,6 @@ spring:
 microsoft:
     tenant-id: aec003eb-c537-4e8a-b0f3-1144a93a60bc
     client-id: 77df993d-e728-4b8e-9770-6b409aa99552
-    client-secret: Ato8Q~g_FXr69xCkejOH2EZ2d4cIH1MxarOiGavX
-
 jwt:
   secret: xBdqwDtJ6DuRJNtPLZESNWtvrWi4nBWwfT9Y8ma5PSj
 

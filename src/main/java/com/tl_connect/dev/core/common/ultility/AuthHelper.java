@@ -46,11 +46,12 @@ public class AuthHelper {
         this.jwtDecoder = decoder;
     }
 
-    public Jwt verify(String idToken) {
+    public Jwt verify(String accessToken) {
         try {
-            return jwtDecoder.decode(idToken);
+            return jwtDecoder.decode(accessToken);
         } catch (JwtException e) {
-            throw new UnauthorizeException("Invalid token");
+            e.printStackTrace(); // xem lỗi thật
+            throw new UnauthorizeException("Invalid token: " + e.getMessage());
         }
     }
 }

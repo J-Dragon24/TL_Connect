@@ -25,7 +25,7 @@ public class JWTService {
     @Value("${jwt.secret}")
     private String SECRET;
 
-    private final long EXPIRATION = 60 * 60;
+    private final long EXPIRATION = 60 * 60 * 1000L;
     private final ObjectMapper objectMapper = new ObjectMapper();
     private static final String ALGORITHM = "HmacSHA256";
 
@@ -42,20 +42,20 @@ public class JWTService {
         return signJWT(payload);
     }
 
-    public JwtPayload verifyToken (String token){
-        try{
+    public JwtPayload verifyToken(String token) {
+        try {
             JwtPayload payload = verifyJWT(token);
-            if(payload.exp() < System.currentTimeMillis()){
+            if (payload.exp() < System.currentTimeMillis()) {
                 throw new RuntimeException("Expired JWT");
             }
             return payload;
-        }catch(Exception e){
+        } catch (Exception e) {
             throw new RuntimeException("Invalid JWT", e);
         }
     }
 
     private String signJWT(JwtPayload payload) {
-        try{
+        try {
             String header = """
                     {"alg":"HS256","typ":"JWT"}
                     """;
@@ -69,14 +69,14 @@ public class JWTService {
             String encodedSignature = base64UrlEncode(signature);
 
             return signatureData + "." + encodedSignature;
-        }catch(Exception e){
+        } catch (Exception e) {
             throw new RuntimeException("Failed to generate JWT", e);
         }
 
     }
 
     private JwtPayload verifyJWT(String token) {
-        try{
+        try {
             String[] parts = token.split("\\.");
             if (parts.length != 3) {
                 throw new InvalidInputException("Invalid JWT format");
@@ -95,7 +95,7 @@ public class JWTService {
             }
 
             return objectMapper.readValue(base64UrlDecode(payloadBase64), JwtPayload.class);
-        }catch(Exception e){
+        } catch (Exception e) {
             throw new RuntimeException("Failed to verify JWT", e);
         }
     }

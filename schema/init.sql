@@ -52,11 +52,11 @@ CREATE TABLE roles (
 );
 
 CREATE TABLE user_roles (
-  user_id BIGINT NOT NULL,
+  oauth_user_id BIGINT NOT NULL,
   role_id BIGINT NOT NULL,
   assigned_at TIMESTAMP DEFAULT now(),
-  PRIMARY KEY (user_id, role_id),
-  FOREIGN KEY (user_id) REFERENCES oauth_users(id) ON DELETE CASCADE,
+  PRIMARY KEY (oauth_user_id, role_id),
+  FOREIGN KEY (oauth_user_id) REFERENCES oauth_users(id) ON DELETE CASCADE,
   FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
 );
 

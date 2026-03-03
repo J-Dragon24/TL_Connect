@@ -21,13 +21,15 @@ public class AuthController {
 
     private final OAuthService oauthService;
 
+    public record LoginRequest(String accessToken) {}
+
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody String idToken) {
-        if(idToken == null || idToken.isEmpty()){
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        if(request.accessToken() == null || request.accessToken().isEmpty()){
             throw new InvalidInputException("token is required and must be non-empty string");
         }
 
-        OAuthUserInfoDTO userInfo = oauthService.loginWithMicrosoft(idToken);
+        OAuthUserInfoDTO userInfo = oauthService.loginWithMicrosoft(request.accessToken());
 
         return ResponseHelper.success("Login successful", userInfo);    
     }

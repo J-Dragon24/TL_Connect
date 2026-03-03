@@ -34,8 +34,8 @@ public class UserRole {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class UserRoleId implements Serializable {
-        @Column(name = "user_id")
-        private Long userId;
+        @Column(name = "oauth_user_id")
+        private Long oauthUserId;
 
         @Column(name = "role_id")
         private Long roleId;
