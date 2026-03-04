@@ -27,13 +27,13 @@ public class NewsController {
     public ResponseEntity<?> getTop5News() {
         Pageable pageable = PageRequest.of(0, PAGE_SIZE);
         List<NewsDTO> top5News = newsService.getTop5News(pageable);
-        return ResponseHelper.success("Lấy tin tức thành công", top5News);
+        return ResponseHelper.success("Get top 5 news successfully", top5News);
     }
 
     @GetMapping()
     public ResponseEntity<?> getAllNews(@RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
         PagedResponse<NewsDTO> allNews = newsService.getAllNews(pageable);
-        return ResponseHelper.success("Lấy tin tức thành công", allNews);
+        return ResponseHelper.success("Get all news successfully", allNews);
     }
 }

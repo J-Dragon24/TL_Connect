@@ -1,0 +1,464 @@
+{
+  "info": {
+    "_postman_id": "1adb2d62-e1a4-4b24-b41b-19626f917d2d",
+    "name": "TL-connect",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "39878296",
+    "_collection_link": "https://go.postman.co/collection/39878296-1adb2d62-e1a4-4b24-b41b-19626f917d2d?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "V1",
+      "item": [
+        {
+          "name": "student class info",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{domain}}/api/v1/student/me/class",
+              "host": [
+                "{{domain}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "student",
+                "me",
+                "class"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get list study program",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{domain}}/api/v1/study-programs",
+              "host": [
+                "{{domain}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "study-programs"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "mark",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{domain}}/api/v1/student/marks?ctdt=CTDT-KHMT-2021",
+              "host": [
+                "{{domain}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "student",
+                "marks"
+              ],
+              "query": [
+                {
+                  "key": "ctdt",
+                  "value": "CTDT-KHMT-2021"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get detail study program",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{domain}}/api/v1/study-programs/CTDT-KHMT-2021",
+              "host": [
+                "{{domain}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "study-programs",
+                "CTDT-KHMT-2021"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "weekly schedule",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{domain}}/api/v1/student/schedules/weekly?start_date=2022-02-01&end_date=2022-09-01",
+              "host": [
+                "{{domain}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "student",
+                "schedules",
+                "weekly"
+              ],
+              "query": [
+                {
+                  "key": "start_date",
+                  "value": "2022-02-01"
+                },
+                {
+                  "key": "end_date",
+                  "value": "2022-09-01"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "semester schedule",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{domain}}/api/v1/student/schedules/semester?HocKy=HK1 2022-2023",
+              "host": [
+                "{{domain}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "student",
+                "schedules",
+                "semester"
+              ],
+              "query": [
+                {
+                  "key": "HocKy",
+                  "value": "HK1 2022-2023"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "day of week schedule",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer acsjahjkhakjfhjkhjksfhhshfkh",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{domain}}/api/v1/student/schedules/day-of-week",
+              "host": [
+                "{{domain}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "student",
+                "schedules",
+                "day-of-week"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "student info",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{domain}}/api/v1/student/me",
+              "host": [
+                "{{domain}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "student",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "exam",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{domain}}/api/v1/student/exam?HocKy=HK1 2021-2022",
+              "host": [
+                "{{domain}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "student",
+                "exam"
+              ],
+              "query": [
+                {
+                  "key": "HocKy",
+                  "value": "HK1 2021-2022"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "notification",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{domain}}/api/v1/notification",
+              "host": [
+                "{{domain}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "notification"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "notification detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer acsjahjkhakjfhjkhjksfhhshfkh",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{domain}}/api/v1/notification/2",
+              "host": [
+                "{{domain}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "notification",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "application types",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{domain}}/api/v1/applications/types",
+              "host": [
+                "{{domain}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "applications",
+                "types"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "application submit",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "uuid": "42a4e1b0-0cb4-42af-9ded-4a98c5e3df51",
+                  "src": "/C:/Users/LongBao/Documents/abc.pdf"
+                },
+                {
+                  "key": "application-type",
+                  "value": "1",
+                  "type": "text",
+                  "uuid": "980f5d83-02c3-4db4-92b4-41cb1f9b91f2"
+                },
+                {
+                  "key": "content",
+                  "value": "xin học bổng",
+                  "type": "text",
+                  "uuid": "8162bd67-b72a-4d9c-ada6-696b3d18cc05"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{domain}}/api/v1/applications/submit",
+              "host": [
+                "{{domain}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "applications",
+                "submit"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Parse JSON response\r",
+                  "let res = pm.response.json();\r",
+                  "\r",
+                  "// Kiểm tra code trả về\r",
+                  "if (res.code === 0) {\r",
+                  "    // Lưu token vào environment\r",
+                  "    let token = res.data.token;\r",
+                  "    pm.environment.set(\"auth_token\", token);\r",
+                  "    console.log(\"✅ Token saved successfully:\", token);\r",
+                  "} else {\r",
+                  "    console.log(\"❌ Login failed or invalid response.\");\r",
+                  "}\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"accessToken\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6InNNMV95QXhWOEdWNHlOLUI2ajJ4em1pazVBbyJ9.eyJhdWQiOiI3N2RmOTkzZC1lNzI4LTRiOGUtOTc3MC02YjQwOWFhOTk1NTIiLCJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vYWVjMDAzZWItYzUzNy00ZThhLWIwZjMtMTE0NGE5M2E2MGJjL3YyLjAiLCJpYXQiOjE3NzI1MjQ5MDgsIm5iZiI6MTc3MjUyNDkwOCwiZXhwIjoxNzcyNTI5NTMyLCJhaW8iOiJBY1FBTy84YkFBQUFZNlB1eml0VXZObVRBR3BlQXpRVzI4SDJ4Q0FuRFdmU05KWmlDcTRxUlhPSTF1b3ZsU2h6cWE4cFNNTzlWZUZWdUJSSEpHUHBLdXA0VDBtbFgxS0I0RFd1ZjFFem9aeGpFS25SL2Z0eFRVSUswaUVKUDQwbzhJM095ejdkeDErYk9zNk5PKzFxYlI1VHpsMWc5Z0l4aFVYakFCdG9DSTB2M0V2MUdQY0NUOVo3QkMyOGdubWhpOEV1S2RTR01pdDdFWXRmSldHZ25pYlVUTVNyUU10elNGRTlxSXlGOW5Qc2c3eWpnVUFreHhNNVRSUnlZUXdhZlhqNzMzSXd0R0xoIiwiYXpwIjoiNzdkZjk5M2QtZTcyOC00YjhlLTk3NzAtNmI0MDlhYTk5NTUyIiwiYXpwYWNyIjoiMCIsImlkcCI6ImxpdmUuY29tIiwibmFtZSI6Im5ob2sgdGhhbmgiLCJvaWQiOiIxZGViMDBhOS04MzVjLTRhYjctYTUwZi01N2MxMmE1NmM3YmQiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJuaG9rdGhhbmgzMjExQGdtYWlsLmNvbSIsInJoIjoiMS5BY1lBNndQQXJqZkZpazZ3OHhGRXFUcGd2RDJaMzNjbzU0NUxsM0JyUUpxcGxWSUFBSFRHQUEuIiwicm9sZXMiOlsiYWRtaW4iXSwic2NwIjoiYWNjZXNzX2FzX3VzZXIiLCJzaWQiOiIwMDJlNDNkYS0zZjE2LTVlMzgtZGNkZC0zOGNhMmIyOWY0MjAiLCJzdWIiOiJfdUhOeUFndzVuaEE4Z2lqSnNESjQzbkUwU3JaLUVKTVdHMEo0c01ERW9vIiwidGlkIjoiYWVjMDAzZWItYzUzNy00ZThhLWIwZjMtMTE0NGE5M2E2MGJjIiwidXRpIjoiMU82YVpjNmhxa1NoXzlnclpCd0ZBQSIsInZlciI6IjIuMCIsInhtc19mdGQiOiJ3c0ZxOFRac25YZ2FoalpXYzhMYmZrb1RDVm83bmFnWGFBcjl3WmVqQkdnQmEyOXlaV0Z6YjNWMGFDMWtjMjF6In0.B4J92_HMR-_UnBxq7t6HcvUv6Kw249AjoGxPhooq3ra6ZIBLhJXwP_OSEK8eG_SPYF7WkQTaYuYiX9ieibLuTLPREK4zHV6gKrCX_-F053fwsPYHlzBSE47Z2YcFeCf3ffBjf_5PAPR9TcfJ7By9U1Un9ah1roH1QE8ptmFPRq1FsSfoLy9cb7w3UZOtZG8ibTL6gJmFXVqT2y4IhZ57SYOarTwOUBFt3rINbcVoTAP4D7n-ajXl1NEWQ8PpRYj16mGw4VIJnlkwsk5oh7cDJpNu-xKCM-eddIyO-0W4i3nYOLvaigM1uAK2mJmqFTqLcvVEa9HpZhamCS1T8A_83A\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{domain}}/api/v1/oauth2/login",
+              "host": [
+                "{{domain}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "oauth2",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

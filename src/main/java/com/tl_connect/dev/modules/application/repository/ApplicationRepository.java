@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.application;
+package com.tl_connect.dev.modules.application.repository;
 
 import java.util.List;
 
@@ -14,4 +14,5 @@ public interface ApplicationRepository extends JpaRepository<StudentApplication,
     @Query(value = "SELECT * FROM application_types", nativeQuery = true)
     List<ApplicationType> findAllApplicationType();
 
+    
 }

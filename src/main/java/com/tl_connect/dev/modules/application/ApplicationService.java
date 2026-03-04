@@ -11,6 +11,8 @@ import com.tl_connect.dev.modules.application.dto.ApplicationTypeDTO;
 import com.tl_connect.dev.modules.application.entity.ApplicationAttachment;
 import com.tl_connect.dev.modules.application.entity.ApplicationType;
 import com.tl_connect.dev.modules.application.entity.StudentApplication;
+import com.tl_connect.dev.modules.application.repository.ApplicationAttachmentRepository;
+import com.tl_connect.dev.modules.application.repository.ApplicationRepository;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -81,5 +83,16 @@ public class ApplicationService {
         .fileNames(files.stream().map(file -> file.getOriginalFilename()).toList())
         .build();
     }
+
+    // public List<ApplicationTypeDTO> getHistoryApplication(Long studentId) {
+    //     List<StudentApplication> applications = applicationRepository.findAllByStudentId(studentId);
+    //     return applications.stream()
+    //             .map(application -> ApplicationTypeDTO.builder()
+    //                     .id(application.getId())
+    //                     .code(application.getCode())
+    //                     .name(applicationType.getName())
+    //                     .build())
+    //             .toList();
+    // }
 
 }
