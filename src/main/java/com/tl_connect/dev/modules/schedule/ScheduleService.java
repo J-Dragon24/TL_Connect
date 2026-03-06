@@ -14,6 +14,7 @@ import com.tl_connect.dev.modules.schedule.dto.DayOfWeekScheduleDTO;
 import com.tl_connect.dev.modules.schedule.dto.SemesterScheduleDTO;
 import com.tl_connect.dev.modules.schedule.dto.WeeklyScheduleDTO;
 import com.tl_connect.dev.modules.schedule.projection.ScheduleRow;
+import com.tl_connect.dev.modules.student_class.dto.LecturerDTO;
 import com.tl_connect.dev.modules.study_program.entity.Semester;
 
 import lombok.RequiredArgsConstructor;
@@ -41,20 +42,26 @@ public class ScheduleService {
                                         List<ScheduleRow> rows = entry.getValue();
 
                                         List<CourseClassDTO> courseClasses = rows.stream()
-                                                        .map(row -> CourseClassDTO.builder()
-                                                                        .classCode(row.getClassCode())
-                                                                        .dayOfWeek(dayOfWeek)
-                                                                        .subjectName(row.getSubjectName())
-                                                                        .subjectCode(row.getSubjectCode())
-                                                                        .startPeriod(row.getStartPeriod())
-                                                                        .endPeriod(row.getEndPeriod())
-                                                                        .startTime(row.getStartTime())
-                                                                        .endTime(row.getEndTime())
-                                                                        .room(row.getRoom())
-                                                                        .lecturerName(row.getLecturerName())
-                                                                        .lecturerEmail(row.getLecturerEmail())
-                                                                        .build())
-                                                        .collect(Collectors.toList());
+                                                        .map(row -> {
+                                                                LecturerDTO lecturer = LecturerDTO.builder()
+                                                                                .fullName(row.getLecturerName())
+                                                                                .email(row.getLecturerEmail())
+                                                                                .phoneNumber(row.getLecturerPhone())
+                                                                                .lecturerCode(row.getLecturerCode())
+                                                                                .build();
+                                                                return CourseClassDTO.builder()
+                                                                                .classCode(row.getClassCode())
+                                                                                .dayOfWeek(dayOfWeek)
+                                                                                .subjectName(row.getSubjectName())
+                                                                                .subjectCode(row.getSubjectCode())
+                                                                                .startPeriod(row.getStartPeriod())
+                                                                                .endPeriod(row.getEndPeriod())
+                                                                                .startTime(row.getStartTime())
+                                                                                .endTime(row.getEndTime())
+                                                                                .room(row.getRoom())
+                                                                                .lecturer(lecturer)
+                                                                                .build();
+                                                        }).collect(Collectors.toList());
 
                                         return DayOfWeekScheduleDTO.builder()
                                                         .courseClasses(courseClasses)
@@ -79,20 +86,26 @@ public class ScheduleService {
                                 semester.getId());
 
                 List<CourseClassDTO> courseClasses = scheduleRows.stream()
-                                .map(row -> CourseClassDTO.builder()
-                                                .classCode(row.getClassCode())
-                                                .dayOfWeek(row.getDayOfWeek())
-                                                .subjectName(row.getSubjectName())
-                                                .subjectCode(row.getSubjectCode())
-                                                .startPeriod(row.getStartPeriod())
-                                                .endPeriod(row.getEndPeriod())
-                                                .startTime(row.getStartTime())
-                                                .endTime(row.getEndTime())
-                                                .room(row.getRoom())
-                                                .lecturerName(row.getLecturerName())
-                                                .lecturerEmail(row.getLecturerEmail())
-                                                .build())
-                                .collect(Collectors.toList());
+                                .map(row -> {
+                                        LecturerDTO lecturer = LecturerDTO.builder()
+                                                        .fullName(row.getLecturerName())
+                                                        .email(row.getLecturerEmail())
+                                                        .phoneNumber(row.getLecturerPhone())
+                                                        .lecturerCode(row.getLecturerCode())
+                                                        .build();
+                                        return CourseClassDTO.builder()
+                                                        .classCode(row.getClassCode())
+                                                        .dayOfWeek(row.getDayOfWeek())
+                                                        .subjectName(row.getSubjectName())
+                                                        .subjectCode(row.getSubjectCode())
+                                                        .startPeriod(row.getStartPeriod())
+                                                        .endPeriod(row.getEndPeriod())
+                                                        .startTime(row.getStartTime())
+                                                        .endTime(row.getEndTime())
+                                                        .room(row.getRoom())
+                                                        .lecturer(lecturer)
+                                                        .build();
+                                }).collect(Collectors.toList());
 
                 return SemesterScheduleDTO.builder()
                                 .semester(semester.getSemesterName())
@@ -115,23 +128,30 @@ public class ScheduleService {
                 Semester semester = semesterRepository.findSemesterByDate(today)
                                 .orElseThrow(() -> new NotFoundException("Semester not found"));
 
-                List<ScheduleRow> scheduleRows = scheduleRepository.findDayOfWeekSchedule(studentId, semester.getId(),dayOfWeek);
+                List<ScheduleRow> scheduleRows = scheduleRepository.findDayOfWeekSchedule(studentId, semester.getId(),
+                                dayOfWeek);
 
                 List<CourseClassDTO> courseClasses = scheduleRows.stream()
-                                .map(row -> CourseClassDTO.builder()
-                                                .classCode(row.getClassCode())
-                                                .dayOfWeek(row.getDayOfWeek())
-                                                .subjectName(row.getSubjectName())
-                                                .subjectCode(row.getSubjectCode())
-                                                .startPeriod(row.getStartPeriod())
-                                                .endPeriod(row.getEndPeriod())
-                                                .startTime(row.getStartTime())
-                                                .endTime(row.getEndTime())
-                                                .room(row.getRoom())
-                                                .lecturerName(row.getLecturerName())
-                                                .lecturerEmail(row.getLecturerEmail())
-                                                .build())
-                                .collect(Collectors.toList());
+                                .map(row -> {
+                                        LecturerDTO lecturer = LecturerDTO.builder()
+                                                        .fullName(row.getLecturerName())
+                                                        .email(row.getLecturerEmail())
+                                                        .phoneNumber(row.getLecturerPhone())
+                                                        .lecturerCode(row.getLecturerCode())
+                                                        .build();
+                                        return CourseClassDTO.builder()
+                                                        .classCode(row.getClassCode())
+                                                        .dayOfWeek(row.getDayOfWeek())
+                                                        .subjectName(row.getSubjectName())
+                                                        .subjectCode(row.getSubjectCode())
+                                                        .startPeriod(row.getStartPeriod())
+                                                        .endPeriod(row.getEndPeriod())
+                                                        .startTime(row.getStartTime())
+                                                        .endTime(row.getEndTime())
+                                                        .room(row.getRoom())
+                                                        .lecturer(lecturer)
+                                                        .build();
+                                }).collect(Collectors.toList());
 
                 return DayOfWeekScheduleDTO.builder()
                                 .courseClasses(courseClasses)

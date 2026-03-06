@@ -14,4 +14,6 @@ public interface ScheduleRow {
     String getRoom();
     String getLecturerName();
     String getLecturerEmail();
+    String getLecturerPhone();
+    String getLecturerCode();
 }

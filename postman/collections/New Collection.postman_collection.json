@@ -1,0 +1,38 @@
+{
+  "info": {
+    "_postman_id": "c6c5a1bb-92fe-4673-ba8f-231ad8edb11c",
+    "name": "Chat bot",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "stream chat",
+      "id": "500eacca-007a-4025-b816-ddc2aaa72abd",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"prompt\":\"tình hình chiến sự thế giới\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{domain}}/api/v1/stream",
+          "host": [
+            "{{domain}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "stream"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

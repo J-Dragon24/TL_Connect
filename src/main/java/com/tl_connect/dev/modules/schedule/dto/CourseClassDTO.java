@@ -2,6 +2,8 @@ package com.tl_connect.dev.modules.schedule.dto;
 
 import java.time.LocalTime;
 
+import com.tl_connect.dev.modules.student_class.dto.LecturerDTO;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,6 +25,5 @@ public class CourseClassDTO {
     LocalTime startTime;
     LocalTime endTime;
     String room;
-    String lecturerName;
-    String lecturerEmail;
+    LecturerDTO lecturer;
 }

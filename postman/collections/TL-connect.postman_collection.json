@@ -207,7 +207,7 @@
               }
             ],
             "url": {
-              "raw": "{{domain}}/api/v1/student/schedules/day-of-week?",
+              "raw": "{{domain}}/api/v1/student/schedules/day-of-week",
               "host": [
                 "{{domain}}"
               ],
@@ -217,12 +217,6 @@
                 "student",
                 "schedules",
                 "day-of-week"
-              ],
-              "query": [
-                {
-                  "key": "",
-                  "value": null
-                }
               ]
             }
           },
