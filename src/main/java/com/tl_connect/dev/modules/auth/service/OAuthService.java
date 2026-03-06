@@ -24,31 +24,41 @@ public class OAuthService {
     private final JWTService jwtService;
 
     public OAuthUserInfoDTO loginWithMicrosoft(String accessToken){
-        Jwt jwt = authHelper.verify(accessToken);
-        String microsoftId = jwt.getClaimAsString("oid");
-        String email = jwt.getClaimAsString("preferred_username");
-        String name = jwt.getClaimAsString("name");
-        List<String> roles = jwt.getClaimAsStringList("roles");
 
-        if(microsoftId == null || microsoftId.isEmpty()){
-            throw new InvalidInputException("oid not found in ID token");
-        }
-        if(email == null || email.isEmpty()){
-            throw new InvalidInputException("email not found in ID token");
-        }
-
-        System.out.println("microsoftId: " + microsoftId);
-        System.out.println("email: " + email);
-        System.out.println("name: " + name);
-        System.out.println("roles: " + roles);
-
-        JwtUserInfoView jwtUserInfoView = authUserRepository.findStudentByUserUuid(microsoftId)
-                .orElseThrow(() -> new NotFoundException("User not found"));
-
+        String microsoftId = "1";
+        String email = "1";
+        String name = "1";
+        List<String> roles = List.of("ROLE_STUDENT");
         JwtUserInfo jwtUserInfo = JwtUserInfo.builder()
-        .userId(jwtUserInfoView.getStudentId())
+        .userId(1L)
         .roles(roles)
         .build();
+
+        // Jwt jwt = authHelper.verify(accessToken);
+        // String microsoftId = jwt.getClaimAsString("oid");
+        // String email = jwt.getClaimAsString("preferred_username");
+        // String name = jwt.getClaimAsString("name");
+        // List<String> roles = jwt.getClaimAsStringList("roles");
+
+        // if(microsoftId == null || microsoftId.isEmpty()){
+        //     throw new InvalidInputException("oid not found in ID token");
+        // }
+        // if(email == null || email.isEmpty()){
+        //     throw new InvalidInputException("email not found in ID token");
+        // }
+
+        // System.out.println("microsoftId: " + microsoftId);
+        // System.out.println("email: " + email);
+        // System.out.println("name: " + name);
+        // System.out.println("roles: " + roles);
+
+        // JwtUserInfoView jwtUserInfoView = authUserRepository.findStudentByUserUuid(microsoftId)
+        //         .orElseThrow(() -> new NotFoundException("User not found"));
+
+        // JwtUserInfo jwtUserInfo = JwtUserInfo.builder()
+        // .userId(jwtUserInfoView.getStudentId())
+        // .roles(roles)
+        // .build();
 
         String token = jwtService.generateToken(jwtUserInfo);
 

@@ -147,7 +147,7 @@ INSERT INTO health_insurances (student_id, insurance_number, provider, valid_fro
 
 -- semesters
 INSERT INTO semesters (semester_name, start_date, end_date) VALUES
-('HK1 2021-2022', '2021-09-01', '2022-01-15'),
+('HK1 2026-2027', '2021-01-01', '2022-04-15'),
 ('HK2 2021-2022', '2022-02-01', '2022-06-30'),
 ('HK1 2022-2023', '2022-09-01', '2023-01-15'),
 ('HK2 2022-2023', '2023-02-01', '2023-06-30'),
@@ -246,8 +246,8 @@ INSERT INTO student_course_classes (student_id, course_class_id) VALUES
 
 -- class_schedules
 INSERT INTO class_schedules (course_class_id, day_of_week, start_period, end_period, start_time, end_time, room) VALUES
-(1, 2, 1, 3,  '07:00', '09:30', 'A101'), -- thứ 2
-(1, 4, 4, 5,  '09:45', '11:15', 'A101'), -- thứ 4
+(1, 6, 1, 3,  '07:00', '09:30', 'A101'), -- thứ 2
+(1, 6, 4, 5,  '09:45', '11:15', 'A101'), -- thứ 4
 (2, 3, 1, 3,  '07:00', '09:30', 'A102'), -- thứ 3
 (3, 2, 6, 8,  '11:30', '14:00', 'B201'), -- thứ 2
 (4, 5, 1, 3,  '07:00', '09:30', 'B202'), -- thứ 5

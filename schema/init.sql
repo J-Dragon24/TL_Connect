@@ -458,7 +458,7 @@ CREATE TABLE news (
   source TEXT,
   publish_date DATE,
   news_url VARCHAR(255),
-  created_at TIMESTAMP DEFAULT now(),
+  created_at TIMESTAMP DEFAULT now()
 );
 
 

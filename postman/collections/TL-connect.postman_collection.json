@@ -2,9 +2,7 @@
   "info": {
     "_postman_id": "1adb2d62-e1a4-4b24-b41b-19626f917d2d",
     "name": "TL-connect",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "39878296",
-    "_collection_link": "https://go.postman.co/collection/39878296-1adb2d62-e1a4-4b24-b41b-19626f917d2d?source=collection_link"
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
@@ -12,6 +10,7 @@
       "item": [
         {
           "name": "student class info",
+          "id": "5cccf1e6-635f-45de-b088-5ced0d3922f1",
           "request": {
             "method": "GET",
             "header": [
@@ -39,6 +38,7 @@
         },
         {
           "name": "get list study program",
+          "id": "e684edb4-0e9a-4bc2-916b-4cf047ac111d",
           "request": {
             "method": "GET",
             "header": [
@@ -64,6 +64,7 @@
         },
         {
           "name": "mark",
+          "id": "57845ba9-ab1c-4a4f-8bb7-0f405c972bc6",
           "request": {
             "method": "GET",
             "header": [
@@ -96,6 +97,7 @@
         },
         {
           "name": "get detail study program",
+          "id": "e99edadf-49fb-432a-b990-626eba71c3ad",
           "request": {
             "method": "GET",
             "header": [
@@ -122,6 +124,7 @@
         },
         {
           "name": "weekly schedule",
+          "id": "f80f6b87-6b65-4392-b89c-0183adb696c2",
           "request": {
             "method": "GET",
             "header": [
@@ -159,6 +162,7 @@
         },
         {
           "name": "semester schedule",
+          "id": "450f6903-e413-4e32-95ee-e8cc0cce9ebd",
           "request": {
             "method": "GET",
             "header": [
@@ -192,17 +196,18 @@
         },
         {
           "name": "day of week schedule",
+          "id": "fe6bb989-0724-4c2a-921e-c0339a572a8c",
           "request": {
             "method": "GET",
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer acsjahjkhakjfhjkhjksfhhshfkh",
+                "value": "Bearer {{auth_token}}",
                 "type": "text"
               }
             ],
             "url": {
-              "raw": "{{domain}}/api/v1/student/schedules/day-of-week",
+              "raw": "{{domain}}/api/v1/student/schedules/day-of-week?",
               "host": [
                 "{{domain}}"
               ],
@@ -212,6 +217,12 @@
                 "student",
                 "schedules",
                 "day-of-week"
+              ],
+              "query": [
+                {
+                  "key": "",
+                  "value": null
+                }
               ]
             }
           },
@@ -219,6 +230,7 @@
         },
         {
           "name": "student info",
+          "id": "7bb396ef-41dd-42ef-8ae8-2094b976386d",
           "request": {
             "auth": {
               "type": "noauth"
@@ -248,6 +260,7 @@
         },
         {
           "name": "exam",
+          "id": "bb76cdf6-5e2d-461a-b2f8-ea8155ccc8e0",
           "request": {
             "method": "GET",
             "header": [
@@ -280,6 +293,7 @@
         },
         {
           "name": "notification",
+          "id": "333b99fe-0a46-4a15-9e78-dc66268e58ac",
           "request": {
             "method": "GET",
             "header": [
@@ -305,6 +319,7 @@
         },
         {
           "name": "notification detail",
+          "id": "e03a8d0d-9c08-4ddd-9d65-78c0466db82e",
           "request": {
             "method": "GET",
             "header": [
@@ -331,6 +346,7 @@
         },
         {
           "name": "application types",
+          "id": "1f50e2dd-433a-45da-be5e-ce29a481efb4",
           "request": {
             "method": "GET",
             "header": [
@@ -357,6 +373,7 @@
         },
         {
           "name": "application submit",
+          "id": "757bc5d8-66ec-4224-a22b-9546f4859a40",
           "request": {
             "method": "POST",
             "header": [
@@ -373,7 +390,9 @@
                   "key": "file",
                   "type": "file",
                   "uuid": "42a4e1b0-0cb4-42af-9ded-4a98c5e3df51",
-                  "src": "/C:/Users/LongBao/Documents/abc.pdf"
+                  "src": [
+                    "/C:/Users/LongBao/Documents/abc.pdf"
+                  ]
                 },
                 {
                   "key": "application-type",
@@ -431,6 +450,7 @@
               }
             }
           ],
+          "id": "dce290fc-7e1d-4da0-9424-c5b0ec58889b",
           "request": {
             "method": "POST",
             "header": [],
@@ -458,7 +478,8 @@
           },
           "response": []
         }
-      ]
+      ],
+      "id": "5ef693c3-c553-4bc4-99f6-e618c33de471"
     }
   ]
 }

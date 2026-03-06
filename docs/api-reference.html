@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>API Reference</title>
+<style>
+  
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=#gh-light-mode-only],
+.vscode-light img[src$=#gh-dark-mode-only],
+.vscode-high-contrast:not(.vscode-high-contrast-light) img[src$=#gh-light-mode-only],
+.vscode-high-contrast-light img[src$=#gh-dark-mode-only] {
+	display: none;
+}
+
+
+</style>
+<link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+</style>
+<style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+</style>
+<style>
+    
+  .task-list-item {
+      list-style-type: none;
+  }
+
+  .task-list-item-checkbox {
+      margin-left: -20px;
+      vertical-align: middle;
+      pointer-events: none;
+  }
+
+</style>
+<style>
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+</style>
+<style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-severe: #db6d28;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
+  }
+}
+</style>
+<style>
+
+.markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: .25em solid #888;
+}
+
+.markdown-alert>:first-child {
+  margin-top: 0
+}
+
+.markdown-alert>:last-child {
+  margin-bottom: 0
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+
+.markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
+}
+
+
+</style>
+</head>
+<body>
+<h1>TL Connect API Reference</h1>
+<blockquote>
+<p><strong>BaseUrl</strong>: <a href="http://localhost:8080">http://localhost:8080</a><br><strong>Api Version</strong>: 1<br><strong>Content-Type</strong>: application/json (trừ các endpoint dùng multipart/form-data)</p>
+</blockquote>
+<hr>
+<h3>Mục lục</h3>
+<hr>
+<ol>
+<li><a href="#1-response-format-chung">Response Format chung</a></li>
+<li><a href="#2-m%C3%A3-l%E1%BB%97i-response-codes">Mã lỗi (Response Codes)</a></li>
+<li><a href="#3-authentication">Authentication</a></li>
+<li><a href="#4-oauth2--%C4%91%C4%83ng-nh%E1%BA%ADp">OAuth2 – Đăng nhập</a></li>
+<li><a href="#5-student--qu%E1%BA%A3n-l%C3%BD-th%C3%B4ng-tin">Student – Quản lý thông tin</a></li>
+<li><a href="#6-study-program---ch%C6%B0%C6%A1ng-tr%C3%ACnh-%C4%91%C3%A0o-t%E1%BA%A1o">Study Program - Chương trình đào tạo</a></li>
+<li><a href="#7-schedule---l%E1%BB%8Bch-h%E1%BB%8Dc">Schedule - Lịch học</a></li>
+<li><a href="#8-exam---l%E1%BB%8Bch-thi">Exam - Lịch thi</a></li>
+<li><a href="#9-mark---k%E1%BA%BFt-qu%E1%BA%A3-h%E1%BB%8Dc-t%E1%BA%ADp">Mark - Kết quả học tập</a></li>
+<li><a href="#10-notification---th%C3%B4ng-b%C3%A1o">Notification - Thông báo</a></li>
+<li><a href="#11-application---%C4%91%C6%A1n-t%E1%BB%AB">Application - Đơn từ</a></li>
+</ol>
+<h2>1. Response Format chung</h2>
+<p>Tất cả response đều theo cấu trúc JSON thống nhất:</p>
+<pre><code class="language-json">{
+  &quot;code&quot;: 0,
+  &quot;data&quot;: { ... },
+  &quot;message&quot;: &quot;Operation completed successfully&quot;
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>code</td>
+<td>int</td>
+<td>Mã kết quả (&gt;= 0: thành công, &lt; 0: lỗi)</td>
+</tr>
+<tr>
+<td>data</td>
+<td>object</td>
+<td>Dữ liệu trả về</td>
+</tr>
+<tr>
+<td>message</td>
+<td>string</td>
+<td>Mô tả kết quả</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>2. Mã lỗi (Response Codes)</h2>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>HTTP Status</th>
+<th>Ý nghĩa</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>200</td>
+<td>Thành công</td>
+</tr>
+<tr>
+<td>-1</td>
+<td>400</td>
+<td>Input không hợp lệ</td>
+</tr>
+<tr>
+<td>-2</td>
+<td>404</td>
+<td>Không tìm thấy</td>
+</tr>
+<tr>
+<td>-3</td>
+<td>401</td>
+<td>Chưa xác thực / Token không hợp lệ</td>
+</tr>
+<tr>
+<td>-4</td>
+<td>403</td>
+<td>Bị từ chối</td>
+</tr>
+<tr>
+<td>-10</td>
+<td>500</td>
+<td>Lỗi server nội bộ</td>
+</tr>
+<tr>
+<td>-13</td>
+<td>502</td>
+<td>Lỗi external API</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>3. Authentication</h2>
+<p><strong>Headers bắt buộc cho các route yêu cầu xác thực</strong>  </p>
+<blockquote>
+<p>Authorization: Bearer &lt;JWT&gt;</p>
+</blockquote>
+<p>JWT token được cấp sau khi đăng nhập thành công qua /api/v1/oauth2/login.  </p>
+<hr>
+<h2>4. OAuth2 – Đăng nhập</h2>
+<h3>4.1. POST /api/v1/oauth2/login</h3>
+<p>Đăng nhập bằng Microsoft OAuth2 ID Token.</p>
+<ul>
+<li><strong>Auth</strong>: Không yêu cầu</li>
+<li><strong>Content-Type</strong>: application/json<br><strong>Request body</strong>:</li>
+</ul>
+<pre><code class="language-json">{
+  &quot;accessToken&quot;: &quot;eyJhbGciOiJSUzI1NiIs...&quot;
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>idToken</td>
+<td>string</td>
+<td>✅</td>
+<td>Microsoft OAuth2 ID từ Microsoft Azure AD</td>
+</tr>
+</tbody></table>
+<p><strong>Response – Đăng nhập thành công (code 0):</strong>:</p>
+<pre><code class="language-json">{
+  &quot;code&quot;: 0,
+  &quot;data&quot;: {
+    &quot;microsoftId&quot;: &quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...&quot;,
+    &quot;email&quot;: &quot;abc@gmail.com&quot;,
+    &quot;name&quot;: &quot;John Doe&quot;,
+    &quot;token&quot;: &quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...&quot;
+  },
+  &quot;message&quot;: &quot;Login successful&quot;
+}
+</code></pre>
+<p><strong>Response – Không tìm thấy user (code -2):</strong></p>
+<pre><code class="language-json">{
+  &quot;code&quot;: -2,
+  &quot;data&quot;: null,
+  &quot;message&quot;: &quot;User not found&quot;
+}
+</code></pre>
+<p><strong>Response – Token không hợp lệ (code -3):</strong></p>
+<pre><code class="language-json">{
+  &quot;code&quot;: -3,
+  &quot;data&quot;: null,
+  &quot;message&quot;: &quot;Invalid ID token&quot;
+}
+</code></pre>
+<p><strong>Test cases:</strong></p>
+<ul>
+<li>✅ idToken hợp lệ, user tồn tại → code 0 + JWT token</li>
+<li>❌ idToken hợp lệ, user chưa tồn tại → code -2</li>
+<li>❌ idToken rỗng / thiếu → code -1, HTTP 400</li>
+<li>❌ idToken invalid / hết hạn → code -3, HTTP 401</li>
+</ul>
+<hr>
+<h2>5. Student – Quản lý thông tin</h2>
+<h3>5.1. POST /api/v1/student/me</h3>
+<p>Sinh viên lấy thông tin cá nhân.
+-<strong>Auth</strong>: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+-<strong>Content-Type</strong>: Không áp dụng</p>
+<p><strong>Response thành công (code 0):</strong>:</p>
+<pre><code class="language-json">{
+  &quot;code&quot;: 0,
+  &quot;message&quot;: &quot;Student info retrieved successfully&quot;,
+  &quot;data&quot;: {
+      &quot;studentCode&quot;: &quot;SV2021001&quot;,
+      &quot;fullName&quot;: &quot;Pham Minh Duc&quot;,
+      &quot;dateOfBirth&quot;: &quot;2003-05-10&quot;,
+      &quot;gender&quot;: &quot;NAM&quot;,
+      &quot;classCode&quot;: &quot;KHMT2021&quot;,
+      &quot;academicAdvisor&quot;: &quot;Nguyen Van An&quot;,
+      &quot;major&quot;: {
+          &quot;majorCode&quot;: &quot;KHMT&quot;,
+          &quot;majorName&quot;: &quot;Khoa học máy tính&quot;,
+          &quot;faculty&quot;: &quot;Công nghệ thông tin&quot;
+      },
+      &quot;identityCard&quot;: {
+          &quot;cardNumber&quot;: &quot;079203001111&quot;,
+          &quot;cardType&quot;: &quot;CCCD&quot;,
+          &quot;issuedDate&quot;: &quot;2021-01-10&quot;,
+          &quot;issuedPlace&quot;: &quot;Cục CS QLHC về TTXH - HCM&quot;
+      },
+      &quot;contact&quot;: {
+          &quot;phoneNumber&quot;: &quot;0911111111&quot;,
+          &quot;address&quot;: &quot;12 Nguyen Trai, HCM&quot;,
+          &quot;email&quot;: &quot;duc.personal@gmail.com&quot;
+      },
+      &quot;academicInfo&quot;: {
+          &quot;cohort&quot;: &quot;K2021&quot;,
+          &quot;position&quot;: &quot;Lớp trưởng&quot;,
+          &quot;educationMode&quot;: &quot;CHINH_QUY&quot;
+      },
+      &quot;emergencyContact&quot;: {
+          &quot;name&quot;: &quot;Pham Van Bo&quot;,
+          &quot;phoneNumber&quot;: &quot;0981111111&quot;,
+          &quot;address&quot;: &quot;12 Nguyen Trai, HCM&quot;
+      }
+  }
+}
+</code></pre>
+<p><strong>Response – User chưa đăng nhập (code -3):</strong></p>
+<pre><code class="language-json">{
+  &quot;code&quot;: -3,
+  &quot;data&quot;: null,
+  &quot;message&quot;: &quot;Authentication required&quot;
+}
+</code></pre>
+<p><strong>Test cases:</strong></p>
+<ul>
+<li>✅ token hợp lệ → code 0 + thông tin sinh viên</li>
+<li>❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401</li>
+<li>❌ student id không tồn tại trong db → code -2, HTTP 404</li>
+</ul>
+<hr>
+<h3>5.2. POST /api/v1/student/class</h3>
+<p>Lấy thông tin lớp hành chính của sinh viên.</p>
+<ul>
+<li><strong>Auth</strong>: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)</li>
+<li><strong>Content-Type</strong>: Không áp dụng</li>
+</ul>
+<p><strong>Response thành công (code 0):</strong>:</p>
+<pre><code class="language-json">{
+  &quot;code&quot;: 0,
+  &quot;message&quot;: &quot;Student class info retrieved successfully&quot;,
+  &quot;data&quot;: {
+      &quot;classCode&quot;: &quot;KHMT2021&quot;,
+      &quot;academicAdvisor&quot;: {
+          &quot;lecturerCode&quot;: &quot;GV001&quot;,
+          &quot;fullName&quot;: &quot;Nguyen Van An&quot;,
+          &quot;phoneNumber&quot;: &quot;0901234567&quot;,
+          &quot;email&quot;: &quot;an.nguyen@university.edu.vn&quot;
+      },
+      &quot;students&quot;: [
+          {
+              &quot;studentCode&quot;: &quot;SV2021001&quot;,
+              &quot;fullName&quot;: &quot;Pham Minh Duc&quot;,
+              &quot;gender&quot;: &quot;NAM&quot;
+          },
+          {
+              &quot;studentCode&quot;: &quot;SV2021002&quot;,
+              &quot;fullName&quot;: &quot;Hoang Thi Em&quot;,
+              &quot;gender&quot;: &quot;NU&quot;
+          }
+      ]
+  }
+}
+</code></pre>
+<p><strong>Response – User chưa đăng nhập (code -3):</strong></p>
+<pre><code class="language-json">{
+  &quot;code&quot;: -3,
+  &quot;data&quot;: null,
+  &quot;message&quot;: &quot;Authentication required&quot;
+}
+</code></pre>
+<p><strong>Test cases:</strong></p>
+<ul>
+<li>✅ token hợp lệ → code 0 + thông tin lớp hành chính của sinh viên</li>
+<li>❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401</li>
+<li>❌ Không có lớp ứng với student id → code -2, HTTP 404</li>
+</ul>
+<hr>
+<h2>6. Study Program - Chương trình đào tạo</h2>
+<h3>6.1. GET /api/v1/study-programs</h3>
+<p>Lấy thông tin chương trình đào tạo của các ngành sinh viên đang theo học.  </p>
+<ul>
+<li><strong>Auth</strong>: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)</li>
+<li><strong>Content-Type</strong>: Không áp dụng</li>
+</ul>
+<p><strong>Response thành công (code 0):</strong>:</p>
+<pre><code class="language-json">{
+    &quot;code&quot;: 0,
+    &quot;message&quot;: &quot;Study programs retrieved successfully&quot;,
+    &quot;data&quot;: [
+        {
+            &quot;id&quot;: 1,
+            &quot;studentCode&quot;: &quot;SV2021001&quot;,
+            &quot;studyProgramCode&quot;: &quot;CTDT-KHMT-2021&quot;,
+            &quot;studyProgramName&quot;: &quot;Chương trình đào tạo KHMT 2021&quot;,
+            &quot;isPrimary&quot;: true
+        },
+        {
+            &quot;id&quot;: 3,
+            &quot;studentCode&quot;: &quot;SV2021001&quot;,
+            &quot;studyProgramCode&quot;: &quot;CTDT-HTTT-2021&quot;,
+            &quot;studyProgramName&quot;: &quot;Chương trình đào tạo HTTT 2021&quot;,
+            &quot;isPrimary&quot;: false
+        }
+    ]
+}
+</code></pre>
+<p><strong>Response – User chưa đăng nhập (code -3):</strong></p>
+<pre><code class="language-json">{
+  &quot;code&quot;: -3,
+  &quot;data&quot;: null,
+  &quot;message&quot;: &quot;Authentication required&quot;
+}
+</code></pre>
+<p><strong>Test cases:</strong></p>
+<ul>
+<li>✅ token hợp lệ → code 0 + thông tin chương trình đào tạo của các ngành sinh viên đang theo học</li>
+<li>❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401</li>
+</ul>
+<h3>6.2. GET /api/v1/study-programs/studyProgramCode</h3>
+<p>Lấy thông tin chi tiết chương trình đào tạo.  </p>
+<ul>
+<li><strong>Auth</strong>: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)</li>
+<li><strong>Content-Type</strong>: Không áp dụng</li>
+<li><strong>Path param:</strong></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>studyProgramCode</td>
+<td>string</td>
+<td>✅</td>
+<td>Mã chương trình đào tạo</td>
+</tr>
+<tr>
+<td><strong>Response thành công (code 0):</strong>:</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<pre><code class="language-json">{
+    &quot;code&quot;: 0,
+    &quot;message&quot;: &quot;Study programs retrieved successfully&quot;,
+    &quot;data&quot;: [
+        {
+            &quot;id&quot;: 1,
+            &quot;studentCode&quot;: &quot;SV2021001&quot;,
+            &quot;studyProgramCode&quot;: &quot;CTDT-KHMT-2021&quot;,
+            &quot;studyProgramName&quot;: &quot;Chương trình đào tạo KHMT 2021&quot;,
+            &quot;isPrimary&quot;: true
+        },
+        {
+            &quot;id&quot;: 3,
+            &quot;studentCode&quot;: &quot;SV2021001&quot;,
+            &quot;studyProgramCode&quot;: &quot;CTDT-HTTT-2021&quot;,
+            &quot;studyProgramName&quot;: &quot;Chương trình đào tạo HTTT 2021&quot;,
+            &quot;isPrimary&quot;: false
+        }
+    ]
+}
+</code></pre>
+<p><strong>Response – User chưa đăng nhập (code -3):</strong></p>
+<pre><code class="language-json">{
+  &quot;code&quot;: -3,
+  &quot;data&quot;: null,
+  &quot;message&quot;: &quot;Authentication required&quot;
+}
+</code></pre>
+<p><strong>Test cases:</strong></p>
+<ul>
+<li>✅ token hợp lệ + studyProgramCode hợp lệ → code 0 + thông tin chương trình đào tạo</li>
+<li>❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401</li>
+<li>❌ studyProgramCode không tồn tại trong db → code -2, HTTP 404</li>
+</ul>
+<hr>
+<h2>7. Schedule - Lịch học</h2>
+<h3>7.1. GET /api/v1/student/schedules/day-of-week</h3>
+<p>Lấy thông tin lịch học từng ngày trong tuần của sinh viên.  </p>
+<ul>
+<li><strong>Auth</strong>: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)</li>
+<li><strong>Content-Type</strong>: Không áp dụng</li>
+<li><strong>Query param (optional)</strong>:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>day_of_week</td>
+<td>int</td>
+<td>❌</td>
+<td>Thứ 1-7 (1: Monday, 2: Tuesday, ... 7: Sunday)</td>
+</tr>
+</tbody></table>
+<p><strong>Ví dụ request:</strong></p>
+<pre><code class="language-http">GET /api/v1/student/schedules/day-of-week?day_of_week=1
+</code></pre>
+<p><strong>Response thành công (code 0):</strong>:</p>
+<pre><code class="language-json">{
+    &quot;code&quot;: 0,
+    &quot;message&quot;: &quot;Schedules retrieved successfully&quot;,
+    &quot;data&quot;: [
+        {
+            &quot;id&quot;: 1,
+            &quot;studentCode&quot;: &quot;SV2021001&quot;,
+            &quot;studyProgramCode&quot;: &quot;CTDT-KHMT-2021&quot;,
+            &quot;studyProgramName&quot;: &quot;Chương trình đào tạo KHMT 2021&quot;,
+            &quot;isPrimary&quot;: true
+        },
+        {
+            &quot;id&quot;: 3,
+            &quot;studentCode&quot;: &quot;SV2021001&quot;,
+            &quot;studyProgramCode&quot;: &quot;CTDT-HTTT-2021&quot;,
+            &quot;studyProgramName&quot;: &quot;Chương trình đào tạo HTTT 2021&quot;,
+            &quot;isPrimary&quot;: false
+        }
+    ]
+}
+</code></pre>
+<p><strong>Response – User chưa đăng nhập (code -3):</strong></p>
+<pre><code class="language-json">{
+  &quot;code&quot;: -3,
+  &quot;data&quot;: null,
+  &quot;message&quot;: &quot;Authentication required&quot;
+}
+</code></pre>
+<p><strong>Test cases:</strong></p>
+<ul>
+<li>✅ token hợp lệ + dayOfWeek hợp lệ → code 0 + thông tin lịch học</li>
+<li>❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401</li>
+<li>❌ dayOfWeek không hợp lệ → code -2, HTTP 404</li>
+</ul>
+<h3>7.2. GET /api/v1/student/schedules/weekly</h3>
+<p>Lấy thông tin lịch học theo tuần của sinh viên.  </p>
+<ul>
+<li><strong>Auth</strong>: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)</li>
+<li><strong>Content-Type</strong>: Không áp dụng</li>
+<li><strong>Query param (optional)</strong>: <table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>start_date</td>
+<td>string</td>
+<td>❌</td>
+<td>Ngày bắt đầu của tuần (YYYY-MM-DD)</td>
+</tr>
+<tr>
+<td>end_date</td>
+<td>string</td>
+<td>❌</td>
+<td>Ngày kết thúc của tuần (YYYY-MM-DD)</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<p><strong>Ví dụ request:</strong></p>
+<pre><code>GET /api/v1/student/schedules/weekly?start_date=2022-02-01&amp;end_date=2022-09-01
+</code></pre>
+<p><strong>Response thành công (code 0):</strong>:</p>
+<pre><code class="language-json">{
+  &quot;code&quot;: 0,
+  &quot;message&quot;: &quot;Weekly schedule retrieved successfully&quot;,
+  &quot;data&quot;: {
+      &quot;semester&quot;: &quot;HK2 2021-2022&quot;,
+      &quot;week&quot;: 1,
+      &quot;startDate&quot;: &quot;2022-02-01&quot;,
+      &quot;endDate&quot;: &quot;2022-09-01&quot;,
+      &quot;dailySchedules&quot;: [
+          {
+              &quot;courseClasses&quot;: [
+                  {
+                      &quot;classCode&quot;: &quot;INT1002-01&quot;,
+                      &quot;dayOfWeek&quot;: 2,
+                      &quot;subjectName&quot;: &quot;Cấu trúc dữ liệu &amp; giải thuật&quot;,
+                      &quot;subjectCode&quot;: &quot;INT1002&quot;,
+                      &quot;startPeriod&quot;: 6,
+                      &quot;endPeriod&quot;: 8,
+                      &quot;startTime&quot;: &quot;11:30:00&quot;,
+                      &quot;endTime&quot;: &quot;14:00:00&quot;,
+                      &quot;room&quot;: &quot;B201&quot;,
+                      &quot;lecturerName&quot;: &quot;Nguyen Van An&quot;,
+                      &quot;lecturerEmail&quot;: &quot;an.nguyen@university.edu.vn&quot;
+                  }
+              ]
+          },
+          {
+              &quot;courseClasses&quot;: [
+                  {
+                      &quot;classCode&quot;: &quot;INT1003-01&quot;,
+                      &quot;dayOfWeek&quot;: 5,
+                      &quot;subjectName&quot;: &quot;Lập trình hướng đối tượng&quot;,
+                      &quot;subjectCode&quot;: &quot;INT1003&quot;,
+                      &quot;startPeriod&quot;: 1,
+                      &quot;endPeriod&quot;: 3,
+                      &quot;startTime&quot;: &quot;07:00:00&quot;,
+                      &quot;endTime&quot;: &quot;09:30:00&quot;,
+                      &quot;room&quot;: &quot;B202&quot;,
+                      &quot;lecturerName&quot;: &quot;Tran Thi Bich&quot;,
+                      &quot;lecturerEmail&quot;: &quot;bich.tran@university.edu.vn&quot;
+                  }
+              ]
+          }
+      ]
+  }
+}
+</code></pre>
+<p><strong>Response – User chưa đăng nhập (code -3):</strong></p>
+<pre><code class="language-json">{
+  &quot;code&quot;: -3,
+  &quot;data&quot;: null,
+  &quot;message&quot;: &quot;Authentication required&quot;
+}
+</code></pre>
+<p><strong>Response – Sai định dạng ngày (code -1):</strong></p>
+<pre><code class="language-json">{
+  &quot;code&quot;: -1,
+  &quot;data&quot;: null,
+  &quot;message&quot;: &quot;Invalid date format&quot;
+}
+</code></pre>
+<p><strong>Test cases:</strong></p>
+<ul>
+<li>✅ token hợp lệ + ngày hợp lệ → code 0 + thông tin lịch học</li>
+<li>❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401</li>
+<li>❌ sai định dạng ngày → code -1, HTTP 400</li>
+<li>❌ không tồn tại học kỳ thích hợp trong db → code -2, HTTP 404</li>
+</ul>
+<h3>7.3. GET /api/v1/student/schedules/semester</h3>
+<p>Lấy thông tin lịch học theo học kỳ của sinh viên.  </p>
+<ul>
+<li><strong>Auth</strong>: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)</li>
+<li><strong>Content-Type</strong>: Không áp dụng</li>
+<li><strong>Query param</strong>: <table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>HocKy</td>
+<td>string</td>
+<td>✅</td>
+<td>Tên học kỳ</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<p><strong>Ví dụ request:</strong></p>
+<pre><code>GET /api/v1/student/schedules/semester?HocKy=HK1 2022-2023
+</code></pre>
+<p><strong>Response thành công (code 0):</strong>:</p>
+<pre><code class="language-json">{
+  &quot;code&quot;: 0,
+  &quot;message&quot;: &quot;Semester schedule retrieved successfully&quot;,
+  &quot;data&quot;: {
+      &quot;semester&quot;: &quot;HK1 2022-2023&quot;,
+      &quot;courseClasses&quot;: [
+          {
+              &quot;classCode&quot;: &quot;INT2001-01&quot;,
+              &quot;dayOfWeek&quot;: 3,
+              &quot;subjectName&quot;: &quot;Cơ sở dữ liệu&quot;,
+              &quot;subjectCode&quot;: &quot;INT2001&quot;,
+              &quot;startPeriod&quot;: 4,
+              &quot;endPeriod&quot;: 6,
+              &quot;startTime&quot;: &quot;09:45:00&quot;,
+              &quot;endTime&quot;: &quot;12:15:00&quot;,
+              &quot;room&quot;: &quot;C301&quot;,
+              &quot;lecturerName&quot;: &quot;Tran Thi Bich&quot;,
+              &quot;lecturerEmail&quot;: &quot;bich.tran@university.edu.vn&quot;
+          }
+      ]
+  }
+}
+</code></pre>
+<p><strong>Response – User chưa đăng nhập (code -3):</strong></p>
+<pre><code class="language-json">{
+  &quot;code&quot;: -3,
+  &quot;data&quot;: null,
+  &quot;message&quot;: &quot;Authentication required&quot;
+}
+</code></pre>
+<p><strong>Test cases:</strong></p>
+<ul>
+<li>✅ token hợp lệ + học kỳ hợp lệ → code 0 + thông tin lịch học</li>
+<li>❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401</li>
+<li>❌ không tồn tại học kỳ thích hợp trong db → code -2, HTTP 404</li>
+</ul>
+<hr>
+<h2>8. Exam - Lịch thi</h2>
+<h3>8.1. GET /api/v1/student/exams</h3>
+<p>Lấy thông tin lịch thi của sinh viên.  </p>
+<ul>
+<li><strong>Auth</strong>: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)</li>
+<li><strong>Content-Type</strong>: Không áp dụng</li>
+<li><strong>Query param</strong>: <table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>HocKy</td>
+<td>string</td>
+<td>✅</td>
+<td>Tên học kỳ</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<p><strong>Ví dụ request:</strong></p>
+<pre><code>GET /api/v1/student/exams?HocKy=HK1 2022-2023
+</code></pre>
+<p><strong>Response thành công (code 0):</strong>:</p>
+<pre><code class="language-json">{
+  &quot;code&quot;: 0,
+  &quot;message&quot;: &quot;HK1 2021-2022&quot;,
+  &quot;data&quot;: {
+      &quot;semesterName&quot;: &quot;HK1 2021-2022&quot;,
+      &quot;examSchedules&quot;: [
+          {
+              &quot;subjectCode&quot;: &quot;INT1001&quot;,
+              &quot;subjectName&quot;: &quot;Nhập môn lập trình&quot;,
+              &quot;classCode&quot;: &quot;INT1001-01&quot;,
+              &quot;examDate&quot;: &quot;2022-01-10&quot;,
+              &quot;startTime&quot;: &quot;07:30:00&quot;,
+              &quot;endTime&quot;: &quot;09:30:00&quot;,
+              &quot;examRoom&quot;: &quot;P101&quot;,
+              &quot;examLocation&quot;: &quot;Co so 1&quot;,
+              &quot;examFormat&quot;: &quot;TRAC_NGHIEM&quot;,
+              &quot;examType&quot;: &quot;GIUA_KY&quot;,
+              &quot;examAttempt&quot;: 1,
+              &quot;attendanceStatus&quot;: &quot;ATTENDED&quot;,
+              &quot;examStatus&quot;: &quot;DONE&quot;
+          }
+      ]
+  }
+}
+</code></pre>
+<p><strong>Response – User chưa đăng nhập (code -3):</strong></p>
+<pre><code class="language-json">{
+  &quot;code&quot;: -3,
+  &quot;data&quot;: null,
+  &quot;message&quot;: &quot;Authentication required&quot;
+}
+</code></pre>
+<p><strong>Test cases:</strong></p>
+<ul>
+<li>✅ token hợp lệ + học kỳ hợp lệ → code 0 + thông tin lịch thi</li>
+<li>❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401</li>
+<li>❌ không tồn tại học kỳ thích hợp trong db → code -2, HTTP 404</li>
+</ul>
+<hr>
+<h2>9. Mark - Kết quả học tập</h2>
+<h3>9.1. GET /api/v1/student/marks</h3>
+<p>Lấy thông tin kết quả học tập của sinh viên.  </p>
+<ul>
+<li><strong>Auth</strong>: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)</li>
+<li><strong>Content-Type</strong>: Không áp dụng</li>
+<li><strong>Query param</strong>: <table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ctdt</td>
+<td>string</td>
+<td>✅</td>
+<td>Tên chương trình đào tạo</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<p><strong>Ví dụ request:</strong></p>
+<pre><code>GET /api/v1/student/marks?ctdt=CTDT-KHMT-2021
+</code></pre>
+<p><strong>Response thành công (code 0):</strong>:</p>
+<pre><code class="language-json">{
+  &quot;code&quot;: 0,
+  &quot;message&quot;: &quot;Academic result fetched successfully&quot;,
+  &quot;data&quot;: {
+      &quot;studyProgram&quot;: &quot;CTDT-KHMT-2021&quot;,
+      &quot;semesterResults&quot;: [
+          {
+              &quot;semester&quot;: &quot;HK2 2021-2022&quot;,
+              &quot;subjectResults&quot;: [
+                  {
+                      &quot;subjectCode&quot;: &quot;INT1002&quot;,
+                      &quot;subjectName&quot;: &quot;Cấu trúc dữ liệu &amp; giải thuật&quot;,
+                      &quot;credits&quot;: 3,
+                      &quot;score10&quot;: 7.00,
+                      &quot;score4&quot;: 3.00,
+                      &quot;letterGrade&quot;: &quot;B&quot;,
+                      &quot;isPass&quot;: true
+                  },
+                  {
+                      &quot;subjectCode&quot;: &quot;INT1003&quot;,
+                      &quot;subjectName&quot;: &quot;Lập trình hướng đối tượng&quot;,
+                      &quot;credits&quot;: 3,
+                      &quot;score10&quot;: 9.00,
+                      &quot;score4&quot;: 4.00,
+                      &quot;letterGrade&quot;: &quot;A+&quot;,
+                      &quot;isPass&quot;: true
+                  }
+              ],
+              &quot;semesterSummary&quot;: {
+                  &quot;creditsRegistered&quot;: null,
+                  &quot;creditsPassed&quot;: 6,
+                  &quot;semesterGpa&quot;: 3.20,
+                  &quot;conductScore&quot;: 88,
+                  &quot;cumulativeGpa&quot;: 3.30
+              }
+          },
+          {
+              &quot;semester&quot;: &quot;HK1 2022-2023&quot;,
+              &quot;subjectResults&quot;: [
+                  {
+                      &quot;subjectCode&quot;: &quot;INT2001&quot;,
+                      &quot;subjectName&quot;: &quot;Cơ sở dữ liệu&quot;,
+                      &quot;credits&quot;: 3,
+                      &quot;score10&quot;: 6.50,
+                      &quot;score4&quot;: 2.50,
+                      &quot;letterGrade&quot;: &quot;C&quot;,
+                      &quot;isPass&quot;: true
+                  },
+                  {
+                      &quot;subjectCode&quot;: &quot;INT2002&quot;,
+                      &quot;subjectName&quot;: &quot;Mạng máy tính&quot;,
+                      &quot;credits&quot;: 3,
+                      &quot;score10&quot;: 7.50,
+                      &quot;score4&quot;: 3.00,
+                      &quot;letterGrade&quot;: &quot;B&quot;,
+                      &quot;isPass&quot;: true
+                  }
+              ],
+              &quot;semesterSummary&quot;: {
+                  &quot;creditsRegistered&quot;: null,
+                  &quot;creditsPassed&quot;: 6,
+                  &quot;semesterGpa&quot;: 2.80,
+                  &quot;conductScore&quot;: 80,
+                  &quot;cumulativeGpa&quot;: 3.10
+              }
+          },
+          {
+              &quot;semester&quot;: &quot;HK1 2021-2022&quot;,
+              &quot;subjectResults&quot;: [
+                  {
+                      &quot;subjectCode&quot;: &quot;INT1001&quot;,
+                      &quot;subjectName&quot;: &quot;Nhập môn lập trình&quot;,
+                      &quot;credits&quot;: 3,
+                      &quot;score10&quot;: 8.50,
+                      &quot;score4&quot;: 3.50,
+                      &quot;letterGrade&quot;: &quot;A&quot;,
+                      &quot;isPass&quot;: true
+                  }
+              ],
+              &quot;semesterSummary&quot;: {
+                  &quot;creditsRegistered&quot;: null,
+                  &quot;creditsPassed&quot;: 3,
+                  &quot;semesterGpa&quot;: 3.50,
+                  &quot;conductScore&quot;: 85,
+                  &quot;cumulativeGpa&quot;: 3.50
+              }
+          }
+      ]
+  }
+}
+</code></pre>
+<p><strong>Response – User chưa đăng nhập (code -3):</strong></p>
+<pre><code class="language-json">{
+  &quot;code&quot;: -3,
+  &quot;data&quot;: null,
+  &quot;message&quot;: &quot;Authentication required&quot;
+}
+</code></pre>
+<p><strong>Test cases:</strong></p>
+<ul>
+<li>✅ token hợp lệ + chương trình đào tạo hợp lệ → code 0 + thông tin kết quả học tập</li>
+<li>❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401</li>
+<li>❌ không tồn tại chương trình đào tạo thích hợp trong db → code -2, HTTP 404</li>
+</ul>
+<hr>
+<h2>10. Notification - Thông báo</h2>
+<h3>10.1. GET /api/v1/student/notification</h3>
+<p>Lấy tất cả thông tin thông báo của sinh viên.  </p>
+<ul>
+<li><strong>Auth</strong>: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)</li>
+<li><strong>Content-Type</strong>: Không áp dụng</li>
+</ul>
+<p><strong>Response thành công (code 0):</strong>:</p>
+<pre><code class="language-json">{
+  &quot;code&quot;: 0,
+  &quot;message&quot;: &quot;Get all notification successfully&quot;,
+  &quot;data&quot;: [
+      {
+          &quot;id&quot;: 4,
+          &quot;title&quot;: &quot;Ket qua xet hoc bong HK1&quot;,
+          &quot;sender&quot;: &quot;Phong Cong Tac Sinh Vien&quot;,
+          &quot;targetType&quot;: &quot;ALL&quot;,
+          &quot;deadLine&quot;: null,
+          &quot;createdAt&quot;: &quot;2026-02-26T11:28:45.567903&quot;
+      },
+      {
+          &quot;id&quot;: 2,
+          &quot;title&quot;: &quot;Thong bao nghi le 30/4&quot;,
+          &quot;sender&quot;: &quot;Ban Giam Hieu&quot;,
+          &quot;targetType&quot;: &quot;ALL&quot;,
+          &quot;deadLine&quot;: null,
+          &quot;createdAt&quot;: &quot;2026-02-26T11:28:45.567903&quot;
+      },
+      {
+          &quot;id&quot;: 1,
+          &quot;title&quot;: &quot;Thong bao lich thi HK1 2021-2022&quot;,
+          &quot;sender&quot;: &quot;Phong Dao Tao&quot;,
+          &quot;targetType&quot;: &quot;ALL&quot;,
+          &quot;deadLine&quot;: &quot;2022-01-05T17:00:00&quot;,
+          &quot;createdAt&quot;: &quot;2026-02-26T11:28:45.567903&quot;
+      }
+  ]
+}
+</code></pre>
+<p><strong>Response – User chưa đăng nhập (code -3):</strong></p>
+<pre><code class="language-json">{
+    &quot;code&quot;: -3,
+    &quot;data&quot;: null,
+    &quot;message&quot;: &quot;Authentication required&quot;
+}
+</code></pre>
+<p><strong>Test cases:</strong></p>
+<ul>
+<li>✅ token hợp lệ → code 0 + thông tin thông báo</li>
+<li>❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401</li>
+</ul>
+<h3>10.2. GET /api/v1/student/notification/id</h3>
+<p>Lấy thông tin chi tiết thông báo.</p>
+<ul>
+<li><strong>Auth</strong>: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)</li>
+<li><strong>Content-Type</strong>: Không áp dụng</li>
+<li><strong>Path param</strong>:<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>string</td>
+<td>✅</td>
+<td>ID thông báo</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<p><strong>Response thành công (code 0):</strong>:</p>
+<pre><code class="language-json">{
+  &quot;code&quot;: 0,
+  &quot;message&quot;: &quot;Get detail notification successfully&quot;,
+  &quot;data&quot;: {
+      &quot;title&quot;: &quot;Thong bao nghi le 30/4&quot;,
+      &quot;content&quot;: &quot;Truong thong bao nghi le 30/4 - 1/5. Sinh vien nghi hoc tu ngay 29/4 den 2/5.&quot;,
+      &quot;sender&quot;: &quot;Ban Giam Hieu&quot;,
+      &quot;targetType&quot;: &quot;ALL&quot;,
+      &quot;deadLine&quot;: null,
+      &quot;createdAt&quot;: &quot;2026-02-26T11:28:45.567903&quot;
+  }
+}
+</code></pre>
+<p><strong>Response – User chưa đăng nhập (code -3):</strong></p>
+<pre><code class="language-json">{
+    &quot;code&quot;: -3,
+    &quot;data&quot;: null,
+    &quot;message&quot;: &quot;Authentication required&quot;
+}
+</code></pre>
+<p><strong>Test cases:</strong></p>
+<ul>
+<li>✅ token hợp lệ + thông báo tồn tại → code 0 + thông tin thông báo</li>
+<li>❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401</li>
+<li>❌ thông báo không tồn tại → code -2, HTTP 404</li>
+</ul>
+<hr>
+<h2>11. Application - Nộp đơn</h2>
+<h3>11.1. GET /api/v1/applications/types</h3>
+<p>Lấy danh sách loại đơn.</p>
+<ul>
+<li><strong>Auth</strong>: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)</li>
+<li><strong>Content-Type</strong>: Không áp dụng</li>
+</ul>
+<p><strong>Response thành công (code 0):</strong>:</p>
+<pre><code class="language-json">{
+  &quot;code&quot;: 0,
+  &quot;message&quot;: &quot;List of applications&quot;,
+  &quot;data&quot;: [
+      {
+          &quot;id&quot;: 1,
+          &quot;code&quot;: &quot;HOC_BONG&quot;,
+          &quot;name&quot;: &quot;Don xin hoc bong&quot;
+      },
+      {
+          &quot;id&quot;: 2,
+          &quot;code&quot;: &quot;NGHI_HOC&quot;,
+          &quot;name&quot;: &quot;Don xin nghi hoc&quot;
+      },
+      {
+          &quot;id&quot;: 3,
+          &quot;code&quot;: &quot;CHUYEN_NGANH&quot;,
+          &quot;name&quot;: &quot;Don xin chuyen nganh&quot;
+      },
+      {
+          &quot;id&quot;: 4,
+          &quot;code&quot;: &quot;XAC_NHAN_SV&quot;,
+          &quot;name&quot;: &quot;Xac nhan sinh vien&quot;
+      },
+      {
+          &quot;id&quot;: 5,
+          &quot;code&quot;: &quot;HOAN_THI&quot;,
+          &quot;name&quot;: &quot;Don xin hoan thi&quot;
+      },
+      {
+          &quot;id&quot;: 6,
+          &quot;code&quot;: &quot;PHU_CAP_KTX&quot;,
+          &quot;name&quot;: &quot;Don xin phu cap ky tuc xa&quot;
+      }
+  ]
+}
+</code></pre>
+<p><strong>Response – User chưa đăng nhập (code -3):</strong></p>
+<pre><code class="language-json">{
+    &quot;code&quot;: -3,
+    &quot;data&quot;: null,
+    &quot;message&quot;: &quot;Authentication required&quot;
+}
+</code></pre>
+<p><strong>Test cases:</strong></p>
+<ul>
+<li>✅ token hợp lệ → code 0 + danh sách loại đơn</li>
+<li>❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401</li>
+</ul>
+<h3>11.2. POST /api/v1/applications/submit</h3>
+<p>Nộp đơn.</p>
+<ul>
+<li><strong>Auth</strong>: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)</li>
+<li><strong>Content-Type</strong>: multipart/form-data</li>
+</ul>
+<p><strong>Form data fields:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>file</td>
+<td>File</td>
+<td>✅</td>
+<td>file đơn (pdf)</td>
+</tr>
+<tr>
+<td>application-type</td>
+<td>number</td>
+<td>✅</td>
+<td>loại đơn</td>
+</tr>
+<tr>
+<td>content</td>
+<td>string</td>
+<td>❌</td>
+<td>nội dung đơn</td>
+</tr>
+</tbody></table>
+<p><strong>Response thành công (code 0):</strong>:</p>
+<pre><code class="language-json">{
+  &quot;code&quot;: 0,
+  &quot;message&quot;: &quot;Application created successfully&quot;,
+  &quot;data&quot;: [
+      &quot;abc.pdf&quot;
+  ]
+}
+</code></pre>
+<p><strong>Response – Thiếu file (code -1):</strong></p>
+<pre><code class="language-json">{
+    &quot;code&quot;: -1,
+    &quot;data&quot;: null,
+    &quot;message&quot;: &quot;File is empty&quot;
+}
+</code></pre>
+<p><strong>Response – Thiếu loại đơn (code -1):</strong></p>
+<pre><code class="language-json">{
+    &quot;code&quot;: -1,
+    &quot;data&quot;: null,
+    &quot;message&quot;: &quot;Application type is empty&quot;
+}
+</code></pre>
+<p><strong>Response – Sai định dạng file (code -1):</strong></p>
+<pre><code class="language-json">{
+    &quot;code&quot;: -1,
+    &quot;data&quot;: null,
+    &quot;message&quot;: &quot;Only valid PDF files are allowed&quot;
+}
+</code></pre>
+<p><strong>Response – File quá lớn (code -1):</strong></p>
+<pre><code class="language-json">{
+    &quot;code&quot;: -1,
+    &quot;data&quot;: null,
+    &quot;message&quot;: &quot;File size should be less than 5MB&quot;
+}
+</code></pre>
+<p><strong>Response – User chưa đăng nhập (code -3):</strong></p>
+<pre><code class="language-json">{
+    &quot;code&quot;: -3,
+    &quot;data&quot;: null,
+    &quot;message&quot;: &quot;Authentication required&quot;
+}
+</code></pre>
+<p><strong>Response – Lỗi server nội bộ (code -10):</strong></p>
+<pre><code class="language-json">{
+    &quot;code&quot;: -10,
+    &quot;data&quot;: null,
+    &quot;message&quot;: &quot;Application failed to create&quot;
+}
+</code></pre>
+<p><strong>Test cases:</strong></p>
+<ul>
+<li>✅ token hợp lệ + file hợp lệ + loại đơn hợp lệ → code 0 + tên file</li>
+<li>❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401</li>
+<li>❌ file rỗng / sai định dạng / quá lớn → code -1, HTTP 400</li>
+<li>❌ loại đơn rỗng → code -1, HTTP 400</li>
+</ul>
+<hr>
+<h2>12. News - Tin tức</h2>
+<h3>12.1. GET /api/v1/news/top5</h3>
+<p>Lấy top 5 tin tức.</p>
+<ul>
+<li><strong>Auth</strong>: Không áp dụng</li>
+<li><strong>Content-Type</strong>: Không áp dụng</li>
+</ul>
+<p><strong>Response thành công (code 0):</strong>:</p>
+<pre><code class="language-json">{
+  &quot;code&quot;: 0,
+  &quot;message&quot;: &quot;Get top 5 news successfully&quot;,
+  &quot;data&quot;: [
+      &quot;abc.pdf&quot;
+  ]
+}
+</code></pre>
+<p><strong>Test cases:</strong></p>
+<ul>
+<li>✅ không áp dụng auth → code 0 + danh sách tin tức</li>
+</ul>
+<h3>12.2. GET /api/v1/news</h3>
+<p>Lấy tất cả tin tức.</p>
+<ul>
+<li><strong>Auth</strong>: Không áp dụng</li>
+<li><strong>Content-Type</strong>: Không áp dụng</li>
+</ul>
+<p><strong>Response thành công (code 0):</strong>:</p>
+<pre><code class="language-json">{
+  &quot;code&quot;: 0,
+  &quot;message&quot;: &quot;Get all news successfully&quot;,
+  &quot;data&quot;: [
+      {
+          &quot;id&quot;: 1,
+          &quot;title&quot;: &quot;Tin tức 1&quot;,
+          &quot;content&quot;: &quot;Nội dung tin tức 1&quot;,
+          &quot;createdAt&quot;: &quot;2026-02-26T11:28:45.567903&quot;
+      },
+      {
+          &quot;id&quot;: 2,
+          &quot;title&quot;: &quot;Tin tức 2&quot;,
+          &quot;content&quot;: &quot;Nội dung tin tức 2&quot;,
+          &quot;createdAt&quot;: &quot;2026-02-26T11:28:45.567903&quot;
+      }
+  ]
+}
+</code></pre>
+<p><strong>Test cases:</strong></p>
+<ul>
+<li>✅ không áp dụng auth → code 0 + danh sách tin tức</li>
+</ul>
+<hr>
+
+</body>
+</html>

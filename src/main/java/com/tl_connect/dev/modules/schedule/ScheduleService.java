@@ -115,8 +115,7 @@ public class ScheduleService {
                 Semester semester = semesterRepository.findSemesterByDate(today)
                                 .orElseThrow(() -> new NotFoundException("Semester not found"));
 
-                List<ScheduleRow> scheduleRows = scheduleRepository.findDayOfWeekSchedule(studentId, semester.getId(),
-                                dayOfWeek);
+                List<ScheduleRow> scheduleRows = scheduleRepository.findDayOfWeekSchedule(studentId, semester.getId(),dayOfWeek);
 
                 List<CourseClassDTO> courseClasses = scheduleRows.stream()
                                 .map(row -> CourseClassDTO.builder()

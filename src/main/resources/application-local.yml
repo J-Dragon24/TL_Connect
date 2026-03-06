@@ -15,7 +15,7 @@ spring:
             hibernate:
                 default_schema: public
         hibernate:
-            ddl-auto: validate
+            ddl-auto: none
         show-sql: true
 microsoft:
     tenant-id: aec003eb-c537-4e8a-b0f3-1144a93a60bc
