@@ -31,3 +31,6 @@ b2:
     aws_secret_access_key: K005fYW2dznJytAJBvPsA4NICbisFEM
     end_point: https://s3.us-east-005.backblazeb2.com
     bucket_name: student-application
+chatbot:
+    api-key: [ENCRYPTION_KEY]
+    domain: http://127.0.0.1:8787

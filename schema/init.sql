@@ -344,7 +344,7 @@ CREATE TABLE student_semester_summaries (
   study_program_id BIGINT NOT NULL,
   semester_id BIGINT NOT NULL,
   credits_registered INT NOT NULL,
-  credits_passed INT NOT NULL,
+  credits_passed INT NOT NULL CHECK (credits_registered > credits_passed),
   
   semester_gpa DECIMAL(4,2) NOT NULL,
   letter_gpa VARCHAR(2),

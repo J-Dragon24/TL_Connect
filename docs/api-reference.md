@@ -7,16 +7,18 @@
 ### Mục lục
 ---
 1. [Response Format chung](#1-response-format-chung)
-2. [Mã lỗi (Response Codes)](#2-mã-lỗi-response-codes)
+2. [Mã lỗi (Response Codes)](#2-m%C3%A3-l%E1%BB%97i-response-codes)
 3. [Authentication](#3-authentication)
-4. [OAuth2 – Đăng nhập](#4-oauth2--đăng-nhập)
-5. [Student – Quản lý thông tin](#5-student--quản-lý-thông-tin)
-6. [Study Program - Chương trình đào tạo](#6-study-program---chương-trình-đào-tạo)
-7. [Schedule - Lịch học](#7-schedule---lịch-học)
-8. [Exam - Lịch thi](#8-exam---lịch-thi)
-9. [Mark - Kết quả học tập](#9-mark---kết-quả-học-tập)
-10. [Notification - Thông báo](#10-notification---thông-báo)
-11. [Application - Đơn từ](#11-application---đơn-từ)
+4. [OAuth2 – Đăng nhập](#4-oauth2--%C4%91%C4%83ng-nh%E1%BA%ADp)
+5. [Student – Quản lý thông tin](#5-student--qu%E1%BA%A3n-l%C3%BD-th%C3%B4ng-tin)
+6. [Study Program - Chương trình đào tạo](#6-study-program---ch%C6%B0%C6%A1ng-tr%C3%ACnh-%C4%91%C3%A0o-t%E1%BA%A1o)
+7. [Schedule - Lịch học](#7-schedule---l%E1%BB%8Bch-h%E1%BB%8Dc)
+8. [Exam - Lịch thi](#8-exam---l%E1%BB%8Bch-thi)
+9. [Mark - Kết quả học tập](#9-mark---k%E1%BA%BFt-qu%E1%BA%A3-h%E1%BB%8Dc-t%E1%BA%ADp)
+10. [Notification - Thông báo](#10-notification---th%C3%B4ng-b%C3%A1o)
+11. [Application - Đơn từ](#11-application---%C4%91%C6%A1n-t%E1%BB%AB)
+12. [News - Tin tức](#12-news---tin-t%EC%84%B8)
+13. [Chatbot - AI trò chuyện](#13-chatbot---ai-tr%C6%B0%E1%BB%9Dng)
 
 ## 1. Response Format chung
 Tất cả response đều theo cấu trúc JSON thống nhất:
@@ -56,21 +58,21 @@ JWT token được cấp sau khi đăng nhập thành công qua /api/v1/oauth2/l
 ## 4. OAuth2 – Đăng nhập
 ### 4.1. POST /api/v1/oauth2/login
 
-Đăng nhập bằng Google OAuth2 ID Token.
+Đăng nhập bằng Microsoft OAuth2 ID Token.
 
 - **Auth**: Không yêu cầu
 - **Content-Type**: application/json
-**Request body**:
+**Request body**:  
 
 ```json
 {
-  "idToken": "eyJhbGciOiJSUzI1NiIs..."
+  "accessToken": "eyJhbGciOiJSUzI1NiIs..."
 }
 ```  
 
 | Field | Type | Required | Description |
 |------|-----|-----|-----|
-| idToken | string | ✅ | Google OAuth2 ID từ Microsoft Azure AD |
+| idToken | string | ✅ | Microsoft OAuth2 ID từ Microsoft Azure AD |
 
 **Response – Đăng nhập thành công (code 0):**:
 
@@ -116,10 +118,10 @@ JWT token được cấp sau khi đăng nhập thành công qua /api/v1/oauth2/l
 ## 5. Student – Quản lý thông tin
 ### 5.1. POST /api/v1/student/me
 Sinh viên lấy thông tin cá nhân.
--**Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
--**Content-Type**: Không áp dụng
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: Không áp dụng
 
-**Response thành công (code 0):**:
+**Response thành công (code 0):**
 
 ```json
 {
@@ -342,23 +344,24 @@ GET /api/v1/student/schedules/day-of-week?day_of_week=1
 ```json
 {
     "code": 0,
-    "message": "Schedules retrieved successfully",
-    "data": [
-        {
-            "id": 1,
-            "studentCode": "SV2021001",
-            "studyProgramCode": "CTDT-KHMT-2021",
-            "studyProgramName": "Chương trình đào tạo KHMT 2021",
-            "isPrimary": true
-        },
-        {
-            "id": 3,
-            "studentCode": "SV2021001",
-            "studyProgramCode": "CTDT-HTTT-2021",
-            "studyProgramName": "Chương trình đào tạo HTTT 2021",
-            "isPrimary": false
-        }
-    ]
+    "message": "Day of week schedule retrieved successfully",
+    "data": {
+        "courseClasses": [
+            {
+                "classCode": "INT1002-01",
+                "dayOfWeek": 2,
+                "subjectName": "Cấu trúc dữ liệu & giải thuật",
+                "subjectCode": "INT1002",
+                "startPeriod": 6,
+                "endPeriod": 8,
+                "startTime": "11:30:00",
+                "endTime": "14:00:00",
+                "room": "B201",
+                "lecturerName": "Nguyen Van An",
+                "lecturerEmail": "an.nguyen@university.edu.vn"
+            }
+        ]
+    }
 }
 ```  
 
@@ -949,7 +952,58 @@ Nộp đơn.
 - ❌ loại đơn rỗng → code -1, HTTP 400
 ---
 
+## 12. News - Tin tức
+### 12.1. GET /api/v1/news/top5
+Lấy top 5 tin tức.
+- **Auth**: Không áp dụng
+- **Content-Type**: Không áp dụng 
+  
+**Response thành công (code 0):**:
+```json
+{
+  "code": 0,
+  "message": "Get top 5 news successfully",
+  "data": [
+      "abc.pdf"
+  ]
+}
+```  
 
+**Test cases:**
+
+- ✅ không áp dụng auth → code 0 + danh sách tin tức
+  
+### 12.2. GET /api/v1/news
+Lấy tất cả tin tức.
+- **Auth**: Không áp dụng
+- **Content-Type**: Không áp dụng
+  
+**Response thành công (code 0):**:
+```json
+{
+  "code": 0,
+  "message": "Get all news successfully",
+  "data": [
+      {
+          "id": 1,
+          "title": "Tin tức 1",
+          "content": "Nội dung tin tức 1",
+          "createdAt": "2026-02-26T11:28:45.567903"
+      },
+      {
+          "id": 2,
+          "title": "Tin tức 2",
+          "content": "Nội dung tin tức 2",
+          "createdAt": "2026-02-26T11:28:45.567903"
+      }
+  ]
+}
+```  
+
+**Test cases:**
+
+- ✅ không áp dụng auth → code 0 + danh sách tin tức
+---
 
 
 

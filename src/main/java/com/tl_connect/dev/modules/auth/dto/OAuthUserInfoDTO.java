@@ -16,4 +16,5 @@ public class OAuthUserInfoDTO {
     private String email;
     private String name;
     private String token;
+    private String avatar;
 }

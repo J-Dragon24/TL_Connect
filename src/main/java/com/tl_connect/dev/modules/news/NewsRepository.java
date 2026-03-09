@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.home;
+package com.tl_connect.dev.modules.news;
 
 
 import org.springframework.data.domain.Page;

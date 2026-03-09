@@ -13,7 +13,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"prompt\":\"tình hình chiến sự thế giới\"\r\n}",
+          "raw": "{\r\n    \"prompt\":\"mày có đề xuất gì\",\r\n    \"sessionId\": \"unknown_10307c53-c06e-4a8a-a955-7a132cfc3dfa\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -30,6 +30,18 @@
             "v1",
             "stream"
           ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "upload",
+      "id": "a9c50808-adf4-409e-9e23-a669c9c08dfb",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": ""
         }
       },
       "response": []
