@@ -7,18 +7,18 @@
 ### Mục lục
 ---
 1. [Response Format chung](#1-response-format-chung)
-2. [Mã lỗi (Response Codes)](#2-m%C3%A3-l%E1%BB%97i-response-codes)
+2. [Mã lỗi (Response Codes)](#2-mã-lỗi-response-codes)
 3. [Authentication](#3-authentication)
-4. [OAuth2 – Đăng nhập](#4-oauth2--%C4%91%C4%83ng-nh%E1%BA%ADp)
-5. [Student – Quản lý thông tin](#5-student--qu%E1%BA%A3n-l%C3%BD-th%C3%B4ng-tin)
-6. [Study Program - Chương trình đào tạo](#6-study-program---ch%C6%B0%C6%A1ng-tr%C3%ACnh-%C4%91%C3%A0o-t%E1%BA%A1o)
-7. [Schedule - Lịch học](#7-schedule---l%E1%BB%8Bch-h%E1%BB%8Dc)
-8. [Exam - Lịch thi](#8-exam---l%E1%BB%8Bch-thi)
-9. [Mark - Kết quả học tập](#9-mark---k%E1%BA%BFt-qu%E1%BA%A3-h%E1%BB%8Dc-t%E1%BA%ADp)
-10. [Notification - Thông báo](#10-notification---th%C3%B4ng-b%C3%A1o)
-11. [Application - Đơn từ](#11-application---%C4%91%C6%A1n-t%E1%BB%AB)
-12. [News - Tin tức](#12-news---tin-t%EC%84%B8)
-13. [Chatbot - AI trò chuyện](#13-chatbot---ai-tr%C6%B0%E1%BB%9Dng)
+4. [OAuth2 – Đăng nhập](#4-oauth2--đăng-nhập)
+5. [Student – Quản lý thông tin](#5-student--quản-lý-thông-tin)
+6. [Study Program - Chương trình đào tạo](#6-study-program--chương-trình-đào-tạo)
+7. [Schedule - Lịch học](#7-schedule--lịch-học)
+8. [Exam - Lịch thi](#8-exam--lịch-thi)
+9. [Mark - Kết quả học tập](#9-mark--kết-quả-học-tập)
+10. [Notification - Thông báo](#10-notification---thông-báo)
+11. [Application - Đơn từ](#11-application--đơn-từ)
+12. [News - Tin tức](#12-news--tin-tức)
+13. [Chatbot - AI trò chuyện](#13-chatbot---ai-trò-chuyện)
 
 ## 1. Response Format chung
 Tất cả response đều theo cấu trúc JSON thống nhất:
@@ -601,92 +601,71 @@ GET /api/v1/student/marks?ctdt=CTDT-KHMT-2021
 **Response thành công (code 0):**:
 ```json
 {
-  "code": 0,
-  "message": "Academic result fetched successfully",
-  "data": {
-      "studyProgram": "CTDT-KHMT-2021",
-      "semesterResults": [
-          {
-              "semester": "HK2 2021-2022",
-              "subjectResults": [
-                  {
-                      "subjectCode": "INT1002",
-                      "subjectName": "Cấu trúc dữ liệu & giải thuật",
-                      "credits": 3,
-                      "score10": 7.00,
-                      "score4": 3.00,
-                      "letterGrade": "B",
-                      "isPass": true
-                  },
-                  {
-                      "subjectCode": "INT1003",
-                      "subjectName": "Lập trình hướng đối tượng",
-                      "credits": 3,
-                      "score10": 9.00,
-                      "score4": 4.00,
-                      "letterGrade": "A+",
-                      "isPass": true
-                  }
-              ],
-              "semesterSummary": {
-                  "creditsRegistered": null,
-                  "creditsPassed": 6,
-                  "semesterGpa": 3.20,
-                  "conductScore": 88,
-                  "cumulativeGpa": 3.30
-              }
-          },
-          {
-              "semester": "HK1 2022-2023",
-              "subjectResults": [
-                  {
-                      "subjectCode": "INT2001",
-                      "subjectName": "Cơ sở dữ liệu",
-                      "credits": 3,
-                      "score10": 6.50,
-                      "score4": 2.50,
-                      "letterGrade": "C",
-                      "isPass": true
-                  },
-                  {
-                      "subjectCode": "INT2002",
-                      "subjectName": "Mạng máy tính",
-                      "credits": 3,
-                      "score10": 7.50,
-                      "score4": 3.00,
-                      "letterGrade": "B",
-                      "isPass": true
-                  }
-              ],
-              "semesterSummary": {
-                  "creditsRegistered": null,
-                  "creditsPassed": 6,
-                  "semesterGpa": 2.80,
-                  "conductScore": 80,
-                  "cumulativeGpa": 3.10
-              }
-          },
-          {
-              "semester": "HK1 2021-2022",
-              "subjectResults": [
-                  {
-                      "subjectCode": "INT1001",
-                      "subjectName": "Nhập môn lập trình",
-                      "credits": 3,
-                      "score10": 8.50,
-                      "score4": 3.50,
-                      "letterGrade": "A",
-                      "isPass": true
-                  }
-              ],
-              "semesterSummary": {
-                  "creditsRegistered": null,
-                  "creditsPassed": 3,
-                  "semesterGpa": 3.50,
-                  "conductScore": 85,
-                  "cumulativeGpa": 3.50
-              }
-          }
+"code": 0,
+"message": "Academic result fetched successfully",
+"data": {
+    "studyProgram": "CTDT-KHMT-2021",
+    "semesterResults": [
+        {
+            "semester": "HK1 2026-2027",
+            "subjectResults": [
+                {
+                    "subjectCode": "INT1001",
+                    "subjectName": "Nhập môn lập trình",
+                    "credits": 3,
+                    "attendanceScore": 10.00,
+                    "midtermScore": 6.00,
+                    "finalScore": 8.00,
+                    "score10": 8.50,
+                    "score4": 3.50,
+                    "letterGrade": "A",
+                    "isPass": true
+                }
+            ],
+            "semesterSummary": {
+                "creditsRegistered": null,
+                "creditsPassed": 3,
+                "semesterGpa": 3.50,
+                "conductScore": 85,
+                "cumulativeGpa": 3.50
+            }
+        },
+        {
+            "semester": "HK2 2021-2022",
+            "subjectResults": [
+                {
+                    "subjectCode": "INT1002",
+                    "subjectName": "Cấu trúc dữ liệu & giải thuật",
+                    "credits": 3,
+                    "attendanceScore": 10.00,
+                    "midtermScore": 9.00,
+                    "finalScore": 5.00,
+                    "score10": 7.00,
+                    "score4": 3.00,
+                    "letterGrade": "B",
+                    "isPass": true
+                },
+                {
+                    "subjectCode": "INT1003",
+                    "subjectName": "Lập trình hướng đối tượng",
+                    "credits": 3,
+                    "attendanceScore": 10.00,
+                    "midtermScore": 9.00,
+                    "finalScore": 8.60,
+                    "score10": 9.00,
+                    "score4": 4.00,
+                    "letterGrade": "A+",
+                    "isPass": true
+                }
+            ],
+            "semesterSummary": {
+                "creditsRegistered": null,
+                "creditsPassed": 6,
+                "semesterGpa": 3.20,
+                "conductScore": 88,
+                "cumulativeGpa": 3.30
+            }
+        }
       ]
   }
 }
@@ -803,7 +782,7 @@ Lấy thông tin chi tiết thông báo.
 - ❌ thông báo không tồn tại → code -2, HTTP 404
 ---
   
-## 11. Application - Nộp đơn
+## 11. Application - Đơn từ
 ### 11.1. GET /api/v1/applications/types
 Lấy danh sách loại đơn.
 - **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)

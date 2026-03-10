@@ -38,10 +38,31 @@
       "name": "upload",
       "id": "a9c50808-adf4-409e-9e23-a669c9c08dfb",
       "request": {
-        "method": "GET",
+        "method": "POST",
         "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "document",
+              "type": "file",
+              "uuid": "093453de-4ff5-4b1c-b1d4-6cd7668f98d4",
+              "src": [
+                "/C:/projects/KL/tl-chatbot/test.md"
+              ]
+            }
+          ]
+        },
         "url": {
-          "raw": ""
+          "raw": "{{domain}}/api/v1/upload",
+          "host": [
+            "{{domain}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "upload"
+          ]
         }
       },
       "response": []

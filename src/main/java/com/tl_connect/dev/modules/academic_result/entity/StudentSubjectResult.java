@@ -38,13 +38,22 @@ public class StudentSubjectResult {
     @Column(name = "credits", nullable = false)
     private Integer credits;
 
-    @Column(name = "score_10", nullable = false)
+    @Column(name = "attendance_score")
+    private BigDecimal attendanceScore;
+
+    @Column(name = "midterm_score")
+    private BigDecimal midtermScore;
+
+    @Column(name = "final_score")
+    private BigDecimal finalScore;
+
+    @Column(name = "score_10")
     private BigDecimal score10;
 
-    @Column(name = "score_4", nullable = false)
+    @Column(name = "score_4")
     private BigDecimal score4;
 
-    @Column(name = "letter_grade", nullable = false)
+    @Column(name = "letter_grade")
     private String letterGrade;
 
     @Column(name = "is_pass")

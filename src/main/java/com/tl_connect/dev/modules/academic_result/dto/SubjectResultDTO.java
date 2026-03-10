@@ -17,6 +17,9 @@ public class SubjectResultDTO {
     private String subjectCode;
     private String subjectName;
     private Integer credits;
+    private BigDecimal attendanceScore;
+    private BigDecimal midtermScore;
+    private BigDecimal finalScore;
     private BigDecimal score10;
     private BigDecimal score4;
     private String letterGrade;

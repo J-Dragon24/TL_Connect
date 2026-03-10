@@ -7,6 +7,9 @@ public interface SubjectResultRow {
     String getSubjectCode();
     String getSubjectName();
     Integer getCredits();
+    BigDecimal getAttendanceScore();
+    BigDecimal getMidtermScore();
+    BigDecimal getFinalScore();
     BigDecimal getScore10();
     BigDecimal getScore4();
     String getLetterGrade();

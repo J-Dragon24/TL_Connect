@@ -471,6 +471,18 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "chatbot",
+          "id": "acdb8d6b-4834-41a5-b1f1-5e324c13632b",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": ""
+            }
+          },
+          "response": []
         }
       ],
       "id": "5ef693c3-c553-4bc4-99f6-e618c33de471"

@@ -31,6 +31,7 @@ DROP TABLE IF EXISTS notifications CASCADE;
 DROP TABLE IF EXISTS lecturers CASCADE;
 DROP TABLE IF EXISTS student_subject_results CASCADE;
 DROP TABLE IF EXISTS grade_scale CASCADE;
+DROP TABLE IF EXISTS news CASCADE;
 
 CREATE TABLE oauth_users (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -326,9 +327,12 @@ CREATE TABLE student_subject_results (
   subject_id BIGINT NOT NULL,
   semester_id BIGINT NOT NULL,
   credits INT NOT NULL,
-  score_10 DECIMAL(4,2) NOT NULL,
-  score_4 DECIMAL(3,2) NOT NULL,
-  letter_grade VARCHAR(2) NOT NULL,
+  attendance_score DECIMAL(4,2),
+  midterm_score DECIMAL(4,2),
+  final_score DECIMAL(4,2),
+  score_10 DECIMAL(4,2),
+  score_4 DECIMAL(3,2),
+  letter_grade VARCHAR(2),
   is_pass BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
@@ -344,7 +348,7 @@ CREATE TABLE student_semester_summaries (
   study_program_id BIGINT NOT NULL,
   semester_id BIGINT NOT NULL,
   credits_registered INT NOT NULL,
-  credits_passed INT NOT NULL CHECK (credits_registered > credits_passed),
+  credits_passed INT NOT NULL CHECK (credits_registered >= credits_passed),
   
   semester_gpa DECIMAL(4,2) NOT NULL,
   letter_gpa VARCHAR(2),

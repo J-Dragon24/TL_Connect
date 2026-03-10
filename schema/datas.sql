@@ -286,28 +286,28 @@ INSERT INTO student_exam_registrations (student_id, exam_schedule_id, exam_attem
 (5, 8, 1, 'UPCOMING');
 
 -- student_subject_results
-INSERT INTO student_subject_results (student_id, subject_id, semester_id, credits, score_10, score_4, letter_grade, is_pass) VALUES
+INSERT INTO student_subject_results (student_id, subject_id, semester_id, credits, attendance_score, midterm_score, final_score, score_10, score_4, letter_grade, is_pass) VALUES
 -- SV Duc (id=1)
-(1, 1, 1, 3, 8.5,  3.5,  'A',  TRUE),
-(1, 2, 2, 3, 7.0,  3.0,  'B',  TRUE),
-(1, 3, 2, 3, 9.0,  4.0,  'A+', TRUE),
-(1, 4, 3, 3, 6.5,  2.5,  'C',  TRUE),
-(1, 5, 3, 3, 7.5,  3.0,  'B',  TRUE),
+(1, 1, 1, 3, 10, 6, 8, 8.5,  3.5,  'A',  TRUE),
+(1, 2, 2, 3, 10, 9, 5, 7.0,  3.0,  'B',  TRUE),
+(1, 3, 2, 3, 10, 9, 8.6, 9.0,  4.0,  'A+', TRUE),
+(1, 4, 3, 3, 10, 7, 7.5, 6.5,  2.5,  'C',  TRUE),
+(1, 5, 3, 3, 10, 7, 8, 7.5,  3.0,  'B',  TRUE),
 -- SV Em (id=2)
-(2, 1, 1, 3, 5.0,  1.0,  'D',  FALSE), -- rớt
-(2, 1, 2, 3, 6.5,  2.5,  'C',  TRUE),  -- thi lại qua
-(2, 2, 2, 3, 7.5,  3.0,  'B',  TRUE),
-(2, 3, 2, 3, 8.0,  3.5,  'A',  TRUE),
-(2, 4, 3, 3, 6.0,  2.0,  'C-', TRUE),
+(2, 1, 1, 3, 8, 5, 5, 5.0,  1.0,  'D',  FALSE), -- rớt
+(2, 1, 2, 3, 10, 8, 6, 6.5,  2.5,  'C',  TRUE),  -- thi lại qua
+(2, 2, 2, 3, 10, 8, 6, 7.0,  3.0,  'B',  TRUE),
+(2, 3, 2, 3, 10, 10, 7.8, 8.0,  3.5,  'A',  TRUE),
+(2, 4, 3, 3, 10, 7, 7.0, 6.0,  2.0,  'C-', TRUE),
 -- SV Hung (id=3)
-(3, 1, 1, 3, 9.5,  4.0,  'A+', TRUE),
-(3, 2, 2, 3, 8.5,  3.5,  'A',  TRUE),
-(3, 3, 2, 3, 7.0,  3.0,  'B',  TRUE),
+(3, 1, 1, 3, 10, 10, 9, 9.5,  4.0,  'A+', TRUE),
+(3, 2, 2, 3, 10, 9, 8, 8.5,  3.5,  'A',  TRUE),
+(3, 3, 2, 3, 10, 9, 8, 8.0,  3.0,  'B',  TRUE),
 -- SV Lan (id=4) - DROPPED
-(4, 1, 1, 3, 4.5,  0.0,  'F',  FALSE),
+(4, 1, 1, 3, 10, 6, 4, 4.5,  0.0,  'F',  FALSE),
 -- SV Minh (id=5)
-(5, 1, 1, 3, 8.0,  3.5,  'A',  TRUE),
-(5, 2, 2, 3, 7.5,  3.0,  'B',  TRUE);
+(5, 1, 1, 3, 10, 10, 8, 8.0,  3.5,  'A',  TRUE),
+(5, 2, 2, 3, 10, 10, 7, 7.5,  3.0,  'B',  TRUE);
 
 -- student_semester_summaries
 INSERT INTO student_semester_summaries (student_id, study_program_id, semester_id, credits_registered, credits_passed, semester_gpa, conduct_score, activity_score, group_contribution) VALUES

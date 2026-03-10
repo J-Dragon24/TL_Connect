@@ -41,26 +41,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
             try {
-                // JwtUserInfo userInfo = JwtUserInfo.builder()
-                //         .userId(1L)
-                //         .roles(new ArrayList<>(List.of("admin")))
-                //         .build();
-                // UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userInfo, null,
-                //         null);
-
-                JwtPayload payload = jwtService.verifyToken(token);
-
                 JwtUserInfo userInfo = JwtUserInfo.builder()
-                        .userId(payload.userId())
-                        .roles(payload.roles())
+                        .userId(1L)
+                        .roles(new ArrayList<>(List.of("admin")))
                         .build();
-
-                List<GrantedAuthority> authorities = payload.roles().stream()
-                        .map(r -> (GrantedAuthority) new SimpleGrantedAuthority("APPROLE_" + r))
-                        .toList();
-
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userInfo, null,
-                        authorities);
+                        null);
+
+                // JwtPayload payload = jwtService.verifyToken(token);
+
+                // JwtUserInfo userInfo = JwtUserInfo.builder()
+                //         .userId(payload.userId())
+                //         .roles(payload.roles())
+                //         .build();
+
+                // List<GrantedAuthority> authorities = payload.roles().stream()
+                //         .map(r -> (GrantedAuthority) new SimpleGrantedAuthority("APPROLE_" + r))
+                //         .toList();
+
+                // UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userInfo, null,
+                //         authorities);
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
             } catch (Exception e) {

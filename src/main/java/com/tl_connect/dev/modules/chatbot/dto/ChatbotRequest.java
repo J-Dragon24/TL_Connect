@@ -6,5 +6,5 @@ import lombok.Data;
 @Data
 public class ChatbotRequest {
     @NotBlank
-    private String message;
+    private String prompt;
 }
