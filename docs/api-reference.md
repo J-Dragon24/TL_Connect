@@ -243,14 +243,12 @@ Lấy thông tin chương trình đào tạo của các ngành sinh viên đang 
     "message": "Study programs retrieved successfully",
     "data": [
         {
-            "id": 1,
             "studentCode": "SV2021001",
             "studyProgramCode": "CTDT-KHMT-2021",
             "studyProgramName": "Chương trình đào tạo KHMT 2021",
             "isPrimary": true
         },
         {
-            "id": 3,
             "studentCode": "SV2021001",
             "studyProgramCode": "CTDT-HTTT-2021",
             "studyProgramName": "Chương trình đào tạo HTTT 2021",
@@ -274,7 +272,7 @@ Lấy thông tin chương trình đào tạo của các ngành sinh viên đang 
 - ✅ token hợp lệ → code 0 + thông tin chương trình đào tạo của các ngành sinh viên đang theo học
 - ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
 
-### 6.2. GET /api/v1/study-programs/studyProgramCode
+### 6.2. GET /api/v1/study-programs/{studyProgramCode}
 Lấy thông tin chi tiết chương trình đào tạo.  
 - **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
 - **Content-Type**: Không áp dụng
@@ -288,23 +286,38 @@ Lấy thông tin chi tiết chương trình đào tạo.
 ```json
 {
     "code": 0,
-    "message": "Study programs retrieved successfully",
-    "data": [
-        {
-            "id": 1,
-            "studentCode": "SV2021001",
-            "studyProgramCode": "CTDT-KHMT-2021",
-            "studyProgramName": "Chương trình đào tạo KHMT 2021",
-            "isPrimary": true
+    "message": "Study program retrieved successfully",
+    "data": {
+        "studyProgramName": "Chương trình đào tạo KHMT 2021",
+        "yearStart": 2021,
+        "totalCredits": 130,
+        "major": {
+            "majorName": "Khoa học máy tính",
+            "majorCode": "KHMT",
+            "faculty": "Công nghệ thông tin"
         },
-        {
-            "id": 3,
-            "studentCode": "SV2021001",
-            "studyProgramCode": "CTDT-HTTT-2021",
-            "studyProgramName": "Chương trình đào tạo HTTT 2021",
-            "isPrimary": false
-        }
-    ]
+        "semesters": [
+            {
+                "semesterName": "HK1 2026-2027",
+                "semesterStartDate": "2021-01-01",
+                "semesterEndDate": "2022-04-15",
+                "subjects": [
+                    {
+                        "subjectCode": "INT1001",
+                        "subjectName": "Nhập môn lập trình",
+                        "credits": 3,
+                        "isRequired": true,
+                        "electiveGroup": null,
+                        "lectureHours": 30,
+                        "practiceHours": 15,
+                        "subjectPrerequisite": null,
+                        "faculty": "Công nghệ thông tin",
+                        "department": "Khoa học máy tính"
+                    }
+                ]
+            }
+        ]
+    }
 }
 ```  
 
@@ -357,8 +370,12 @@ GET /api/v1/student/schedules/day-of-week?day_of_week=1
                 "startTime": "11:30:00",
                 "endTime": "14:00:00",
                 "room": "B201",
-                "lecturerName": "Nguyen Van An",
-                "lecturerEmail": "an.nguyen@university.edu.vn"
+                "lecturer": {
+                    "lecturerCode": "GV001",
+                    "fullName": "Nguyen Van An",
+                    "email": "an.nguyen@university.edu.vn",
+                    "phoneNumber": "0123456789"
+                }
             }
         ]
     }
@@ -418,8 +435,12 @@ GET /api/v1/student/schedules/weekly?start_date=2022-02-01&end_date=2022-09-01
                       "startTime": "11:30:00",
                       "endTime": "14:00:00",
                       "room": "B201",
-                      "lecturerName": "Nguyen Van An",
-                      "lecturerEmail": "an.nguyen@university.edu.vn"
+                      "lecturer": {
+                            "lecturerCode": "GV001",
+                            "fullName": "Nguyen Van An",
+                            "email": "an.nguyen@university.edu.vn",
+                            "phoneNumber": "0123456789"
+                        }
                   }
               ]
           },
@@ -435,8 +456,12 @@ GET /api/v1/student/schedules/weekly?start_date=2022-02-01&end_date=2022-09-01
                       "startTime": "07:00:00",
                       "endTime": "09:30:00",
                       "room": "B202",
-                      "lecturerName": "Tran Thi Bich",
-                      "lecturerEmail": "bich.tran@university.edu.vn"
+                      "lecturer": {
+                        "lecturerCode": "GV001",
+                        "fullName": "Nguyen Van An",
+                        "email": "an.nguyen@university.edu.vn",
+                        "phoneNumber": "0123456789"
+                    }
                   }
               ]
           }
@@ -503,8 +528,12 @@ GET /api/v1/student/schedules/semester?HocKy=HK1 2022-2023
               "startTime": "09:45:00",
               "endTime": "12:15:00",
               "room": "C301",
-              "lecturerName": "Tran Thi Bich",
-              "lecturerEmail": "bich.tran@university.edu.vn"
+              "lecturer": {
+                "lecturerCode": "GV001",
+                "fullName": "Nguyen Van An",
+                "email": "an.nguyen@university.edu.vn",
+                "phoneNumber": "0123456789"
+            }
           }
       ]
   }
