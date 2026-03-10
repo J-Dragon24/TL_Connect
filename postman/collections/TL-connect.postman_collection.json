@@ -135,7 +135,7 @@
               }
             ],
             "url": {
-              "raw": "{{domain}}/api/v1/student/schedules/weekly?start_date=2022-02-01&end_date=2022-09-01",
+              "raw": "{{domain}}/api/v1/student/schedules/weekly",
               "host": [
                 "{{domain}}"
               ],
@@ -145,16 +145,6 @@
                 "student",
                 "schedules",
                 "weekly"
-              ],
-              "query": [
-                {
-                  "key": "start_date",
-                  "value": "2022-02-01"
-                },
-                {
-                  "key": "end_date",
-                  "value": "2022-09-01"
-                }
               ]
             }
           },
@@ -423,6 +413,7 @@
             {
               "listen": "test",
               "script": {
+                "id": "dcd4897a-83b1-46b3-b0df-e9c913a45981",
                 "exec": [
                   "// Parse JSON response\r",
                   "let res = pm.response.json();\r",
@@ -442,6 +433,18 @@
                 "packages": {},
                 "requests": {}
               }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "a97c53a7-1e9d-4bd6-92aa-a672c326f5c5",
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
             }
           ],
           "id": "dce290fc-7e1d-4da0-9424-c5b0ec58889b",
@@ -450,7 +453,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"accessToken\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6InNNMV95QXhWOEdWNHlOLUI2ajJ4em1pazVBbyJ9.eyJhdWQiOiI3N2RmOTkzZC1lNzI4LTRiOGUtOTc3MC02YjQwOWFhOTk1NTIiLCJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vYWVjMDAzZWItYzUzNy00ZThhLWIwZjMtMTE0NGE5M2E2MGJjL3YyLjAiLCJpYXQiOjE3NzI1MjQ5MDgsIm5iZiI6MTc3MjUyNDkwOCwiZXhwIjoxNzcyNTI5NTMyLCJhaW8iOiJBY1FBTy84YkFBQUFZNlB1eml0VXZObVRBR3BlQXpRVzI4SDJ4Q0FuRFdmU05KWmlDcTRxUlhPSTF1b3ZsU2h6cWE4cFNNTzlWZUZWdUJSSEpHUHBLdXA0VDBtbFgxS0I0RFd1ZjFFem9aeGpFS25SL2Z0eFRVSUswaUVKUDQwbzhJM095ejdkeDErYk9zNk5PKzFxYlI1VHpsMWc5Z0l4aFVYakFCdG9DSTB2M0V2MUdQY0NUOVo3QkMyOGdubWhpOEV1S2RTR01pdDdFWXRmSldHZ25pYlVUTVNyUU10elNGRTlxSXlGOW5Qc2c3eWpnVUFreHhNNVRSUnlZUXdhZlhqNzMzSXd0R0xoIiwiYXpwIjoiNzdkZjk5M2QtZTcyOC00YjhlLTk3NzAtNmI0MDlhYTk5NTUyIiwiYXpwYWNyIjoiMCIsImlkcCI6ImxpdmUuY29tIiwibmFtZSI6Im5ob2sgdGhhbmgiLCJvaWQiOiIxZGViMDBhOS04MzVjLTRhYjctYTUwZi01N2MxMmE1NmM3YmQiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJuaG9rdGhhbmgzMjExQGdtYWlsLmNvbSIsInJoIjoiMS5BY1lBNndQQXJqZkZpazZ3OHhGRXFUcGd2RDJaMzNjbzU0NUxsM0JyUUpxcGxWSUFBSFRHQUEuIiwicm9sZXMiOlsiYWRtaW4iXSwic2NwIjoiYWNjZXNzX2FzX3VzZXIiLCJzaWQiOiIwMDJlNDNkYS0zZjE2LTVlMzgtZGNkZC0zOGNhMmIyOWY0MjAiLCJzdWIiOiJfdUhOeUFndzVuaEE4Z2lqSnNESjQzbkUwU3JaLUVKTVdHMEo0c01ERW9vIiwidGlkIjoiYWVjMDAzZWItYzUzNy00ZThhLWIwZjMtMTE0NGE5M2E2MGJjIiwidXRpIjoiMU82YVpjNmhxa1NoXzlnclpCd0ZBQSIsInZlciI6IjIuMCIsInhtc19mdGQiOiJ3c0ZxOFRac25YZ2FoalpXYzhMYmZrb1RDVm83bmFnWGFBcjl3WmVqQkdnQmEyOXlaV0Z6YjNWMGFDMWtjMjF6In0.B4J92_HMR-_UnBxq7t6HcvUv6Kw249AjoGxPhooq3ra6ZIBLhJXwP_OSEK8eG_SPYF7WkQTaYuYiX9ieibLuTLPREK4zHV6gKrCX_-F053fwsPYHlzBSE47Z2YcFeCf3ffBjf_5PAPR9TcfJ7By9U1Un9ah1roH1QE8ptmFPRq1FsSfoLy9cb7w3UZOtZG8ibTL6gJmFXVqT2y4IhZ57SYOarTwOUBFt3rINbcVoTAP4D7n-ajXl1NEWQ8PpRYj16mGw4VIJnlkwsk5oh7cDJpNu-xKCM-eddIyO-0W4i3nYOLvaigM1uAK2mJmqFTqLcvVEa9HpZhamCS1T8A_83A\"\r\n}",
+              "raw": "{\r\n    \"accessToken\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6InNNMV95QXhWOEdWNHlOLUI2ajJ4em1pazVBbyJ9.eyJhdWQiOiI3N2RmOTkzZC1lNzI4LTRiOGUtOTc3MC02YjQwOWFhOTk1NTIiLCJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vYWVjMDAzZWItYzUzNy00ZThhLWIwZjMtMTE0NGE5M2E2MGJjL3YyLjAiLCJpYXQiOjE3NzMxMzA4NjcsIm5iZiI6MTc3MzEzMDg2NywiZXhwIjoxNzczMTM1NjU2LCJhaW8iOiJBY1FBTy84YkFBQUEvQWlmOGh2aHJkSGROVFpPN1h4SEJTKzZ5RERNZTFNZnlla0RFRThWdlJncmtyUTFDRk9DMXRSMUU4dWt3M0poeEtEbE9IOUhCYzBjV3piSDY4OFN1UGFheW5rTzI0L1RkM0dvWWhZdW9NZG84dGFSU3FxRTdLd3R2TEtKVjN6djlsUVplUjBvVzlUUUN0OW91bitmNE1nWWhhYXlGYjVkMDNsYTFwSVNMb3lFWnhMU3N6NjJmU2N1dVpIN0F1QTVzTWpoOElOYlVuTHRqNzZyOUpSNnlaUVdKQitTWkF5a01JQlQ5cUZCTm9aenZkSDk1THZmb2ZENFQ3c0Q0T1Y2IiwiYXpwIjoiNzdkZjk5M2QtZTcyOC00YjhlLTk3NzAtNmI0MDlhYTk5NTUyIiwiYXpwYWNyIjoiMCIsImlkcCI6ImxpdmUuY29tIiwibmFtZSI6InR1YW5uZ3V5ZW5jb2RlIiwib2lkIjoiYTY1ZDAzZDQtNmEyYS00MjZmLTk2M2QtOGRjYTI0Mzk5YjgzIiwicHJlZmVycmVkX3VzZXJuYW1lIjoidHVhbm5ndXllbmNvZGVAZ21haWwuY29tIiwicmgiOiIxLkFjWUE2d1BBcmpmRmlrNnc4eEZFcVRwZ3ZEMlozM2NvNTQ1TGwzQnJRSnFwbFZJQUFNekdBQS4iLCJyb2xlcyI6WyJzdHVkZW50Il0sInNjcCI6ImFjY2Vzc19hc191c2VyIiwic2lkIjoiMDAyZTZhZWEtZGQxMC0xYWI4LTg1MzAtM2M1YTQxN2YxZjdhIiwic3ViIjoiWTVaaHlUUDg2ZHN0WVBBX2UtN2ZlRjNWLXEwMTN2T0pobmYwVzBlQ2JXMCIsInRpZCI6ImFlYzAwM2ViLWM1MzctNGU4YS1iMGYzLTExNDRhOTNhNjBiYyIsInV0aSI6IkNpc0tLS252RmtheTIyZlFOQjJ1QUEiLCJ2ZXIiOiIyLjAiLCJ4bXNfZnRkIjoiQlZ0cUc4ZURlZWxMX2F4dDVmUG5taTBwUTRkRFIxZkdlYU5JTjZhZ001SUJhMjl5WldGalpXNTBjbUZzTFdSemJYTSJ9.FFCehcDEmDg19MarvVLtUQZXPxyL1tAwsp_yX-O9NHq6_vFHP-Xplenk_-M8gRj2OxbLL9IsaYlnDAeDdJvXaRvWohtGLhUeSUaJYG6SRxM-1YFGZMkUe7x2SsuasqPLXfXhAayjz7_6tKfs-vA-StrisU3qA1Uq_ago35JxAhS_kmkP3DbJc-XHuZtaH0s54d2pJSWTglh9adZm4Tsw12DLK2iT5Vr_zMOKabB6iL7RSfe3HSaq0xIgM3dxJ0l5-rrCDb48_RAfcLciu2QpkxhqgJnDrDSKKL08_gVRx1UBI0keM_Kpg2RW_q0FbuwZErkDtfbg17YbJyH38IQ77A\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -476,10 +479,34 @@
           "name": "chatbot",
           "id": "acdb8d6b-4834-41a5-b1f1-5e324c13632b",
           "request": {
-            "method": "GET",
-            "header": [],
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text",
+                "uuid": "07321f86-963f-4d0e-9b70-7e12f5aecd2b"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"prompt\": \"Thị trường chứng khoán hôm nay\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
             "url": {
-              "raw": ""
+              "raw": "{{domain}}/api/v1/chatbot",
+              "host": [
+                "{{domain}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "chatbot"
+              ]
             }
           },
           "response": []

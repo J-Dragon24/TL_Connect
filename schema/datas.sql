@@ -40,7 +40,7 @@ RESTART IDENTITY CASCADE;
 -- oauth_users
 INSERT INTO oauth_users (user_uuid, display_name, email, status) VALUES
 ('1deb00a9-835c-4ab7-a50f-57c12a56c7bd', 'Nguyen Van An', 'nhokthanh3211@gmail.com', 'ACTIVE'),
-('uuid-lecturer-002', 'Tran Thi Bich', 'bich.tran@university.edu.vn', 'ACTIVE'),
+('a65d03d4-6a2a-426f-963d-8dca24399b83', 'Tran Thi Bich', 'bich.tran@university.edu.vn', 'ACTIVE'),
 ('uuid-lecturer-003', 'Le Van Cuong', 'cuong.le@university.edu.vn', 'BLOCKED'),
 ('uuid-student-001', 'Pham Minh Duc', 'duc.pm@student.edu.vn', 'ACTIVE'),
 ('uuid-student-002', 'Hoang Thi Em', 'em.ht@student.edu.vn', 'ACTIVE'),

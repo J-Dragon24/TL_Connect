@@ -26,7 +26,7 @@ public class JWTService {
     private String SECRET;
 
     private final long EXPIRATION = 60 * 60 * 1000L;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final String ALGORITHM = "HmacSHA256";
 
     public String generateToken(JwtUserInfo userInfo) {
@@ -43,22 +43,20 @@ public class JWTService {
     }
 
     public JwtPayload verifyToken(String token) {
-        try {
-            JwtPayload payload = verifyJWT(token);
-            if (payload.exp() < System.currentTimeMillis()) {
-                throw new RuntimeException("Expired JWT");
-            }
-            return payload;
-        } catch (Exception e) {
-            throw new RuntimeException("Invalid JWT", e);
+        String[] parts = token.split("\\.");
+        if (parts.length != 3)
+            throw new InvalidInputException("Invalid JWT format");
+
+        JwtPayload payload = verifyJWT(token);
+        if (payload.getExp() < System.currentTimeMillis()) {
+            throw new UnauthorizeException("Token expired");
         }
+        return payload;
     }
 
     private String signJWT(JwtPayload payload) {
         try {
-            String header = """
-                    {"alg":"HS256","typ":"JWT"}
-                    """;
+            String header = "{\"alg\":\"HS256\",\"typ\":\"JWT\"}";
             String payloadJson = objectMapper.writeValueAsString(payload);
 
             String headerBase64 = base64UrlEncode(header.getBytes(StandardCharsets.UTF_8));

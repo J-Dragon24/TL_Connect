@@ -3,7 +3,18 @@ package com.tl_connect.dev.core.common.types;
 import java.util.List;
 
 import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
+@Data
 @Builder
-public record JwtPayload(Long userId, List<String> roles, String sign, Long iat, Long exp) {
+@NoArgsConstructor
+@AllArgsConstructor
+public class JwtPayload {
+    private Long userId;
+    private List<String> roles;
+    private String sign;
+    private Long iat;
+    private Long exp;
 }

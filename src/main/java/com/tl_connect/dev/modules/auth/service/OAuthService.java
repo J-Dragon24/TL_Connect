@@ -2,10 +2,8 @@ package com.tl_connect.dev.modules.auth.service;
 
 import java.util.List;
 
-import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
-import software.amazon.awssdk.services.s3.endpoints.internal.Value.Str;
 
 import com.tl_connect.dev.core.common.exception.InvalidInputException;
 import com.tl_connect.dev.core.common.exception.NotFoundException;
@@ -47,7 +45,7 @@ public class OAuthService {
         System.out.println("name: " + name);
         System.out.println("roles: " + roles);
 
-        JwtUserInfoView jwtUserInfoView = authUserRepository.findStudentByUserUuid(microsoftId)
+        JwtUserInfoView jwtUserInfoView = authUserRepository.findStudentByUserUuid("1deb00a9-835c-4ab7-a50f-57c12a56c7bd")
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
         JwtUserInfo jwtUserInfo = JwtUserInfo.builder()
