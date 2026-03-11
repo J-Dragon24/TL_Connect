@@ -1,5 +1,6 @@
 package com.tl_connect.dev.modules.notification.dto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.tl_connect.dev.core.common.enums.TargetType;
@@ -18,8 +19,10 @@ import lombok.Setter;
 public class SummaryNotifyDTO {
     private Long id;
     private String title;
-    private String sender;
+    private String content;
+    private String createdBy;
     private TargetType targetType;
-    private LocalDateTime deadLine;
+    private LocalDate deadLine;
     private LocalDateTime createdAt;
+    private Boolean isRead;
 }

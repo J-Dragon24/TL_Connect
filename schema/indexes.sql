@@ -28,5 +28,6 @@ CREATE INDEX IF NOT EXISTS idx_student_majors_student_id_primary ON student_majo
 /*Health Insurances indexes*/
 CREATE INDEX IF NOT EXISTS idx_health_insurances_student_id ON health_insurances(student_id);
 
+
 /*Students indexes*/
 CREATE INDEX IF NOT EXISTS idx_students_student_class_id ON students(student_class_id);

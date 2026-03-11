@@ -5,4 +5,5 @@ public enum TargetType {
     STUDENT_CLASS,
     COURSE_CLASS,
     STUDENT,
+    FACULTY
 }

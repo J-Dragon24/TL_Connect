@@ -15,6 +15,7 @@ import com.tl_connect.dev.core.common.types.JwtUserInfo;
 import com.tl_connect.dev.core.common.ultility.ResponseHelper;
 import com.tl_connect.dev.modules.notification.dto.DetailNotifyDTO;
 import com.tl_connect.dev.modules.notification.dto.SummaryNotifyDTO;
+import com.tl_connect.dev.modules.notification.dto.UnreadNotificationDTO;
 
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -41,5 +42,15 @@ public class NotificationController {
         }
         DetailNotifyDTO notification = notificationService.getDetailNotification(id);
         return ResponseHelper.success("Get detail notification successfully", notification);
+    }
+
+    @GetMapping("/unread-count")
+    public ResponseEntity<?> countUnreadNotification(Authentication authentication) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo userInfo)) {
+            throw new UnauthorizeException("Authentication is required");
+        }
+        Long studentId = userInfo.userId();
+        UnreadNotificationDTO count = notificationService.countUnreadNotification(studentId);
+        return ResponseHelper.success("Count unread notification successfully", count);
     }
 }

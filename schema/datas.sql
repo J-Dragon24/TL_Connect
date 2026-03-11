@@ -147,19 +147,25 @@ INSERT INTO health_insurances (student_id, insurance_number, provider, valid_fro
 
 -- semesters
 INSERT INTO semesters (semester_name, start_date, end_date) VALUES
-('HK1 2026-2027', '2021-01-01', '2022-04-15'),
-('HK2 2021-2022', '2022-02-01', '2022-06-30'),
-('HK1 2022-2023', '2022-09-01', '2023-01-15'),
-('HK2 2022-2023', '2023-02-01', '2023-06-30'),
 ('HK1 2025-2026', '2025-09-01', '2026-01-15'),
-('HK2 2025-2026', '2025-02-01', '2026-06-30');
+('HK2 2025-2026', '2026-02-01', '2026-06-30'),
+
+('HK1 2026-2027', '2026-09-01', '2027-01-15'),
+('HK2 2026-2027', '2027-02-01', '2027-06-30'),
+
+('HK1 2027-2028', '2027-09-01', '2028-01-15'),
+('HK2 2027-2028', '2028-02-01', '2028-06-30');
 
 -- study_programs
 INSERT INTO study_programs (major_id, study_program_code, study_program_name, total_credits, start_year) VALUES
-(1, 'CTDT-KHMT-2021', 'Chương trình đào tạo KHMT 2021', 130, 2021),
-(1, 'CTDT-KHMT-2022', 'Chương trình đào tạo KHMT 2022', 132, 2022),
-(2, 'CTDT-HTTT-2021', 'Chương trình đào tạo HTTT 2021', 128, 2021),
-(3, 'CTDT-KTPM-2022', 'Chương trình đào tạo KTPM 2022', 135, 2022);
+(1, 'CTDT-KHMT-2024', 'Chương trình đào tạo KHMT 2024', 132, 2024),
+(1, 'CTDT-KHMT-2025', 'Chương trình đào tạo KHMT 2025', 134, 2025),
+
+(2, 'CTDT-HTTT-2024', 'Chương trình đào tạo HTTT 2024', 130, 2024),
+(2, 'CTDT-HTTT-2025', 'Chương trình đào tạo HTTT 2025', 132, 2025),
+
+(3, 'CTDT-KTPM-2024', 'Chương trình đào tạo KTPM 2024', 135, 2024),
+(3, 'CTDT-KTPM-2025', 'Chương trình đào tạo KTPM 2025', 136, 2025);
 
 -- student_majors
 INSERT INTO student_majors (student_id, major_id, study_program_id, is_primary, start_year, end_year, status) VALUES
@@ -326,6 +332,37 @@ INSERT INTO student_semester_summaries (student_id, study_program_id, semester_i
 (5, 4, 1, 3,  3,  3.5,  83, 5.0, 5.0),
 (5, 4, 2, 3,  3,  3.0,  85, 5.0, 5.0);
 
+--fees
+INSERT INTO fees (student_id, semester_id, amount, due_date, status) VALUES
+
+-- HK1 2025-2026
+(1,1,8500000,'2025-10-15','PAID'),
+(2,1,8500000,'2025-10-15','PAID'),
+(3,1,8500000,'2025-10-15','PAID'),
+(4,1,8500000,'2025-10-15','PAID'),
+(5,1,8500000,'2025-10-15','PAID'),
+
+-- HK2 2025-2026
+(1,2,8700000,'2026-03-15','PAID'),
+(2,2,8700000,'2026-03-15','PAID'),
+(3,2,8700000,'2026-03-15','UNPAID'),
+(4,2,8700000,'2026-03-15','UNPAID'),
+(5,2,8700000,'2026-03-15','PAID'),
+
+-- HK1 2026-2027
+(1,3,9000000,'2026-10-15','UNPAID'),
+(2,3,9000000,'2026-10-15','UNPAID'),
+(3,3,9000000,'2026-10-15','UNPAID'),
+(4,3,9000000,'2026-10-15','UNPAID'),
+(5,3,9000000,'2026-10-15','UNPAID'),
+
+-- HK2 2026-2027
+(1,4,9200000,'2027-03-15','UNPAID'),
+(2,4,9200000,'2027-03-15','UNPAID'),
+(3,4,9200000,'2027-03-15','UNPAID'),
+(4,4,9200000,'2027-03-15','UNPAID'),
+(5,4,9200000,'2027-03-15','UNPAID');
+
 -- application_types
 INSERT INTO application_types (code, name) VALUES
 ('HOC_BONG',       'Don xin hoc bong'),
@@ -355,31 +392,73 @@ INSERT INTO application_attachments (application_id, file_key, original_filename
 (5, 'files/app5/don_chuyen.pdf',    'DonXinChuyenNganh.pdf',      180000),
 (6, 'files/app6/giay_benh.pdf',     'GiayChungNhanBenh_CSDL.pdf', 290000);
 
+-- notification_template
+INSERT INTO notification_template (code, name, content) VALUES
+('GENERAL', 'Thong bao chung', '{{content}}'),
+('EXAM', 'Thong bao lich thi', 'Lich thi: {{content}}'),
+('FEE', 'Nhac nop hoc phi', 'Sinh vien can nop hoc phi truoc {{deadline}}'),
+('SCHOLARSHIP', 'Thong bao hoc bong', '{{content}}'),
+('ACADEMIC_WARNING', 'Canh bao hoc vu', '{{content}}'),
+('DEFENSE', 'Thong bao bao ve do an', '{{content}}');
+
 -- notifications
-INSERT INTO notifications (title, content, sender, target_type, target_id, dead_line) VALUES
-('Thong bao lich thi HK1 2021-2022',
- 'Phong dao tao thong bao lich thi cuoi ky HK1 2021-2022. Sinh vien xem lich thi tren cong thong tin.',
- 'Phong Dao Tao', 'ALL', NULL, '2022-01-05 17:00:00'),
+INSERT INTO notifications
+(template_id, title, content, created_by, target_type, target_id, reference_id, reference_type, deadline)
+VALUES
 
-('Thong bao nghi le 30/4',
- 'Truong thong bao nghi le 30/4 - 1/5. Sinh vien nghi hoc tu ngay 29/4 den 2/5.',
- 'Ban Giam Hieu', 'ALL', NULL, NULL),
+-- ALL
+(1,'Thong bao he thong','He thong se bao tri vao 23:00 toi nay','Admin','ALL',0,NULL,NULL,NULL),
+(1,'Cap nhat cong thong tin','Da cap nhat giao dien moi','Admin','ALL',0,NULL,NULL,NULL),
+(1,'Thong bao nghi le','Sinh vien nghi le quoc khanh','Ban Giam Hieu','ALL',0,NULL,NULL,NULL),
+(2,'Lich thi HK1','Lich thi da duoc cap nhat tren portal','Phong Dao Tao','ALL',0,NULL,NULL,'2024-01-05'),
+(4,'Ket qua hoc bong','Danh sach hoc bong HK1 da duoc cong bo','Phong CTSV','ALL',0,NULL,NULL,NULL),
 
-('Nhac nho nop hoc phi HK2',
- 'Sinh vien lop KHMT2021 chu y nop hoc phi HK2 truoc ngay 28/02/2022.',
- 'Phong Tai Chinh', 'CLASS', 1, '2022-02-28 17:00:00'),
+-- CLASS
+(3,'Nhac nop hoc phi','Sinh vien lop KHMT2021 nop hoc phi HK2','Phong Tai Chinh','CLASS',1,NULL,NULL,'2024-02-28'),
+(3,'Nhac nop hoc phi lan 2','Sinh vien chua nop hoc phi vui long hoan thanh','Phong Tai Chinh','CLASS',1,NULL,NULL,'2024-03-05'),
+(6,'Lich bao ve do an','Sinh vien xem lich bao ve mon Web','GV Tran Thi Bich','CLASS',4,NULL,NULL,'2024-06-20'),
+(1,'Thong bao hoc tap','Sinh vien nop bai tap tuan 5','GV Nguyen Van A','CLASS',2,NULL,NULL,NULL),
+(1,'Thong bao hoc tap','Sinh vien nop bai tap tuan 6','GV Nguyen Van A','CLASS',2,NULL,NULL,NULL),
 
-('Ket qua xet hoc bong HK1',
- 'Danh sach sinh vien duoc hoc bong HK1 2022-2023 da duoc cong bo. Sinh vien kiem tra ket qua.',
- 'Phong Cong Tac Sinh Vien', 'ALL', NULL, NULL),
+-- STUDENT_CLASS
+(5,'Canh bao hoc vu','Ket qua hoc tap duoi muc yeu cau','Phong Dao Tao','STUDENT_CLASS',2,NULL,NULL,'2024-03-01'),
+(5,'Canh bao hoc vu lan 2','Sinh vien can gap co van hoc tap','Phong Dao Tao','STUDENT_CLASS',2,NULL,NULL,'2024-03-10'),
+(1,'Thong bao rieng','Sinh vien duoc chon tham gia workshop','Phong CTSV','STUDENT_CLASS',3,NULL,NULL,NULL),
+(1,'Thong bao rieng','Sinh vien duoc cap tai khoan lab','Phong CNTT','STUDENT_CLASS',4,NULL,NULL,NULL),
+(1,'Thong bao rieng','Sinh vien cap nhat thong tin ca nhan','Phong Dao Tao','STUDENT_CLASS',5,NULL,NULL,NULL),
 
-('Canh bao hoc vu',
- 'Ban nhan duoc canh bao hoc vu do ket qua hoc tap HK1 chua dat yeu cau. De nghi lien he co van hoc tap.',
- 'Phong Dao Tao', 'STUDENT', 2, '2022-03-01 17:00:00'),
+-- COURSE_CLASS
+(1,'Thong bao mon hoc','Lop lap trinh web thay doi phong hoc','GV Tran','COURSE_CLASS',10,NULL,NULL,NULL),
+(1,'Thong bao mon hoc','Buoi hoc toi se hoc online','GV Tran','COURSE_CLASS',10,NULL,NULL,NULL),
+(1,'Thong bao mon hoc','Deadline project duoc gia han','GV Tran','COURSE_CLASS',10,NULL,NULL,'2024-04-10'),
+(1,'Thong bao mon hoc','Upload slide bai giang moi','GV Tran','COURSE_CLASS',10,NULL,NULL,NULL),
+(1,'Thong bao mon hoc','Sinh vien chuan bi demo giua ky','GV Tran','COURSE_CLASS',10,NULL,NULL,NULL),
 
-('Lich bao ve do an cuoi ky',
- 'Sinh vien lop KTPM2022 xem lich bao ve do an mon Lap trinh web.',
- 'Giang vien Tran Thi Bich', 'CLASS', 4, '2023-06-20 17:00:00');
+-- FACULTY
+(1,'Thong bao khoa CNTT','Sinh vien tham gia hoi thao AI','Khoa CNTT','FACULTY',1,NULL,NULL,NULL),
+(1,'Thong bao khoa CNTT','Cuoc thi lap trinh sap dien ra','Khoa CNTT','FACULTY',1,NULL,NULL,NULL),
+(1,'Thong bao khoa CNTT','Mo dang ky CLB AI','Khoa CNTT','FACULTY',1,NULL,NULL,NULL),
+(1,'Thong bao khoa CNTT','Workshop Cloud Computing','Khoa CNTT','FACULTY',1,NULL,NULL,NULL),
+(1,'Thong bao khoa CNTT','Sinh vien dang ky thuc tap he','Khoa CNTT','FACULTY',1,NULL,NULL,NULL);
+
+-- notification_read
+INSERT INTO notification_read (notification_id, oauth_user_id, read_at) VALUES
+(1,1,now()),
+(2,1,now()),
+(3,1,now()),
+(4,1,now()),
+
+(1,2,now()),
+(2,2,now()),
+
+(5,3,now()),
+(6,3,now()),
+(7,3,now()),
+
+(10,4,now()),
+(11,4,now()),
+
+(15,5,now());
 
 INSERT INTO grade_scale (min_score, max_score, letter_grade) VALUES
 (9.50, 10.00, 'A+'),

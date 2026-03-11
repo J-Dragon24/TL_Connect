@@ -246,13 +246,15 @@ Lấy thông tin chương trình đào tạo của các ngành sinh viên đang 
             "studentCode": "SV2021001",
             "studyProgramCode": "CTDT-KHMT-2021",
             "studyProgramName": "Chương trình đào tạo KHMT 2021",
-            "isPrimary": true
+            "isPrimary": true,
+            "startYear": 2021
         },
         {
             "studentCode": "SV2021001",
             "studyProgramCode": "CTDT-HTTT-2021",
             "studyProgramName": "Chương trình đào tạo HTTT 2021",
-            "isPrimary": false
+            "isPrimary": false,
+            "startYear": 2021
         }
     ]
 }

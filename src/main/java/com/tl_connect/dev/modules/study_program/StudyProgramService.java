@@ -36,6 +36,7 @@ public class StudyProgramService {
                                                 .studyProgramCode(studyProgram.getStudyProgramCode())
                                                 .studyProgramName(studyProgram.getStudyProgramName())
                                                 .isPrimary(studyProgram.getIsPrimary())
+                                                .startYear(studyProgram.getStartYear())
                                                 .build())
                                 .collect(Collectors.toList());
         }

@@ -9,4 +9,6 @@ public interface StudyProgramRow {
     String getStudyProgramName();
 
     Boolean getIsPrimary();
+
+    Integer getStartYear();
 }

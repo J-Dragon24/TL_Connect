@@ -1,5 +1,6 @@
 package com.tl_connect.dev.modules.notification;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -32,8 +33,8 @@ public class Notification {
     @Column(name = "content")
     private String content;
 
-    @Column(name = "sender")
-    private String sender;
+    @Column(name = "created_by")
+    private String createdBy;
 
     @Column(name = "target_type")
     @Enumerated(EnumType.STRING)
@@ -42,8 +43,14 @@ public class Notification {
     @Column(name = "target_id")
     private Long targetId;
 
+    @Column(name = "reference_id")
+    private Long referenceId;
+
+    @Column(name = "reference_type")
+    private String referenceType;
+
     @Column(name = "dead_line")
-    private LocalDateTime deadLine;
+    private LocalDate deadLine;
 
     @CreationTimestamp
     @Column(name = "created_at")
