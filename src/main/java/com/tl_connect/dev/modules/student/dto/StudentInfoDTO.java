@@ -22,6 +22,8 @@ public class StudentInfoDTO {
     private Gender gender;
     private String classCode;
     private String academicAdvisor;
+    private LocalDate startYear;
+    private LocalDate endYear;
     private MajorDTO major;
     private IdentityCardDTO identityCard;
     private ContactDTO contact;

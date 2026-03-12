@@ -510,6 +510,18 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "get student semester",
+          "id": "d22cc28c-3ef3-4ee3-a3f5-defb505bcc36",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": ""
+            }
+          },
+          "response": []
         }
       ],
       "id": "5ef693c3-c553-4bc4-99f6-e618c33de471"

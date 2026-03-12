@@ -11,7 +11,6 @@ import com.tl_connect.dev.modules.chatbot.dto.ChatbotRequest;
 
 import java.util.concurrent.CompletableFuture;
 
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.MediaType;
 
 import lombok.RequiredArgsConstructor;

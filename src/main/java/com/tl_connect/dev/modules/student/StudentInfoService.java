@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import com.tl_connect.dev.core.common.exception.NotFoundException;
-import com.tl_connect.dev.core.common.ultility.AuthHelper;
 import com.tl_connect.dev.modules.student.dto.AcademicInfoDTO;
 import com.tl_connect.dev.modules.student.dto.ContactDTO;
 import com.tl_connect.dev.modules.student.dto.EmergencyContactDTO;
@@ -14,8 +13,10 @@ import com.tl_connect.dev.modules.student.dto.HealthInsDetailDTO;
 import com.tl_connect.dev.modules.student.dto.IdentityCardDTO;
 import com.tl_connect.dev.modules.student.dto.MajorDTO;
 import com.tl_connect.dev.modules.student.dto.StudentInfoDTO;
+import com.tl_connect.dev.modules.student.dto.YearStudyDTO;
 import com.tl_connect.dev.modules.student.projection.HealthInsuranceView;
 import com.tl_connect.dev.modules.student.projection.StudentInfoView;
+import com.tl_connect.dev.modules.student.projection.StudyYearView;
 import com.tl_connect.dev.modules.student_class.StudentClassRepository;
 import com.tl_connect.dev.modules.student_class.dto.LecturerDTO;
 import com.tl_connect.dev.modules.student_class.dto.StudentClassInfoDTO;
@@ -31,7 +32,6 @@ public class StudentInfoService {
 
         private final StudentRepository studentRepository;
         private final StudentClassRepository studentClassRepository;
-        private final AuthHelper authHelper;
 
         public StudentInfoDTO getStudentInfo(Long id) {
                 StudentInfoView student = studentRepository.findStudentInfoById(id)
@@ -43,6 +43,8 @@ public class StudentInfoService {
                                 .gender(student.getGender())
                                 .classCode(student.getClassCode())
                                 .academicAdvisor(student.getAcademicAdvisor())
+                                .startYear(student.getStartYear())
+                                .endYear(student.getEndYear())
                                 .major(MajorDTO.builder()
                                                 .majorCode(student.getMajorCode())
                                                 .majorName(student.getMajorName())
@@ -113,6 +115,15 @@ public class StudentInfoService {
                                 .phoneNumber(healthInsurance.getPhoneNumber())
                                 .email(healthInsurance.getEmail())
                                 .healthInsDetail(healthInsDetail)
+                                .build();
+        }
+
+        public YearStudyDTO getYearStudy(Long id) {
+                StudyYearView studyYear = studentRepository.findYearStudy(id)
+                        .orElseThrow(() -> new NotFoundException("Study year not found for student id: " + id));
+                return YearStudyDTO.builder()
+                                .startYear(studyYear.getStartYear())
+                                .endYear(studyYear.getEndYear())
                                 .build();
         }
 }

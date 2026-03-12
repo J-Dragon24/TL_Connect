@@ -18,7 +18,7 @@
 10. [Notification - Thông báo](#10-notification---thông-báo)
 11. [Application - Đơn từ](#11-application--đơn-từ)
 12. [News - Tin tức](#12-news--tin-tức)
-13. [Chatbot - AI trò chuyện](#13-chatbot---ai-trò-chuyện)
+13. [Semester - Kỳ học](#13-semester---ky-hoc)
 
 ## 1. Response Format chung
 Tất cả response đều theo cấu trúc JSON thống nhất:
@@ -125,42 +125,44 @@ Sinh viên lấy thông tin cá nhân.
 
 ```json
 {
-  "code": 0,
-  "message": "Student info retrieved successfully",
-  "data": {
-      "studentCode": "SV2021001",
-      "fullName": "Pham Minh Duc",
-      "dateOfBirth": "2003-05-10",
-      "gender": "NAM",
-      "classCode": "KHMT2021",
-      "academicAdvisor": "Nguyen Van An",
-      "major": {
-          "majorCode": "KHMT",
-          "majorName": "Khoa học máy tính",
-          "faculty": "Công nghệ thông tin"
-      },
-      "identityCard": {
-          "cardNumber": "079203001111",
-          "cardType": "CCCD",
-          "issuedDate": "2021-01-10",
-          "issuedPlace": "Cục CS QLHC về TTXH - HCM"
-      },
-      "contact": {
-          "phoneNumber": "0911111111",
-          "address": "12 Nguyen Trai, HCM",
-          "email": "duc.personal@gmail.com"
-      },
-      "academicInfo": {
-          "cohort": "K2021",
-          "position": "Lớp trưởng",
-          "educationMode": "CHINH_QUY"
-      },
-      "emergencyContact": {
-          "name": "Pham Van Bo",
-          "phoneNumber": "0981111111",
-          "address": "12 Nguyen Trai, HCM"
-      }
-  }
+"code": 0,
+"message": "Student info retrieved successfully",
+"data": {
+    "studentCode": "SV2021001",
+    "fullName": "Pham Minh Duc",
+    "dateOfBirth": "2003-05-10",
+    "gender": "NAM",
+    "classCode": "KHMT2021",
+    "academicAdvisor": "Nguyen Van An",
+    "startYear": "2022-09-01",
+    "endYear": "2028-06-30",
+    "major": {
+        "majorCode": "KHMT",
+        "majorName": "Khoa học máy tính",
+        "faculty": "Công nghệ thông tin"
+    },
+    "identityCard": {
+        "cardNumber": "079203001111",
+        "cardType": "CCCD",
+        "issuedDate": "2021-01-10",
+        "issuedPlace": "Cục CS QLHC về TTXH - HCM"
+    },
+    "contact": {
+        "phoneNumber": "0911111111",
+        "address": "12 Nguyen Trai, HCM",
+        "email": "duc.personal@gmail.com"
+    },
+    "academicInfo": {
+        "cohort": "K2021",
+        "position": "Lớp trưởng",
+        "educationMode": "CHINH_QUY"
+    },
+    "emergencyContact": {
+        "name": "Pham Van Bo",
+        "phoneNumber": "0981111111",
+        "address": "12 Nguyen Trai, HCM"
+    }
+}
 }
 ```  
 
@@ -1015,5 +1017,51 @@ Lấy tất cả tin tức.
 - ✅ không áp dụng auth → code 0 + danh sách tin tức
 ---
 
+## 13. Semester - Kỳ học
+### 13.1. GET /api/v1/semester/student
+Lấy thông tin kỳ học của sinh viên.
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: Không áp dụng
+
+**Response thành công (code 0):**:
+```json
+{
+    "code": 0,
+    "message": "Student semesters retrieved successfully",
+    "data": [
+        {
+            "semesterName": "HK1 2025-2026",
+            "startDate": "2025-09-01",
+            "endDate": "2026-01-15"
+        },
+        {
+            "semesterName": "HK2 2025-2026",
+            "startDate": "2026-02-01",
+            "endDate": "2026-06-30"
+        },
+        {
+            "semesterName": "HK1 2026-2027",
+            "startDate": "2026-09-01",
+            "endDate": "2027-01-15"
+        }
+    ]
+}
+```  
+
+**Response – User chưa đăng nhập (code -3):**
+
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```    
+
+**Test cases:**
+
+- ✅ token hợp lệ → code 0 + thông tin kỳ học
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+- ❌ student id không tồn tại trong db → code -2, HTTP 404
 
 

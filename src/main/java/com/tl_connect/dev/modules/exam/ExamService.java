@@ -8,8 +8,8 @@ import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.exam.dto.ExamScheduleDTO;
 import com.tl_connect.dev.modules.exam.dto.ExamScheduleDetailDTO;
 import com.tl_connect.dev.modules.exam.projection.ExamScheduleView;
-import com.tl_connect.dev.modules.schedule.SemesterRepository;
-import com.tl_connect.dev.modules.study_program.entity.Semester;
+import com.tl_connect.dev.modules.semester.Semester;
+import com.tl_connect.dev.modules.semester.SemesterRepository;
 
 import lombok.RequiredArgsConstructor;
 

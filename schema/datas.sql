@@ -168,14 +168,17 @@ INSERT INTO study_programs (major_id, study_program_code, study_program_name, to
 (3, 'CTDT-KTPM-2025', 'Chương trình đào tạo KTPM 2025', 136, 2025);
 
 -- student_majors
-INSERT INTO student_majors (student_id, major_id, study_program_id, is_primary, start_year, end_year, status) VALUES
-(1, 1, 1, TRUE,  2021, NULL, 'STUDYING'),
-(2, 1, 1, TRUE,  2021, NULL, 'STUDYING'),
-(3, 1, 2, TRUE,  2022, NULL, 'STUDYING'),
-(4, 2, 3, TRUE,  2021, NULL, 'DROPPED'),
-(5, 3, 4, TRUE,  2022, NULL, 'STUDYING'),
--- sinh vien 1 học thêm ngành 2
-(1, 2, 3, FALSE, 2022, NULL, 'STUDYING');
+INSERT INTO student_majors 
+(student_id, major_id, study_program_id, is_primary, start_year, end_year, status) 
+VALUES
+(1, 1, 1, TRUE,  '2022-09-01', '2028-06-30', 'STUDYING'),
+(2, 1, 1, TRUE,  '2022-09-01', '2028-06-30', 'STUDYING'),
+(3, 1, 2, TRUE,  '2022-09-01', '2028-06-30', 'STUDYING'),
+(4, 2, 3, TRUE,  '2022-09-01', '2028-06-30', 'DROPPED'),
+(5, 3, 4, TRUE,  '2022-09-01', '2028-06-30', 'STUDYING'),
+
+-- sinh viên 1 học thêm ngành 2
+(1, 2, 3, FALSE, '2022-09-01', '2028-06-30', 'STUDYING');
 
 -- academic_infos
 INSERT INTO academic_infos (student_major_id, cohort, position, education_mode) VALUES

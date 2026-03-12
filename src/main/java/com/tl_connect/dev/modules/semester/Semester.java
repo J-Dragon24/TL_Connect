@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.study_program.entity;
+package com.tl_connect.dev.modules.semester;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

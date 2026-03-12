@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.tl_connect.dev.modules.student.entity.Student;
 import com.tl_connect.dev.modules.student.projection.HealthInsuranceView;
 import com.tl_connect.dev.modules.student.projection.StudentInfoView;
+import com.tl_connect.dev.modules.student.projection.StudyYearView;
 import com.tl_connect.dev.modules.student_class.projection.ClassHeaderView;
 
 @Repository
@@ -22,6 +23,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
                 s.date_of_birth AS dateOfBirth,
                 c.class_code AS classCode,
                 l.full_name AS academicAdvisor,
+                sm.start_year AS startYear,
+                sm.end_year AS endYear,
                 m.major_code AS majorCode,
                 m.major_name AS majorName,
                 f.faculty_name AS faculty,
@@ -94,4 +97,14 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             WHERE s.id = :studentId
             """, nativeQuery = true)
     Optional<HealthInsuranceView> findHealthInsuranceById(@Param("studentId") Long studentId);
+
+    @Query(value = """
+            SELECT
+                sm.start_year AS startYear,
+                sm.end_year AS endYear
+            FROM students s
+            JOIN student_majors sm ON s.id = sm.student_id AND sm.is_primary = true
+            WHERE s.id = :studentId
+            """, nativeQuery = true)
+    Optional<StudyYearView> findYearStudy(@Param("studentId") Long studentId);
 }
