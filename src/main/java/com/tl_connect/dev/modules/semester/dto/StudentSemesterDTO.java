@@ -15,6 +15,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class StudentSemesterDTO {
     String semesterName;
+    String academicYear;
+    Integer semesterNumber;
     LocalDate startDate;
     LocalDate endDate;
 }

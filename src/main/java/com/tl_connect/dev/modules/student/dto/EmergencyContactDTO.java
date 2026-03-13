@@ -15,4 +15,5 @@ public class EmergencyContactDTO {
     private String name;
     private String phoneNumber;
     private String address;
+    private String relationship;
 }

@@ -35,6 +35,8 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+	implementation 'org.apache.poi:poi-ooxml:5.2.3'
+	implementation 'com.opencsv:opencsv:5.7.1'
 }
 
 tasks.named('test') {

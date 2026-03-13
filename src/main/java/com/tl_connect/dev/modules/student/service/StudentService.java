@@ -1,10 +1,12 @@
-package com.tl_connect.dev.modules.student;
+package com.tl_connect.dev.modules.student.service;
 
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 import com.tl_connect.dev.core.common.exception.NotFoundException;
+import com.tl_connect.dev.core.common.ultility.importer.FileParseHelper;
+import com.tl_connect.dev.modules.student.StudentRepository;
 import com.tl_connect.dev.modules.student.dto.AcademicInfoDTO;
 import com.tl_connect.dev.modules.student.dto.ContactDTO;
 import com.tl_connect.dev.modules.student.dto.EmergencyContactDTO;
@@ -28,9 +30,10 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class StudentInfoService {
+public class StudentService {
 
         private final StudentRepository studentRepository;
+        private final FileParseHelper fileParserUtil;
         private final StudentClassRepository studentClassRepository;
 
         public StudentInfoDTO getStudentInfo(Long id) {
@@ -43,8 +46,6 @@ public class StudentInfoService {
                                 .gender(student.getGender())
                                 .classCode(student.getClassCode())
                                 .academicAdvisor(student.getAcademicAdvisor())
-                                .startYear(student.getStartYear())
-                                .endYear(student.getEndYear())
                                 .major(MajorDTO.builder()
                                                 .majorCode(student.getMajorCode())
                                                 .majorName(student.getMajorName())
@@ -59,7 +60,7 @@ public class StudentInfoService {
                                 .contact(ContactDTO.builder()
                                                 .phoneNumber(student.getPhoneNumber())
                                                 .email(student.getEmail())
-                                                .address(student.getAdress())
+                                                .address(student.getAddress())
                                                 .build())
                                 .academicInfo(AcademicInfoDTO.builder()
                                                 .cohort(student.getCohort())
@@ -69,7 +70,8 @@ public class StudentInfoService {
                                 .emergencyContact(EmergencyContactDTO.builder()
                                                 .name(student.getEmergencyContactName())
                                                 .phoneNumber(student.getEmergencyContactPhoneNumber())
-                                                .address(student.getEmergencyContactAdress())
+                                                .address(student.getEmergencyContactAddress())
+                                                .relationship(student.getRelationship())
                                                 .build())
                                 .build();
         }
@@ -126,4 +128,5 @@ public class StudentInfoService {
                                 .endYear(studyYear.getEndYear())
                                 .build();
         }
+
 }

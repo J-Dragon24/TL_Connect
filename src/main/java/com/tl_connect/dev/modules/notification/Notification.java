@@ -49,7 +49,7 @@ public class Notification {
     @Column(name = "reference_type")
     private String referenceType;
 
-    @Column(name = "dead_line")
+    @Column(name = "deadline")
     private LocalDate deadLine;
 
     @CreationTimestamp

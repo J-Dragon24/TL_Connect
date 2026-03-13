@@ -163,7 +163,7 @@
               }
             ],
             "url": {
-              "raw": "{{domain}}/api/v1/student/schedules/semester?HocKy=HK1 2022-2023",
+              "raw": "{{domain}}/api/v1/student/schedules/semester?HocKy=HK1 2025-2026",
               "host": [
                 "{{domain}}"
               ],
@@ -177,7 +177,8 @@
               "query": [
                 {
                   "key": "HocKy",
-                  "value": "HK1 2022-2023"
+                  "value": "HK1 2025-2026",
+                  "uuid": "a2919454-d703-4a77-93ca-18dd0b02142e"
                 }
               ]
             }
@@ -255,7 +256,7 @@
               }
             ],
             "url": {
-              "raw": "{{domain}}/api/v1/student/exam?HocKy=HK1 2021-2022",
+              "raw": "{{domain}}/api/v1/student/exam?HocKy=HK1 2025-2026",
               "host": [
                 "{{domain}}"
               ],
@@ -268,7 +269,8 @@
               "query": [
                 {
                   "key": "HocKy",
-                  "value": "HK1 2021-2022"
+                  "value": "HK1 2025-2026",
+                  "uuid": "2492c2f8-a50d-44a6-bbc4-f4cb8a0f6a3e"
                 }
               ]
             }
@@ -516,9 +518,25 @@
           "id": "d22cc28c-3ef3-4ee3-a3f5-defb505bcc36",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text",
+                "uuid": "741652b6-7af9-438c-a8cc-bbdf58b920d9"
+              }
+            ],
             "url": {
-              "raw": ""
+              "raw": "{{domain}}/api/v1/semester/student",
+              "host": [
+                "{{domain}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "semester",
+                "student"
+              ]
             }
           },
           "response": []

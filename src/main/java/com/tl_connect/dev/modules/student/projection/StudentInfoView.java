@@ -14,10 +14,6 @@ public interface StudentInfoView {
     String getClassCode();
     String getAcademicAdvisor();
 
-    //Study year
-    LocalDate getStartYear();
-    LocalDate getEndYear();
-
     //major
     String getMajorCode();
     String getMajorName();
@@ -31,7 +27,7 @@ public interface StudentInfoView {
 
     //contact
     String getPhoneNumber();
-    String getAdress();
+    String getAddress();
     String getEmail();
 
     //academic info
@@ -42,5 +38,6 @@ public interface StudentInfoView {
     //emergency contact
     String getEmergencyContactName();
     String getEmergencyContactPhoneNumber();
-    String getEmergencyContactAdress();
+    String getEmergencyContactAddress();
+    String getRelationship();
 }

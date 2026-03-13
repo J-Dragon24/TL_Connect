@@ -17,9 +17,14 @@ public interface SemesterRepository extends JpaRepository<Semester, Long> {
     @Query(value = """
         SELECT *
         FROM semesters s
-        WHERE s.start_date >= :startYear AND s.end_date <= :endYear
+        WHERE 
+            (EXTRACT(YEAR FROM s.start_date) > :startYear 
+            OR (EXTRACT(YEAR FROM s.start_date) = :startYear AND s.semester_number >= 1))
+        AND 
+            (EXTRACT(YEAR FROM s.start_date) < :endYear
+            OR (EXTRACT(YEAR FROM s.start_date) = :endYear AND s.semester_number <= 2))
     """, nativeQuery = true)
-    List<Semester> findAllStudentSemester(@Param("startYear") LocalDate startYear, @Param("endYear") LocalDate endYear);
+    List<Semester> findAllStudentSemester(@Param("startYear") int startYear, @Param("endYear") int endYear);
 
     @Query(value = """
             SELECT *

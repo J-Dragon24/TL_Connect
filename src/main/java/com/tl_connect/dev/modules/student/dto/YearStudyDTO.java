@@ -1,7 +1,5 @@
 package com.tl_connect.dev.modules.student.dto;
 
-import java.time.LocalDate;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +12,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class YearStudyDTO {
-    private LocalDate startYear;
-    private LocalDate endYear;
+    private int startYear;
+    private int endYear;
 }

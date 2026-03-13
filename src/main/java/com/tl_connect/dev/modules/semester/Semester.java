@@ -29,6 +29,12 @@ public class Semester {
     @Column(name = "semester_name", nullable = false)
     private String semesterName;
 
+    @Column(name = "academic_years", nullable = false)
+    private String academicYears;
+
+    @Column(name = "semester_number", nullable = false)
+    private int semesterNumber;
+
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
 

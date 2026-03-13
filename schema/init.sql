@@ -122,7 +122,7 @@ CREATE TABLE lecturers (
 
 CREATE TABLE students (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  oauth_user_id BIGINT UNIQUE NOT NULL,
+  oauth_user_id BIGINT UNIQUE,
   student_class_id BIGINT NOT NULL,
   full_name VARCHAR(255),
   student_code VARCHAR(20) UNIQUE NOT NULL,
@@ -163,6 +163,7 @@ CREATE TABLE emergency_contacts (
   full_name VARCHAR(100),
   phone_number VARCHAR(20),
   address VARCHAR(255),
+  relationship VARCHAR (255),
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
   FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE
@@ -213,8 +214,8 @@ CREATE TABLE student_majors (
   major_id BIGINT NOT NULL,
   study_program_id BIGINT NOT NULL,
   is_primary BOOLEAN DEFAULT TRUE,
-  start_year DATE NOT NULL,
-  end_year DATE NOT NULL,
+  start_year INT NOT NULL,
+  end_year INT NOT NULL,
   status VARCHAR(20) NOT NULL DEFAULT 'STUDYING' CHECK (status IN ('STUDYING', 'GRADUATED', 'DROPPED')),
   UNIQUE(student_id, major_id),
   FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
@@ -261,6 +262,8 @@ CREATE TABLE subject_prerequisites (
 CREATE TABLE semesters (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   semester_name VARCHAR(50) NOT NULL,
+  academic_years varchar(20) NOT NULL,
+  semester_number INT NOT NULL,
   start_date DATE NOT NULL,
   end_date DATE NOT NULL,
   created_at TIMESTAMP DEFAULT now(),

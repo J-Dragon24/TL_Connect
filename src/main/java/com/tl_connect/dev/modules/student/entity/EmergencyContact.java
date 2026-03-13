@@ -37,6 +37,9 @@ public class EmergencyContact {
     @Column(name = "address")
     private String address;
 
+    @Column(name = "relationship")
+    private String relationship;
+
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;

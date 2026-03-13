@@ -146,15 +146,13 @@ INSERT INTO health_insurances (student_id, insurance_number, provider, valid_fro
 (5, 'HS4010005555', 'BHXH HCM', '2024-06-01', '2025-05-31', 'BV Nhân dân 115', 'ACTIVE');
 
 -- semesters
-INSERT INTO semesters (semester_name, start_date, end_date) VALUES
-('HK1 2025-2026', '2025-09-01', '2026-01-15'),
-('HK2 2025-2026', '2026-02-01', '2026-06-30'),
-
-('HK1 2026-2027', '2026-09-01', '2027-01-15'),
-('HK2 2026-2027', '2027-02-01', '2027-06-30'),
-
-('HK1 2027-2028', '2027-09-01', '2028-01-15'),
-('HK2 2027-2028', '2028-02-01', '2028-06-30');
+INSERT INTO semesters (semester_name, academic_years, semester_number, start_date, end_date) VALUES
+('HK1 2025-2026', '2025-2026', 1, '2025-09-01', '2026-01-15'),
+('HK2 2025-2026', '2025-2026', 2, '2026-02-01', '2026-06-30'),
+('HK1 2026-2027', '2026-2027', 1, '2026-09-01', '2027-01-15'),
+('HK2 2026-2027', '2026-2027', 2, '2027-02-01', '2027-06-30'),
+('HK1 2027-2028', '2027-2028', 1, '2027-09-01', '2028-01-15'),
+('HK2 2027-2028', '2027-2028', 2, '2028-02-01', '2028-06-30');
 
 -- study_programs
 INSERT INTO study_programs (major_id, study_program_code, study_program_name, total_credits, start_year) VALUES
@@ -171,14 +169,14 @@ INSERT INTO study_programs (major_id, study_program_code, study_program_name, to
 INSERT INTO student_majors 
 (student_id, major_id, study_program_id, is_primary, start_year, end_year, status) 
 VALUES
-(1, 1, 1, TRUE,  '2022-09-01', '2028-06-30', 'STUDYING'),
-(2, 1, 1, TRUE,  '2022-09-01', '2028-06-30', 'STUDYING'),
-(3, 1, 2, TRUE,  '2022-09-01', '2028-06-30', 'STUDYING'),
-(4, 2, 3, TRUE,  '2022-09-01', '2028-06-30', 'DROPPED'),
-(5, 3, 4, TRUE,  '2022-09-01', '2028-06-30', 'STUDYING'),
+(1, 1, 1, TRUE,  2022, 2028, 'STUDYING'),
+(2, 1, 1, TRUE,  2022, 2028, 'STUDYING'),
+(3, 1, 2, TRUE,  2022, 2028, 'STUDYING'),
+(4, 2, 3, TRUE,  2022, 2028, 'DROPPED'),
+(5, 3, 4, TRUE,  2022, 2028, 'STUDYING'),
 
 -- sinh viên 1 học thêm ngành 2
-(1, 2, 3, FALSE, '2022-09-01', '2028-06-30', 'STUDYING');
+(1, 2, 3, FALSE, 2022, 2028, 'STUDYING');
 
 -- academic_infos
 INSERT INTO academic_infos (student_major_id, cohort, position, education_mode) VALUES

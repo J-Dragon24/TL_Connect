@@ -23,8 +23,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
                 s.date_of_birth AS dateOfBirth,
                 c.class_code AS classCode,
                 l.full_name AS academicAdvisor,
-                sm.start_year AS startYear,
-                sm.end_year AS endYear,
                 m.major_code AS majorCode,
                 m.major_name AS majorName,
                 f.faculty_name AS faculty,
@@ -40,7 +38,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
                 ai.education_mode AS educationMode,
                 ec.full_name AS emergencyContactName,
                 ec.phone_number AS emergencyContactPhoneNumber,
-                ec.address AS emergencyContactAdress
+                ec.address AS emergencyContactAdress,
+                ec.relationship AS relationship
             FROM students s
             LEFT JOIN student_classes c ON s.student_class_id = c.id
             LEFT JOIN student_majors sm ON s.id = sm.student_id AND sm.is_primary = true

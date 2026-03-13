@@ -15,14 +15,13 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class StudentInfoDTO {
+public class StudentImportDTO {
     private String studentCode;
     private String fullName;
     private LocalDate dateOfBirth;
     private Gender gender;
-    private String classCode;
-    private String academicAdvisor;
-    private MajorDTO major;
+    private String studentClassCode;
+    private String majorCode;
     private IdentityCardDTO identityCard;
     private ContactDTO contact;
     private AcademicInfoDTO academicInfo;

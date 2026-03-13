@@ -9,6 +9,7 @@ import com.tl_connect.dev.core.common.exception.UnauthorizeException;
 import com.tl_connect.dev.core.common.types.JwtUserInfo;
 import com.tl_connect.dev.core.common.ultility.ResponseHelper;
 import com.tl_connect.dev.modules.student.dto.StudentInfoDTO;
+import com.tl_connect.dev.modules.student.service.StudentService;
 import com.tl_connect.dev.modules.student_class.dto.StudentClassInfoDTO;
 
 import org.springframework.security.core.Authentication;
@@ -19,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/student")
 @RequiredArgsConstructor
 public class StudentController {
-    private final StudentInfoService studentService;
+    private final StudentService studentService;
 
     @GetMapping("/me")
     public ResponseEntity<?> getStudentInfo(Authentication authentication) {
