@@ -1,5 +1,6 @@
 package com.tl_connect.dev.modules.student.dto;
 
+import com.tl_connect.dev.core.common.ultility.importer.annotation.ImportColumn;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +13,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ContactDTO {
+    @ImportColumn("Số điện thoại")
     private String phoneNumber;
+    @ImportColumn("Địa chỉ")
     private String address;
+    @ImportColumn("Email")
     private String email;
 }

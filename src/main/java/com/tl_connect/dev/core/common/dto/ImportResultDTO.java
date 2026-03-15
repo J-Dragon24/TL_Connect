@@ -2,12 +2,18 @@ package com.tl_connect.dev.core.common.dto;
 
 import java.util.List;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Value
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class ImportResultDTO {
     private int total;
-    private boolean success;
+    private int success;
     private int failed;
     private List<String> errors;
 }

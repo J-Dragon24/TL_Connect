@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.core.common.ultility.importer.FileParseHelper;
-import com.tl_connect.dev.modules.student.StudentRepository;
 import com.tl_connect.dev.modules.student.dto.AcademicInfoDTO;
 import com.tl_connect.dev.modules.student.dto.ContactDTO;
 import com.tl_connect.dev.modules.student.dto.EmergencyContactDTO;
@@ -19,6 +18,7 @@ import com.tl_connect.dev.modules.student.dto.YearStudyDTO;
 import com.tl_connect.dev.modules.student.projection.HealthInsuranceView;
 import com.tl_connect.dev.modules.student.projection.StudentInfoView;
 import com.tl_connect.dev.modules.student.projection.StudyYearView;
+import com.tl_connect.dev.modules.student.repository.StudentRepository;
 import com.tl_connect.dev.modules.student_class.StudentClassRepository;
 import com.tl_connect.dev.modules.student_class.dto.LecturerDTO;
 import com.tl_connect.dev.modules.student_class.dto.StudentClassInfoDTO;

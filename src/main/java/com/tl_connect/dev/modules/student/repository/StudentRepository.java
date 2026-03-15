@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.student;
+package com.tl_connect.dev.modules.student.repository;
 
 import java.util.Optional;
 
@@ -15,6 +15,9 @@ import com.tl_connect.dev.modules.student_class.projection.ClassHeaderView;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
+
+    boolean existsByStudentCode(String studentCode);
+
     @Query(value = """
             SELECT
                 s.student_code AS studentCode,
@@ -31,14 +34,14 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
                 i.issued_date AS issuedDate,
                 i.issued_place AS issuedPlace,
                 sc.phone_number AS phoneNumber,
-                sc.address AS adress,
+                sc.address AS address,
                 sc.email_personal AS email,
                 ai.cohort AS cohort,
                 ai.position AS position,
                 ai.education_mode AS educationMode,
                 ec.full_name AS emergencyContactName,
                 ec.phone_number AS emergencyContactPhoneNumber,
-                ec.address AS emergencyContactAdress,
+                ec.address AS emergencyContactAddress,
                 ec.relationship AS relationship
             FROM students s
             LEFT JOIN student_classes c ON s.student_class_id = c.id

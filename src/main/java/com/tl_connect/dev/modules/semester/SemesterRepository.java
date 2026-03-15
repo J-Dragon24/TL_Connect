@@ -16,7 +16,7 @@ public interface SemesterRepository extends JpaRepository<Semester, Long> {
 
     @Query(value = """
         SELECT *
-        FROM semesters s
+        FROM Semesters s
         WHERE 
             (EXTRACT(YEAR FROM s.start_date) > :startYear 
             OR (EXTRACT(YEAR FROM s.start_date) = :startYear AND s.semester_number >= 1))

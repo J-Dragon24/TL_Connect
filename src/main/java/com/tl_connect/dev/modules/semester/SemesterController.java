@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tl_connect.dev.core.common.exception.UnauthorizeException;
 import com.tl_connect.dev.core.common.types.JwtUserInfo;
 import com.tl_connect.dev.core.common.ultility.ResponseHelper;
-import com.tl_connect.dev.modules.semester.dto.StudentSemesterDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,7 +27,7 @@ public class SemesterController {
             throw new UnauthorizeException("Authentication required");
         }
         Long studentId = userInfo.userId();
-        List<StudentSemesterDTO> semester = semesterService.getAllStudentSemesters(studentId);
+        List<Semester> semester = semesterService.getAllStudentSemesters(studentId);
         return ResponseHelper.success("Student semesters retrieved successfully", semester);
     }
 }

@@ -35,21 +35,21 @@ public class Student {
     @Column(name = "student_class_id", nullable = false)
     private Long studentClassId;
 
-    @Column(name = "full_name")
+    @Column(name = "full_name", nullable = false)
     private String fullName;
 
     @Column(name = "student_code", nullable = false, unique = true)
     private String studentCode;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "gender")
+    @Column(name = "gender", nullable = false)
     private Gender gender;
 
-    @Column(name = "date_of_birth")
+    @Column(name = "date_of_birth", nullable = false)
     private LocalDate dateOfBirth;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private StudentStatus status;
 
     @CreationTimestamp
