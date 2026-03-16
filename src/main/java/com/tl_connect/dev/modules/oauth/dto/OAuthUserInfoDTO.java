@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.auth.dto;
+package com.tl_connect.dev.modules.oauth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

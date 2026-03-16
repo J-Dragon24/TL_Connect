@@ -136,6 +136,7 @@ Sinh viên lấy thông tin cá nhân.
     "academicAdvisor": "Nguyen Van An",
     "startYear": "2022-09-01",
     "endYear": "2028-06-30",
+    "trainingType": "CHINH_QUY",
     "major": {
         "majorCode": "KHMT",
         "majorName": "Khoa học máy tính",
@@ -155,7 +156,6 @@ Sinh viên lấy thông tin cá nhân.
     "academicInfo": {
         "cohort": "K2021",
         "position": "Lớp trưởng",
-        "educationMode": "CHINH_QUY"
     },
     "emergencyContact": {
         "name": "Pham Van Bo",

@@ -1,28 +1,38 @@
-package com.tl_connect.dev.modules.auth.service;
+package com.tl_connect.dev.modules.oauth.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import lombok.RequiredArgsConstructor;
 
+import com.tl_connect.dev.core.common.enums.UserStatus;
 import com.tl_connect.dev.core.common.exception.InvalidInputException;
 import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.core.common.types.JwtUserInfo;
 import com.tl_connect.dev.core.common.types.UserInfo;
 import com.tl_connect.dev.core.common.ultility.AuthHelper;
-import com.tl_connect.dev.modules.auth.AuthUserRepository;
-import com.tl_connect.dev.modules.auth.projection.JwtUserInfoView;
-import com.tl_connect.dev.modules.auth.dto.OAuthUserInfoDTO;
+import com.tl_connect.dev.modules.oauth.OAuthUserRepository;
+import com.tl_connect.dev.modules.oauth.dto.OAuthUserInfoDTO;
+import com.tl_connect.dev.modules.oauth.entity.OAuthUser;
+import com.tl_connect.dev.modules.oauth.projection.JwtUserInfoView;
+import com.tl_connect.dev.modules.student.entity.Student;
+import com.tl_connect.dev.modules.student.repository.StudentRepository;
 
 @Service
 @RequiredArgsConstructor
 public class OAuthService {
-    private final AuthUserRepository authUserRepository;
+    private final OAuthUserRepository oauthUserRepository;
     
     private final AuthHelper authHelper;
 
     private final JWTService jwtService;
 
+    private final StudentRepository studentRepository;
+
+    @Transactional
     public OAuthUserInfoDTO loginWithMicrosoft(String accessToken){
 
         UserInfo userInfo = authHelper.extractUserInfo(accessToken);
@@ -45,11 +55,27 @@ public class OAuthService {
         System.out.println("name: " + name);
         System.out.println("roles: " + roles);
 
-        JwtUserInfoView jwtUserInfoView = authUserRepository.findStudentByUserUuid("1deb00a9-835c-4ab7-a50f-57c12a56c7bd")
-                .orElseThrow(() -> new NotFoundException("User not found"));
+        Optional<JwtUserInfoView> jwtUserInfoView = oauthUserRepository.findStudentByUserUuid("1deb00a9-835c-4ab7-a50f-57c12a56c7bd");
+
+        if(jwtUserInfoView.isEmpty()){
+            String studentCode = email.split("@")[0];
+            Student student = studentRepository.findByStudentCode(studentCode)
+                .orElseThrow(() -> new NotFoundException("Tài khoản không tồn tại trong hệ thống: " + studentCode));
+            if(student.getOauthUserId() != null){
+                throw new InvalidInputException("Sinh viên đã được liên kết với tài khoản khác");
+            }
+            OAuthUser oauthUser = oauthUserRepository.save(OAuthUser.builder()
+                .userUuid(microsoftId)
+                .displayName(name)
+                .email(email)
+                .status(UserStatus.ACTIVE)
+                .build());
+            student.setOauthUserId(oauthUser.getId());
+            studentRepository.save(student);
+        }
 
         JwtUserInfo jwtUserInfo = JwtUserInfo.builder()
-        .userId(jwtUserInfoView.getStudentId())
+        .userId(jwtUserInfoView.get().getStudentId())
         .roles(roles)
         .build();
 

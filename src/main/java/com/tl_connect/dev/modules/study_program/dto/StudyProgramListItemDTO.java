@@ -12,7 +12,6 @@ import lombok.Builder;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StudyProgramListItemDTO {
-    private Long id;
     private String studentCode;
     private String studyProgramCode;
     private String studyProgramName;

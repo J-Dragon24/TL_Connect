@@ -5,8 +5,6 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.tl_connect.dev.core.common.enums.EducationMode;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,10 +33,6 @@ public class AcademicInfo {
 
     @Column(name = "position")
     private String position;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "education_mode")
-    private EducationMode educationMode;
 
     @CreationTimestamp
     @Column(name = "created_at")

@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.student;
+package com.tl_connect.dev.modules.student.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,4 +41,5 @@ public class StudentController {
         StudentClassInfoDTO studentClassInfo = studentService.getStudentClassInfo(studentId);
         return ResponseHelper.success("Student class info retrieved successfully", studentClassInfo);
     }
+
 }

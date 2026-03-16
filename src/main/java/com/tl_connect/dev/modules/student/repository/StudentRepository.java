@@ -1,6 +1,8 @@
 package com.tl_connect.dev.modules.student.repository;
 
+import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,6 +19,8 @@ import com.tl_connect.dev.modules.student_class.projection.ClassHeaderView;
 public interface StudentRepository extends JpaRepository<Student, Long> {
 
     boolean existsByStudentCode(String studentCode);
+
+    Optional<Student> findByStudentCode(String studentCode);
 
     @Query(value = """
             SELECT
@@ -38,7 +42,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
                 sc.email_personal AS email,
                 ai.cohort AS cohort,
                 ai.position AS position,
-                ai.education_mode AS educationMode,
+                sp.training_type AS trainingType,
                 ec.full_name AS emergencyContactName,
                 ec.phone_number AS emergencyContactPhoneNumber,
                 ec.address AS emergencyContactAddress,
@@ -46,6 +50,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             FROM students s
             LEFT JOIN student_classes c ON s.student_class_id = c.id
             LEFT JOIN student_majors sm ON s.id = sm.student_id AND sm.is_primary = true
+            LEFT JOIN study_programs sp ON sm.study_program_id = sp.id
             LEFT JOIN majors m ON sm.major_id = m.id
             LEFT JOIN faculties f ON m.faculty_id = f.id
             LEFT JOIN identity_cards i ON s.id = i.student_id
@@ -109,4 +114,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             WHERE s.id = :studentId
             """, nativeQuery = true)
     Optional<StudyYearView> findYearStudy(@Param("studentId") Long studentId);
+
+    @Query("SELECT s.studentCode FROM Student s WHERE s.studentCode IN :codes")
+    Set<String> findExistingStudentCodes(@Param("codes") Collection<String> codes);
 }

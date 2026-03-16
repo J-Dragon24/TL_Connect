@@ -33,7 +33,6 @@ import lombok.RequiredArgsConstructor;
 public class StudentService {
 
         private final StudentRepository studentRepository;
-        private final FileParseHelper fileParserUtil;
         private final StudentClassRepository studentClassRepository;
 
         public StudentInfoDTO getStudentInfo(Long id) {
@@ -46,6 +45,7 @@ public class StudentService {
                                 .gender(student.getGender())
                                 .classCode(student.getClassCode())
                                 .academicAdvisor(student.getAcademicAdvisor())
+                                .trainingType(student.getTrainingType())
                                 .major(MajorDTO.builder()
                                                 .majorCode(student.getMajorCode())
                                                 .majorName(student.getMajorName())
@@ -65,7 +65,6 @@ public class StudentService {
                                 .academicInfo(AcademicInfoDTO.builder()
                                                 .cohort(student.getCohort())
                                                 .position(student.getPosition())
-                                                .educationMode(student.getEducationMode())
                                                 .build())
                                 .emergencyContact(EmergencyContactDTO.builder()
                                                 .name(student.getEmergencyContactName())

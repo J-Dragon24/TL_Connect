@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.auth.service;
+package com.tl_connect.dev.modules.oauth.service;
 
 import org.springframework.stereotype.Service;
 

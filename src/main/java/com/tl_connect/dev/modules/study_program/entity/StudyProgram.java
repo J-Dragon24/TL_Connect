@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.tl_connect.dev.core.common.enums.TrainingType;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,6 +38,10 @@ public class StudyProgram {
 
     @Column(name = "start_year", nullable = false)
     private Integer startYear;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "training_type", nullable = false)
+    private TrainingType trainingType;
 
     @Column(name = "total_credits")
     private Integer totalCredits;

@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.auth;
+package com.tl_connect.dev.modules.oauth;
 
 import org.springframework.http.ResponseEntity;
 
@@ -9,15 +9,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tl_connect.dev.core.common.exception.InvalidInputException;
 import com.tl_connect.dev.core.common.ultility.ResponseHelper;
-import com.tl_connect.dev.modules.auth.dto.OAuthUserInfoDTO;
-import com.tl_connect.dev.modules.auth.service.OAuthService;
+import com.tl_connect.dev.modules.oauth.dto.OAuthUserInfoDTO;
+import com.tl_connect.dev.modules.oauth.service.OAuthService;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/oauth2")
 @RequiredArgsConstructor
-public class AuthController {
+public class OAuthController {
 
     private final OAuthService oauthService;
 

@@ -3,6 +3,7 @@ package com.tl_connect.dev.modules.student.dto;
 import java.time.LocalDate;
 
 import com.tl_connect.dev.core.common.enums.Gender;
+import com.tl_connect.dev.core.common.enums.TrainingType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +24,7 @@ public class StudentInfoDTO {
     private String classCode;
     private String academicAdvisor;
     private MajorDTO major;
+    private TrainingType trainingType;
     private IdentityCardDTO identityCard;
     private ContactDTO contact;
     private AcademicInfoDTO academicInfo;

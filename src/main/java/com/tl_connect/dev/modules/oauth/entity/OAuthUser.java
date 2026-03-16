@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.auth.entity;
+package com.tl_connect.dev.modules.oauth.entity;
 
 import java.time.LocalDateTime;
 

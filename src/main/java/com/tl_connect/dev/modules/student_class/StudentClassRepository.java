@@ -1,6 +1,8 @@
 package com.tl_connect.dev.modules.student_class;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -24,4 +26,7 @@ public interface StudentClassRepository extends JpaRepository<StudentClass, Long
             """, nativeQuery = true)
     List<StudentInClassRow> findStudentsByClassId(@Param("classId") Long classId);
 
+    List<StudentClass> findByClassCodeIn(Set<String> classCodes);
+
+    Optional<StudentClass> findByClassCode(String classCode);
 }

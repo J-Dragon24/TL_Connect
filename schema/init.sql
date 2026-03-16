@@ -202,6 +202,7 @@ CREATE TABLE study_programs (
   study_program_name VARCHAR(255) NOT NULL,
   total_credits INT,
   start_year INT NOT NULL,
+  training_type VARCHAR(20) NOT NULL DEFAULT 'CHINH_QUY' CHECK (training_type IN ('CHINH_QUY','LIEN_THONG')),
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
 
@@ -228,7 +229,6 @@ CREATE TABLE academic_infos (
   student_major_id BIGINT UNIQUE NOT NULL,
   cohort VARCHAR(20) NOT NULL,
   position VARCHAR(50),
-  education_mode VARCHAR(20) NOT NULL DEFAULT 'CHINH_QUY' CHECK (education_mode IN ('CHINH_QUY','LIEN_THONG')),
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
   FOREIGN KEY (student_major_id) REFERENCES student_majors(id) ON DELETE CASCADE

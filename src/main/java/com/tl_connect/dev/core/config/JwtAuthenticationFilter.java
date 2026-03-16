@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.tl_connect.dev.core.common.types.JwtPayload;
 import com.tl_connect.dev.core.common.types.JwtUserInfo;
-import com.tl_connect.dev.modules.auth.service.JWTService;
+import com.tl_connect.dev.modules.oauth.service.JWTService;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
