@@ -25,7 +25,7 @@ import com.tl_connect.dev.modules.student.repository.StudentRepository;
 @RequiredArgsConstructor
 public class OAuthService {
     private final OAuthUserRepository oauthUserRepository;
-    
+
     private final AuthHelper authHelper;
 
     private final JWTService jwtService;
@@ -33,7 +33,7 @@ public class OAuthService {
     private final StudentRepository studentRepository;
 
     @Transactional
-    public OAuthUserInfoDTO loginWithMicrosoft(String accessToken){
+    public OAuthUserInfoDTO loginWithMicrosoft(String accessToken) {
 
         UserInfo userInfo = authHelper.extractUserInfo(accessToken);
 
@@ -43,10 +43,10 @@ public class OAuthService {
         List<String> roles = userInfo.roles();
         String avatar = userInfo.avatar();
 
-        if(microsoftId == null || microsoftId.isEmpty()){
+        if (microsoftId == null || microsoftId.isEmpty()) {
             throw new InvalidInputException("oid not found in ID token");
         }
-        if(email == null || email.isEmpty()){
+        if (email == null || email.isEmpty()) {
             throw new InvalidInputException("email not found in ID token");
         }
 
@@ -55,39 +55,46 @@ public class OAuthService {
         System.out.println("name: " + name);
         System.out.println("roles: " + roles);
 
-        Optional<JwtUserInfoView> jwtUserInfoView = oauthUserRepository.findStudentByUserUuid("1deb00a9-835c-4ab7-a50f-57c12a56c7bd");
+        Optional<JwtUserInfoView> jwtUserInfoView = oauthUserRepository.findStudentByUserUuid(microsoftId);
 
-        if(jwtUserInfoView.isEmpty()){
+        JwtUserInfo jwtUserInfo;
+
+        if (jwtUserInfoView.isPresent()) {
+            jwtUserInfo = JwtUserInfo.builder()
+                    .userId(jwtUserInfoView.get().getStudentId())
+                    .roles(roles)
+                    .build();
+        } else {
             String studentCode = email.split("@")[0];
             Student student = studentRepository.findByStudentCode(studentCode)
-                .orElseThrow(() -> new NotFoundException("Tài khoản không tồn tại trong hệ thống: " + studentCode));
-            if(student.getOauthUserId() != null){
+                    .orElseThrow(() -> new NotFoundException("Sinh viên không tồn tại trong hệ thống: " + studentCode));
+            if (student.getOauthUserId() != null) {
                 throw new InvalidInputException("Sinh viên đã được liên kết với tài khoản khác");
             }
             OAuthUser oauthUser = oauthUserRepository.save(OAuthUser.builder()
-                .userUuid(microsoftId)
-                .displayName(name)
-                .email(email)
-                .status(UserStatus.ACTIVE)
-                .build());
+                    .userUuid(microsoftId)
+                    .displayName(name)
+                    .email(email)
+                    .status(UserStatus.ACTIVE)
+                    .build());
             student.setOauthUserId(oauthUser.getId());
             studentRepository.save(student);
-        }
 
-        JwtUserInfo jwtUserInfo = JwtUserInfo.builder()
-        .userId(jwtUserInfoView.get().getStudentId())
-        .roles(roles)
-        .build();
+            jwtUserInfo = JwtUserInfo.builder()
+                    .userId(student.getId())
+                    .roles(roles)
+                    .build();
+        }
 
         String token = jwtService.generateToken(jwtUserInfo);
 
         return OAuthUserInfoDTO.builder()
-            .microsoftId(microsoftId)
-            .email(email)
-            .name(name)
-            .token(token)
-            .avatar(avatar)
-            .build();
+                .microsoftId(microsoftId)
+                .email(email)
+                .name(name)
+                .token(token)
+                .avatar(avatar)
+                .build();
     }
 
 }

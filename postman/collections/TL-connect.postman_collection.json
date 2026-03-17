@@ -540,6 +540,37 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "create student",
+          "id": "42ab3f94-a7c2-423e-a791-72081fa5987c",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"student_code\": \"A46049\",\r\n    \"full_name\": \"John Doe\",\r\n    \"date_of_birth\": \"2004-12-27\",\r\n    \"gender\": \"NAM\",\r\n    \"student_class_code\": \"KHMT2021\",\r\n    \"major_code\": \"KHMT\",\r\n    \"start_year\": 2023,\r\n    \"end_year\": 2028,\r\n    \"training_type\": \"CHINH_QUY\",\r\n    \"identity_card\":{\r\n        \"card_type\": \"CCCD\",\r\n        \"card_number\": \"1234567890123456\",\r\n        \"issued_date\": \"2015-12-25\",\r\n        \"issued_place\": \"Hanoi\"\r\n    },\r\n    \"contact\":{\r\n        \"email\": \"john.doe@example.com\",\r\n        \"phone_number\": \"0987654321\",\r\n        \"address\": \"123 Nguyen Huu Tho\"\r\n    },\r\n    \"academic_info\":{\r\n        \r\n    }\r\n\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{domain}}/api/v1/admin/student/create",
+              "host": [
+                "{{domain}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "student",
+                "create"
+              ]
+            }
+          },
+          "response": []
         }
       ],
       "id": "5ef693c3-c553-4bc4-99f6-e618c33de471"

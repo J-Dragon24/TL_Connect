@@ -4,8 +4,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import com.tl_connect.dev.core.common.dto.PagedResponse;
 import com.tl_connect.dev.core.common.exception.NotFoundException;
-import com.tl_connect.dev.core.common.ultility.importer.FileParseHelper;
 import com.tl_connect.dev.modules.student.dto.AcademicInfoDTO;
 import com.tl_connect.dev.modules.student.dto.ContactDTO;
 import com.tl_connect.dev.modules.student.dto.EmergencyContactDTO;
@@ -25,6 +25,8 @@ import com.tl_connect.dev.modules.student_class.dto.StudentClassInfoDTO;
 import com.tl_connect.dev.modules.student_class.dto.StudentInClassDTO;
 import com.tl_connect.dev.modules.student_class.projection.ClassHeaderView;
 import com.tl_connect.dev.modules.student_class.projection.StudentInClassRow;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,44 +37,23 @@ public class StudentService {
         private final StudentRepository studentRepository;
         private final StudentClassRepository studentClassRepository;
 
+        public PagedResponse<StudentInfoDTO> getAllStudents(Pageable pageable) {
+                Page<StudentInfoView> students = studentRepository.findAllStudentInfo(pageable);
+
+                return new PagedResponse<>(
+                                students.getContent().stream().map(this::toDTO).toList(),
+                                students.getNumber(),
+                                students.getSize(),
+                                students.getTotalElements(),
+                                students.getTotalPages(),
+                                students.isFirst(),
+                                students.isLast());
+        }
+
         public StudentInfoDTO getStudentInfo(Long id) {
                 StudentInfoView student = studentRepository.findStudentInfoById(id)
                         .orElseThrow(() -> new NotFoundException("Student not found with id: " + id));
-                return StudentInfoDTO.builder()
-                                .studentCode(student.getStudentCode())
-                                .fullName(student.getFullName())
-                                .dateOfBirth(student.getDateOfBirth())
-                                .gender(student.getGender())
-                                .classCode(student.getClassCode())
-                                .academicAdvisor(student.getAcademicAdvisor())
-                                .trainingType(student.getTrainingType())
-                                .major(MajorDTO.builder()
-                                                .majorCode(student.getMajorCode())
-                                                .majorName(student.getMajorName())
-                                                .faculty(student.getFaculty())
-                                                .build())
-                                .identityCard(IdentityCardDTO.builder()
-                                                .cardNumber(student.getIdCardNumber())
-                                                .cardType(student.getIdCardType())
-                                                .issuedDate(student.getIssuedDate())
-                                                .issuedPlace(student.getIssuedPlace())
-                                                .build())
-                                .contact(ContactDTO.builder()
-                                                .phoneNumber(student.getPhoneNumber())
-                                                .email(student.getEmail())
-                                                .address(student.getAddress())
-                                                .build())
-                                .academicInfo(AcademicInfoDTO.builder()
-                                                .cohort(student.getCohort())
-                                                .position(student.getPosition())
-                                                .build())
-                                .emergencyContact(EmergencyContactDTO.builder()
-                                                .name(student.getEmergencyContactName())
-                                                .phoneNumber(student.getEmergencyContactPhoneNumber())
-                                                .address(student.getEmergencyContactAddress())
-                                                .relationship(student.getRelationship())
-                                                .build())
-                                .build();
+                return toDTO(student);
         }
 
         public StudentClassInfoDTO getStudentClassInfo(Long id) {
@@ -125,6 +106,44 @@ public class StudentService {
                 return YearStudyDTO.builder()
                                 .startYear(studyYear.getStartYear())
                                 .endYear(studyYear.getEndYear())
+                                .build();
+        }
+
+        private StudentInfoDTO toDTO(StudentInfoView student) {
+                return StudentInfoDTO.builder()
+                                .studentCode(student.getStudentCode())
+                                .fullName(student.getFullName())
+                                .dateOfBirth(student.getDateOfBirth())
+                                .gender(student.getGender())
+                                .classCode(student.getClassCode())
+                                .academicAdvisor(student.getAcademicAdvisor())
+                                .trainingType(student.getTrainingType())
+                                .major(MajorDTO.builder()
+                                                .majorCode(student.getMajorCode())
+                                                .majorName(student.getMajorName())
+                                                .faculty(student.getFaculty())
+                                                .build())
+                                .identityCard(IdentityCardDTO.builder()
+                                                .cardNumber(student.getIdCardNumber())
+                                                .cardType(student.getIdCardType())
+                                                .issuedDate(student.getIssuedDate())
+                                                .issuedPlace(student.getIssuedPlace())
+                                                .build())
+                                .contact(ContactDTO.builder()
+                                                .phoneNumber(student.getPhoneNumber())
+                                                .email(student.getEmail())
+                                                .address(student.getAddress())
+                                                .build())
+                                .academicInfo(AcademicInfoDTO.builder()
+                                                .cohort(student.getCohort())
+                                                .position(student.getPosition())
+                                                .build())
+                                .emergencyContact(EmergencyContactDTO.builder()
+                                                .name(student.getEmergencyContactName())
+                                                .phoneNumber(student.getEmergencyContactPhoneNumber())
+                                                .address(student.getEmergencyContactAddress())
+                                                .relationship(student.getRelationship())
+                                                .build())
                                 .build();
         }
 

@@ -155,15 +155,15 @@ INSERT INTO semesters (semester_name, academic_years, semester_number, start_dat
 ('HK2 2027-2028', '2027-2028', 2, '2028-02-01', '2028-06-30');
 
 -- study_programs
-INSERT INTO study_programs (major_id, study_program_code, study_program_name, total_credits, start_year) VALUES
-(1, 'CTDT-KHMT-2024', 'Chương trình đào tạo KHMT 2024', 132, 2024),
-(1, 'CTDT-KHMT-2025', 'Chương trình đào tạo KHMT 2025', 134, 2025),
+INSERT INTO study_programs (major_id, study_program_code, study_program_name, total_credits, start_year, training_type) VALUES
+(1, 'CTDT-KHMT-2024', 'Chương trình đào tạo KHMT 2024', 132, 2024, 'CHINH_QUY'),
+(1, 'CTDT-KHMT-2025', 'Chương trình đào tạo KHMT 2025', 134, 2025, 'CHINH_QUY'),
 
-(2, 'CTDT-HTTT-2024', 'Chương trình đào tạo HTTT 2024', 130, 2024),
-(2, 'CTDT-HTTT-2025', 'Chương trình đào tạo HTTT 2025', 132, 2025),
+(2, 'CTDT-HTTT-2024', 'Chương trình đào tạo HTTT 2024', 130, 2024, 'CHINH_QUY'),
+(2, 'CTDT-HTTT-2025', 'Chương trình đào tạo HTTT 2025', 132, 2025, 'CHINH_QUY'),
 
-(3, 'CTDT-KTPM-2024', 'Chương trình đào tạo KTPM 2024', 135, 2024),
-(3, 'CTDT-KTPM-2025', 'Chương trình đào tạo KTPM 2025', 136, 2025);
+(3, 'CTDT-KTPM-2024', 'Chương trình đào tạo KTPM 2024', 135, 2024, 'CHINH_QUY'),
+(3, 'CTDT-KTPM-2025', 'Chương trình đào tạo KTPM 2025', 136, 2025, 'LIEN_THONG');
 
 -- student_majors
 INSERT INTO student_majors 
@@ -180,24 +180,24 @@ VALUES
 
 -- academic_infos
 INSERT INTO academic_infos (student_major_id, cohort, position, education_mode) VALUES
-(1, 'K2021', 'Lớp trưởng', 'CHINH_QUY'),
-(2, 'K2021', NULL,          'CHINH_QUY'),
-(3, 'K2022', 'Lớp phó',    'CHINH_QUY'),
-(4, 'K2021', NULL,          'LIEN_THONG'),
-(5, 'K2021', NULL,          'LIEN_THONG'),
-(6, 'K2022', NULL,          'CHINH_QUY');
+(1, 'K2021', 'Lớp trưởng'),
+(2, 'K2021', NULL),
+(3, 'K2022', 'Lớp phó'),
+(4, 'K2021', NULL),
+(5, 'K2021', NULL),
+(6, 'K2022', NULL);
 
 -- subjects
-INSERT INTO subjects (faculty_id, department_id, subject_code, subject_name, credits, lecture_hours, practice_hours, is_active) VALUES
-(1, 1, 'INT1001', 'Nhập môn lập trình',         3, 30, 15, TRUE),
-(1, 1, 'INT1002', 'Cấu trúc dữ liệu & giải thuật', 3, 30, 15, TRUE),
-(1, 1, 'INT1003', 'Lập trình hướng đối tượng',  3, 30, 15, TRUE),
-(1, 1, 'INT2001', 'Cơ sở dữ liệu',              3, 30, 15, TRUE),
-(1, 1, 'INT2002', 'Mạng máy tính',              3, 30, 15, TRUE),
-(1, 2, 'INT2003', 'Hệ thống thông tin',         3, 30, 15, TRUE),
-(1, 1, 'INT3001', 'Lập trình web',              3, 15, 30, TRUE),
-(1, 1, 'INT3002', 'Kiểm thử phần mềm',         3, 30, 15, TRUE),
-(1, 1, 'INT3003', 'Trí tuệ nhân tạo',           3, 30, 15, FALSE);
+INSERT INTO subjects (faculty_id, department_id, subject_code, subject_name, credits, coefficient, lecture_hours, practice_hours, is_active) VALUES
+(1, 1, 'INT1001', 'Nhập môn lập trình',         3, 1.0, 30, 15, TRUE),
+(1, 1, 'INT1002', 'Cấu trúc dữ liệu & giải thuật', 3, 1.0, 30, 15, TRUE),
+(1, 1, 'INT1003', 'Lập trình hướng đối tượng',  3, 1.5, 30, 15, TRUE),
+(1, 1, 'INT2001', 'Cơ sở dữ liệu',              3, 1.2, 30, 15, TRUE),
+(1, 1, 'INT2002', 'Mạng máy tính',              3, 1.5, 30, 15, TRUE),
+(1, 2, 'INT2003', 'Hệ thống thông tin',         3, 1.5, 30, 15, TRUE),
+(1, 1, 'INT3001', 'Lập trình web',              3, 1.8, 15, 30, TRUE),
+(1, 1, 'INT3002', 'Kiểm thử phần mềm',         3, 1.5, 30, 15, TRUE),
+(1, 1, 'INT3003', 'Trí tuệ nhân tạo',           3, 1.8, 30, 15, FALSE);
 
 -- subject_prerequisites
 INSERT INTO subject_prerequisites (subject_id, prerequisite_subject_id) VALUES
@@ -237,19 +237,19 @@ INSERT INTO course_classes (lecturer_id, subject_id, semester_id, class_code, cl
 (NULL, 8, 4, 'INT3002-01', 'Kiểm thử PM - Lớp 01'); -- chưa có giảng viên
 
 -- student_course_classes
-INSERT INTO student_course_classes (student_id, course_class_id) VALUES
-(1, 1), -- duc học INT1001-01
-(2, 2), -- em học INT1001-02
-(3, 1),
-(1, 3), -- duc học CTDL
-(2, 3),
-(3, 3),
-(1, 4), -- duc học OOP
-(2, 4),
-(1, 5), -- duc học CSDL
-(2, 5),
-(5, 1),
-(5, 3);
+INSERT INTO student_course_classes (student_id, course_class_id, is_retake, status) VALUES
+(1, 1, FALSE, 'ACTIVE'), -- duc học INT1001-01
+(2, 2, FALSE, 'ACTIVE'), -- em học INT1001-02
+(3, 1, FALSE, 'ACTIVE'),
+(1, 3, FALSE, 'DROPPED'), -- duc học CTDL
+(2, 3, FALSE, 'ACTIVE'),
+(3, 3, FALSE, 'ACTIVE'),
+(1, 4, FALSE, 'ACTIVE'), -- duc học OOP
+(2, 4, FALSE, 'ACTIVE'),
+(1, 5, FALSE, 'ACTIVE'), -- duc học CSDL
+(2, 5, FALSE, 'DROPPED'),
+(5, 1, FALSE, 'ACTIVE'),
+(5, 3, TRUE, 'ACTIVE');
 
 -- class_schedules
 INSERT INTO class_schedules (course_class_id, day_of_week, start_period, end_period, start_time, end_time, room) VALUES

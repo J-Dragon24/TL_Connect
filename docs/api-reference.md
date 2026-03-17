@@ -44,8 +44,10 @@ Tất cả response đều theo cấu trúc JSON thống nhất:
 | -2 | 404 | Không tìm thấy |
 | -3 | 401 | Chưa xác thực / Token không hợp lệ |
 | -4 | 403 | Bị từ chối |
+| -5 | 400 | Lỗi validation |
 | -10 | 500 | Lỗi server nội bộ |
 | -13 | 502 | Lỗi external API |
+| -25 | 409 | Đã tồn tại |
 ---
 ## 3. Authentication
 **Headers bắt buộc cho các route yêu cầu xác thực**  
@@ -125,44 +127,43 @@ Sinh viên lấy thông tin cá nhân.
 
 ```json
 {
-"code": 0,
-"message": "Student info retrieved successfully",
-"data": {
-    "studentCode": "SV2021001",
-    "fullName": "Pham Minh Duc",
-    "dateOfBirth": "2003-05-10",
-    "gender": "NAM",
-    "classCode": "KHMT2021",
-    "academicAdvisor": "Nguyen Van An",
-    "startYear": "2022-09-01",
-    "endYear": "2028-06-30",
-    "trainingType": "CHINH_QUY",
-    "major": {
-        "majorCode": "KHMT",
-        "majorName": "Khoa học máy tính",
-        "faculty": "Công nghệ thông tin"
-    },
-    "identityCard": {
-        "cardNumber": "079203001111",
-        "cardType": "CCCD",
-        "issuedDate": "2021-01-10",
-        "issuedPlace": "Cục CS QLHC về TTXH - HCM"
-    },
-    "contact": {
-        "phoneNumber": "0911111111",
-        "address": "12 Nguyen Trai, HCM",
-        "email": "duc.personal@gmail.com"
-    },
-    "academicInfo": {
-        "cohort": "K2021",
-        "position": "Lớp trưởng",
-    },
-    "emergencyContact": {
-        "name": "Pham Van Bo",
-        "phoneNumber": "0981111111",
-        "address": "12 Nguyen Trai, HCM"
+    "code": 0,
+    "message": "Student info retrieved successfully",
+    "data": {
+        "student_code": "SV2021001",
+        "full_name": "Pham Minh Duc",
+        "date_of_birth": "2003-05-10",
+        "gender": "NAM",
+        "class_code": "KHMT2021",
+        "academic_advisor": "Nguyen Van An",
+        "major": {
+            "major_code": "KHMT",
+            "major_name": "Khoa học máy tính",
+            "faculty": "Công nghệ thông tin"
+        },
+        "training_type": "CHINH_QUY",
+        "identity_card": {
+            "card_number": "079203001111",
+            "card_type": "CCCD",
+            "issued_date": "2021-01-10",
+            "issued_place": "Cục CS QLHC về TTXH - HCM"
+        },
+        "contact": {
+            "phone_number": "0911111111",
+            "address": "12 Nguyen Trai, HCM",
+            "email": "duc.personal@gmail.com"
+        },
+        "academic_info": {
+            "cohort": "K2021",
+            "position": "Lớp trưởng"
+        },
+        "emergency_contact": {
+            "name": "Pham Van Bo",
+            "phone_number": "0981111111",
+            "address": "12 Nguyen Trai, HCM",
+            "relationship": null
+        }
     }
-}
 }
 ```  
 
@@ -190,29 +191,29 @@ Lấy thông tin lớp hành chính của sinh viên.
 
 ```json
 {
-  "code": 0,
-  "message": "Student class info retrieved successfully",
-  "data": {
-      "classCode": "KHMT2021",
-      "academicAdvisor": {
-          "lecturerCode": "GV001",
-          "fullName": "Nguyen Van An",
-          "phoneNumber": "0901234567",
-          "email": "an.nguyen@university.edu.vn"
-      },
-      "students": [
-          {
-              "studentCode": "SV2021001",
-              "fullName": "Pham Minh Duc",
-              "gender": "NAM"
-          },
-          {
-              "studentCode": "SV2021002",
-              "fullName": "Hoang Thi Em",
-              "gender": "NU"
-          }
-      ]
-  }
+    "code": 0,
+    "message": "Student class info retrieved successfully",
+    "data": {
+        "class_code": "KHMT2021",
+        "academic_advisor": {
+            "lecturer_code": "GV001",
+            "full_name": "Nguyen Van An",
+            "phone_number": "0901234567",
+            "email": "an.nguyen@university.edu.vn"
+        },
+        "students": [
+            {
+                "student_code": "SV2021001",
+                "full_name": "Pham Minh Duc",
+                "gender": "NAM"
+            },
+            {
+                "student_code": "SV2021002",
+                "full_name": "Hoang Thi Em",
+                "gender": "NU"
+            }
+        ]
+    }
 }
 ```  
 
@@ -230,7 +231,269 @@ Lấy thông tin lớp hành chính của sinh viên.
 - ✅ token hợp lệ → code 0 + thông tin lớp hành chính của sinh viên
 - ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
 - ❌ Không có lớp ứng với student id → code -2, HTTP 404
----
+---  
+### 5.3. POST /api/v1/admin/student/create
+Thêm 1 sinh viên.
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: application/json
+
+**Request body:**:
+
+```json
+{
+  "student_code": "A46049",
+  "full_name": "Nguyễn Văn An",
+  "date_of_birth": "2007-01-25",
+  "gender": "NAM",
+  "student_class_code": "KHMT2021",
+  "major_code": "KHMT",
+  "start_year": 2024,
+  "end_year": 2028,
+  "training_type": "CHINH_QUY",
+  "identity_card": {
+    "card_number": "012345678901",
+    "card_type": "CCCD",
+    "issued_date": "2020-06-15",
+    "issued_place": "Cục Cảnh sát QLHC về TTXH"
+  },
+  "contact": {
+    "phone_number": "0912345678",
+    "address": "123 Nguyễn Trãi, Hà Nội",
+    "email": "an.nguyen@example.com"
+  },
+  "academic_info": {
+    "cohort": "2022-2026",
+    "position": "Lớp trưởng"
+  },
+  "emergency_contact": {
+    "name": "Nguyễn Văn Bình",
+    "phone_number": "0987654321",
+    "address": "123 Nguyễn Trãi, Hà Nội",
+    "relationship": "Cha"
+  }
+}
+```  
+| Field | Type | Required | Description |
+|------|-----|-----|-----|
+| student_code | string | ✅ | Mã sinh viên |
+| full_name | string | ✅ | Họ tên sinh viên |
+| date_of_birth | string | ✅ | Ngày sinh |
+| gender | string | ✅ | Giới tính |
+| student_class_code | string | ✅ | Mã lớp hành chính |
+| major_code | string | ✅ | Mã ngành học |
+| start_year | int | ✅ | Năm bắt đầu học |
+| end_year | int | ✅ | Năm kết thúc học |
+| training_type | string | ✅ | Loại hình đào tạo |
+| card_number | string | ✅ | Số thẻ căn cước |
+| card_type | string | ✅ | Loại thẻ căn cước |
+| issued_date | string | ❌ | Ngày cấp thẻ căn cước |
+| issued_place | string | ❌ | Nơi cấp thẻ căn cước |
+| phone_number | string | ❌ | Số điện thoại |
+| address | string | ❌ | Địa chỉ |
+| email | string | ❌ | Email |
+| cohort | string | ✅ | Thông tin học tập |
+| position | string | ❌ | Thông tin học tập |
+| name | string | ❌ | Thông tin liên hệ khẩn cấp |
+| phone_number | string | ❌ | Thông tin liên hệ khẩn cấp |
+| address | string | ❌ | Địa chỉ |
+| relationship | string | ❌ | Thông tin liên hệ khẩn cấp |
+**Response thành công (code 0):**:
+
+```json
+{
+  "code": 0,
+  "message": "Student created successfully",
+  "data": 9
+}
+```  
+
+**Response – User chưa đăng nhập (code -3):**
+
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```  
+
+**Response – Student code đã tồn tại (code -25):**
+
+```json
+{
+    "code": -25,
+    "message": "Student code already exists",
+    "data": null
+}
+```
+
+**Response – Trường thông tin sai hoặc bỏ trống (code -1):**
+
+```json
+{
+    "code": -1,
+    "message": "Giới tính không được để trống",
+    "data": null
+}
+```
+**Test cases:**
+
+- ✅ token hợp lệ → code 0 + id sinh viên
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+- ❌ Student code already exists → code -25, HTTP 409
+- ❌ Trường thông tin sai hoặc bỏ trống → code -1, HTTP 400
+---  
+
+### 5.4. POST /api/v1/admin/student/import
+Import danh sách sinh viên từ file xlsx/csv.
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: multipart/form-data
+
+**Form data field:**
+
+| Field | Type | Required | Description |
+|------|-----|-----|-----|
+| file | File | ✅ | File chứa data sinh viên |
+
+**Response thành công (code 0):**
+
+```json
+{
+    "code": 0,
+    "message": "File imported successfully",
+    "data": {
+        "total": 2,
+        "success": 2,
+        "failed": 0,
+        "errors": []
+    }
+}
+```
+
+**Response – User chưa đăng nhập (code -3):**
+
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```
+
+**Response – Sai định dạng file (code -1):**
+
+```json
+{
+  "code": -1,
+  "message": "File must be CSV or Excel (.csv, .xlsx, .xls)",
+  "data": null
+}
+```
+
+**Response – File không có tên (code -1):**
+
+```json
+{
+  "code": -1,
+  "message": "File name is null",
+  "data": null
+}
+```
+
+**Response – Thiếu file (code -1):**
+
+```json
+{
+  "code": -1,
+  "message": "File is missing",
+  "data": null
+}
+```
+
+
+**Test cases:**
+
+- ✅ token hợp lệ → code 0 + thông tin import
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+- ❌ Sai định dạng file → code -1, HTTP 400
+- ❌ File Excel không đúng định dạng → code -1, HTTP 400
+- ❌ File Excel có dữ liệu không hợp lệ → code -1, HTTP 400
+---  
+### 5.5. GET /api/v1/admin/student/all
+Lấy danh sách tất cả sinh viên.
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: Không áp dụng
+
+**Response thành công (code 0):**
+
+```json
+{
+    "code": 0,
+    "message": "Get all students successfully",
+    "data": {
+        "content": [
+            {
+                "student_code": "SV2022002",
+                "full_name": "Dang Van Minh",
+                "date_of_birth": "2004-03-07",
+                "gender": "NAM",
+                "class_code": "KTPM2022",
+                "academic_advisor": null,
+                "major": {
+                    "major_code": "KTPM",
+                    "major_name": "Kỹ thuật phần mềm",
+                    "faculty": "Công nghệ thông tin"
+                },
+                "training_type": "CHINH_QUY",
+                "identity_card": {
+                    "card_number": "079203005555",
+                    "card_type": "CCCD",
+                    "issued_date": "2022-02-28",
+                    "issued_place": "Cục CS QLHC về TTXH - HCM"
+                },
+                "contact": {
+                    "phone_number": "0955555555",
+                    "address": "90 Le Duan, HCM",
+                    "email": "minh.personal@gmail.com"
+                },
+                "academic_info": {
+                    "cohort": "K2021",
+                    "position": null
+                },
+                "emergency_contact": {
+                    "name": "Dang Van Gio",
+                    "phone_number": "0985555555",
+                    "address": "90 Le Duan, HCM",
+                    "relationship": null
+                }
+            }
+        ],
+        "page": 0,
+        "size": 50,
+        "total_elements": 6,
+        "total_pages": 1,
+        "first": true,
+        "last": true
+    }
+}
+```
+
+**Response – User chưa đăng nhập (code -3):**
+
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```
+
+**Test cases:**
+
+- ✅ token hợp lệ → code 0 + danh sách sinh viên
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+---  
+
 ## 6. Study Program - Chương trình đào tạo
 ### 6.1. GET /api/v1/study-programs
 Lấy thông tin chương trình đào tạo của các ngành sinh viên đang theo học.  
@@ -245,18 +508,18 @@ Lấy thông tin chương trình đào tạo của các ngành sinh viên đang 
     "message": "Study programs retrieved successfully",
     "data": [
         {
-            "studentCode": "SV2021001",
-            "studyProgramCode": "CTDT-KHMT-2021",
-            "studyProgramName": "Chương trình đào tạo KHMT 2021",
-            "isPrimary": true,
-            "startYear": 2021
+            "student_code": "SV2021001",
+            "study_program_code": "CTDT-KHMT-2024",
+            "study_program_name": "Chương trình đào tạo KHMT 2024",
+            "is_primary": true,
+            "start_year": 2022
         },
         {
-            "studentCode": "SV2021001",
-            "studyProgramCode": "CTDT-HTTT-2021",
-            "studyProgramName": "Chương trình đào tạo HTTT 2021",
-            "isPrimary": false,
-            "startYear": 2021
+            "student_code": "SV2021001",
+            "study_program_code": "CTDT-HTTT-2024",
+            "study_program_name": "Chương trình đào tạo HTTT 2024",
+            "is_primary": false,
+            "start_year": 2022
         }
     ]
 }
@@ -275,7 +538,7 @@ Lấy thông tin chương trình đào tạo của các ngành sinh viên đang 
 
 - ✅ token hợp lệ → code 0 + thông tin chương trình đào tạo của các ngành sinh viên đang theo học
 - ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
-
+---  
 ### 6.2. GET /api/v1/study-programs/{studyProgramCode}
 Lấy thông tin chi tiết chương trình đào tạo.  
 - **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
@@ -292,29 +555,29 @@ Lấy thông tin chi tiết chương trình đào tạo.
     "code": 0,
     "message": "Study program retrieved successfully",
     "data": {
-        "studyProgramName": "Chương trình đào tạo KHMT 2021",
-        "yearStart": 2021,
-        "totalCredits": 130,
+        "study_program_name": "Chương trình đào tạo KHMT 2024",
+        "year_start": 2024,
+        "total_credits": 132,
         "major": {
-            "majorName": "Khoa học máy tính",
-            "majorCode": "KHMT",
+            "major_name": "Khoa học máy tính",
+            "major_code": "KHMT",
             "faculty": "Công nghệ thông tin"
         },
         "semesters": [
             {
-                "semesterName": "HK1 2026-2027",
-                "semesterStartDate": "2021-01-01",
-                "semesterEndDate": "2022-04-15",
+                "semester_name": "HK1 2025-2026",
+                "semester_start_date": "2025-09-01",
+                "semester_end_date": "2026-01-15",
                 "subjects": [
                     {
-                        "subjectCode": "INT1001",
-                        "subjectName": "Nhập môn lập trình",
+                        "subject_code": "INT1001",
+                        "subject_name": "Nhập môn lập trình",
                         "credits": 3,
-                        "isRequired": true,
-                        "electiveGroup": null,
-                        "lectureHours": 30,
-                        "practiceHours": 15,
-                        "subjectPrerequisite": null,
+                        "is_required": true,
+                        "elective_group": null,
+                        "lecture_hours": 30,
+                        "practice_hours": 15,
+                        "subject_prerequisite": null,
                         "faculty": "Công nghệ thông tin",
                         "department": "Khoa học máy tính"
                     }
@@ -363,22 +626,22 @@ GET /api/v1/student/schedules/day-of-week?day_of_week=1
     "code": 0,
     "message": "Day of week schedule retrieved successfully",
     "data": {
-        "courseClasses": [
+        "course_classes": [
             {
-                "classCode": "INT1002-01",
-                "dayOfWeek": 2,
-                "subjectName": "Cấu trúc dữ liệu & giải thuật",
-                "subjectCode": "INT1002",
-                "startPeriod": 6,
-                "endPeriod": 8,
-                "startTime": "11:30:00",
-                "endTime": "14:00:00",
+                "class_code": "INT1002-01",
+                "day_of_week": 2,
+                "subject_name": "Cấu trúc dữ liệu & giải thuật",
+                "subject_code": "INT1002",
+                "start_period": 6,
+                "end_period": 8,
+                "start_time": "11:30:00",
+                "end_time": "14:00:00",
                 "room": "B201",
                 "lecturer": {
-                    "lecturerCode": "GV001",
-                    "fullName": "Nguyen Van An",
-                    "email": "an.nguyen@university.edu.vn",
-                    "phoneNumber": "0123456789"
+                    "lecturer_code": "GV001",
+                    "full_name": "Nguyen Van An",
+                    "phone_number": "0901234567",
+                    "email": "an.nguyen@university.edu.vn"
                 }
             }
         ]
@@ -419,58 +682,37 @@ GET /api/v1/student/schedules/weekly?start_date=2022-02-01&end_date=2022-09-01
 **Response thành công (code 0):**:
 ```json
 {
-  "code": 0,
-  "message": "Weekly schedule retrieved successfully",
-  "data": {
-      "semester": "HK2 2021-2022",
-      "week": 1,
-      "startDate": "2022-02-01",
-      "endDate": "2022-09-01",
-      "dailySchedules": [
-          {
-              "courseClasses": [
-                  {
-                      "classCode": "INT1002-01",
-                      "dayOfWeek": 2,
-                      "subjectName": "Cấu trúc dữ liệu & giải thuật",
-                      "subjectCode": "INT1002",
-                      "startPeriod": 6,
-                      "endPeriod": 8,
-                      "startTime": "11:30:00",
-                      "endTime": "14:00:00",
-                      "room": "B201",
-                      "lecturer": {
-                            "lecturerCode": "GV001",
-                            "fullName": "Nguyen Van An",
-                            "email": "an.nguyen@university.edu.vn",
-                            "phoneNumber": "0123456789"
+    "code": 0,
+    "message": "Weekly schedule retrieved successfully",
+    "data": {
+        "semester": "HK1 2025-2026",
+        "week": 18,
+        "start_date": "2026-01-01",
+        "end_date": "2026-09-01",
+        "daily_schedules": [
+            {
+                "course_classes": [
+                    {
+                        "class_code": "INT1001-01",
+                        "day_of_week": 6,
+                        "subject_name": "Nhập môn lập trình",
+                        "subject_code": "INT1001",
+                        "start_period": 1,
+                        "end_period": 3,
+                        "start_time": "07:00:00",
+                        "end_time": "09:30:00",
+                        "room": "A101",
+                        "lecturer": {
+                            "lecturer_code": null,
+                            "full_name": "Nguyen Van An",
+                            "phone_number": null,
+                            "email": "an.nguyen@university.edu.vn"
                         }
-                  }
-              ]
-          },
-          {
-              "courseClasses": [
-                  {
-                      "classCode": "INT1003-01",
-                      "dayOfWeek": 5,
-                      "subjectName": "Lập trình hướng đối tượng",
-                      "subjectCode": "INT1003",
-                      "startPeriod": 1,
-                      "endPeriod": 3,
-                      "startTime": "07:00:00",
-                      "endTime": "09:30:00",
-                      "room": "B202",
-                      "lecturer": {
-                        "lecturerCode": "GV001",
-                        "fullName": "Nguyen Van An",
-                        "email": "an.nguyen@university.edu.vn",
-                        "phoneNumber": "0123456789"
                     }
-                  }
-              ]
-          }
-      ]
-  }
+                ]
+            }
+        ]
+    }
 }
 ```  
 
@@ -517,30 +759,30 @@ GET /api/v1/student/schedules/semester?HocKy=HK1 2022-2023
 **Response thành công (code 0):**:
 ```json
 {
-  "code": 0,
-  "message": "Semester schedule retrieved successfully",
-  "data": {
-      "semester": "HK1 2022-2023",
-      "courseClasses": [
-          {
-              "classCode": "INT2001-01",
-              "dayOfWeek": 3,
-              "subjectName": "Cơ sở dữ liệu",
-              "subjectCode": "INT2001",
-              "startPeriod": 4,
-              "endPeriod": 6,
-              "startTime": "09:45:00",
-              "endTime": "12:15:00",
-              "room": "C301",
-              "lecturer": {
-                "lecturerCode": "GV001",
-                "fullName": "Nguyen Van An",
-                "email": "an.nguyen@university.edu.vn",
-                "phoneNumber": "0123456789"
+    "code": 0,
+    "message": "Semester schedule retrieved successfully",
+    "data": {
+        "semester": "HK1 2025-2026",
+        "course_classes": [
+            {
+                "class_code": "INT1001-01",
+                "day_of_week": 6,
+                "subject_name": "Nhập môn lập trình",
+                "subject_code": "INT1001",
+                "start_period": 1,
+                "end_period": 3,
+                "start_time": "07:00:00",
+                "end_time": "09:30:00",
+                "room": "A101",
+                "lecturer": {
+                    "lecturer_code": null,
+                    "full_name": "Nguyen Van An",
+                    "phone_number": null,
+                    "email": "an.nguyen@university.edu.vn"
+                }
             }
-          }
-      ]
-  }
+        ]
+    }
 }
 ```  
 
@@ -576,28 +818,27 @@ GET /api/v1/student/exams?HocKy=HK1 2022-2023
 **Response thành công (code 0):**:
 ```json
 {
-  "code": 0,
-  "message": "HK1 2021-2022",
-  "data": {
-      "semesterName": "HK1 2021-2022",
-      "examSchedules": [
-          {
-              "subjectCode": "INT1001",
-              "subjectName": "Nhập môn lập trình",
-              "classCode": "INT1001-01",
-              "examDate": "2022-01-10",
-              "startTime": "07:30:00",
-              "endTime": "09:30:00",
-              "examRoom": "P101",
-              "examLocation": "Co so 1",
-              "examFormat": "TRAC_NGHIEM",
-              "examType": "GIUA_KY",
-              "examAttempt": 1,
-              "attendanceStatus": "ATTENDED",
-              "examStatus": "DONE"
-          }
-      ]
-  }
+    "code": 0,
+    "message": "HK1 2025-2026",
+    "data": {
+        "semester_name": "HK1 2025-2026",
+        "exam_schedules": [
+            {
+                "subject_code": "INT1001",
+                "subject_name": "Nhập môn lập trình",
+                "class_code": "INT1001-01",
+                "exam_date": "2022-01-10",
+                "start_time": "07:30:00",
+                "end_time": "09:30:00",
+                "exam_room": "P101",
+                "exam_location": "Co so 1",
+                "exam_format": "TRAC_NGHIEM",
+                "exam_type": "GIUA_KY",
+                "exam_attempt": 1,
+                "attendance_status": "ATTENDED"
+            }
+        ]
+    }
 }
 ```  
 

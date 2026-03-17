@@ -18,13 +18,13 @@ public class NewsService {
 
     public List<NewsDTO> getTop5News(Pageable pageable) {
         Page<News> newsList = newsRepository.findAllByOrderByPublishDateDesc(pageable);
-        return newsList.getContent().stream().map(this::toDTO).collect(Collectors.toList());
+        return newsList.getContent().stream().map(this::toDTO).toList();
     }
 
     public PagedResponse<NewsDTO> getAllNews(Pageable pageable) {
         Page<News> newsPage = newsRepository.findAllByOrderByPublishDateDesc(pageable);
         return new PagedResponse<>(
-                newsPage.getContent().stream().map(this::toDTO).collect(Collectors.toList()),
+                newsPage.getContent().stream().map(this::toDTO).toList(),
                 newsPage.getNumber(),
                 newsPage.getSize(),
                 newsPage.getTotalElements(),

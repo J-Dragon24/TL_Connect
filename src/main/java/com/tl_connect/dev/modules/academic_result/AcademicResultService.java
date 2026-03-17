@@ -53,13 +53,16 @@ public class AcademicResultService {
                                                 .isPass(s.getIsPass())
                                                 .build();
                         }).collect(Collectors.toList());
-                        SemesterSummaryDTO semesterSummaryDTO = SemesterSummaryDTO.builder()
+                        SemesterSummaryDTO semesterSummaryDTO = null;
+                        if (semesterSummary != null) {
+                                semesterSummaryDTO = SemesterSummaryDTO.builder()
                                         .creditsRegistered(semesterSummary.getCreditsRegistered())
                                         .creditsPassed(semesterSummary.getCreditsPassed())
                                         .semesterGpa(semesterSummary.getSemesterGpa())
                                         .conductScore(semesterSummary.getConductScore())
                                         .cumulativeGpa(semesterSummary.getCumulativeGpa().setScale(2, RoundingMode.HALF_UP))
                                         .build();
+                        }
                         return SemesterResultDTO.builder()
                                         .semester(semester)
                                         .subjectResults(subjectResultDTOs)

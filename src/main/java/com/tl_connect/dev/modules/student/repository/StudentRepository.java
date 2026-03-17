@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -62,6 +64,58 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             WHERE s.id = :id
             """, nativeQuery = true)
     Optional<StudentInfoView> findStudentInfoById(@Param("id") Long id);
+
+    @Query(value = """
+            SELECT
+                s.student_code AS studentCode,
+                s.full_name AS fullName,
+                s.gender AS gender,
+                s.date_of_birth AS dateOfBirth,
+                c.class_code AS classCode,
+                m.major_code AS majorCode,
+                m.major_name AS majorName,
+                f.faculty_name AS faculty,
+                i.card_number AS idCardNumber,
+                i.card_type AS idCardType,
+                i.issued_date AS issuedDate,
+                i.issued_place AS issuedPlace,
+                sc.phone_number AS phoneNumber,
+                sc.address AS address,
+                sc.email_personal AS email,
+                ai.cohort AS cohort,
+                ai.position AS position,
+                sp.training_type AS trainingType,
+                ec.full_name AS emergencyContactName,
+                ec.phone_number AS emergencyContactPhoneNumber,
+                ec.address AS emergencyContactAddress,
+                ec.relationship AS relationship
+            FROM students s
+            LEFT JOIN student_classes c ON s.student_class_id = c.id
+            LEFT JOIN student_majors sm ON s.id = sm.student_id AND sm.is_primary = true
+            LEFT JOIN study_programs sp ON sm.study_program_id = sp.id
+            LEFT JOIN majors m ON sm.major_id = m.id
+            LEFT JOIN faculties f ON m.faculty_id = f.id
+            LEFT JOIN identity_cards i ON s.id = i.student_id
+            LEFT JOIN student_contacts sc ON s.id = sc.student_id
+            LEFT JOIN academic_infos ai ON sm.id = ai.student_major_id
+            LEFT JOIN emergency_contacts ec ON s.id = ec.student_id
+            ORDER BY s.student_code DESC
+            """,
+            countQuery = """
+                SELECT COUNT(s.id)
+                FROM students s
+                LEFT JOIN student_classes c ON s.student_class_id = c.id
+                LEFT JOIN student_majors sm ON s.id = sm.student_id AND sm.is_primary = true
+                LEFT JOIN study_programs sp ON sm.study_program_id = sp.id
+                LEFT JOIN majors m ON sm.major_id = m.id
+                LEFT JOIN faculties f ON m.faculty_id = f.id
+                LEFT JOIN identity_cards i ON s.id = i.student_id
+                LEFT JOIN student_contacts sc ON s.id = sc.student_id
+                LEFT JOIN academic_infos ai ON sm.id = ai.student_major_id
+                LEFT JOIN emergency_contacts ec ON s.id = ec.student_id
+            """, 
+            nativeQuery = true)
+    Page<StudentInfoView> findAllStudentInfo(Pageable pageable);
 
 
     @Query(value = """

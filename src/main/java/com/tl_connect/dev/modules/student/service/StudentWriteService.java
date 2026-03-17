@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tl_connect.dev.core.common.dto.ImportResultDTO;
+import com.tl_connect.dev.core.common.enums.StudentMajorStatus;
 import com.tl_connect.dev.core.common.enums.StudentStatus;
 import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.student.dto.StudentImportDTO;
@@ -42,6 +43,8 @@ import com.tl_connect.dev.modules.major.entity.Major;
 import com.tl_connect.dev.modules.major.entity.StudentMajor;
 import com.tl_connect.dev.modules.major.repository.MajorRepository;
 import com.tl_connect.dev.modules.major.repository.StudentMajorRepository;
+import com.tl_connect.dev.core.common.exception.ConflictException;
+import com.tl_connect.dev.core.common.exception.InvalidInputException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -64,8 +67,17 @@ public class StudentWriteService {
 
         @Transactional
         public Long createStudent(StudentImportDTO dto) {
+
+                Set<ConstraintViolation<StudentImportDTO>> violations = validator.validate(dto);
+                if (!violations.isEmpty()) {
+                        String message = violations.stream()
+                                        .map(ConstraintViolation::getMessage)
+                                        .collect(Collectors.joining(", "));
+                        throw new InvalidInputException(message);
+                }
+
                 if(studentRepository.existsByStudentCode(dto.getStudentCode())) {
-                        throw new RuntimeException("Student code already exists");
+                        throw new ConflictException("Student code already exists");
                 }
 
                 Major major = majorRepository.findByMajorCode(dto.getMajorCode())
@@ -246,6 +258,7 @@ public class StudentWriteService {
                                 .isPrimary(true)
                                 .startYear(dto.getStartYear())
                                 .endYear(dto.getEndYear())
+                                .status(StudentMajorStatus.STUDYING)
                                 .build());
 
                 academicInfoRepository.save(

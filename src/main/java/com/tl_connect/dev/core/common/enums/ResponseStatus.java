@@ -6,8 +6,10 @@ public enum ResponseStatus {
     NOT_FOUND(404, "Resource not found", -2),
     UNAUTHORIZED(401, "Authentication required", -3),
     FORBIDDEN(403, "Access denied", -4),
+    VALIDATION_ERROR(400, "Validation error", -5),
     INTERNAL_ERROR(500, "Internal server error", -10),
-    EXTERNAL_ERROR(502, "External service error", -13);
+    EXTERNAL_ERROR(502, "External service error", -13),
+    CONFLICT(409, "Resource already exists", -25);
 
     private final int httpStatus;
     private final String message;

@@ -14,9 +14,10 @@ import java.util.Map;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
-
+import com.tl_connect.dev.core.common.exception.InvalidInputException;
 import com.tl_connect.dev.core.common.ultility.importer.accessor.CsvRowAccessor;
 import com.tl_connect.dev.core.common.ultility.importer.accessor.ExcelRowAccessor;
+import com.tl_connect.dev.core.common.ultility.importer.accessor.RowAccessor;
 import com.tl_connect.dev.core.common.ultility.importer.annotation.ImportColumn;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -31,14 +32,14 @@ public class FileParseHelper {
     public <T> List<T> parse(MultipartFile file, Class<T> clazz) throws IOException {
         String fileName = file.getOriginalFilename();
         if (fileName == null) {
-            throw new IllegalArgumentException("File name is null");
+            throw new InvalidInputException("File name is null");
         }
         if (fileName.endsWith(".csv")) {
             return parseCSV(file, clazz);
         } else if (fileName.endsWith(".xlsx") || fileName.endsWith(".xls")) {
             return parseExcel(file, clazz);
         } else {
-            throw new IllegalArgumentException("Unsupported file type");
+            throw new InvalidInputException("File must be CSV or Excel (.csv, .xlsx, .xls)");
         }
     }
 
@@ -92,7 +93,11 @@ public class FileParseHelper {
                 ImportColumn col = field.getAnnotation(ImportColumn.class);
 
                 if (col != null) {
-                    field.set(obj, convertValue(row.getString(col.value()), field.getType()));
+                    if (field.getType() == LocalDate.class) {
+                        field.set(obj, row.getDate(col.value()));
+                    } else {
+                        field.set(obj, convertValue(row.getString(col.value()), field.getType()));
+                    }
                 } else if (!isPrimitive(field.getType())) {
                     field.set(obj, mapToObject(row, field.getType()));
                 }
@@ -109,9 +114,9 @@ public class FileParseHelper {
         if (type == String.class)
             return val;
         if (type == Integer.class)
-            return Integer.parseInt(val);
+            return (int) Double.parseDouble(val);
         if (type == Long.class)
-            return Long.parseLong(val);
+            return (long) Double.parseDouble(val);
         if (type == Double.class)
             return Double.parseDouble(val);
         if (type == BigDecimal.class)

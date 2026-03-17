@@ -41,6 +41,6 @@ public class StudentMajor {
     private Integer endYear;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private StudentMajorStatus status;
 }
