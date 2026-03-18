@@ -169,7 +169,7 @@ INSERT INTO study_programs (major_id, study_program_code, study_program_name, to
 INSERT INTO student_majors 
 (student_id, major_id, study_program_id, is_primary, start_year, end_year, status) 
 VALUES
-(1, 1, 1, TRUE,  2022, 2028, 'STUDYING'),
+(1, 1, 2, TRUE,  2022, 2028, 'STUDYING'),
 (2, 1, 1, TRUE,  2022, 2028, 'STUDYING'),
 (3, 1, 2, TRUE,  2022, 2028, 'STUDYING'),
 (4, 2, 3, TRUE,  2022, 2028, 'DROPPED'),
@@ -179,7 +179,7 @@ VALUES
 (1, 2, 3, FALSE, 2022, 2028, 'STUDYING');
 
 -- academic_infos
-INSERT INTO academic_infos (student_major_id, cohort, position, education_mode) VALUES
+INSERT INTO academic_infos (student_major_id, cohort, position) VALUES
 (1, 'K2021', 'Lớp trưởng'),
 (2, 'K2021', NULL),
 (3, 'K2022', 'Lớp phó'),
@@ -319,9 +319,9 @@ INSERT INTO student_subject_results (student_id, subject_id, semester_id, credit
 -- student_semester_summaries
 INSERT INTO student_semester_summaries (student_id, study_program_id, semester_id, credits_registered, credits_passed, semester_gpa, conduct_score, activity_score, group_contribution) VALUES
 -- SV Duc
-(1, 1, 1, 3,  3,  3.5,  85, 5.0, 5.0),
-(1, 1, 2, 6,  6,  3.2,  88, 5.0, 5.0),
-(1, 1, 3, 6,  6,  2.8,  80, 5.0, 5.0),
+(1, 2, 1, 3,  3,  3.5,  85, 5.0, 5.0),
+(1, 2, 2, 6,  6,  3.2,  88, 5.0, 5.0),
+(1, 2, 3, 6,  6,  2.8,  80, 5.0, 5.0),
 -- SV Em
 (2, 1, 1, 3,  0,  1.0,  75, 5.0, 5.0),
 (2, 1, 2, 9,  9,  2.7,  78, 5.0, 5.0),

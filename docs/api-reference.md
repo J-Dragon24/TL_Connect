@@ -878,70 +878,34 @@ GET /api/v1/student/marks?ctdt=CTDT-KHMT-2021
 "code": 0,
 "message": "Academic result fetched successfully",
 "data": {
-    "studyProgram": "CTDT-KHMT-2021",
-    "semesterResults": [
-        {
-            "semester": "HK1 2026-2027",
-            "subjectResults": [
-                {
-                    "subjectCode": "INT1001",
-                    "subjectName": "Nhập môn lập trình",
-                    "credits": 3,
-                    "attendanceScore": 10.00,
-                    "midtermScore": 6.00,
-                    "finalScore": 8.00,
-                    "score10": 8.50,
-                    "score4": 3.50,
-                    "letterGrade": "A",
-                    "isPass": true
+    "study_program": "CTDT-KHMT-2025",
+        "semester_results": [
+            {
+                "semester": "HK1 2026-2027",
+                "subject_results": [
+                    {
+                        "subject_code": "INT2001",
+                        "subject_name": "Cơ sở dữ liệu",
+                        "credits": 3,
+                        "attendance_score": 10.00,
+                        "midterm_score": 7.00,
+                        "final_score": 7.50,
+                        "score10": 6.50,
+                        "score4": 2.50,
+                        "letter_grade": "C",
+                        "is_pass": true
+                    }
+                ],
+                "semester_summary": {
+                    "credits_registered": null,
+                    "credits_passed": 6,
+                    "semester_gpa": 2.80,
+                    "conduct_score": 80,
+                    "cumulative_gpa": 3.10
                 }
-            ],
-            "semesterSummary": {
-                "creditsRegistered": null,
-                "creditsPassed": 3,
-                "semesterGpa": 3.50,
-                "conductScore": 85,
-                "cumulativeGpa": 3.50
             }
-        },
-        {
-            "semester": "HK2 2021-2022",
-            "subjectResults": [
-                {
-                    "subjectCode": "INT1002",
-                    "subjectName": "Cấu trúc dữ liệu & giải thuật",
-                    "credits": 3,
-                    "attendanceScore": 10.00,
-                    "midtermScore": 9.00,
-                    "finalScore": 5.00,
-                    "score10": 7.00,
-                    "score4": 3.00,
-                    "letterGrade": "B",
-                    "isPass": true
-                },
-                {
-                    "subjectCode": "INT1003",
-                    "subjectName": "Lập trình hướng đối tượng",
-                    "credits": 3,
-                    "attendanceScore": 10.00,
-                    "midtermScore": 9.00,
-                    "finalScore": 8.60,
-                    "score10": 9.00,
-                    "score4": 4.00,
-                    "letterGrade": "A+",
-                    "isPass": true
-                }
-            ],
-            "semesterSummary": {
-                "creditsRegistered": null,
-                "creditsPassed": 6,
-                "semesterGpa": 3.20,
-                "conductScore": 88,
-                "cumulativeGpa": 3.30
-            }
-        }
-      ]
-  }
+        ]
+    }
 }
 ```  
 
@@ -970,34 +934,30 @@ Lấy tất cả thông tin thông báo của sinh viên.
 **Response thành công (code 0):**:
 ```json
 {
-  "code": 0,
-  "message": "Get all notification successfully",
-  "data": [
-      {
-          "id": 4,
-          "title": "Ket qua xet hoc bong HK1",
-          "sender": "Phong Cong Tac Sinh Vien",
-          "targetType": "ALL",
-          "deadLine": null,
-          "createdAt": "2026-02-26T11:28:45.567903"
-      },
-      {
-          "id": 2,
-          "title": "Thong bao nghi le 30/4",
-          "sender": "Ban Giam Hieu",
-          "targetType": "ALL",
-          "deadLine": null,
-          "createdAt": "2026-02-26T11:28:45.567903"
-      },
-      {
-          "id": 1,
-          "title": "Thong bao lich thi HK1 2021-2022",
-          "sender": "Phong Dao Tao",
-          "targetType": "ALL",
-          "deadLine": "2022-01-05T17:00:00",
-          "createdAt": "2026-02-26T11:28:45.567903"
-      }
-  ]
+    "code": 0,
+    "message": "Get all notification successfully",
+    "data": [
+        {
+            "id": 1,
+            "title": "Thong bao he thong",
+            "content": "He thong se bao tri vao 23:00 toi nay",
+            "created_by": "Admin",
+            "target_type": "ALL",
+            "dead_line": null,
+            "created_at": "2026-03-18T08:48:44.464959",
+            "is_read": true
+        },
+        {
+            "id": 2,
+            "title": "Cap nhat cong thong tin",
+            "content": "Da cap nhat giao dien moi",
+            "created_by": "Admin",
+            "target_type": "ALL",
+            "dead_line": null,
+            "created_at": "2026-03-18T08:48:44.464959",
+            "is_read": true
+        }
+    ]
 }
 ```  
 
@@ -1027,16 +987,16 @@ Lấy thông tin chi tiết thông báo.
 **Response thành công (code 0):**:
 ```json
 {
-  "code": 0,
-  "message": "Get detail notification successfully",
-  "data": {
-      "title": "Thong bao nghi le 30/4",
-      "content": "Truong thong bao nghi le 30/4 - 1/5. Sinh vien nghi hoc tu ngay 29/4 den 2/5.",
-      "sender": "Ban Giam Hieu",
-      "targetType": "ALL",
-      "deadLine": null,
-      "createdAt": "2026-02-26T11:28:45.567903"
-  }
+    "code": 0,
+    "message": "Get detail notification successfully",
+    "data": {
+        "title": "Cap nhat cong thong tin",
+        "content": "Da cap nhat giao dien moi",
+        "created_by": "Admin",
+        "target_type": "ALL",
+        "dead_line": null,
+        "created_at": "2026-03-18T08:48:44.464959"
+    }
 }
 ```  
 
@@ -1271,19 +1231,14 @@ Lấy thông tin kỳ học của sinh viên.
     "message": "Student semesters retrieved successfully",
     "data": [
         {
-            "semesterName": "HK1 2025-2026",
-            "startDate": "2025-09-01",
-            "endDate": "2026-01-15"
-        },
-        {
-            "semesterName": "HK2 2025-2026",
-            "startDate": "2026-02-01",
-            "endDate": "2026-06-30"
-        },
-        {
-            "semesterName": "HK1 2026-2027",
-            "startDate": "2026-09-01",
-            "endDate": "2027-01-15"
+            "id": 1,
+            "semester_name": "HK1 2025-2026",
+            "academic_years": "2025-2026",
+            "semester_number": 1,
+            "start_date": "2025-09-01",
+            "end_date": "2026-01-15",
+            "created_at": "2026-03-18T08:48:44.464959",
+            "updated_at": "2026-03-18T08:48:44.464959"
         }
     ]
 }

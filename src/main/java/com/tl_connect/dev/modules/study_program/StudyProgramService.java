@@ -42,11 +42,8 @@ public class StudyProgramService {
         }
 
         public StudyProgramDTO getStudyProgram(String studyProgramCode) {
-                StudyProgramHeaderView header = studyProgramRepository
-                                .findStudyProgramHeader(studyProgramCode)
-                                .orElseThrow(() -> new NotFoundException(
-                                                "Study program not found for study program with code: "
-                                                                + studyProgramCode));
+                StudyProgramHeaderView header = studyProgramRepository.findStudyProgramHeader(studyProgramCode)
+                                .orElseThrow(() -> new NotFoundException("Study program not found for study program with code: "+ studyProgramCode));
 
                 List<StudyProgramSubjectRow> studyProgramSubjects = studyProgramRepository
                                 .findSubjectsByProgramId(header.getId());

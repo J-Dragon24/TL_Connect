@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.tl_connect.dev.core.common.dto.ImportResultDTO;
 import com.tl_connect.dev.core.common.dto.PagedResponse;
 import com.tl_connect.dev.core.common.exception.InvalidInputException;
+import com.tl_connect.dev.core.common.ultility.FileHelper;
 import com.tl_connect.dev.core.common.ultility.ResponseHelper;
 import com.tl_connect.dev.modules.student.dto.StudentImportDTO;
 import com.tl_connect.dev.modules.student.dto.StudentInfoDTO;
@@ -33,6 +34,7 @@ public class AdminStudentController {
 
     private final StudentWriteService studentWriteService;
     private final StudentService studentService;
+    private final FileHelper fileHelper;
 
     private static final int PAGE_SIZE = 50;
 
@@ -41,13 +43,8 @@ public class AdminStudentController {
         if (file == null || file.isEmpty()) {
             throw new InvalidInputException("File is missing");
         }
-        String fileName = file.getOriginalFilename();
-        if (fileName == null) {
-            throw new InvalidInputException("File name is null");
-        }
-
-        String lower = fileName.toLowerCase();
-        if (!lower.endsWith(".csv") && !lower.endsWith(".xlsx") && !lower.endsWith(".xls")) {
+        
+        if (!fileHelper.isXLSX(file) && !fileHelper.isCSV(file)) {
             throw new InvalidInputException("File must be CSV or Excel (.csv, .xlsx, .xls)");
         }
  

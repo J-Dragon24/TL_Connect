@@ -1,5 +1,6 @@
 package com.tl_connect.dev.modules.study_program.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -39,6 +40,9 @@ public class Subject {
 
     @Column(name = "credits", nullable = false)
     private Integer credits;
+
+    @Column(name = "coefficient", nullable = false)
+    private BigDecimal coefficient;
 
     @Column(name = "lecture_hours")
     private Integer lectureHours;

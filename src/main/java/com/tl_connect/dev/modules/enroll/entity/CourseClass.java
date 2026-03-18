@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.schedule.entity;
+package com.tl_connect.dev.modules.enroll.entity;
 
 import java.time.LocalDateTime;
 
