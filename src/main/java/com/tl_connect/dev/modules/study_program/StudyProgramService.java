@@ -19,6 +19,10 @@ import com.tl_connect.dev.modules.study_program.dto.StudyProgramDTO;
 import com.tl_connect.dev.modules.study_program.projection.SubjectPrerequisiteRow;
 import com.tl_connect.dev.modules.study_program.projection.StudyProgramHeaderView;
 import com.tl_connect.dev.modules.study_program.projection.StudyProgramSubjectRow;
+import com.tl_connect.dev.modules.subject.entity.SubjectPrerequisiteGroup;
+import com.tl_connect.dev.modules.subject.entity.SubjectPrerequisiteGroupItem;
+import com.tl_connect.dev.modules.subject.repository.SubjectPreGroupItemRepository;
+import com.tl_connect.dev.modules.subject.repository.SubjectPreGroupRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,6 +31,8 @@ import lombok.RequiredArgsConstructor;
 public class StudyProgramService {
 
         private final StudyProgramRepository studyProgramRepository;
+        private final SubjectPreGroupRepository subjectPreGroupRepository;
+        private final SubjectPreGroupItemRepository subjectPreGroupItemRepository;
 
         public List<StudyProgramListItemDTO> getAllStudyProgram(Long studentId) {
                 List<StudyProgramRow> studyPrograms = studyProgramRepository.findAllStudyProgram(studentId);
@@ -48,10 +54,20 @@ public class StudyProgramService {
                 List<StudyProgramSubjectRow> studyProgramSubjects = studyProgramRepository
                                 .findSubjectsByProgramId(header.getId());
 
-                List<SubjectPrerequisiteRow> subjectPrerequisitesRows = studyProgramRepository
-                                .findSubjectPrerequisitesByProgramId(header.getId());
+                List<Long> subjectIds = studyProgramSubjects.stream()
+                                .map(StudyProgramSubjectRow::getSubjectId)
+                                .collect(Collectors.toList());
 
-                return mapStudyProgram(header, studyProgramSubjects, subjectPrerequisitesRows);
+                List<SubjectPrerequisiteGroup> subjectPrerequisiteGroups = subjectPreGroupRepository.findBySubjectIdIn(subjectIds);
+
+                List<Long> groupIds = subjectPrerequisiteGroups.stream()
+                                .map(SubjectPrerequisiteGroup::getId)
+                                .collect(Collectors.toList());
+
+                List<SubjectPrerequisiteGroupItem> subjectPrerequisiteGroupItems = subjectPreGroupItemRepository.findByGroupIdIn(groupIds);
+
+
+                return mapStudyProgram(header, studyProgramSubjects, subjectPrerequisiteGroupItems);
         }
 
         private StudyProgramDTO mapStudyProgram(StudyProgramHeaderView header,

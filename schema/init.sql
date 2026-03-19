@@ -250,13 +250,35 @@ CREATE TABLE subjects (
   FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE SET NULL
 );
 
-CREATE TABLE subject_prerequisites (
+CREATE TABLE subject_prerequisite_groups (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   subject_id BIGINT NOT NULL,
+  min_subjects_required INT DEFAULT 1,
+  description TEXT,
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now(),
+  FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE
+);
+
+CREATE TABLE subject_prerequisite_group_items (
+  group_id BIGINT NOT NULL,
   prerequisite_subject_id BIGINT NOT NULL,
   created_at TIMESTAMP DEFAULT now(),
-  PRIMARY KEY (subject_id, prerequisite_subject_id),
-  FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE,
+  PRIMARY KEY (group_id, prerequisite_subject_id),
+  FOREIGN KEY (group_id) REFERENCES subject_prerequisite_groups(id) ON DELETE CASCADE,
   FOREIGN KEY (prerequisite_subject_id) REFERENCES subjects(id) ON DELETE CASCADE
+);
+
+CREATE TABLE subject_enrollment_conditions (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  subject_id BIGINT NOT NULL,
+  condition_type VARCHAR(50) NOT NULL,
+  condition_value DECIMAL(6,2) NOT NULL,
+  condition_operator VARCHAR(5) DEFAULT '>=' CHECK (condition_operator IN ('>=', '>', '=', '<=')),
+  description TEXT,
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now(),
+  FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE
 );
 
 CREATE TABLE semesters (

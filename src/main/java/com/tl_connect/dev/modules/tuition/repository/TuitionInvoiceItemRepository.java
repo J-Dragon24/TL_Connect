@@ -7,25 +7,27 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.tl_connect.dev.modules.tuition.entity.TuitionInvoiceItem;
-import com.tl_connect.dev.modules.tuition.dto.TuitionItemDTO;
+import com.tl_connect.dev.modules.tuition.projection.TuitionItemProjection;
 
 @Repository
 public interface TuitionInvoiceItemRepository extends JpaRepository<TuitionInvoiceItem, Long> {
 
-    @Query("""
-        SELECT new com.example.dto.TuitionItemDTO(
-            c.id,
-            sub.subjectName,
-            ti.credits,
-            ti.pricePerCredit,
-            ti.coefficient,
-            ti.amount,
-            ti.isRetake
-        )
-        FROM TuitionInvoiceItem ti
-        JOIN CourseClass c ON ti.courseClassId = c.id
-        JOIN Subject sub ON c.subjectId = sub.id
-        WHERE ti.invoiceId = :invoiceId
-    """)
-    List<TuitionItemDTO> findItemsByInvoiceId(Long invoiceId);
+    @Query(value = """
+        SELECT 
+            c.id as id,
+            sub.subject_name as subjectName,
+            ti.credits as credits,
+            ti.price_per_credit as pricePerCredit,
+            ti.coefficient as coefficient,
+            ti.amount as amount,
+            scc.is_retake as isRetake
+        FROM tuition_invoice_items ti
+        JOIN course_classes c ON ti.course_class_id = c.id
+        JOIN subjects sub ON c.subject_id = sub.id
+        LEFT JOIN student_course_classes scc 
+            ON scc.course_class_id = c.id
+        AND scc.student_id = :studentId
+        WHERE ti.invoice_id = :invoiceId
+    """, nativeQuery = true)
+    List<TuitionItemProjection> findItemsByInvoiceId(Long invoiceId, Long studentId);
 }

@@ -7,42 +7,38 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.tl_connect.dev.modules.tuition.dto.TuitionInvoiceDTO;
 import com.tl_connect.dev.modules.tuition.entity.TuitionInvoice;
+import com.tl_connect.dev.modules.tuition.projection.TuitionInvoiceView;
 
 @Repository
 public interface TuitionInvoiceRepository extends JpaRepository<TuitionInvoice, Long> {
 
-    @Query("""
+    @Query(value = """
             SELECT 
-                new com.tl_connect.dev.modules.tuition.dto.TuitionInvoiceDTO(
-                    t.id,
-                    s.semesterName,
-                    t.totalAmount,
-                    t.finalAmount,
-                    t.status,
-                    t.dueDate
-                )
-            FROM TuitionInvoice t
-            JOIN Semester s ON t.semesterId = s.id
-            WHERE t.studentId = :studentId
-            ORDER BY s.startDate DESC
-    """)
-    List<TuitionInvoiceDTO> findAllByStudentId(Long studentId);
+                t.id as id,
+                s.semester_name as semesterName,
+                t.total_amount as totalAmount,
+                t.final_amount as finalAmount,
+                t.status as status,
+                t.due_date as dueDate
+            FROM tuition_invoices t
+            JOIN semesters s ON t.semester_id = s.id
+            WHERE t.student_id = :studentId
+            ORDER BY s.start_date DESC
+            """, nativeQuery = true)
+    List<TuitionInvoiceView> findAllByStudentId(Long studentId);
 
     @Query("""
             SELECT 
-                new com.tl_connect.dev.modules.tuition.dto.TuitionInvoiceDTO(
-                    t.id,
-                    s.semesterName,
-                    t.totalAmount,
-                    t.finalAmount,
-                    t.status,
-                    t.dueDate
-                )
-            FROM TuitionInvoice t
-            JOIN Semester s ON t.semesterId = s.id
-            WHERE t.id = :invoiceId AND t.studentId = :studentId
+                t.id as id,
+                s.semester_name as semesterName,
+                t.total_amount as totalAmount,
+                t.final_amount as finalAmount,
+                t.status as status,
+                t.due_date as dueDate
+            FROM tuition_invoices t
+            JOIN semesters s ON t.semester_id = s.id
+            WHERE t.id = :invoiceId AND t.student_id = :studentId
     """)
-    Optional<TuitionInvoiceDTO> findByIdAndStudentId(Long invoiceId, Long studentId);
+    Optional<TuitionInvoiceView> findByIdAndStudentId(Long invoiceId, Long studentId);
 }

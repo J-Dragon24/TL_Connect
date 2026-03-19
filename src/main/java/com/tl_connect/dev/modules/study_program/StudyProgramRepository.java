@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.tl_connect.dev.core.common.enums.TrainingType;
 import com.tl_connect.dev.modules.study_program.entity.StudyProgram;
 import com.tl_connect.dev.modules.study_program.projection.SubjectPrerequisiteRow;
+import com.tl_connect.dev.modules.subject.entity.SubjectPrerequisiteGroup;
 import com.tl_connect.dev.modules.study_program.projection.StudyProgramHeaderView;
 import com.tl_connect.dev.modules.study_program.projection.StudyProgramRow;
 import com.tl_connect.dev.modules.study_program.projection.StudyProgramSubjectRow;
@@ -77,12 +78,22 @@ public interface StudyProgramRepository extends JpaRepository<StudyProgram, Long
     @Query(value = """
             SELECT
                 sps.subject_id AS subjectId,
-                sp.prerequisite_subject_id AS prerequisiteSubjectId,
+                g.id AS groupId,
+                g.group_logic AS groupLogic,
+                g.min_subjects_required AS minSubjectsRequired,
+
+                gi.prerequisite_subject_id AS prerequisiteSubjectId,
                 s.subject_code AS prerequisiteSubjectCode,
                 s.subject_name AS prerequisiteSubjectName
+
             FROM study_program_subjects sps
-            JOIN subject_prerequisites sp ON sps.subject_id = sp.subject_id
-            JOIN subjects s ON sp.prerequisite_subject_id = s.id
+            JOIN subject_prerequisite_groups g 
+                ON g.subject_id = sps.subject_id
+            JOIN subject_prerequisite_group_items gi 
+                ON gi.group_id = g.id
+            JOIN subjects s 
+                ON gi.prerequisite_subject_id = s.id
+
             WHERE sps.study_program_id = :studyProgramId
             """, nativeQuery = true)
     List<SubjectPrerequisiteRow> findSubjectPrerequisitesByProgramId(@Param("studyProgramId") Long studyProgramId);

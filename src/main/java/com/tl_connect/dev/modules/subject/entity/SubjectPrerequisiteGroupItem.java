@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.study_program.entity;
+package com.tl_connect.dev.modules.subject.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -14,16 +14,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "subject_prerequisites")
+@Table(name = "subject_prerequisite_group_items")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SubjectPrerequisite {
+public class SubjectPrerequisiteGroupItem {
 
     @EmbeddedId
-    private SubjectPrerequisiteId id;
+    private SubjectPrerequisiteGroupItemId id;
 
     @CreationTimestamp
     @Column(name = "created_at")
@@ -33,9 +33,9 @@ public class SubjectPrerequisite {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SubjectPrerequisiteId implements Serializable {
-        @Column(name = "subject_id")
-        private Long subjectId;
+    public static class SubjectPrerequisiteGroupItemId implements Serializable {
+        @Column(name = "group_id")
+        private Long groupId;
 
         @Column(name = "prerequisite_subject_id")
         private Long prerequisiteSubjectId;
