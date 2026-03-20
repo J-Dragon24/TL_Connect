@@ -10,8 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.tl_connect.dev.core.common.enums.TrainingType;
 import com.tl_connect.dev.modules.study_program.entity.StudyProgram;
-import com.tl_connect.dev.modules.study_program.projection.SubjectPrerequisiteRow;
-import com.tl_connect.dev.modules.subject.entity.SubjectPrerequisiteGroup;
+
 import com.tl_connect.dev.modules.study_program.projection.StudyProgramHeaderView;
 import com.tl_connect.dev.modules.study_program.projection.StudyProgramRow;
 import com.tl_connect.dev.modules.study_program.projection.StudyProgramSubjectRow;
@@ -43,11 +42,13 @@ public interface StudyProgramRepository extends JpaRepository<StudyProgram, Long
                 m.major_name AS majorName,
                 f.faculty_name AS faculty
             FROM study_programs sp
-            JOIN majors m ON sp.major_id = m.id
+            JOIN student_majors sm ON sp.id = sm.study_program_id
+            JOIN majors m ON sm.major_id = m.id
             JOIN faculties f ON m.faculty_id = f.id
             WHERE sp.study_program_code = :studyProgramCode
+            AND sm.student_id = :studentId
             """, nativeQuery = true)
-    Optional<StudyProgramHeaderView> findStudyProgramHeader(@Param("studyProgramCode") String studyProgramCode);
+    Optional<StudyProgramHeaderView> findStudyProgramHeader(@Param("studyProgramCode") String studyProgramCode, @Param("studentId") Long studentId);
 
     @Query(value = """
             SELECT
@@ -74,29 +75,6 @@ public interface StudyProgramRepository extends JpaRepository<StudyProgram, Long
             ORDER BY sem.id, sub.subject_code
             """, nativeQuery = true)
     List<StudyProgramSubjectRow> findSubjectsByProgramId(@Param("studyProgramId") Long studyProgramId);
-
-    @Query(value = """
-            SELECT
-                sps.subject_id AS subjectId,
-                g.id AS groupId,
-                g.group_logic AS groupLogic,
-                g.min_subjects_required AS minSubjectsRequired,
-
-                gi.prerequisite_subject_id AS prerequisiteSubjectId,
-                s.subject_code AS prerequisiteSubjectCode,
-                s.subject_name AS prerequisiteSubjectName
-
-            FROM study_program_subjects sps
-            JOIN subject_prerequisite_groups g 
-                ON g.subject_id = sps.subject_id
-            JOIN subject_prerequisite_group_items gi 
-                ON gi.group_id = g.id
-            JOIN subjects s 
-                ON gi.prerequisite_subject_id = s.id
-
-            WHERE sps.study_program_id = :studyProgramId
-            """, nativeQuery = true)
-    List<SubjectPrerequisiteRow> findSubjectPrerequisitesByProgramId(@Param("studyProgramId") Long studyProgramId);
 
     Optional<StudyProgram> findByMajorIdAndTrainingTypeAndStartYear(
             Long majorId, TrainingType trainingType, Integer startYear);

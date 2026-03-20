@@ -23,8 +23,10 @@ public class StudentInfoDTO {
     private Gender gender;
     private String classCode;
     private String academicAdvisor;
-    private MajorDTO major;
+    private int startYear;
+    private int endYear;
     private TrainingType trainingType;
+    private MajorDTO major;
     private IdentityCardDTO identityCard;
     private ContactDTO contact;
     private AcademicInfoDTO academicInfo;

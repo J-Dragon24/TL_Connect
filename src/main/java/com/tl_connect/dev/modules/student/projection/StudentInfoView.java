@@ -13,6 +13,8 @@ public interface StudentInfoView {
     LocalDate getDateOfBirth();
     String getClassCode();
     String getAcademicAdvisor();
+    int getStartYear();
+    int getEndYear();
 
     //major
     String getMajorCode();

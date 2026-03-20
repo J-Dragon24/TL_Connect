@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.tl_connect.dev.modules.tuition.entity.TuitionInvoice;
 import com.tl_connect.dev.modules.tuition.projection.TuitionInvoiceView;
+import org.springframework.data.repository.query.Param;
 
 @Repository
 public interface TuitionInvoiceRepository extends JpaRepository<TuitionInvoice, Long> {
@@ -26,9 +27,9 @@ public interface TuitionInvoiceRepository extends JpaRepository<TuitionInvoice, 
             WHERE t.student_id = :studentId
             ORDER BY s.start_date DESC
             """, nativeQuery = true)
-    List<TuitionInvoiceView> findAllByStudentId(Long studentId);
+    List<TuitionInvoiceView> findAllByStudentId(@Param("studentId") Long studentId);
 
-    @Query("""
+    @Query(value = """
             SELECT 
                 t.id as id,
                 s.semester_name as semesterName,
@@ -39,6 +40,6 @@ public interface TuitionInvoiceRepository extends JpaRepository<TuitionInvoice, 
             FROM tuition_invoices t
             JOIN semesters s ON t.semester_id = s.id
             WHERE t.id = :invoiceId AND t.student_id = :studentId
-    """)
-    Optional<TuitionInvoiceView> findByIdAndStudentId(Long invoiceId, Long studentId);
+        """, nativeQuery = true)
+    Optional<TuitionInvoiceView> findByIdAndStudentId(@Param("invoiceId") Long invoiceId, @Param("studentId") Long studentId);
 }

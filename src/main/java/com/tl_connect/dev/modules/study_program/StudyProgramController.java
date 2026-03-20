@@ -37,8 +37,13 @@ public class StudyProgramController {
     }
 
     @GetMapping("/{studyProgramCode}")
-    public ResponseEntity<?> getStudyProgram(@PathVariable("studyProgramCode") String studyProgramCode) {
-        StudyProgramDTO result = studyProgramService.getStudyProgram(studyProgramCode);
+    public ResponseEntity<?> getStudyProgram(@PathVariable("studyProgramCode") String studyProgramCode,
+            Authentication authentication) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo userInfo)) {
+            throw new UnauthorizeException("Authentication required");
+        }
+        Long studentId = userInfo.userId();
+        StudyProgramDTO result = studyProgramService.getStudyProgram(studyProgramCode, studentId);
         return ResponseHelper.success("Study program retrieved successfully", result);
     }
 }

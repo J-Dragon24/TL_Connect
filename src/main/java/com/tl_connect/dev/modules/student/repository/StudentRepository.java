@@ -32,6 +32,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
                 s.date_of_birth AS dateOfBirth,
                 c.class_code AS classCode,
                 l.full_name AS academicAdvisor,
+                sm.start_year AS startYear,
+                sm.end_year AS endYear,
                 m.major_code AS majorCode,
                 m.major_name AS majorName,
                 f.faculty_name AS faculty,

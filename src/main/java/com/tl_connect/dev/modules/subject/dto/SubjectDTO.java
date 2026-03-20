@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.study_program.dto;
+package com.tl_connect.dev.modules.subject.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,7 +21,7 @@ public class SubjectDTO {
     private String electiveGroup;
     private Integer lectureHours;
     private Integer practiceHours;
-    private List<SubjectPrerequisiteDTO> subjectPrerequisite;
+    private List<SubjectPrerequisiteGroupDTO> subjectPrerequisite;
     private String faculty;
     private String department;
 }

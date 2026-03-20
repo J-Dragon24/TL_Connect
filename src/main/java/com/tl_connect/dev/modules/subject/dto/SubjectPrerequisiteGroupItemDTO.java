@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.study_program.dto;
+package com.tl_connect.dev.modules.subject.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SubjectPrerequisiteDTO {
+public class SubjectPrerequisiteGroupItemDTO {
     private String subjectCode;
     private String subjectName;
 }

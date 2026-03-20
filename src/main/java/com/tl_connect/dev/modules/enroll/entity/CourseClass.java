@@ -40,6 +40,9 @@ public class CourseClass {
     @Column(name = "class_name", nullable = false)
     private String className;
 
+    @Column(name = "capacity", nullable = false)
+    private Integer capacity;
+
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;

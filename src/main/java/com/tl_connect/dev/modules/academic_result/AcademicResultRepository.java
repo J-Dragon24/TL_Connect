@@ -9,6 +9,7 @@ import com.tl_connect.dev.modules.academic_result.entity.StudentSubjectResult;
 import com.tl_connect.dev.modules.academic_result.projection.SemesterSummaryView;
 import com.tl_connect.dev.modules.academic_result.projection.SubjectResultRow;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
@@ -47,8 +48,8 @@ public interface AcademicResultRepository extends JpaRepository<StudentSubjectRe
                             SUM(sss.semester_gpa * sss.credits_passed)
                             OVER (ORDER BY sem.id)
                             /
-                            SUM(sss.credits_passed)
-                            OVER (ORDER BY sem.id)
+                            NULLIF(SUM(sss.credits_passed)::decimal
+                            OVER (ORDER BY sem.id), 0)
                             AS cumulativeGpa
                         FROM student_semester_summaries sss
                         JOIN semesters sem ON sss.semester_id = sem.id
@@ -58,4 +59,39 @@ public interface AcademicResultRepository extends JpaRepository<StudentSubjectRe
                         """, nativeQuery = true)
         List<SemesterSummaryView> findSemesterSummary(@Param("studentId") Long studentId,
                         @Param("studyProgramCode") String studyProgramCode);
+
+        @Query(value = """
+                        SELECT
+                            COALESCE(SUM(sss.credits_passed), 0) AS creditsPassed
+                        FROM student_semester_summaries sss
+                        JOIN study_programs tp ON sss.study_program_id = tp.id
+                        WHERE sss.student_id = :studentId
+                        AND tp.id = :studyProgramId
+                        """, nativeQuery = true)
+        Integer findCreditsPassed(@Param("studentId") Long studentId,
+                        @Param("studyProgramId") Long studyProgramId);
+
+        @Query(value = """
+                    SELECT
+                        COALESCE(SUM(sss.semester_gpa * sss.credits_passed)
+                        /
+                        NULLIF(SUM(sss.credits_passed)::decimal, 0), 0) AS cumulativeGpa
+                    FROM student_semester_summaries sss
+                    JOIN study_programs tp ON sss.study_program_id = tp.id
+                    WHERE sss.student_id = :studentId
+                    AND tp.id = :studyProgramId
+                        """, nativeQuery = true)
+        BigDecimal findCurrentSemesterGpa(@Param("studentId") Long studentId,
+                        @Param("studyProgramId") Long studyProgramId);
+
+        @Query(value = """
+            SELECT ssr.is_pass
+            FROM student_subject_results ssr
+            JOIN semesters sem ON ssr.semester_id = sem.id
+            WHERE ssr.student_id = :studentId
+                AND ssr.subject_id = :subjectId
+            ORDER BY sem.start_date DESC
+            LIMIT 1
+            """, nativeQuery = true)
+        Boolean getLatestSubjectResult(@Param("studentId") Long studentId, @Param("subjectId") Long subjectId);
 }

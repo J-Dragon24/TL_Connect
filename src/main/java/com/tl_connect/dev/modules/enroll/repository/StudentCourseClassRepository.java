@@ -1,12 +1,19 @@
 package com.tl_connect.dev.modules.enroll.repository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.tl_connect.dev.core.common.enums.StudentCourseClassStatus;
 import com.tl_connect.dev.modules.enroll.entity.StudentCourseClass;
+
+import jakarta.persistence.LockModeType;
 
 @Repository
 public interface StudentCourseClassRepository extends JpaRepository<StudentCourseClass, Long> {
@@ -23,7 +30,29 @@ public interface StudentCourseClassRepository extends JpaRepository<StudentCours
             AND cc.id = :courseClassId
         )
     """, nativeQuery = true)
-    boolean isSubjectAllowed(Long studentId, Long courseClassId);
+    boolean isSubjectAllowed(@Param("studentId") Long studentId, @Param("courseClassId") Long courseClassId);
 
     Optional<StudentCourseClass> findByStudentIdAndCourseClassId(Long studentId, Long courseClassId);
+
+    List<StudentCourseClass> findByStudentIdAndSemesterIdAndStatusIn(Long studentId, Long semesterId, Set<StudentCourseClassStatus> status);
+
+    @Query(value = """
+                SELECT COALESCE(SUM(s.credits), 0)
+                FROM student_course_classes scc
+                JOIN course_classes cc ON scc.course_class_id = cc.id
+                JOIN subjects s ON cc.subject_id = s.id
+                WHERE scc.student_id = :studentId
+                    AND scc.status IN ('PENDING', 'ENROLLED')
+                    AND cc.semester_id = :semesterId
+            """, nativeQuery = true)
+    Integer findCreditsRegistered(@Param("studentId") Long studentId, @Param("semesterId") Long semesterId);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query(value = """
+                SELECT COUNT(*)
+                FROM student_course_classes scc
+                WHERE scc.course_class_id = :courseClassId
+                    AND scc.status IN ('PENDING', 'ENROLLED')
+            """, nativeQuery = true)
+    Integer countEnroll(@Param("courseClassId") Long courseClassId);
 }

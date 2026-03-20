@@ -66,4 +66,12 @@ public interface ScheduleRepository extends JpaRepository<ClassSchedule, Long> {
             """, nativeQuery = true)
     List<ScheduleRow> findDayOfWeekSchedule(@Param("studentId") Long studentId, @Param("semesterId") Long semesterId, @Param("dayOfWeek") int dayOfWeek);
 
+    List<ClassSchedule> findByCourseClassId(Long courseClassId);
+
+    @Query(value = """
+        SELECT *
+        FROM class_schedules
+        WHERE course_class_id IN :courseClassIds
+        """, nativeQuery = true)
+    List<ClassSchedule> findByCourseClassIds(@Param("courseClassIds") List<Long> courseClassIds);
 }

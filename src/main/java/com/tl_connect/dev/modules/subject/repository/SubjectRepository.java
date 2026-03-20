@@ -15,6 +15,7 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
     @Query(value ="""
             SELECT g.id AS id,
                 g.min_subjects_required AS minSubjectsRequired,
+                g.description AS description,
                 COUNT(ssr.subject_id) AS passedCount,
                 COUNT(gi.prerequisite_subject_id) AS total
             FROM subject_prerequisite_groups g

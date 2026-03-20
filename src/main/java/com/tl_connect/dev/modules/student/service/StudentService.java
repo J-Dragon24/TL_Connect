@@ -117,6 +117,8 @@ public class StudentService {
                                 .gender(student.getGender())
                                 .classCode(student.getClassCode())
                                 .academicAdvisor(student.getAcademicAdvisor())
+                                .startYear(student.getStartYear())
+                                .endYear(student.getEndYear())
                                 .trainingType(student.getTrainingType())
                                 .major(MajorDTO.builder()
                                                 .majorCode(student.getMajorCode())

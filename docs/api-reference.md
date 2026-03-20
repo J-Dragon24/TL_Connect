@@ -136,6 +136,8 @@ Sinh viên lấy thông tin cá nhân.
         "gender": "NAM",
         "class_code": "KHMT2021",
         "academic_advisor": "Nguyen Van An",
+        "start_year": 2021,
+        "end_year": 2026,
         "major": {
             "major_code": "KHMT",
             "major_name": "Khoa học máy tính",

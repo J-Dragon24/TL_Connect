@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.tl_connect.dev.core.common.enums.ConditionEnrollmentType;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,8 +31,9 @@ public class SubjectEnrollmentCondition {
     @Column(name = "subject_id")
     private Long subjectId;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "condition_type")
-    private String conditionType;
+    private ConditionEnrollmentType conditionType;
 
     @Column(name = "condition_value")
     private BigDecimal conditionValue;

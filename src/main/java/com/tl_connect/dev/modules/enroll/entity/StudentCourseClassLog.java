@@ -37,7 +37,7 @@ public class StudentCourseClassLog {
     @Enumerated(EnumType.STRING)
     private EnrollAction action;
 
-    @Column(name = "from_status", nullable = false)
+    @Column(name = "from_status")
     @Enumerated(EnumType.STRING)
     private StudentCourseClassStatus fromStatus;
 
