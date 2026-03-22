@@ -2,6 +2,7 @@ package com.tl_connect.dev.modules.subject.repository;
 
 import java.util.List;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -28,5 +29,6 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
             WHERE g.subject_id = :subjectId
             GROUP BY g.id, g.min_subjects_required;
             """, nativeQuery = true)
+    @Cacheable("subject_prerequisite_condition")
     List<SubjectPrerequisiteConditionRow> findSubjectPrerequisiteCondition(@Param("studentId") Long studentId, @Param("subjectId") Long subjectId);
 }

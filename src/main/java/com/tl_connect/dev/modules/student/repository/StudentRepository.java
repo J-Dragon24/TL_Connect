@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import com.tl_connect.dev.modules.student.entity.Student;
 import com.tl_connect.dev.modules.student.projection.HealthInsuranceView;
 import com.tl_connect.dev.modules.student.projection.StudentInfoView;
+import com.tl_connect.dev.modules.student.projection.StudentRow;
 import com.tl_connect.dev.modules.student.projection.StudyYearView;
 import com.tl_connect.dev.modules.student_class.projection.ClassHeaderView;
 
@@ -69,14 +70,16 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     @Query(value = """
             SELECT
+                s.id as id,
                 s.student_code AS studentCode,
                 s.full_name AS fullName,
                 s.gender AS gender,
                 s.date_of_birth AS dateOfBirth,
                 c.class_code AS classCode,
                 m.major_code AS majorCode,
-                m.major_name AS majorName,
-                f.faculty_name AS faculty,
+                sp.training_type AS trainingType,
+                sm.start_year AS startYear,
+                sm.end_year AS endYear,
                 i.card_number AS idCardNumber,
                 i.card_type AS idCardType,
                 i.issued_date AS issuedDate,
@@ -86,7 +89,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
                 sc.email_personal AS email,
                 ai.cohort AS cohort,
                 ai.position AS position,
-                sp.training_type AS trainingType,
                 ec.full_name AS emergencyContactName,
                 ec.phone_number AS emergencyContactPhoneNumber,
                 ec.address AS emergencyContactAddress,
@@ -117,7 +119,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
                 LEFT JOIN emergency_contacts ec ON s.id = ec.student_id
             """, 
             nativeQuery = true)
-    Page<StudentInfoView> findAllStudentInfo(Pageable pageable);
+    Page<StudentRow> findAllStudent(Pageable pageable);
 
 
     @Query(value = """

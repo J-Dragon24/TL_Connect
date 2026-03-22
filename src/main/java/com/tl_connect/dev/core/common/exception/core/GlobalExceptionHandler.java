@@ -1,4 +1,4 @@
-package com.tl_connect.dev.core.common.exception;
+package com.tl_connect.dev.core.common.exception.core;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

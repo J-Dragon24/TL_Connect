@@ -2,6 +2,7 @@ package com.tl_connect.dev.modules.schedule;
 
 import java.util.List;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -66,12 +67,21 @@ public interface ScheduleRepository extends JpaRepository<ClassSchedule, Long> {
             """, nativeQuery = true)
     List<ScheduleRow> findDayOfWeekSchedule(@Param("studentId") Long studentId, @Param("semesterId") Long semesterId, @Param("dayOfWeek") int dayOfWeek);
 
+    @Cacheable("schedule")
     List<ClassSchedule> findByCourseClassId(Long courseClassId);
 
     @Query(value = """
-        SELECT *
-        FROM class_schedules
-        WHERE course_class_id IN :courseClassIds
+        SELECT 1
+            FROM class_schedules s1
+            JOIN class_schedules s2
+            ON s1.day_of_week = s2.day_of_week
+            AND s1.start_period < s2.end_period
+            AND s1.end_period > s2.start_period
+            WHERE s1.course_class_id = :newClassId
+            AND s2.course_class_id IN (:registeredIds)
         """, nativeQuery = true)
-    List<ClassSchedule> findByCourseClassIds(@Param("courseClassIds") List<Long> courseClassIds);
+    boolean isScheduleConflict(
+        @Param("newClassId") Long newClassId,
+        @Param("registeredClassIds") List<Long> registeredClassIds
+    );
 }

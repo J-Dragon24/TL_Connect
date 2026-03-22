@@ -9,7 +9,8 @@ public enum ResponseStatus {
     VALIDATION_ERROR(400, "Validation error", -5),
     INTERNAL_ERROR(500, "Internal server error", -10),
     EXTERNAL_ERROR(502, "External service error", -13),
-    CONFLICT(409, "Resource already exists", -25);
+    CONFLICT(409, "Resource already exists", -25),
+    BAD_REQUEST(400, "Bad request", -26);
 
     private final int httpStatus;
     private final String message;

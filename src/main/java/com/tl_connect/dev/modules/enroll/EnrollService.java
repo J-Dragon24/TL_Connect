@@ -48,18 +48,18 @@ public class EnrollService {
     @Transactional
     public void enroll(Long studentId, Long courseClassId, String studyProgramCode) {
 
-        CourseClass courseClass = courseClassRepository.findById(courseClassId)
+        CourseClass courseClass = courseClassRepository.findByIdForUpdate(courseClassId)
                 .orElseThrow(() -> new NotFoundException("Course class not found"));
 
-        StudyProgramHeaderView header = studyProgramRepository.findStudyProgramHeader(studyProgramCode, studentId)
+        StudyProgramHeaderView header = studyProgramRepository.findByStudyProgramCodeAndStudentId(studyProgramCode, studentId)
                 .orElseThrow(() -> new NotFoundException("Study program not found"));
 
-        //check if student is allowed to enroll in the course class
+        // check if student is allowed to enroll in the course class
         if (!studentCourseClassRepository.isSubjectAllowed(studentId, courseClass.getId())) {
             throw new ForbiddenException("You don't have permission to enroll in this course class");
         }
 
-        //check if student has already enrolled in the course class
+        // check if student has already enrolled in the course class
         Optional<StudentCourseClass> existingOpt = studentCourseClassRepository
                 .findByStudentIdAndCourseClassId(studentId, courseClassId);
 
@@ -71,11 +71,22 @@ public class EnrollService {
             oldStatus = scc.getStatus();
 
             if (Set.of(StudentCourseClassStatus.PENDING, StudentCourseClassStatus.ENROLLED).contains(scc.getStatus())) {
-                throw new RuntimeException("You have already enrolled in this course class");
+                throw new ForbiddenException("You have already enrolled in this course class");
             }
         }
 
-        //check if student has passed the subject
+        boolean alreadyEnrollSameSubject = studentCourseClassRepository
+                .existsByStudentIdAndSubjectIdAndSemesterIdAndStatusIn(
+                        studentId,
+                        courseClass.getSubjectId(),
+                        courseClass.getSemesterId(),
+                        Set.of(StudentCourseClassStatus.PENDING, StudentCourseClassStatus.ENROLLED));
+
+        if (alreadyEnrollSameSubject) {
+            throw new ForbiddenException("You already enrolled this subject");
+        }
+
+        // check if student has passed the subject
         Boolean latestPassed = academicResultRepository.getLatestSubjectResult(studentId, courseClass.getSubjectId());
 
         boolean hasPassed = (latestPassed != null && latestPassed);
@@ -85,18 +96,18 @@ public class EnrollService {
             throw new ForbiddenException("You have already passed this subject");
         }
 
-        //check schedule conflict
+        // check schedule conflict
         checkScheduleConflict(studentId, courseClass);
-        //check subject condition
+        // check subject condition
         checkSubjectCondition(studentId, courseClass, header.getId());
-        //check max credits
+        // check max credits
         checkMaxCredits(studentId, courseClass, header.getId());
 
         int currentStudent = studentCourseClassRepository.countEnroll(courseClassId);
         if (currentStudent >= courseClass.getCapacity()) {
             throw new ForbiddenException("Course class is full");
         }
-        
+
         if (scc == null) {
             scc = new StudentCourseClass();
             scc.setStudentId(studentId);
@@ -120,44 +131,56 @@ public class EnrollService {
         courseClassLogRepository.save(log);
     }
 
-    private void checkSubjectCondition(Long studentId, CourseClass courseClass, Long studyProgramId) {
-        List<SubjectPrerequisiteConditionRow> groups = subjectRepository.findSubjectPrerequisiteCondition(studentId, courseClass.getId());
+    public void preCheck(Long studentId, CourseClass courseClass, Long studyProgramId) {
         
-        for (SubjectPrerequisiteConditionRow group : groups) {
-            if (group.getPassedCount() < group.getMinSubjectsRequired()) {
-                throw new ForbiddenException(group.getDescription() != null ? group.getDescription() : "You don't have permission to enroll in this course class");
+    }
+
+    private void checkSubjectCondition(Long studentId, CourseClass courseClass, Long studyProgramId) {
+        List<SubjectPrerequisiteConditionRow> groups = subjectRepository.findSubjectPrerequisiteCondition(studentId,
+                courseClass.getId());
+
+        if (groups != null && !groups.isEmpty()) {
+            for (SubjectPrerequisiteConditionRow group : groups) {
+                if (group.getPassedCount() < group.getMinSubjectsRequired()) {
+                    throw new ForbiddenException(group.getDescription() != null ? group.getDescription()
+                            : "You don't have permission to enroll in this course class");
+                }
             }
         }
 
-        List<SubjectEnrollmentCondition> conditions = subjectEnrollmentConditionRepository.findBySubjectId(courseClass.getSubjectId());
+        List<SubjectEnrollmentCondition> conditions = subjectEnrollmentConditionRepository
+                .findBySubjectId(courseClass.getSubjectId());
 
-        for (SubjectEnrollmentCondition condition : conditions) {
-            switch (condition.getConditionType()) {
-                case MIN_CREDITS:
-                    Integer creditsPassed = academicResultRepository.findCreditsPassed(studentId, studyProgramId);
-                    if (creditsPassed < condition.getConditionValue().intValue()) {
-                        throw new ForbiddenException("You don't have permission to enroll in this course class");
-                    }
-                    break;
-                case GPA:
-                    BigDecimal gpa = academicResultRepository.findCurrentSemesterGpa(studentId, studyProgramId);
-                    if (gpa.compareTo(condition.getConditionValue()) < 0) {
-                        throw new ForbiddenException("You don't have permission to enroll in this course class");
-                    }
-                    break;
-                default:
-                    break;
+        if (conditions != null && !conditions.isEmpty()) {
+            for (SubjectEnrollmentCondition condition : conditions) {
+                switch (condition.getConditionType()) {
+                    case MIN_CREDITS:
+                        Integer creditsPassed = academicResultRepository.findCreditsPassed(studentId, studyProgramId);
+                        if (creditsPassed < condition.getConditionValue().intValue()) {
+                            throw new ForbiddenException("You don't have permission to enroll in this course class");
+                        }
+                        break;
+                    case GPA:
+                        BigDecimal gpa = academicResultRepository.findCurrentSemesterGpa(studentId, studyProgramId);
+                        if (gpa == null || gpa.compareTo(condition.getConditionValue()) < 0) {
+                            throw new ForbiddenException("You don't have permission to enroll in this course class");
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }
 
     private void checkScheduleConflict(Long studentId, CourseClass courseClass) {
         List<StudentCourseClass> registered = studentCourseClassRepository.findByStudentIdAndSemesterIdAndStatusIn(
-            studentId, 
-            courseClass.getSemesterId(), 
-            Set.of(StudentCourseClassStatus.PENDING, StudentCourseClassStatus.ENROLLED));
+                studentId,
+                courseClass.getSemesterId(),
+                Set.of(StudentCourseClassStatus.PENDING, StudentCourseClassStatus.ENROLLED));
 
-        if (registered.isEmpty()) return;
+        if (registered.isEmpty())
+            return;
 
         List<ClassSchedule> newSchedules = scheduleRepository.findByCourseClassId(courseClass.getId());
 
@@ -165,29 +188,24 @@ public class EnrollService {
             throw new ForbiddenException("Course class has no schedule");
         }
 
-        List<Long> classIds = registered.stream()
-            .map(StudentCourseClass::getCourseClassId)
-            .filter(id -> !id.equals(courseClass.getId()))
-            .toList();
+        List<Long> registeredClassIds = registered.stream()
+                .map(StudentCourseClass::getCourseClassId)
+                .filter(id -> !id.equals(courseClass.getId()))
+                .toList();
 
-        if (classIds.isEmpty()) return;
+        if (registeredClassIds.isEmpty())
+            return;
 
-        List<ClassSchedule> allSchedules = scheduleRepository.findByCourseClassIds(classIds);
+        boolean isConflict = scheduleRepository.isScheduleConflict(courseClass.getId(), registeredClassIds);
 
-        for (ClassSchedule newSc : newSchedules) {
-            for (ClassSchedule existingSc : allSchedules) {
-                boolean sameDay = existingSc.getDayOfWeek() == newSc.getDayOfWeek();
-
-                boolean overlap = newSc.getStartPeriod() < existingSc.getEndPeriod() && newSc.getEndPeriod() > existingSc.getStartPeriod();
-                if (sameDay && overlap) {
-                    throw new ForbiddenException("You have a schedule conflict");
-                }
-            }
+        if (isConflict) {
+            throw new ForbiddenException("You have a schedule conflict");
         }
     }
 
     private void checkMaxCredits(Long studentId, CourseClass courseClass, Long studyProgramId) {
-        Integer creditsRegistered = studentCourseClassRepository.findCreditsRegistered(studentId, courseClass.getSemesterId());
+        Integer creditsRegistered = studentCourseClassRepository.findCreditsRegistered(studentId,
+                courseClass.getSemesterId());
         Integer newCredits = subjectRepository.findById(courseClass.getSubjectId())
                 .orElseThrow(() -> new NotFoundException("Subject not found")).getCredits();
         if (creditsRegistered + newCredits > 18) {

@@ -1,4 +1,4 @@
-package com.tl_connect.dev.core.common.exception;
+package com.tl_connect.dev.core.common.exception.core;
 
 import com.tl_connect.dev.core.common.enums.ResponseStatus;
 

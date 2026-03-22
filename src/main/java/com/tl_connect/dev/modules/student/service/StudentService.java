@@ -13,10 +13,12 @@ import com.tl_connect.dev.modules.student.dto.HealthInsDTO;
 import com.tl_connect.dev.modules.student.dto.HealthInsDetailDTO;
 import com.tl_connect.dev.modules.student.dto.IdentityCardDTO;
 import com.tl_connect.dev.modules.student.dto.MajorDTO;
+import com.tl_connect.dev.modules.student.dto.StudentFullInfo;
 import com.tl_connect.dev.modules.student.dto.StudentInfoDTO;
 import com.tl_connect.dev.modules.student.dto.YearStudyDTO;
 import com.tl_connect.dev.modules.student.projection.HealthInsuranceView;
 import com.tl_connect.dev.modules.student.projection.StudentInfoView;
+import com.tl_connect.dev.modules.student.projection.StudentRow;
 import com.tl_connect.dev.modules.student.projection.StudyYearView;
 import com.tl_connect.dev.modules.student.repository.StudentRepository;
 import com.tl_connect.dev.modules.student_class.StudentClassRepository;
@@ -37,11 +39,11 @@ public class StudentService {
         private final StudentRepository studentRepository;
         private final StudentClassRepository studentClassRepository;
 
-        public PagedResponse<StudentInfoDTO> getAllStudents(Pageable pageable) {
-                Page<StudentInfoView> students = studentRepository.findAllStudentInfo(pageable);
+        public PagedResponse<StudentFullInfo> getAllStudents(Pageable pageable) {
+                Page<StudentRow> students = studentRepository.findAllStudent(pageable);
 
                 return new PagedResponse<>(
-                                students.getContent().stream().map(this::toDTO).toList(),
+                                students.getContent().stream().map(this::toFullInfo).toList(),
                                 students.getNumber(),
                                 students.getSize(),
                                 students.getTotalElements(),
@@ -125,6 +127,42 @@ public class StudentService {
                                                 .majorName(student.getMajorName())
                                                 .faculty(student.getFaculty())
                                                 .build())
+                                .identityCard(IdentityCardDTO.builder()
+                                                .cardNumber(student.getIdCardNumber())
+                                                .cardType(student.getIdCardType())
+                                                .issuedDate(student.getIssuedDate())
+                                                .issuedPlace(student.getIssuedPlace())
+                                                .build())
+                                .contact(ContactDTO.builder()
+                                                .phoneNumber(student.getPhoneNumber())
+                                                .email(student.getEmail())
+                                                .address(student.getAddress())
+                                                .build())
+                                .academicInfo(AcademicInfoDTO.builder()
+                                                .cohort(student.getCohort())
+                                                .position(student.getPosition())
+                                                .build())
+                                .emergencyContact(EmergencyContactDTO.builder()
+                                                .name(student.getEmergencyContactName())
+                                                .phoneNumber(student.getEmergencyContactPhoneNumber())
+                                                .address(student.getEmergencyContactAddress())
+                                                .relationship(student.getRelationship())
+                                                .build())
+                                .build();
+        }
+
+        private StudentFullInfo toFullInfo(StudentRow student) {
+                return StudentFullInfo.builder()
+                                .id(student.getId())
+                                .studentCode(student.getStudentCode())
+                                .fullName(student.getFullName())
+                                .dateOfBirth(student.getDateOfBirth())
+                                .gender(student.getGender())
+                                .classCode(student.getClassCode())
+                                .startYear(student.getStartYear())
+                                .endYear(student.getEndYear())
+                                .trainingType(student.getTrainingType())
+                                .majorCode(student.getMajorCode())
                                 .identityCard(IdentityCardDTO.builder()
                                                 .cardNumber(student.getIdCardNumber())
                                                 .cardType(student.getIdCardType())

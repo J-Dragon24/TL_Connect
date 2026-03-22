@@ -34,6 +34,11 @@ DROP TABLE IF EXISTS grade_scale CASCADE;
 DROP TABLE IF EXISTS news CASCADE;
 DROP TABLE IF EXISTS notification_template CASCADE;
 DROP TABLE IF EXISTS notification_read CASCADE;
+DROP TABLE IF EXISTS tuition_invoices CASCADE;
+DROP TABLE IF EXISTS tuition_invoice_items CASCADE;
+DROP TABLE IF EXISTS tuition_fee_configs CASCADE;
+DROP TABLE IF EXISTS payment CASCADE;
+DROP TABLE IF EXISTS tuition_transactions CASCADE;
 
 CREATE TABLE oauth_users (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -334,11 +339,16 @@ CREATE TABLE student_course_classes (
   course_class_id BIGINT NOT NULL,
   is_retake BOOLEAN DEFAULT FALSE,
   status VARCHAR(20) NOT NULL DEFAULT 'PENDING' CHECK (status IN ('PENDING', 'ENROLLED', 'DROPPED', 'REJECTED')),
+  subject_id BIGINT NOT NULL,
+  semester_id BIGINT NOT NULL,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
   UNIQUE (student_id, course_class_id),
+  UNIQUE (student_id, subject_id, semester_id),
   FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
-  FOREIGN KEY (course_class_id) REFERENCES course_classes(id) ON DELETE CASCADE
+  FOREIGN KEY (course_class_id) REFERENCES course_classes(id) ON DELETE CASCADE,
+  FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE SET NULL,
+  FOREIGN KEY (semester_id) REFERENCES semesters(id) ON DELETE SET NULL
 );
 
 CREATE TABLE student_course_class_logs (
@@ -363,8 +373,8 @@ CREATE TABLE tuition_invoices (
   status VARCHAR(20) NOT NULL DEFAULT 'UNPAID' CHECK (status IN ('UNPAID','PAID','OVERDUE','CANCELLED')),
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
-  FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
-  FOREIGN KEY (semester_id) REFERENCES semesters(id) ON DELETE CASCADE
+  FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE RESTRICT,
+  FOREIGN KEY (semester_id) REFERENCES semesters(id) ON DELETE RESTRICT
 );
 
 CREATE TABLE tuition_invoice_items (
@@ -398,7 +408,7 @@ CREATE TABLE payment (
   status VARCHAR(20) NOT NULL DEFAULT 'PENDING' CHECK (status IN ('PENDING','SUCCESS','FAILED')),
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
-  FOREIGN KEY (invoice_id) REFERENCES tuition_invoices(id) ON DELETE CASCADE
+  FOREIGN KEY (invoice_id) REFERENCES tuition_invoices(id) ON DELETE RESTRICT
 );
 
 CREATE TABLE tuition_transactions (
@@ -411,7 +421,7 @@ CREATE TABLE tuition_transactions (
   reference_type VARCHAR(20),
   description TEXT,
   created_at TIMESTAMP DEFAULT now(),
-  FOREIGN KEY (invoice_id) REFERENCES tuition_invoices(id) ON DELETE CASCADE
+  FOREIGN KEY (invoice_id) REFERENCES tuition_invoices(id) ON DELETE RESTRICT
 );
 
 CREATE TABLE class_schedules (
@@ -444,7 +454,7 @@ CREATE TABLE student_subject_results (
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
   UNIQUE (student_id, subject_id, semester_id),
-  FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+  FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE RESTRICT,
   FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE RESTRICT,
   FOREIGN KEY (semester_id) REFERENCES semesters(id) ON DELETE RESTRICT
 );
@@ -471,7 +481,7 @@ CREATE TABLE student_semester_summaries (
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
   FOREIGN KEY (study_program_id) REFERENCES study_programs(id) ON DELETE RESTRICT,
-  FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+  FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE RESTRICT,
   FOREIGN KEY (semester_id) REFERENCES semesters(id) ON DELETE RESTRICT
 );
 
@@ -526,7 +536,7 @@ CREATE TABLE student_applications (
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
 
-  FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+  FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE,
   FOREIGN KEY (application_type_id) REFERENCES application_types(id) ON DELETE SET NULL
 );
 

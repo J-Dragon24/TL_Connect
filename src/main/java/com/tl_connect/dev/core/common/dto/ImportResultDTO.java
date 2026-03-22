@@ -1,6 +1,5 @@
 package com.tl_connect.dev.core.common.dto;
 
-import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,5 +14,4 @@ public class ImportResultDTO {
     private int total;
     private int success;
     private int failed;
-    private List<String> errors;
 }

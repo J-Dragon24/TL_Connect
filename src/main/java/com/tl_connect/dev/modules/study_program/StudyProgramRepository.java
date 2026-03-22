@@ -2,7 +2,9 @@ package com.tl_connect.dev.modules.study_program;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -50,6 +52,21 @@ public interface StudyProgramRepository extends JpaRepository<StudyProgram, Long
             """, nativeQuery = true)
     Optional<StudyProgramHeaderView> findStudyProgramHeader(@Param("studyProgramCode") String studyProgramCode, @Param("studentId") Long studentId);
 
+
+    @Query(value = """
+            SELECT
+                sp.id AS id,
+                sp.study_program_name AS studyProgramName,
+                sp.start_year AS startYear,
+                sp.total_credits AS totalCredits
+            FROM study_programs sp
+            JOIN student_majors sm ON sp.id = sm.study_program_id
+            WHERE sp.study_program_code = :studyProgramCode
+            AND sm.student_id = :studentId
+            """, nativeQuery = true)
+    @Cacheable("study_program")
+    Optional<StudyProgramHeaderView> findByStudyProgramCodeAndStudentId(@Param("studyProgramCode") String studyProgramCode, @Param("studentId") Long studentId);
+
     @Query(value = """
             SELECT
                 sem.id AS semesterId,
@@ -78,4 +95,6 @@ public interface StudyProgramRepository extends JpaRepository<StudyProgram, Long
 
     Optional<StudyProgram> findByMajorIdAndTrainingTypeAndStartYear(
             Long majorId, TrainingType trainingType, Integer startYear);
+
+    List<StudyProgram> findByStartYearIn(Set<Integer> startYear);
 }

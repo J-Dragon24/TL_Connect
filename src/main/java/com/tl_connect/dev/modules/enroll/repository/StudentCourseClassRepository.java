@@ -47,7 +47,6 @@ public interface StudentCourseClassRepository extends JpaRepository<StudentCours
             """, nativeQuery = true)
     Integer findCreditsRegistered(@Param("studentId") Long studentId, @Param("semesterId") Long semesterId);
 
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query(value = """
                 SELECT COUNT(*)
                 FROM student_course_classes scc
@@ -55,4 +54,22 @@ public interface StudentCourseClassRepository extends JpaRepository<StudentCours
                     AND scc.status IN ('PENDING', 'ENROLLED')
             """, nativeQuery = true)
     Integer countEnroll(@Param("courseClassId") Long courseClassId);
+
+    @Query(value = """
+        SELECT EXISTS (
+            SELECT 1
+            FROM student_course_classes scc
+            JOIN course_classes cc ON scc.course_class_id = cc.id
+            WHERE scc.student_id = :studentId
+            AND cc.subject_id = :subjectId
+            AND cc.semester_id = :semesterId
+            AND scc.status IN ('PENDING', 'ENROLLED')
+        )
+    """, nativeQuery = true)
+    boolean existsByStudentIdAndSubjectIdAndSemesterIdAndStatusIn(
+        @Param("studentId") Long studentId,
+        @Param("subjectId") Long subjectId,
+        @Param("semesterId") Long semesterId,
+        @Param("status") Set<StudentCourseClassStatus> status
+    );
 }

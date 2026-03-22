@@ -1,5 +1,6 @@
 package com.tl_connect.dev.modules.academic_result;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -73,9 +74,9 @@ public interface AcademicResultRepository extends JpaRepository<StudentSubjectRe
 
         @Query(value = """
                     SELECT
-                        COALESCE(SUM(sss.semester_gpa * sss.credits_passed)
+                        SUM(sss.semester_gpa * sss.credits_passed)
                         /
-                        NULLIF(SUM(sss.credits_passed)::decimal, 0), 0) AS cumulativeGpa
+                        NULLIF(SUM(sss.credits_passed)::decimal, 0) AS cumulativeGpa
                     FROM student_semester_summaries sss
                     JOIN study_programs tp ON sss.study_program_id = tp.id
                     WHERE sss.student_id = :studentId
@@ -93,5 +94,6 @@ public interface AcademicResultRepository extends JpaRepository<StudentSubjectRe
             ORDER BY sem.start_date DESC
             LIMIT 1
             """, nativeQuery = true)
+        @Cacheable("latest_subject_result")
         Boolean getLatestSubjectResult(@Param("studentId") Long studentId, @Param("subjectId") Long subjectId);
 }

@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import jakarta.validation.constraints.Pattern;
+
 @Getter
 @Setter
 @Builder
@@ -14,6 +16,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ContactDTO {
     @ImportColumn("Số điện thoại")
+    @Pattern(regexp = "^(0|\\+84)[0-9]{9}$", message = "Invalid phone number")
     private String phoneNumber;
     @ImportColumn("Địa chỉ")
     private String address;

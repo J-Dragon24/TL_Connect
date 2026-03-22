@@ -12,6 +12,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import jakarta.validation.constraints.Past;
 
 @Getter
 @Setter
@@ -27,6 +28,7 @@ public class IdentityCardDTO {
     @ImportColumn("Loại thẻ")
     private IdCardType cardType;
     @ImportColumn("Ngày cấp")
+    @Past(message = "Ngày cấp phải là ngày trong quá khứ")
     private LocalDate issuedDate;
     @ImportColumn("Nơi cấp")
     private String issuedPlace;

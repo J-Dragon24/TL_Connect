@@ -7,7 +7,9 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,10 +22,15 @@ import com.tl_connect.dev.core.common.dto.PagedResponse;
 import com.tl_connect.dev.core.common.exception.InvalidInputException;
 import com.tl_connect.dev.core.common.ultility.FileHelper;
 import com.tl_connect.dev.core.common.ultility.ResponseHelper;
+import com.tl_connect.dev.modules.student.dto.StudentFullInfo;
 import com.tl_connect.dev.modules.student.dto.StudentImportDTO;
 import com.tl_connect.dev.modules.student.dto.StudentInfoDTO;
+import com.tl_connect.dev.modules.student.dto.UpdateBasicInfoDTO;
+import com.tl_connect.dev.modules.student.dto.UpdateStudentAcademicDTO;
 import com.tl_connect.dev.modules.student.service.StudentService;
 import com.tl_connect.dev.modules.student.service.StudentWriteService;
+import com.tl_connect.dev.modules.student.service.StudentUpdateService;
+import com.tl_connect.dev.modules.student.service.StudentDeleteService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -33,6 +40,8 @@ import lombok.RequiredArgsConstructor;
 public class AdminStudentController {
 
     private final StudentWriteService studentWriteService;
+    private final StudentUpdateService studentUpdateService;
+    private final StudentDeleteService studentDeleteService;
     private final StudentService studentService;
     private final FileHelper fileHelper;
 
@@ -61,7 +70,25 @@ public class AdminStudentController {
     @GetMapping("/all")
     public ResponseEntity<?> getAllStudents(@RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
-        PagedResponse<StudentInfoDTO> result = studentService.getAllStudents(pageable);
+        PagedResponse<StudentFullInfo> result = studentService.getAllStudents(pageable);
         return ResponseHelper.success("Get all students successfully", result);
+    }
+
+    @PostMapping("/update/{studentId}/basic")
+    public ResponseEntity<?> updateStudentBasicInfo(@PathVariable Long studentId, @RequestBody @Valid UpdateBasicInfoDTO dto) {
+        studentUpdateService.updateBasicInfo(studentId, dto);
+        return ResponseHelper.success("Student updated successfully", studentId);
+    }
+
+    @PostMapping("/update/{studentId}/academic")
+    public ResponseEntity<?> updateStudentAcademicInfo(@PathVariable Long studentId, @RequestBody @Valid UpdateStudentAcademicDTO dto) {
+        studentUpdateService.updateAcademicInfo(studentId, dto);
+        return ResponseHelper.success("Student academic info updated successfully", studentId);
+    }
+
+    @DeleteMapping("/delete/{studentId}")
+    public ResponseEntity<?> deleteStudent(@PathVariable Long studentId) {
+        studentDeleteService.deleteStudent(studentId);
+        return ResponseHelper.success("Student deleted successfully", studentId);
     }
 }
