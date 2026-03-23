@@ -31,4 +31,6 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
             """, nativeQuery = true)
     @Cacheable("subject_prerequisite_condition")
     List<SubjectPrerequisiteConditionRow> findSubjectPrerequisiteCondition(@Param("studentId") Long studentId, @Param("subjectId") Long subjectId);
+
+    boolean existsBySubjectCode(String subjectCode);
 }

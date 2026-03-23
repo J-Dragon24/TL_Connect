@@ -10,4 +10,6 @@ import com.tl_connect.dev.modules.subject.entity.SubjectPrerequisiteGroup;
 @Repository
 public interface SubjectPreGroupRepository extends JpaRepository<SubjectPrerequisiteGroup, Long> {
     List<SubjectPrerequisiteGroup> findBySubjectIdIn(List<Long> subjectIds);
+
+    List<SubjectPrerequisiteGroup> findBySubjectId(Long subjectId);
 }

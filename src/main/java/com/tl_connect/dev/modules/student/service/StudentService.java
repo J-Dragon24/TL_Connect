@@ -125,7 +125,7 @@ public class StudentService {
                                 .major(MajorDTO.builder()
                                                 .majorCode(student.getMajorCode())
                                                 .majorName(student.getMajorName())
-                                                .faculty(student.getFaculty())
+                                                .facultyCode(student.getFaculty())
                                                 .build())
                                 .identityCard(IdentityCardDTO.builder()
                                                 .cardNumber(student.getIdCardNumber())

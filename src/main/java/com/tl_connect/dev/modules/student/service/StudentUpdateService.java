@@ -13,7 +13,6 @@ import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.major.entity.Major;
 import com.tl_connect.dev.modules.major.entity.StudentMajor;
 import com.tl_connect.dev.modules.major.repository.MajorRepository;
-import com.tl_connect.dev.modules.student.dto.StudentImportDTO;
 import com.tl_connect.dev.modules.student.entity.AcademicInfo;
 import com.tl_connect.dev.modules.student.entity.EmergencyContact;
 import com.tl_connect.dev.modules.student.entity.IdentityCard;

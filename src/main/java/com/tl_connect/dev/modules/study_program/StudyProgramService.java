@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
 import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.study_program.projection.StudyProgramRow;
 import com.tl_connect.dev.modules.study_program.dto.StudyProgramListItemDTO;
+import com.tl_connect.dev.modules.study_program.dto.StudyProgramSubject;
 import com.tl_connect.dev.modules.study_program.dto.MajorDTO;
 import com.tl_connect.dev.modules.study_program.dto.SemesterSubjectsDTO;
 import com.tl_connect.dev.modules.study_program.dto.StudyProgramDTO;
-import com.tl_connect.dev.modules.subject.dto.SubjectDTO;
 import com.tl_connect.dev.modules.subject.dto.SubjectPrerequisiteGroupDTO;
 import com.tl_connect.dev.modules.subject.dto.SubjectPrerequisiteGroupItemDTO;
 import com.tl_connect.dev.modules.subject.entity.SubjectPrerequisiteGroup;
@@ -120,7 +120,7 @@ public class StudyProgramService {
                                 (a, b) -> a
                         ));
 
-                List<SubjectDTO> subjects = uniqueSubjects.values().stream()
+                List<StudyProgramSubject> subjects = uniqueSubjects.values().stream()
                         .map(s -> mapSubject(s, groupsBySubjectId, itemsByGroupId))
                         .toList();
 
@@ -132,7 +132,7 @@ public class StudyProgramService {
                         .build();
         }
         
-        private SubjectDTO mapSubject(
+        private StudyProgramSubject mapSubject(
                 StudyProgramSubjectRow s,
                 Map<Long, List<SubjectPrerequisiteGroup>> groupsBySubjectId,
                 Map<Long, List<SubjectPrerequisiteGroupItemRow>> itemsByGroupId
@@ -144,7 +144,7 @@ public class StudyProgramService {
                         .map(group -> mapGroup(group, itemsByGroupId))
                         .toList();
 
-                return SubjectDTO.builder()
+                return StudyProgramSubject.builder()
                         .subjectCode(s.getSubjectCode())
                         .subjectName(s.getSubjectName())
                         .credits(s.getCredits())

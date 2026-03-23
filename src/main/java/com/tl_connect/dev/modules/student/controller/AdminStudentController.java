@@ -24,7 +24,6 @@ import com.tl_connect.dev.core.common.ultility.FileHelper;
 import com.tl_connect.dev.core.common.ultility.ResponseHelper;
 import com.tl_connect.dev.modules.student.dto.StudentFullInfo;
 import com.tl_connect.dev.modules.student.dto.StudentImportDTO;
-import com.tl_connect.dev.modules.student.dto.StudentInfoDTO;
 import com.tl_connect.dev.modules.student.dto.UpdateBasicInfoDTO;
 import com.tl_connect.dev.modules.student.dto.UpdateStudentAcademicDTO;
 import com.tl_connect.dev.modules.student.service.StudentService;
@@ -86,7 +85,7 @@ public class AdminStudentController {
         return ResponseHelper.success("Student academic info updated successfully", studentId);
     }
 
-    @DeleteMapping("/delete/{studentId}")
+    @PostMapping("/delete/{studentId}")
     public ResponseEntity<?> deleteStudent(@PathVariable Long studentId) {
         studentDeleteService.deleteStudent(studentId);
         return ResponseHelper.success("Student deleted successfully", studentId);

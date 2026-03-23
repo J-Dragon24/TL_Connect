@@ -14,5 +14,5 @@ import lombok.Setter;
 public class MajorDTO {
     private String majorCode;
     private String majorName;
-    private String faculty;
+    private String facultyCode;
 }

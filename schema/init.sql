@@ -39,6 +39,11 @@ DROP TABLE IF EXISTS tuition_invoice_items CASCADE;
 DROP TABLE IF EXISTS tuition_fee_configs CASCADE;
 DROP TABLE IF EXISTS payment CASCADE;
 DROP TABLE IF EXISTS tuition_transactions CASCADE;
+DROP TABLE IF EXISTS subject_prerequisite_group_items CASCADE;
+DROP TABLE IF EXISTS subject_prerequisite_groups CASCADE;
+DROP TABLE IF EXISTS subject_enrollment_conditions CASCADE;
+DROP TABLE IF EXISTS student_course_class_logs CASCADE;
+
 
 CREATE TABLE oauth_users (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -536,7 +541,7 @@ CREATE TABLE student_applications (
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
 
-  FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE,
+  FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE RESTRICT,
   FOREIGN KEY (application_type_id) REFERENCES application_types(id) ON DELETE SET NULL
 );
 

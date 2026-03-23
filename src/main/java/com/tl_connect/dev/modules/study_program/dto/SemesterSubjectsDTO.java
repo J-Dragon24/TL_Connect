@@ -3,8 +3,6 @@ package com.tl_connect.dev.modules.study_program.dto;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.tl_connect.dev.modules.subject.dto.SubjectDTO;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,5 +18,5 @@ public class SemesterSubjectsDTO {
     private String semesterName;
     private LocalDate semesterStartDate;
     private LocalDate semesterEndDate;
-    private List<SubjectDTO> subjects;
+    private List<StudyProgramSubject> subjects;
 }

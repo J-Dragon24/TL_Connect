@@ -14,6 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SubjectPrerequisiteGroupDTO {
+    private Long id;
     private Integer minSubjectsRequired;
     private String description;
     private List<SubjectPrerequisiteGroupItemDTO> items;
