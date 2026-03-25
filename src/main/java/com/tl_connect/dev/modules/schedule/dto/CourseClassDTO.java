@@ -2,7 +2,7 @@ package com.tl_connect.dev.modules.schedule.dto;
 
 import java.time.LocalTime;
 
-import com.tl_connect.dev.modules.student_class.dto.LecturerDTO;
+import com.tl_connect.dev.modules.lecturer.dto.LecturerDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

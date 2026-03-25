@@ -41,6 +41,9 @@ public class Semester {
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
+    @Column(name = "is_active")
+    private Boolean isActive;
+
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;

@@ -29,14 +29,14 @@ public class FacultyController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createFaculty(@Valid @RequestBody FacultyDTO facultyDTO) {
-        Faculty faculty = facultyService.createFaculty(facultyDTO);
-        return ResponseHelper.success("Create faculty successfully", faculty);
+        Long id = facultyService.createFaculty(facultyDTO);
+        return ResponseHelper.success("Create faculty successfully", id);
     }
 
     @PostMapping("/update/{id}")
     public ResponseEntity<?> updateFaculty(@PathVariable Long id, @Valid @RequestBody UpdateFacultyDTO facultyDTO) {
-        Faculty faculty = facultyService.updateFaculty(id, facultyDTO);
-        return ResponseHelper.success("Update faculty successfully", faculty);
+        facultyService.updateFaculty(id, facultyDTO);
+        return ResponseHelper.success("Update faculty successfully", null);
     }
 
     @PostMapping("/delete/{id}")

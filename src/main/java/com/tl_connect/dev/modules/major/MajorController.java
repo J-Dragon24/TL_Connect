@@ -10,7 +10,6 @@ import com.tl_connect.dev.core.common.ultility.ResponseHelper;
 import com.tl_connect.dev.modules.major.dto.CreateMajorDTO;
 import com.tl_connect.dev.modules.major.dto.MajorAdmDTO;
 import com.tl_connect.dev.modules.major.dto.UpdateMajorDTO;
-import com.tl_connect.dev.modules.major.entity.Major;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,14 +30,14 @@ public class MajorController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createMajor(@Valid @RequestBody CreateMajorDTO dto) {
-        Major major = majorService.createMajor(dto);
-        return ResponseHelper.success("Create major successfully", major);
+        Long id = majorService.createMajor(dto);
+        return ResponseHelper.success("Create major successfully", id);
     }
 
     @PostMapping("/update/{id}")
     public ResponseEntity<?> updateMajor(@PathVariable Long id, @Valid @RequestBody UpdateMajorDTO dto) {
         majorService.updateMajor(id, dto);
-        return ResponseHelper.success("Update major successfully", dto);
+        return ResponseHelper.success("Update major successfully", null);
     }
 
     @PostMapping("/delete/{id}")

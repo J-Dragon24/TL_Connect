@@ -28,14 +28,14 @@ public class SubjectEnrollmentCondition {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "subject_id")
+    @Column(name = "subject_id", nullable = false)
     private Long subjectId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "condition_type")
+    @Column(name = "condition_type", nullable = false)
     private ConditionEnrollmentType conditionType;
 
-    @Column(name = "condition_value")
+    @Column(name = "condition_value", nullable = false)
     private BigDecimal conditionValue;
 
     @Column(name = "condition_operator")

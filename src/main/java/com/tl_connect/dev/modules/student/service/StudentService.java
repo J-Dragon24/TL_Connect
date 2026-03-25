@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.tl_connect.dev.core.common.dto.PagedResponse;
 import com.tl_connect.dev.core.common.exception.NotFoundException;
+import com.tl_connect.dev.modules.lecturer.dto.LecturerDTO;
 import com.tl_connect.dev.modules.student.dto.AcademicInfoDTO;
 import com.tl_connect.dev.modules.student.dto.ContactDTO;
 import com.tl_connect.dev.modules.student.dto.EmergencyContactDTO;
@@ -22,7 +23,6 @@ import com.tl_connect.dev.modules.student.projection.StudentRow;
 import com.tl_connect.dev.modules.student.projection.StudyYearView;
 import com.tl_connect.dev.modules.student.repository.StudentRepository;
 import com.tl_connect.dev.modules.student_class.StudentClassRepository;
-import com.tl_connect.dev.modules.student_class.dto.LecturerDTO;
 import com.tl_connect.dev.modules.student_class.dto.StudentClassInfoDTO;
 import com.tl_connect.dev.modules.student_class.dto.StudentInClassDTO;
 import com.tl_connect.dev.modules.student_class.projection.ClassHeaderView;
@@ -59,13 +59,15 @@ public class StudentService {
         }
 
         public StudentClassInfoDTO getStudentClassInfo(Long id) {
-                ClassHeaderView header = studentRepository.findClassHeaderById(id)
+                ClassHeaderView header = studentRepository.findClassHeaderByStudentId(id)
                         .orElseThrow(() -> new NotFoundException("Student class not found for student id: " + id));
                 Long classId = header.getClassId();
 
                 List<StudentInClassRow> students = studentClassRepository.findStudentsByClassId(classId);
                 return StudentClassInfoDTO.builder()
                                 .classCode(header.getClassCode())
+                                .majorName(header.getMajorName())
+                                .startYear(header.getStartYear())
                                 .academicAdvisor(LecturerDTO.builder()
                                                 .lecturerCode(header.getLecturerCode())
                                                 .fullName(header.getAcademicAdvisor())

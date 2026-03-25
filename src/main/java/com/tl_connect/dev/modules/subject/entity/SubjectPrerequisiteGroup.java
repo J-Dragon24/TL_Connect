@@ -25,7 +25,7 @@ public class SubjectPrerequisiteGroup {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "subject_id")
+    @Column(name = "subject_id", nullable = false)
     private Long subjectId;
 
     @Column(name = "min_subjects_required")

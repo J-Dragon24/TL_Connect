@@ -41,7 +41,7 @@ public class FacultyService {
     }
 
     @Transactional
-    public Faculty createFaculty(FacultyDTO facultyDTO) {
+    public Long createFaculty(FacultyDTO facultyDTO) {
         Set<ConstraintViolation<FacultyDTO>> violations = validator.validate(facultyDTO);
         if (!violations.isEmpty()) {
             String message = violations.stream()
@@ -59,14 +59,15 @@ public class FacultyService {
         faculty.setFacultyCode(facultyDTO.getFacultyCode());
         faculty.setIsActive(true);
         try {
-            return facultyRepository.save(faculty);
+            facultyRepository.save(faculty);
+            return faculty.getId();
         } catch (DataIntegrityViolationException ex) {
             throw new BadRequestException("Failed to create faculty");
         }
     }
 
     @Transactional
-    public Faculty updateFaculty(Long id, UpdateFacultyDTO facultyDTO) {
+    public void updateFaculty(Long id, UpdateFacultyDTO facultyDTO) {
         Set<ConstraintViolation<UpdateFacultyDTO>> violations = validator.validate(facultyDTO);
         if (!violations.isEmpty()) {
             String message = violations.stream()
@@ -90,7 +91,7 @@ public class FacultyService {
         }
 
         try {
-            return facultyRepository.save(faculty);
+            facultyRepository.save(faculty);
         } catch (DataIntegrityViolationException ex) {
             throw new BadRequestException("Failed to update faculty");
         }

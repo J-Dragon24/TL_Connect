@@ -3,6 +3,7 @@ package com.tl_connect.dev.modules.subject.dto;
 import java.math.BigDecimal;
 import java.util.List;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -31,6 +32,10 @@ public class UpdateSubjectDTO implements StudyDTOInterface {
     private Integer lectureHours;
     @Min(value = 1, message = "Practice hours must be >= 1")
     private Integer practiceHours;
-    private List<SubjectPrerequisiteGroupDTO> prerequisiteGroups;
+
+    @Valid
+    private List<PreGroupUpdateDTO> prerequisiteGroups;
+    
+    @Valid
     private List<EnrollmentConditionDTO> enrollmentConditions;
 }

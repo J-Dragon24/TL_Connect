@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.tl_connect.dev.core.common.exception.NotFoundException;
+import com.tl_connect.dev.modules.lecturer.dto.LecturerDTO;
 import com.tl_connect.dev.modules.schedule.dto.CourseClassDTO;
 import com.tl_connect.dev.modules.schedule.dto.DayOfWeekScheduleDTO;
 import com.tl_connect.dev.modules.schedule.dto.SemesterScheduleDTO;
@@ -16,7 +17,6 @@ import com.tl_connect.dev.modules.schedule.dto.WeeklyScheduleDTO;
 import com.tl_connect.dev.modules.schedule.projection.ScheduleRow;
 import com.tl_connect.dev.modules.semester.Semester;
 import com.tl_connect.dev.modules.semester.SemesterRepository;
-import com.tl_connect.dev.modules.student_class.dto.LecturerDTO;
 
 import lombok.RequiredArgsConstructor;
 

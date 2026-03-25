@@ -25,6 +25,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     Optional<Student> findByStudentCode(String studentCode);
 
+    boolean existsByStudentClassId(Long studentClassId);
+
     @Query(value = """
             SELECT
                 s.student_code AS studentCode,
@@ -126,19 +128,20 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             SELECT
                 c.id AS classId,
                 c.class_code AS classCode,
+                m.major_name AS major,
+                c.start_year AS startYear,
                 l.lecturer_code AS lecturerCode,
                 l.full_name AS academicAdvisor,
-                m.major_name AS major,
                 l.phone_number AS phoneNumber,
                 l.email AS email
             FROM students s
             JOIN student_classes c ON s.student_class_id = c.id
-            JOIN majors m ON c.major_id = m.id
-            JOIN academic_advisors aa ON c.id = aa.student_class_id
-            JOIN lecturers l ON aa.lecturer_id = l.id
+            LEFT JOIN majors m ON c.major_id = m.id
+            LEFT JOIN academic_advisors aa ON c.id = aa.student_class_id
+            LEFT JOIN lecturers l ON aa.lecturer_id = l.id
             WHERE s.id = :studentId
             """, nativeQuery = true)
-    Optional<ClassHeaderView> findClassHeaderById(@Param("studentId") Long studentId);
+    Optional<ClassHeaderView> findClassHeaderByStudentId(@Param("studentId") Long studentId);
 
     @Query(value = """
             SELECT

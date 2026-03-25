@@ -33,4 +33,7 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
     List<SubjectPrerequisiteConditionRow> findSubjectPrerequisiteCondition(@Param("studentId") Long studentId, @Param("subjectId") Long subjectId);
 
     boolean existsBySubjectCode(String subjectCode);
+
+    @Query("SELECT COUNT(s.id) FROM Subject s WHERE s.id IN :ids")
+    long countByIdIn(@Param("ids") List<Long> ids);
 }

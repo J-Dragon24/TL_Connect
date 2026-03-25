@@ -48,7 +48,7 @@ public class MajorService {
     }
 
     @Transactional
-    public Major createMajor(CreateMajorDTO majorDTO) {
+    public Long createMajor(CreateMajorDTO majorDTO) {
         Set<ConstraintViolation<CreateMajorDTO>> violations = validator.validate(majorDTO);
         if (!violations.isEmpty()) {
             String message = violations.stream()
@@ -71,10 +71,11 @@ public class MajorService {
             major.setIsActive(true);
 
         try {
-            return majorRepository.save(major);
+            majorRepository.save(major);
         } catch (DataIntegrityViolationException ex) {
             throw new BadRequestException("Failed to create major");
         }
+        return major.getId();
     }
 
 

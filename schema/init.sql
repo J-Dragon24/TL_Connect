@@ -300,8 +300,10 @@ CREATE TABLE semesters (
   semester_number INT NOT NULL,
   start_date DATE NOT NULL,
   end_date DATE NOT NULL,
+  is_active BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now()
+  updated_at TIMESTAMP DEFAULT now(),
+  UNIQUE(academic_years, semester_number)
 );
 
 CREATE TABLE study_program_subjects (
@@ -320,7 +322,7 @@ CREATE TABLE study_program_subjects (
 
   FOREIGN KEY (study_program_id) REFERENCES study_programs(id) ON DELETE CASCADE,
   FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE,
-  FOREIGN KEY (semester_id) REFERENCES semesters(id) ON DELETE SET NULL
+  FOREIGN KEY (semester_id) REFERENCES semesters(id) ON DELETE RESTRICT
 );
 
 CREATE TABLE course_classes (
@@ -335,7 +337,7 @@ CREATE TABLE course_classes (
   updated_at TIMESTAMP DEFAULT now(),
   FOREIGN KEY (lecturer_id) REFERENCES lecturers(id) ON DELETE SET NULL,
   FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE SET NULL,
-  FOREIGN KEY (semester_id) REFERENCES semesters(id) ON DELETE SET NULL
+  FOREIGN KEY (semester_id) REFERENCES semesters(id) ON DELETE RESTRICT
 );
 
 CREATE TABLE student_course_classes (
@@ -353,7 +355,7 @@ CREATE TABLE student_course_classes (
   FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
   FOREIGN KEY (course_class_id) REFERENCES course_classes(id) ON DELETE CASCADE,
   FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE SET NULL,
-  FOREIGN KEY (semester_id) REFERENCES semesters(id) ON DELETE SET NULL
+  FOREIGN KEY (semester_id) REFERENCES semesters(id) ON DELETE RESTRICT
 );
 
 CREATE TABLE student_course_class_logs (

@@ -16,7 +16,7 @@ import lombok.Builder;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateStudyDTO implements StudyDTOInterface {
+public class CreateSubjectDTO implements StudyDTOInterface {
     @NotNull(message = "Faculty ID is required")
     private Long facultyId;
     private Long departmentId;

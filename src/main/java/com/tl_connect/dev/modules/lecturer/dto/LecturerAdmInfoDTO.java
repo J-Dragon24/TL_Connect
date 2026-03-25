@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.student_class.dto;
+package com.tl_connect.dev.modules.lecturer.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LecturerDTO {
+public class LecturerAdmInfoDTO {
+    private Long id;
     private String lecturerCode;
     private String fullName;
-    private String phoneNumber;
     private String email;
+    private String phoneNumber;
+    private String departmentCode;
+    private String status;
 }

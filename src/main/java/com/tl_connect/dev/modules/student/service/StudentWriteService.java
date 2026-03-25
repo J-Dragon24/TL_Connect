@@ -48,6 +48,7 @@ import com.tl_connect.dev.modules.major.repository.MajorRepository;
 import com.tl_connect.dev.modules.major.repository.StudentMajorRepository;
 import com.tl_connect.dev.core.common.exception.ConflictException;
 import com.tl_connect.dev.core.common.exception.InvalidInputException;
+import com.tl_connect.dev.core.common.exception.BadRequestException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -101,7 +102,7 @@ public class StudentWriteService {
                 try {
                         return saveStudentEntities(dto, major.getId(), clazz.getId(), studyProgramId);
                 } catch (DataIntegrityViolationException e) {
-                        throw new ConflictException("Student code already exists");
+                        throw new BadRequestException("Failed to create student: " + e.getMessage());
                 }
         }
 

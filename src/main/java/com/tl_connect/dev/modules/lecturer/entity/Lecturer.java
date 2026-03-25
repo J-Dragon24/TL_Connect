@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.schedule.entity;
+package com.tl_connect.dev.modules.lecturer.entity;
 
 import java.time.LocalDateTime;
 
@@ -36,7 +36,7 @@ public class Lecturer {
     @Column(name = "full_name")
     private String fullName;
 
-    @Column(name = "lecturer_code", nullable = false)
+    @Column(name = "lecturer_code", nullable = false, unique = true)
     private String lecturerCode;
 
     @Column(name = "phone_number")

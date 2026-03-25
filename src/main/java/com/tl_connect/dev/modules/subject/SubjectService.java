@@ -1,22 +1,23 @@
 package com.tl_connect.dev.modules.subject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.tl_connect.dev.core.common.dto.PagedResponse;
 import com.tl_connect.dev.core.common.exception.BadRequestException;
-import com.tl_connect.dev.core.common.exception.ConflictException;
 import com.tl_connect.dev.core.common.exception.InvalidInputException;
 import com.tl_connect.dev.core.common.exception.NotFoundException;
-import com.tl_connect.dev.modules.major.dto.UpdateMajorDTO;
-import com.tl_connect.dev.modules.subject.dto.CreateStudyDTO;
+import com.tl_connect.dev.modules.subject.dto.CreateSubjectDTO;
 import com.tl_connect.dev.modules.subject.dto.EnrollmentConditionDTO;
+import com.tl_connect.dev.modules.subject.dto.PreGroupUpdateDTO;
 import com.tl_connect.dev.modules.subject.dto.UpdateSubjectDTO;
 import com.tl_connect.dev.modules.subject.dto.StudyDTOInterface;
 import com.tl_connect.dev.modules.subject.dto.SubjectDTO;
@@ -25,11 +26,14 @@ import com.tl_connect.dev.modules.subject.dto.SubjectPrerequisiteGroupItemDTO;
 import com.tl_connect.dev.modules.subject.entity.Subject;
 import com.tl_connect.dev.modules.subject.entity.SubjectEnrollmentCondition;
 import com.tl_connect.dev.modules.subject.entity.SubjectPrerequisiteGroup;
+import com.tl_connect.dev.modules.subject.entity.SubjectPrerequisiteGroupItem;
 import com.tl_connect.dev.modules.subject.repository.SubjectPreGroupRepository;
 import com.tl_connect.dev.modules.subject.repository.SubjectPreGroupItemRepository;
 import com.tl_connect.dev.modules.subject.repository.SubjectRepository;
 import com.tl_connect.dev.modules.subject.projection.SubjectPrerequisiteGroupItemRow;
 import com.tl_connect.dev.modules.subject.repository.SubjectEnrollmentConditionRepository;
+import com.tl_connect.dev.modules.faculty.FacultyRepository;
+import com.tl_connect.dev.modules.department.DepartmentRepository;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolation;
@@ -44,6 +48,8 @@ public class SubjectService {
     private final SubjectPreGroupRepository subjectPreGroupRepository;
     private final SubjectPreGroupItemRepository subjectPreGroupItemRepository;
     private final SubjectEnrollmentConditionRepository subjectEnrollmentConditionRepository;
+    private final FacultyRepository facultyRepository;
+    private final DepartmentRepository departmentRepository;
     private final Validator validator;
 
     public PagedResponse<Subject> getAllSubjects(Pageable pageable) {
@@ -119,8 +125,8 @@ public class SubjectService {
     }
 
     @Transactional
-    public Subject create(CreateStudyDTO dto) {
-        Set<ConstraintViolation<CreateStudyDTO>> violations = validator.validate(dto);
+    public Long create(CreateSubjectDTO dto) {
+        Set<ConstraintViolation<CreateSubjectDTO>> violations = validator.validate(dto);
         if (!violations.isEmpty()) {
             String message = violations.stream()
                     .map(ConstraintViolation::getMessage)
@@ -128,13 +134,18 @@ public class SubjectService {
             throw new InvalidInputException(message);
         }
         if (subjectRepository.existsBySubjectCode(dto.getSubjectCode())) {
-            throw new ConflictException("Subject code already exists");
+            throw new InvalidInputException("Subject code already exists");
         }
 
         Subject subject = new Subject();
         mapToEntity(dto, subject);
 
-        return subjectRepository.save(subject);
+        try {
+            subjectRepository.save(subject);
+        } catch (DataIntegrityViolationException e) {
+            throw new BadRequestException("Failed to create subject: " + e.getMessage());
+        }
+        return subject.getId();
     }
 
     @Transactional
@@ -151,58 +162,95 @@ public class SubjectService {
                 .orElseThrow(() -> new NotFoundException("Subject not found"));
 
         if (dto.getSubjectCode() != null && !subject.getSubjectCode().equals(dto.getSubjectCode()) && subjectRepository.existsBySubjectCode(dto.getSubjectCode())) {
-            throw new ConflictException("Subject code already exists");
+            throw new InvalidInputException("Subject code already exists");
         }
 
         mapToEntity(dto, subject);
 
-        subjectRepository.save(subject);
-
-        subjectRepository.flush();
+        try {
+            subjectRepository.save(subject);
+        } catch (DataIntegrityViolationException e) {
+            throw new BadRequestException("Failed to update subject");
+        }
 
         if(dto.getPrerequisiteGroups() != null){
-            for (SubjectPrerequisiteGroupDTO prerequisiteGroup : dto.getPrerequisiteGroups()) {
-                SubjectPrerequisiteGroup subjectPrerequisiteGroup = null;
-                if(prerequisiteGroup.getId() != null){
-                    subjectPrerequisiteGroup = subjectPreGroupRepository.findById(prerequisiteGroup.getId())
-                            .orElseThrow(() -> new NotFoundException("Prerequisite group not found"));
-                }else{
-                    subjectPrerequisiteGroup = new SubjectPrerequisiteGroup();
-                }
+            subjectPreGroupRepository.deleteBySubjectId(id);
+
+            for (PreGroupUpdateDTO prerequisiteGroup : dto.getPrerequisiteGroups()) {
+
+                SubjectPrerequisiteGroup subjectPrerequisiteGroup = new SubjectPrerequisiteGroup();
                 subjectPrerequisiteGroup.setSubjectId(id);
+
                 if(prerequisiteGroup.getMinSubjectsRequired() != null){
                     subjectPrerequisiteGroup.setMinSubjectsRequired(prerequisiteGroup.getMinSubjectsRequired());
                 }
                 if(prerequisiteGroup.getDescription() != null){
                     subjectPrerequisiteGroup.setDescription(prerequisiteGroup.getDescription());
                 }
-                subjectPreGroupRepository.save(subjectPrerequisiteGroup);
+                subjectPreGroupRepository.saveAndFlush(subjectPrerequisiteGroup);
+
+                List<Long> ids = prerequisiteGroup.getPrerequisiteSubjectIds();
+
+                if(ids != null && !ids.isEmpty()){
+                    long count = subjectRepository.countByIdIn(ids);
+
+                    if (count != ids.size()) {
+                        throw new NotFoundException("Some prerequisite subjects not found");
+                    }
+
+                    if(prerequisiteGroup.getMinSubjectsRequired() != null && prerequisiteGroup.getMinSubjectsRequired() > ids.size()){
+                        throw new InvalidInputException("minSubjectsRequired invalid");
+                    }
+
+                    List<SubjectPrerequisiteGroupItem> prerequisiteGroupItems = new ArrayList<>();
+                    for (Long subjectId : ids) {
+
+                        if(subjectId.equals(id)){
+                            throw new InvalidInputException("Subject cannot be prerequisite of itself");
+                        }
+
+                        SubjectPrerequisiteGroupItem subjectPrerequisiteGroupItem = SubjectPrerequisiteGroupItem.builder()
+                                .id(new SubjectPrerequisiteGroupItem.SubjectPrerequisiteGroupItemId(subjectPrerequisiteGroup.getId(), subjectId))
+                                .build();
+                        prerequisiteGroupItems.add(subjectPrerequisiteGroupItem);
+                    }
+                    try {
+                        subjectPreGroupItemRepository.saveAll(prerequisiteGroupItems);
+                    } catch (DataIntegrityViolationException e) {
+                        throw new BadRequestException("Failed to update subject: " + e.getMessage());
+                    }
+                }
             }
         }
 
         if(dto.getEnrollmentConditions() != null){
+            subjectEnrollmentConditionRepository.deleteBySubjectId(id);
             for (EnrollmentConditionDTO enrollmentCondition : dto.getEnrollmentConditions()) {
-                SubjectEnrollmentCondition subjectEnrollmentCondition = null;
-                if(enrollmentCondition.getId() != null){
-                    subjectEnrollmentCondition = subjectEnrollmentConditionRepository.findById(enrollmentCondition.getId())
-                            .orElseThrow(() -> new NotFoundException("Enrollment condition not found"));
-                }else{
-                    subjectEnrollmentCondition = new SubjectEnrollmentCondition();
-                }
+                SubjectEnrollmentCondition subjectEnrollmentCondition = new SubjectEnrollmentCondition();
+
                 subjectEnrollmentCondition.setSubjectId(id);
+
                 if(enrollmentCondition.getConditionType() != null){
                     subjectEnrollmentCondition.setConditionType(enrollmentCondition.getConditionType());
                 }
+
                 if(enrollmentCondition.getConditionValue() != null){
                     subjectEnrollmentCondition.setConditionValue(enrollmentCondition.getConditionValue());
                 }
+
                 if(enrollmentCondition.getConditionOperator() != null){
                     subjectEnrollmentCondition.setConditionOperator(enrollmentCondition.getConditionOperator());
                 }
+
                 if(enrollmentCondition.getDescription() != null){
                     subjectEnrollmentCondition.setDescription(enrollmentCondition.getDescription());
                 }
-                subjectEnrollmentConditionRepository.save(subjectEnrollmentCondition);
+
+                try {
+                    subjectEnrollmentConditionRepository.save(subjectEnrollmentCondition);
+                } catch (DataIntegrityViolationException e) {
+                    throw new BadRequestException("Failed to update subject: " + e.getMessage());
+                }
             }
         }
     }
@@ -226,13 +274,27 @@ public class SubjectService {
         if(dto.getPracticeHours() != null){
             subject.setPracticeHours(dto.getPracticeHours());
         }
-        if(dto.getFacultyId() != null){
+        if(dto.getFacultyId() != null && facultyRepository.existsById(dto.getFacultyId())){
             subject.setFacultyId(dto.getFacultyId());
         }
-        if(dto.getDepartmentId() != null){
+        if(dto.getDepartmentId() != null && departmentRepository.existsById(dto.getDepartmentId())){
             subject.setDepartmentId(dto.getDepartmentId());
         }
     }
 
+    @Transactional
+    public void delete(Long id) {
+        Subject subject = subjectRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Subject not found"));
+        if(!subject.getIsActive()){
+            throw new BadRequestException("Subject already deleted");
+        }
+        subject.setIsActive(false);
+        try {
+            subjectRepository.save(subject);
+        } catch (DataIntegrityViolationException e) {
+            throw new BadRequestException("Failed to delete subject: " + e.getMessage());
+        }
+    }
     
 }
