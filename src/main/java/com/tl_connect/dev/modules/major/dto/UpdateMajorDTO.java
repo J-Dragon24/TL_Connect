@@ -12,6 +12,5 @@ public class UpdateMajorDTO {
     private String majorName;
     @Size(min = 3, max = 10, message = "Major code must be between 3 and 10 characters")
     private String majorCode;
-    @NotNull(message = "Faculty ID is required")
     private Long facultyId;
 }

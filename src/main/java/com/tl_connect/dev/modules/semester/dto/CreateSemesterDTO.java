@@ -16,6 +16,8 @@ public class CreateSemesterDTO {
     private String academicYears;
     @NotBlank(message = "Semester name is required")
     private String semesterName;
+    @NotBlank(message = "Semester code is required")
+    private String semesterCode;
     @NotNull(message = "Semester number is required")
     @Min(1) @Max(3)
     private int semesterNumber;

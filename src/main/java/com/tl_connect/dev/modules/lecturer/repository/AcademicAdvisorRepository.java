@@ -12,7 +12,22 @@ import com.tl_connect.dev.modules.lecturer.projection.AcademicAdvisorDetailView;
 import com.tl_connect.dev.modules.lecturer.projection.AcademicAdvisorRow;
 
 public interface AcademicAdvisorRepository extends JpaRepository<AcademicAdvisor, Long> {
+
+    void deleteByStudentClassId(Long studentClassId);
+
+    @Query(value="""
+        SELECT EXISTS(
+            SELECT 1
+            FROM academic_advisors a
+            LEFT JOIN lecturers l ON a.lecturer_id = l.id
+            WHERE l.status = 'ACTIVE'
+            AND a.student_class_id = :studentClassId
+        )
+        """, nativeQuery = true)
     boolean existsByStudentClassId(Long studentClassId);
+
+    
+    void deleteByLecturerId(Long lecturerId);
 
     @Query(value="""
         SELECT 

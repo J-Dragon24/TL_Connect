@@ -69,9 +69,14 @@ public class SemesterService {
             throw new InvalidInputException("Start date must be before end date");
         }
 
+        if (semesterRepository.existsBySemesterCode(dto.getSemesterCode())) {
+            throw new InvalidInputException("Semester code " + dto.getSemesterCode() + " already exists");
+        }
+
         Semester semester = new Semester();
         semester.setAcademicYears(dto.getAcademicYears());
         semester.setSemesterName(dto.getSemesterName());
+        semester.setSemesterCode(dto.getSemesterCode());
         semester.setSemesterNumber(dto.getSemesterNumber());
         semester.setStartDate(dto.getStartDate());
         semester.setEndDate(dto.getEndDate());
@@ -109,6 +114,13 @@ public class SemesterService {
 
         if(dto.getSemesterName() != null){
             semester.setSemesterName(dto.getSemesterName());
+        }
+
+        if(dto.getSemesterCode() != null){
+            if (!dto.getSemesterCode().equals(semester.getSemesterCode()) && semesterRepository.existsBySemesterCode(dto.getSemesterCode())) {
+                throw new InvalidInputException("Semester code " + dto.getSemesterCode() + " already exists");
+            }
+            semester.setSemesterCode(dto.getSemesterCode());
         }
 
         if(dto.getStartDate() != null || dto.getEndDate() != null){

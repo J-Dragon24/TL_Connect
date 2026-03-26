@@ -28,10 +28,10 @@ public class FacultyService {
     private final FacultyRepository facultyRepository;
     private final Validator validator;
 
-    public PagedResponse<Faculty> getAllFaculties(Pageable pageable) {
+    public PagedResponse<FacultyDTO> getAllFaculties(Pageable pageable) {
         Page<Faculty> faculties = facultyRepository.findAll(pageable);
         return new PagedResponse<>(
-                faculties.getContent(),
+                faculties.getContent().stream().map(this::toDTO).toList(),
                 faculties.getNumber(),
                 faculties.getSize(),
                 faculties.getTotalElements(),
@@ -107,6 +107,15 @@ public class FacultyService {
         } catch (DataIntegrityViolationException ex) {
             throw new BadRequestException("Failed to delete faculty");
         }
+    }
+
+    private FacultyDTO toDTO(Faculty faculty) {
+        return FacultyDTO.builder()
+                .id(faculty.getId())
+                .facultyCode(faculty.getFacultyCode())
+                .facultyName(faculty.getFacultyName())
+                .isActive(faculty.getIsActive())
+                .build();
     }
     
 }

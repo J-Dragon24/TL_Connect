@@ -296,6 +296,7 @@ CREATE TABLE subject_enrollment_conditions (
 CREATE TABLE semesters (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   semester_name VARCHAR(50) NOT NULL,
+  semester_code VARCHAR(20) UNIQUE NOT NULL,
   academic_years varchar(20) NOT NULL,
   semester_number INT NOT NULL,
   start_date DATE NOT NULL,
@@ -333,6 +334,7 @@ CREATE TABLE course_classes (
   class_code VARCHAR(20) NOT NULL,
   class_name VARCHAR(100) NOT NULL,
   capacity INT NOT NULL,
+  is_active BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
   FOREIGN KEY (lecturer_id) REFERENCES lecturers(id) ON DELETE SET NULL,

@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.enroll.entity;
+package com.tl_connect.dev.modules.course_class;
 
 import java.time.LocalDateTime;
 
@@ -42,6 +42,9 @@ public class CourseClass {
 
     @Column(name = "capacity", nullable = false)
     private Integer capacity;
+
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive;
 
     @CreationTimestamp
     @Column(name = "created_at")

@@ -11,11 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.tl_connect.dev.core.common.exception.ForbiddenException;
 import com.tl_connect.dev.core.common.exception.NotFoundException;
-import com.tl_connect.dev.modules.enroll.entity.CourseClass;
 import com.tl_connect.dev.modules.enroll.entity.StudentCourseClass;
 import com.tl_connect.dev.modules.enroll.entity.StudentCourseClassLog;
 import com.tl_connect.dev.modules.enroll.repository.CourseClassLogRepository;
-import com.tl_connect.dev.modules.enroll.repository.CourseClassRepository;
 import com.tl_connect.dev.modules.enroll.repository.StudentCourseClassRepository;
 import com.tl_connect.dev.modules.study_program.projection.StudyProgramHeaderView;
 import com.tl_connect.dev.core.common.enums.EnrollAction;
@@ -25,6 +23,8 @@ import com.tl_connect.dev.modules.subject.projection.SubjectPrerequisiteConditio
 import com.tl_connect.dev.modules.subject.repository.SubjectEnrollmentConditionRepository;
 import com.tl_connect.dev.modules.subject.repository.SubjectRepository;
 import com.tl_connect.dev.modules.academic_result.AcademicResultRepository;
+import com.tl_connect.dev.modules.course_class.CourseClass;
+import com.tl_connect.dev.modules.course_class.CourseClassRepository;
 import com.tl_connect.dev.modules.study_program.StudyProgramRepository;
 import com.tl_connect.dev.modules.schedule.ScheduleRepository;
 import com.tl_connect.dev.modules.schedule.entity.ClassSchedule;

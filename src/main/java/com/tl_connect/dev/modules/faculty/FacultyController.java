@@ -23,7 +23,7 @@ public class FacultyController {
     @GetMapping("/all")
     public ResponseEntity<?> getAllFaculties(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        PagedResponse<?> response = facultyService.getAllFaculties(pageable);
+        PagedResponse<FacultyDTO> response = facultyService.getAllFaculties(pageable);
         return ResponseHelper.success("Get all faculties successfully", response);
     }
 

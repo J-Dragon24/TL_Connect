@@ -13,8 +13,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FacultyDTO {
+    private Long id;
     @NotBlank(message = "Faculty name is required")
     private String facultyName;
     @NotBlank(message = "Faculty code is required")
     private String facultyCode;
+    private Boolean isActive;
 }

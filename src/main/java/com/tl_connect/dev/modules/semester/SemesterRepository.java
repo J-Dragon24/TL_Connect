@@ -48,4 +48,13 @@ public interface SemesterRepository extends JpaRepository<Semester, Long> {
             )
             """, nativeQuery = true)
     boolean existsByAcademicYearsAndSemesterNumber(@Param("academicYears") String academicYears, @Param("semesterNumber") int semesterNumber);
+
+    @Query(value = """
+            SELECT EXISTS(
+                SELECT 1
+                FROM semesters
+                WHERE semester_code = :semesterCode
+            )
+            """, nativeQuery = true)
+    boolean existsBySemesterCode(@Param("semesterCode") String semesterCode);
 }

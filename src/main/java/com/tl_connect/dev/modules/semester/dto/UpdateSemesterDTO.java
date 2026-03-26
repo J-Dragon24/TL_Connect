@@ -18,6 +18,9 @@ public class UpdateSemesterDTO {
     @Size(min = 1, max = 10, message = "Semester name must be between 1 and 10 characters")
     private String semesterName;
 
+    @Size(min = 1, max = 10, message = "Semester code must be between 1 and 10 characters")
+    private String semesterCode;
+
     @Min(1) @Max(3)
     private Integer semesterNumber;
 
