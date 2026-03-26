@@ -37,6 +37,12 @@ public class StudentCourseClass {
     @Column(name = "course_class_id", nullable = false)
     private Long courseClassId;
 
+    @Column(name = "subject_id", nullable = false)
+    private Long subjectId;
+
+    @Column(name = "semester_id", nullable = false)
+    private Long semesterId;
+
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private StudentCourseClassStatus status;
