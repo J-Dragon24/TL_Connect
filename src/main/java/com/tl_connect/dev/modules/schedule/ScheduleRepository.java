@@ -1,6 +1,7 @@
 package com.tl_connect.dev.modules.schedule;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,6 +14,7 @@ import com.tl_connect.dev.modules.schedule.projection.ScheduleRow;
 
 @Repository
 public interface ScheduleRepository extends JpaRepository<ClassSchedule, Long> {
+
     @Query(value = """
             SELECT
                 cs.day_of_week AS dayOfWeek,
@@ -83,5 +85,19 @@ public interface ScheduleRepository extends JpaRepository<ClassSchedule, Long> {
     boolean isScheduleConflict(
         @Param("newClassId") Long newClassId,
         @Param("registeredClassIds") List<Long> registeredClassIds
+    );
+
+    @Query("""
+    SELECT s FROM ClassSchedule s
+    WHERE s.semesterId = :semesterId
+      AND (
+            s.dayOfWeek IN :days
+         OR s.courseClassId = :courseClassId
+      )
+    """)
+    List<ClassSchedule> findForConflict(
+            Set<Integer> days,
+            Long courseClassId,
+            Long semesterId
     );
 }

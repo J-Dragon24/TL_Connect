@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.exam;
+package com.tl_connect.dev.modules.exam.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tl_connect.dev.core.common.exception.UnauthorizeException;
 import com.tl_connect.dev.core.common.types.JwtUserInfo;
 import com.tl_connect.dev.core.common.ultility.ResponseHelper;
+import com.tl_connect.dev.modules.exam.ExamService;
 import com.tl_connect.dev.modules.exam.dto.ExamScheduleDTO;
 
 import lombok.RequiredArgsConstructor;

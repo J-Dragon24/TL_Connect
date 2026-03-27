@@ -57,4 +57,6 @@ public interface SemesterRepository extends JpaRepository<Semester, Long> {
             )
             """, nativeQuery = true)
     boolean existsBySemesterCode(@Param("semesterCode") String semesterCode);
+
+    boolean existsById(Long id);
 }
