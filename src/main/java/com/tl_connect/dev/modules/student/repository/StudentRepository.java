@@ -1,6 +1,7 @@
 package com.tl_connect.dev.modules.student.repository;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -26,6 +27,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     Optional<Student> findByStudentCode(String studentCode);
 
     boolean existsByStudentClassId(Long studentClassId);
+
+    List<Student> findByStudentCodeIn(Collection<String> studentCodes);
 
     @Query(value = """
             SELECT

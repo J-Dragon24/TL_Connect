@@ -197,19 +197,18 @@ public class ScheduleService {
                 CourseClass courseClass = courseClassRepository.findById(courseClassId)
                                 .orElseThrow(() -> new NotFoundException("Course class not found"));
 
-                // ===== 1. CHECK NEW VS NEW =====
-                for (int i = 0; i < newSchedules.size(); i++) {
-                        for (int j = i + 1; j < newSchedules.size(); j++) {
-                        ClassScheduleDTO a = newSchedules.get(i);
-                        ClassScheduleDTO b = newSchedules.get(j);
 
-                        if (sameDay(a, b) && overlap(a, b)) {
-                                throw new ConflictException("Time conflict in request");
-                        }
+                for (int i = 0; i < newSchedules.size(); i++) {
+                                for (int j = i + 1; j < newSchedules.size(); j++) {
+                                ClassScheduleDTO a = newSchedules.get(i);
+                                ClassScheduleDTO b = newSchedules.get(j);
+
+                                if (sameDay(a, b) && overlap(a, b)) {
+                                        throw new ConflictException("Time conflict in request");
+                                }
                         }
                 }
 
-                // ===== 2. LOAD DB 1 LẦN =====
                 Set<Integer> days = newSchedules.stream()
                         .map(ClassScheduleDTO::getDayOfWeek)
                         .collect(Collectors.toSet());
@@ -219,7 +218,7 @@ public class ScheduleService {
                 Map<Integer, List<ClassSchedule>> dbMap = dbList.stream()
                         .collect(Collectors.groupingBy(ClassSchedule::getDayOfWeek));
 
-                // ===== 3. CHECK NEW VS DB =====
+
                 for (ClassScheduleDTO dto : newSchedules) {
 
                         List<ClassSchedule> sameDayList = dbMap.getOrDefault(dto.getDayOfWeek(), List.of());
@@ -285,6 +284,10 @@ public class ScheduleService {
                 LocalTime startTime = dto.getStartTime() != null ? dto.getStartTime() : classSchedule.getStartTime();
                 LocalTime endTime = dto.getEndTime() != null ? dto.getEndTime() : classSchedule.getEndTime();
                 String room = dto.getRoom() != null ? dto.getRoom() : classSchedule.getRoom();
+
+                if (!startTime.isBefore(endTime) || !(startPeriod <= endPeriod)) {
+                    throw new BadRequestException("Start time must be before end time");
+                }
                 
                 for (ClassSchedule db : dbList) {
 

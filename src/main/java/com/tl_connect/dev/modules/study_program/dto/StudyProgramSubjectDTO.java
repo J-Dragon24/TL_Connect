@@ -15,7 +15,8 @@ import com.tl_connect.dev.modules.subject.dto.SubjectPrerequisiteGroupDTO;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class StudyProgramSubject {
+public class StudyProgramSubjectDTO {
+    private Long id;
     private String subjectCode;
     private String subjectName;
     private Integer credits;

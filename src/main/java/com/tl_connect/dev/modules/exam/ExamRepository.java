@@ -1,6 +1,9 @@
 package com.tl_connect.dev.modules.exam;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import com.tl_connect.dev.modules.exam.entity.ExamSchedule;
 import com.tl_connect.dev.modules.exam.projection.ExamScheduleAdminRow;
 import com.tl_connect.dev.modules.exam.projection.ExamScheduleView;
+import com.tl_connect.dev.modules.schedule.entity.ClassSchedule;
 
 import org.springframework.data.repository.query.Param;
 
@@ -97,4 +101,38 @@ public interface ExamRepository extends JpaRepository<ExamSchedule, Long> {
                     """,
             nativeQuery = true)
     Page<ExamScheduleAdminRow> findAllExamScheduleByFacultyId(@Param("semesterId") Long semesterId, @Param("facultyId") Long facultyId, Pageable pageable);
+
+    @Query(value = """
+        SELECT COUNT(es.id) > 0 FROM exam_schedules es
+        WHERE es.semester_id = :semesterId
+            AND es.exam_date = :examDate
+            AND es.exam_room = :room
+            AND es.start_time < :endTime
+            AND es.end_time > :startTime
+    """, nativeQuery = true)
+    boolean existsConflict(
+            @Param("examDate") LocalDate examDate,
+            @Param("semesterId") Long semesterId,
+            @Param("room") String room,
+            @Param("startTime") LocalTime startTime,
+            @Param("endTime") LocalTime endTime
+    );
+
+    @Query(value = """
+        SELECT COUNT(es.id) > 0 FROM exam_schedules es
+        WHERE es.semester_id = :semesterId
+            AND es.exam_date = :examDate
+            AND es.exam_room = :room
+            AND es.start_time < :endTime
+            AND es.end_time > :startTime
+            AND es.id != :id
+    """, nativeQuery = true)
+    boolean existsConflictExcludingId(
+            @Param("examDate") LocalDate examDate,
+            @Param("semesterId") Long semesterId,
+            @Param("room") String room,
+            @Param("startTime") LocalTime startTime,
+            @Param("endTime") LocalTime endTime,
+            @Param("id") Long id
+    );
 }

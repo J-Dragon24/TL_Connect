@@ -28,10 +28,10 @@ public class StudyProgramSubject {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "study_program_id")
+    @Column(name = "study_program_id", nullable = false)
     private Long studyProgramId;
 
-    @Column(name = "subject_id")
+    @Column(name = "subject_id", nullable = false)
     private Long subjectId;
 
     @Column(name = "semester_id", nullable = false)

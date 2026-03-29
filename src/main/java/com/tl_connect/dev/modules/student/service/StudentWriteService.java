@@ -30,8 +30,8 @@ import com.tl_connect.dev.modules.student.repository.StudentContactRepository;
 import com.tl_connect.dev.modules.student.repository.StudentRepository;
 import com.tl_connect.dev.modules.student_class.StudentClassRepository;
 import com.tl_connect.dev.modules.student_class.entity.StudentClass;
-import com.tl_connect.dev.modules.study_program.StudyProgramRepository;
 import com.tl_connect.dev.modules.study_program.entity.StudyProgram;
+import com.tl_connect.dev.modules.study_program.repository.StudyProgramRepository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

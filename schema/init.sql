@@ -11,7 +11,6 @@ DROP TABLE IF EXISTS academic_advisors CASCADE;
 DROP TABLE IF EXISTS faculties CASCADE;
 DROP TABLE IF EXISTS departments CASCADE;
 DROP TABLE IF EXISTS subjects CASCADE;
-DROP TABLE IF EXISTS subject_prerequisites CASCADE;
 DROP TABLE IF EXISTS study_programs CASCADE;
 DROP TABLE IF EXISTS study_program_subjects CASCADE;
 DROP TABLE IF EXISTS semesters CASCADE;
@@ -525,7 +524,7 @@ CREATE TABLE student_exam_registrations (
   UNIQUE (student_id, exam_schedule_id, exam_attempt),
   
   FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
-  FOREIGN KEY (exam_schedule_id) REFERENCES exam_schedules(id) ON DELETE RESTRICT
+  FOREIGN KEY (exam_schedule_id) REFERENCES exam_schedules(id) ON DELETE CASCADE
 );
 
 CREATE TABLE application_types (

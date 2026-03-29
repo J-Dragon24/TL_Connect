@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.study_program;
+package com.tl_connect.dev.modules.study_program.controller;
 
 import java.util.List;
 
@@ -13,6 +13,7 @@ import com.tl_connect.dev.core.common.types.JwtUserInfo;
 import com.tl_connect.dev.core.common.ultility.ResponseHelper;
 import com.tl_connect.dev.modules.study_program.dto.StudyProgramDTO;
 import com.tl_connect.dev.modules.study_program.dto.StudyProgramListItemDTO;
+import com.tl_connect.dev.modules.study_program.service.StudyProgramService;
 
 import org.springframework.security.core.Authentication;
 
@@ -32,7 +33,7 @@ public class StudyProgramController {
         }
         Long studentId = userInfo.userId();
 
-        List<StudyProgramListItemDTO> result = studyProgramService.getAllStudyProgram(studentId);
+        List<StudyProgramListItemDTO> result = studyProgramService.getBasicInfoStudyProgram(studentId);
         return ResponseHelper.success("Study programs retrieved successfully", result);
     }
 

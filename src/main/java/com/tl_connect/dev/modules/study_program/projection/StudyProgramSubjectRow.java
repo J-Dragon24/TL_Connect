@@ -3,6 +3,8 @@ package com.tl_connect.dev.modules.study_program.projection;
 import java.time.LocalDate;
 
 public interface StudyProgramSubjectRow {
+    Long getId();
+
     Long getSemesterId();
 
     String getSemesterName();

@@ -1,10 +1,12 @@
-package com.tl_connect.dev.modules.study_program;
+package com.tl_connect.dev.modules.study_program.repository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,13 +14,15 @@ import org.springframework.stereotype.Repository;
 
 import com.tl_connect.dev.core.common.enums.TrainingType;
 import com.tl_connect.dev.modules.study_program.entity.StudyProgram;
-
+import com.tl_connect.dev.modules.study_program.projection.StudyProgramAdmRow;
 import com.tl_connect.dev.modules.study_program.projection.StudyProgramHeaderView;
 import com.tl_connect.dev.modules.study_program.projection.StudyProgramRow;
 import com.tl_connect.dev.modules.study_program.projection.StudyProgramSubjectRow;
 
 @Repository
 public interface StudyProgramRepository extends JpaRepository<StudyProgram, Long> {
+
+    boolean existsById(Long id);
 
     @Query(value = """
             SELECT
@@ -38,6 +42,7 @@ public interface StudyProgramRepository extends JpaRepository<StudyProgram, Long
             SELECT
                 sp.id AS id,
                 sp.study_program_name AS studyProgramName,
+                sp.study_program_code AS studyProgramCode,
                 sp.start_year AS startYear,
                 sp.total_credits AS totalCredits,
                 m.major_code AS majorCode,
@@ -50,7 +55,7 @@ public interface StudyProgramRepository extends JpaRepository<StudyProgram, Long
             WHERE sp.study_program_code = :studyProgramCode
             AND sm.student_id = :studentId
             """, nativeQuery = true)
-    Optional<StudyProgramHeaderView> findStudyProgramHeader(@Param("studyProgramCode") String studyProgramCode, @Param("studentId") Long studentId);
+    Optional<StudyProgramHeaderView> findStudyProgramHeaderByStudentId(@Param("studyProgramCode") String studyProgramCode, @Param("studentId") Long studentId);
 
 
     @Query(value = """
@@ -69,6 +74,7 @@ public interface StudyProgramRepository extends JpaRepository<StudyProgram, Long
 
     @Query(value = """
             SELECT
+                sps.id AS id,
                 sem.id AS semesterId,
                 sem.semester_name AS semesterName,
                 sem.start_date AS semesterStartDate,
@@ -97,4 +103,44 @@ public interface StudyProgramRepository extends JpaRepository<StudyProgram, Long
             Long majorId, TrainingType trainingType, Integer startYear);
 
     List<StudyProgram> findByStartYearIn(Set<Integer> startYear);
+
+    @Query(value = """
+            SELECT
+                sp.id AS id,
+                sp.study_program_code AS studyProgramCode,
+                sp.study_program_name AS studyProgramName,
+                m.major_code AS majorCode,
+                sp.start_year AS startYear,
+                sp.total_credits AS totalCredits,
+                sp.training_type AS trainingType
+            FROM study_programs sp
+            JOIN majors m ON sp.major_id = m.id
+            WHERE sp.start_year = :startYear
+            ORDER BY sp.study_program_code
+            """,
+            countQuery = """
+                    SELECT COUNT(*)
+                    FROM study_programs sp
+                    JOIN majors m ON sp.major_id = m.id
+                    WHERE sp.start_year = :startYear
+                    """,
+            nativeQuery = true)
+    Page<StudyProgramAdmRow> findByStartYear(@Param("startYear") Integer startYear, Pageable pageable);
+
+    @Query(value = """
+            SELECT
+                sp.id AS id,
+                sp.study_program_name AS studyProgramName,
+                sp.study_program_code AS studyProgramCode,
+                sp.start_year AS startYear,
+                sp.total_credits AS totalCredits,
+                m.major_code AS majorCode,
+                m.major_name AS majorName,
+                f.faculty_name AS faculty
+            FROM study_programs sp
+            JOIN majors m ON sp.major_id = m.id
+            JOIN faculties f ON m.faculty_id = f.id
+            WHERE sp.id = :studyProgramId
+            """, nativeQuery = true)
+    Optional<StudyProgramHeaderView> findStudyProgramHeaderById(@Param("studyProgramId") Long studyProgramId);
 }

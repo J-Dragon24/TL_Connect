@@ -87,17 +87,17 @@ public interface ScheduleRepository extends JpaRepository<ClassSchedule, Long> {
         @Param("registeredClassIds") List<Long> registeredClassIds
     );
 
-    @Query("""
-    SELECT s FROM ClassSchedule s
-    WHERE s.semesterId = :semesterId
-      AND (
-            s.dayOfWeek IN :days
-         OR s.courseClassId = :courseClassId
-      )
-    """)
+    @Query(value = """
+        SELECT s.* FROM class_schedules s
+        WHERE s.semester_id = :semesterId
+            AND (
+                s.day_of_week IN :days
+                OR s.course_class_id = :courseClassId
+            )
+    """, nativeQuery = true)
     List<ClassSchedule> findForConflict(
-            Set<Integer> days,
-            Long courseClassId,
-            Long semesterId
+            @Param("days") Set<Integer> days,
+            @Param("courseClassId") Long courseClassId,
+            @Param("semesterId") Long semesterId
     );
 }

@@ -1,9 +1,10 @@
-package com.tl_connect.dev.modules.academic_result;
+package com.tl_connect.dev.modules.academic_result.service;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.tl_connect.dev.modules.academic_result.AcademicResultRepository;
 import com.tl_connect.dev.modules.academic_result.dto.AcademicResultDTO;
 import com.tl_connect.dev.modules.academic_result.dto.SemesterResultDTO;
 import com.tl_connect.dev.modules.academic_result.dto.SemesterSummaryDTO;

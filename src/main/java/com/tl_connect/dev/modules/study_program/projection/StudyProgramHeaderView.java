@@ -5,6 +5,8 @@ public interface StudyProgramHeaderView {
     
     String getStudyProgramName();
 
+    String getStudyProgramCode();
+
     Integer getStartYear();
 
     Integer getTotalCredits();

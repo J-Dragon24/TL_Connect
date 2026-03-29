@@ -16,6 +16,7 @@ import com.tl_connect.dev.core.common.dto.PagedResponse;
 import com.tl_connect.dev.core.common.exception.BadRequestException;
 import com.tl_connect.dev.core.common.exception.InvalidInputException;
 import com.tl_connect.dev.modules.semester.dto.CreateSemesterDTO;
+import com.tl_connect.dev.modules.semester.dto.SemesterDTO;
 import com.tl_connect.dev.modules.semester.dto.UpdateSemesterDTO;
 import com.tl_connect.dev.modules.student.dto.YearStudyDTO;
 import com.tl_connect.dev.modules.student.service.StudentService;
@@ -33,17 +34,17 @@ public class SemesterService {
     private final StudentService studentInfoService;
     private final Validator validator;
     
-    public List<Semester> getAllStudentSemesters(Long studentId) {
+    public List<SemesterDTO> getAllStudentSemesters(Long studentId) {
         YearStudyDTO yearStudy = studentInfoService.getYearStudy(studentId);
         
         List<Semester> semesters = semesterRepository.findAllStudentSemester(yearStudy.getStartYear(), yearStudy.getEndYear());
-            return semesters;
+        return semesters.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
-    public PagedResponse<Semester> getAll(Pageable pageable) {
+    public PagedResponse<SemesterDTO> getAll(Pageable pageable) {
         Page<Semester> semesters = semesterRepository.findAll(pageable);
         return new PagedResponse<>(
-                semesters.getContent(),
+                semesters.getContent().stream().map(this::toDTO).collect(Collectors.toList()),
                 semesters.getNumber(),
                 semesters.getSize(),
                 semesters.getTotalElements(),
@@ -153,5 +154,18 @@ public class SemesterService {
         } catch (DataIntegrityViolationException e) {
             throw new BadRequestException("Failed to delete semester");
         }
+    }
+
+    private SemesterDTO toDTO(Semester semester){
+        return SemesterDTO.builder()
+                .id(semester.getId())
+                .semesterName(semester.getSemesterName())
+                .semesterCode(semester.getSemesterCode())
+                .academicYears(semester.getAcademicYears())
+                .semesterNumber(semester.getSemesterNumber())
+                .startDate(semester.getStartDate())
+                .endDate(semester.getEndDate())
+                .isActive(semester.getIsActive())
+                .build();
     }
 }

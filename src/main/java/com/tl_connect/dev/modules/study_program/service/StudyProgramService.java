@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.study_program;
+package com.tl_connect.dev.modules.study_program.service;
 
 import java.util.Comparator;
 import java.util.List;
@@ -6,14 +6,18 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.tl_connect.dev.core.common.dto.PagedResponse;
 import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.study_program.projection.StudyProgramRow;
 import com.tl_connect.dev.modules.study_program.dto.StudyProgramListItemDTO;
-import com.tl_connect.dev.modules.study_program.dto.StudyProgramSubject;
+import com.tl_connect.dev.modules.study_program.dto.StudyProgramSubjectDTO;
 import com.tl_connect.dev.modules.study_program.dto.MajorDTO;
 import com.tl_connect.dev.modules.study_program.dto.SemesterSubjectsDTO;
+import com.tl_connect.dev.modules.study_program.dto.StudyProgramAdmDTO;
 import com.tl_connect.dev.modules.study_program.dto.StudyProgramDTO;
 import com.tl_connect.dev.modules.subject.dto.SubjectPrerequisiteGroupDTO;
 import com.tl_connect.dev.modules.subject.dto.SubjectPrerequisiteGroupItemDTO;
@@ -23,6 +27,8 @@ import com.tl_connect.dev.modules.subject.repository.SubjectPreGroupItemReposito
 import com.tl_connect.dev.modules.subject.repository.SubjectPreGroupRepository;
 import com.tl_connect.dev.modules.study_program.projection.StudyProgramHeaderView;
 import com.tl_connect.dev.modules.study_program.projection.StudyProgramSubjectRow;
+import com.tl_connect.dev.modules.study_program.repository.StudyProgramRepository;
+import com.tl_connect.dev.modules.study_program.projection.StudyProgramAdmRow;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,7 +40,41 @@ public class StudyProgramService {
         private final SubjectPreGroupRepository subjectPreGroupRepository;
         private final SubjectPreGroupItemRepository subjectPreGroupItemRepository;
 
-        public List<StudyProgramListItemDTO> getAllStudyProgram(Long studentId) {
+        public PagedResponse<StudyProgramAdmDTO> getAllStudyProgram(Pageable pageable, Integer startYear) {
+                Page<StudyProgramAdmRow> page = studyProgramRepository.findByStartYear(startYear, pageable);
+                return new PagedResponse<>(
+                        page.getContent().stream().map(this::toDTO).toList(),
+                        page.getNumber(),
+                        page.getSize(),
+                        page.getTotalElements(),
+                        page.getTotalPages(),
+                        page.isFirst(),
+                        page.isLast());
+        }
+
+        public StudyProgramDTO getDetailedStudyProgram(Long studyProgramId) {
+                StudyProgramHeaderView header = studyProgramRepository.findStudyProgramHeaderById(studyProgramId)
+                                .orElseThrow(() -> new NotFoundException("Study program not found"));
+
+                List<StudyProgramSubjectRow> studyProgramSubjects = studyProgramRepository
+                                .findSubjectsByProgramId(header.getId());
+
+                List<Long> subjectIds = studyProgramSubjects.stream()
+                                .map(StudyProgramSubjectRow::getSubjectId)
+                                .collect(Collectors.toList());
+                
+                List<SubjectPrerequisiteGroup> subjectPrerequisiteGroups = subjectPreGroupRepository.findBySubjectIdIn(subjectIds);
+
+                List<Long> groupIds = subjectPrerequisiteGroups.stream()
+                                .map(SubjectPrerequisiteGroup::getId)
+                                .collect(Collectors.toList());
+
+                List<SubjectPrerequisiteGroupItemRow> subjectPrerequisiteGroupItems = subjectPreGroupItemRepository.findByGroupIdIn(groupIds);
+
+                return mapStudyProgram(header, studyProgramSubjects, subjectPrerequisiteGroups, subjectPrerequisiteGroupItems);
+        }
+
+        public List<StudyProgramListItemDTO> getBasicInfoStudyProgram(Long studentId) {
                 List<StudyProgramRow> studyPrograms = studyProgramRepository.findAllStudyProgram(studentId);
                 return studyPrograms.stream().map(
                                 studyProgram -> StudyProgramListItemDTO.builder()
@@ -48,7 +88,7 @@ public class StudyProgramService {
         }
 
         public StudyProgramDTO getStudyProgram(String studyProgramCode, Long studentId) {
-                StudyProgramHeaderView header = studyProgramRepository.findStudyProgramHeader(studyProgramCode, studentId)
+                StudyProgramHeaderView header = studyProgramRepository.findStudyProgramHeaderByStudentId(studyProgramCode, studentId)
                                 .orElseThrow(() -> new NotFoundException("Study program not found"));
 
                 List<StudyProgramSubjectRow> studyProgramSubjects = studyProgramRepository
@@ -97,6 +137,7 @@ public class StudyProgramService {
 
                 StudyProgramDTO studyProgram = StudyProgramDTO.builder()
                                 .studyProgramName(header.getStudyProgramName())
+                                .studyProgramCode(header.getStudyProgramCode())
                                 .yearStart(header.getStartYear())
                                 .totalCredits(header.getTotalCredits())
                                 .major(major)
@@ -120,7 +161,7 @@ public class StudyProgramService {
                                 (a, b) -> a
                         ));
 
-                List<StudyProgramSubject> subjects = uniqueSubjects.values().stream()
+                List<StudyProgramSubjectDTO> subjects = uniqueSubjects.values().stream()
                         .map(s -> mapSubject(s, groupsBySubjectId, itemsByGroupId))
                         .toList();
 
@@ -132,7 +173,7 @@ public class StudyProgramService {
                         .build();
         }
         
-        private StudyProgramSubject mapSubject(
+        private StudyProgramSubjectDTO mapSubject(
                 StudyProgramSubjectRow s,
                 Map<Long, List<SubjectPrerequisiteGroup>> groupsBySubjectId,
                 Map<Long, List<SubjectPrerequisiteGroupItemRow>> itemsByGroupId
@@ -144,7 +185,8 @@ public class StudyProgramService {
                         .map(group -> mapGroup(group, itemsByGroupId))
                         .toList();
 
-                return StudyProgramSubject.builder()
+                return StudyProgramSubjectDTO.builder()
+                        .id(s.getId())
                         .subjectCode(s.getSubjectCode())
                         .subjectName(s.getSubjectName())
                         .credits(s.getCredits())
@@ -177,5 +219,17 @@ public class StudyProgramService {
                         .description(group.getDescription())
                         .items(itemsDTO)
                         .build();
+        }
+
+        private StudyProgramAdmDTO toDTO(StudyProgramAdmRow row) {
+                return StudyProgramAdmDTO.builder()
+                                .id(row.getId())
+                                .studyProgramCode(row.getStudyProgramCode())
+                                .studyProgramName(row.getStudyProgramName())
+                                .majorCode(row.getMajorCode())
+                                .startYear(row.getStartYear())
+                                .totalCredits(row.getTotalCredits())
+                                .trainingType(row.getTrainingType())
+                                .build();
         }
 }

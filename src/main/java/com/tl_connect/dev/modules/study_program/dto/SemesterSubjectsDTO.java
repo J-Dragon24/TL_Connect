@@ -18,5 +18,5 @@ public class SemesterSubjectsDTO {
     private String semesterName;
     private LocalDate semesterStartDate;
     private LocalDate semesterEndDate;
-    private List<StudyProgramSubject> subjects;
+    private List<StudyProgramSubjectDTO> subjects;
 }

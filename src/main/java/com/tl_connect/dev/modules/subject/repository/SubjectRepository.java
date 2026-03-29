@@ -2,6 +2,9 @@ package com.tl_connect.dev.modules.subject.repository;
 
 import java.util.List;
 
+import java.util.Optional;
+import java.util.Set;
+
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,6 +16,11 @@ import com.tl_connect.dev.modules.subject.projection.SubjectPrerequisiteConditio
 
 @Repository
 public interface SubjectRepository extends JpaRepository<Subject, Long> {
+
+    List<Subject> findBySubjectCodeIn(Set<String> subjectCodes);
+
+    Optional<Subject> findBySubjectCode(String subjectCode);
+    
     @Query(value ="""
             SELECT g.id AS id,
                 g.min_subjects_required AS minSubjectsRequired,
@@ -33,6 +41,8 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
     List<SubjectPrerequisiteConditionRow> findSubjectPrerequisiteCondition(@Param("studentId") Long studentId, @Param("subjectId") Long subjectId);
 
     boolean existsBySubjectCode(String subjectCode);
+
+    boolean existsById(Long id);
 
     @Query("SELECT COUNT(s.id) FROM Subject s WHERE s.id IN :ids")
     long countByIdIn(@Param("ids") List<Long> ids);

@@ -1,6 +1,6 @@
 package com.tl_connect.dev.modules.study_program.dto;
 
-import java.util.List;
+import com.tl_connect.dev.core.common.enums.TrainingType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,13 +11,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class StudyProgramDTO {
-    private String studyProgramName;
+@NoArgsConstructor
+public class StudyProgramAdmDTO {
+    private Long id;
     private String studyProgramCode;
-    private Integer yearStart;
+    private String studyProgramName;
+    private String majorCode;
+    private Integer startYear;
     private Integer totalCredits;
-    private MajorDTO major;
-    private List<SemesterSubjectsDTO> semesters;
+    private TrainingType trainingType;
 }
