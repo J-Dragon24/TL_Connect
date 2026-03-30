@@ -1,6 +1,5 @@
 package com.tl_connect.dev.modules.major.dto;
 
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;

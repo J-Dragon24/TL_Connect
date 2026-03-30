@@ -3,6 +3,7 @@ package com.tl_connect.dev.modules.study_program.controller;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,8 +37,7 @@ public class StudyProgramAdminController {
     private final StudyProgramSubjectService studyProgramSubjectService;
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAllStudyProgram(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(required = true) Integer startYear){
-        Pageable pageable = PageRequest.of(page, size);
+    public ResponseEntity<?> getAllStudyProgram(@PageableDefault(page = 0, size = 10) Pageable pageable, @RequestParam(required = true) Integer startYear){
         PagedResponse<StudyProgramAdmDTO> result = studyProgramService.getAllStudyProgram(pageable, startYear);
         return ResponseHelper.success("Study programs retrieved successfully", result);
     }

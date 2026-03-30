@@ -1,9 +1,9 @@
 package com.tl_connect.dev.modules.course_class;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.data.domain.PageRequest;
 
 import com.tl_connect.dev.core.common.ultility.ResponseHelper;
 import com.tl_connect.dev.modules.course_class.dto.CreateCourseClassDTO;
@@ -20,8 +20,7 @@ public class CourseClassController {
     private final CourseClassService courseClassService;
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public ResponseEntity<?> getAll( @PageableDefault(page = 0, size = 10) Pageable pageable) {
         return ResponseHelper.success("Get all course classes successfully",courseClassService.getAll(pageable));
     }
 

@@ -39,7 +39,7 @@ public class ApplicationController {
             Authentication authentication,
             @RequestParam("file") List<MultipartFile> files,
             @RequestParam("application-type") Long applicationType,
-            @RequestParam("content") String content) throws IOException {
+            @RequestParam(value = "content", required = false) String content) throws IOException {
         if (files == null || files.isEmpty()) {
             throw new InvalidInputException("File is empty");
         }

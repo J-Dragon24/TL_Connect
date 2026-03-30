@@ -30,4 +30,22 @@ public interface TuitionInvoiceItemRepository extends JpaRepository<TuitionInvoi
         WHERE ti.invoice_id = :invoiceId
     """, nativeQuery = true)
     List<TuitionItemProjection> findItemsByInvoiceId(Long invoiceId, Long studentId);
+
+    @Query(value = """
+        SELECT 
+            c.id as id,
+            sub.subject_name as subjectName,
+            ti.credits as credits,
+            ti.price_per_credit as pricePerCredit,
+            ti.coefficient as coefficient,
+            ti.amount as amount,
+            scc.is_retake as isRetake
+        FROM tuition_invoice_items ti
+        JOIN course_classes c ON ti.course_class_id = c.id
+        JOIN subjects sub ON c.subject_id = sub.id
+        LEFT JOIN student_course_classes scc 
+            ON scc.course_class_id = c.id
+        WHERE ti.invoice_id = :invoiceId
+    """, nativeQuery = true)
+    List<TuitionItemProjection> findItemsByInvoiceId(Long invoiceId);
 }

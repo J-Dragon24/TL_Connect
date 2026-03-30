@@ -1,7 +1,7 @@
 package com.tl_connect.dev.modules.department;
 
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,8 +22,7 @@ public class DepartmentController {
     private final DepartmentService departmentService;
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAllDepartments(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public ResponseEntity<?> getAllDepartments(@PageableDefault(page = 0, size = 10) Pageable pageable) {
         PagedResponse<DepartmentDTO> response = departmentService.getAllDepartments(pageable);
         return ResponseHelper.success("Get all departments successfully", response);
     }

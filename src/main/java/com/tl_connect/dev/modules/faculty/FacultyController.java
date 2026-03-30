@@ -1,7 +1,7 @@
 package com.tl_connect.dev.modules.faculty;
 
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,8 +21,7 @@ public class FacultyController {
     private final FacultyService facultyService;
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAllFaculties(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public ResponseEntity<?> getAllFaculties(@PageableDefault(page = 0, size = 10) Pageable pageable) {
         PagedResponse<FacultyDTO> response = facultyService.getAllFaculties(pageable);
         return ResponseHelper.success("Get all faculties successfully", response);
     }

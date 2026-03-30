@@ -17,7 +17,7 @@ import com.tl_connect.dev.core.common.dto.ImportResultDTO;
 import com.tl_connect.dev.core.common.ultility.ResponseHelper;
 import com.tl_connect.dev.modules.academic_result.dto.CreateStudentSubjectResultDTO;
 import com.tl_connect.dev.modules.academic_result.dto.UpdateStudentSubjectResultDTO;
-import com.tl_connect.dev.modules.academic_result.service.AcademicResultMofidyService;
+import com.tl_connect.dev.modules.academic_result.service.AcademicResultModifyService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/admin/academic-results")
 @RequiredArgsConstructor
 public class AcademicResultAdminController {
-    private final AcademicResultMofidyService academicResultMofidyService;
+    private final AcademicResultModifyService academicResultMofidyService;
 
     @PostMapping("/create")
     public ResponseEntity<?> createStudentSubjectResult(@Valid @RequestBody CreateStudentSubjectResultDTO dto) {

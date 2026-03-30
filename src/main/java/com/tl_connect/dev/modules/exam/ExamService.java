@@ -96,7 +96,7 @@ public class ExamService {
     }
 
     @Transactional
-    public void createExamSchedule(CreateExamScheduleDTO createExamScheduleDTO){
+    public Long createExamSchedule(CreateExamScheduleDTO createExamScheduleDTO){
         Set<ConstraintViolation<CreateExamScheduleDTO>> violations = validator.validate(createExamScheduleDTO);
         if (!violations.isEmpty()) {
             String message = violations.stream()
@@ -133,6 +133,7 @@ public class ExamService {
         }catch(DataIntegrityViolationException e){
             throw new BadRequestException("Invalid exam schedule data: " + e.getMessage());
         }
+        return examSchedule.getId();
     }
 
     @Transactional

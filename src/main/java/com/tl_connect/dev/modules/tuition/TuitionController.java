@@ -14,6 +14,7 @@ import com.tl_connect.dev.core.common.types.JwtUserInfo;
 import com.tl_connect.dev.core.common.ultility.ResponseHelper;
 import com.tl_connect.dev.modules.tuition.dto.TuitionInvoiceDTO;
 import com.tl_connect.dev.modules.tuition.dto.TuitionInvoiceDetailDTO;
+import com.tl_connect.dev.modules.tuition.service.TuitionService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,7 +31,7 @@ public class TuitionController {
             throw new UnauthorizeException("Authentication required");
         }
         Long studentId = userInfo.userId();
-        List<TuitionInvoiceDTO> tuitionInvoices = tuitionService.getTuitionInvoices(studentId);
+        List<TuitionInvoiceDTO> tuitionInvoices = tuitionService.getTuitionInvoicesByStudent(studentId);
         return ResponseHelper.success("Get tuition invoices successfully", tuitionInvoices);
     }
 
@@ -40,7 +41,7 @@ public class TuitionController {
             throw new UnauthorizeException("Authentication required");
         }
         Long studentId = userInfo.userId();
-        TuitionInvoiceDetailDTO tuitionInvoiceDetail = tuitionService.getInvoiceDetail(invoiceId, studentId);
+        TuitionInvoiceDetailDTO tuitionInvoiceDetail = tuitionService.getInvoiceDetailByStudent(invoiceId, studentId);
         return ResponseHelper.success("Get tuition invoice detail successfully", tuitionInvoiceDetail);
     }
 }

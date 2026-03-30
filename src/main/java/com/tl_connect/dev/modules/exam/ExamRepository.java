@@ -3,7 +3,6 @@ package com.tl_connect.dev.modules.exam;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Repository;
 import com.tl_connect.dev.modules.exam.entity.ExamSchedule;
 import com.tl_connect.dev.modules.exam.projection.ExamScheduleAdminRow;
 import com.tl_connect.dev.modules.exam.projection.ExamScheduleView;
-import com.tl_connect.dev.modules.schedule.entity.ClassSchedule;
 
 import org.springframework.data.repository.query.Param;
 

@@ -5,9 +5,11 @@ import java.time.LocalDate;
 
 import com.tl_connect.dev.core.common.enums.TuitionStatus;
 
-public interface TuitionInvoiceView {
-    Long getInvoiceId();
+public interface TuitionInvoiceRow {
+    Long getId();
     String getSemesterCode();
+    String getStudentName();
+    String getStudentCode();
     BigDecimal getTotalAmount();
     BigDecimal getFinalAmount();
     TuitionStatus getStatus();

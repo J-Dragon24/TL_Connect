@@ -21,7 +21,8 @@ public class ScheduleAdminController {
 
     @GetMapping("/{courseClassId}")
     public ResponseEntity<?> getDetail(@PathVariable Long courseClassId) {
-        return ResponseHelper.success("Get detail schedule successfully",scheduleService.getAllClassSchedules(courseClassId));
+        List<ClassScheduleDTO> list = scheduleService.getAllClassSchedules(courseClassId);
+        return ResponseHelper.success("Get detail schedule successfully",list);
     }
 
     @PostMapping("/create/{courseClassId}")

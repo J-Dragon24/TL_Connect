@@ -12,6 +12,7 @@ import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.lecturer.dto.AcademicAdvisorDTO;
 import com.tl_connect.dev.modules.lecturer.dto.AcademicAdvisorDetailDTO;
 import com.tl_connect.dev.modules.lecturer.dto.ClassBasicInfoDTO;
+import com.tl_connect.dev.modules.lecturer.dto.CreateAcademicAdvisorDTO;
 import com.tl_connect.dev.modules.lecturer.entity.AcademicAdvisor;
 import com.tl_connect.dev.modules.lecturer.projection.AcademicAdvisorDetailView;
 import com.tl_connect.dev.modules.lecturer.projection.AcademicAdvisorRow;
@@ -60,24 +61,27 @@ public class AcademicAdvisorService {
     }
 
     @Transactional
-    public void create(Long lecturerId, Long studentClassId) {
+    public Long create(CreateAcademicAdvisorDTO dto) {
 
-        if(!lecturerRepository.existsById(lecturerId)) {
+        if(!lecturerRepository.existsById(dto.getLecturerId())) {
             throw new NotFoundException("Lecturer not found");
         }
 
-        if(academicAdvisorRepository.existsByStudentClassId(studentClassId)) {
+        if(academicAdvisorRepository.existsByStudentClassId(dto.getStudentClassId())) {
             throw new ConflictException("Student class already has an academic advisor");
         }
 
+
+        AcademicAdvisor academicAdvisor = AcademicAdvisor.builder()
+                .lecturerId(dto.getLecturerId())
+                .studentClassId(dto.getStudentClassId())
+                .build();
         try {
-            academicAdvisorRepository.save(AcademicAdvisor.builder()
-                    .lecturerId(lecturerId)
-                    .studentClassId(studentClassId)
-                    .build());
+            academicAdvisorRepository.save(academicAdvisor);
         } catch (DataIntegrityViolationException e) {
             throw new BadRequestException("Failed to create academic advisor");
         }
+        return academicAdvisor.getId();
     }
 
     @Transactional

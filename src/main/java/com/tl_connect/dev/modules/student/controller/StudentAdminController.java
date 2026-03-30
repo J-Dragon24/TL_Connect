@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,15 +36,13 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/v1/admin/student")
 @RequiredArgsConstructor
-public class AdminStudentController {
+public class StudentAdminController {
 
     private final StudentWriteService studentWriteService;
     private final StudentUpdateService studentUpdateService;
     private final StudentDeleteService studentDeleteService;
     private final StudentService studentService;
     private final FileHelper fileHelper;
-
-    private static final int PAGE_SIZE = 50;
 
     @PostMapping("/import")
     public ResponseEntity<?> importFile(@RequestParam("file") MultipartFile file) throws IOException {
@@ -66,8 +65,7 @@ public class AdminStudentController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAllStudents(@RequestParam(defaultValue = "0") int page) {
-        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+    public ResponseEntity<?> getAllStudents(@PageableDefault(page = 0, size = 50) Pageable pageable) {
         PagedResponse<StudentFullInfo> result = studentService.getAllStudents(pageable);
         return ResponseHelper.success("Get all students successfully", result);
     }

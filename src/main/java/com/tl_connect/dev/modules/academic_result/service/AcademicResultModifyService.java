@@ -40,7 +40,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class AcademicResultMofidyService {
+public class AcademicResultModifyService {
 
     private final AcademicResultRepository academicResultRepository;
     private final SubjectRepository subjectRepository;

@@ -1,7 +1,7 @@
 package com.tl_connect.dev.modules.major;
 
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,8 +22,7 @@ public class MajorController {
     private final MajorService majorService;
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAllMajors(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public ResponseEntity<?> getAllMajors(@PageableDefault(page = 0, size = 10) Pageable pageable) {
         PagedResponse<MajorAdmDTO> result = majorService.getAllMajors(pageable);
         return ResponseHelper.success("Get all majors successfully", result);
     }

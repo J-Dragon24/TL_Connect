@@ -13,11 +13,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-public class TuitionInvoiceDTO {
+@AllArgsConstructor
+@NoArgsConstructor
+public class TuitionInvoiceAdmDTO {
     private Long invoiceId;
+    private String studentName;
+    private String studentCode;
     private String semesterCode;
     private BigDecimal totalAmount;
     private BigDecimal finalAmount;
