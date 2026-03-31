@@ -19,6 +19,8 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
 
     List<Subject> findBySubjectCodeIn(Set<String> subjectCodes);
 
+    List<Subject> findByIdIn(List<Long> ids);
+
     Optional<Subject> findBySubjectCode(String subjectCode);
     
     @Query(value ="""

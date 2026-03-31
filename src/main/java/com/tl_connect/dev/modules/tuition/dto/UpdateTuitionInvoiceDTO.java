@@ -13,10 +13,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UpdateTuitionInvoiceDTO {
-    @NotNull(message = "Student ID is required")
-    private Long studentId;
-    @NotNull(message = "Semester ID is required")
-    private Long semesterId;
     private List<Long> subjectIds;
     @NotNull(message = "Due date is required")
     private LocalDate dueDate;

@@ -6,8 +6,10 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tl_connect.dev.modules.tuition.entity.TuitionInvoice;
 import com.tl_connect.dev.modules.tuition.projection.TuitionInvoiceRow;
@@ -16,6 +18,8 @@ import org.springframework.data.repository.query.Param;
 
 @Repository
 public interface TuitionInvoiceRepository extends JpaRepository<TuitionInvoice, Long> {
+
+    Optional<TuitionInvoice> findByStudentIdAndSemesterId(Long studentId, Long semesterId);
 
     @Query(value = """
             SELECT 
@@ -89,4 +93,30 @@ public interface TuitionInvoiceRepository extends JpaRepository<TuitionInvoice, 
             WHERE t.id = :invoiceId
             """, nativeQuery = true)
     Optional<TuitionInvoiceRow> findByTuitionInvoiceId(@Param("invoiceId") Long invoiceId);
+
+    @Modifying
+    @Transactional
+    @Query(value = """
+        INSERT INTO tuition_invoices (student_id, semester_id, due_date, total_amount, final_amount, status)
+        SELECT 
+            s.student_id,
+            s.semester_id,
+            CURRENT_DATE + INTERVAL '15 days',
+            SUM(sub.credits * sub.coefficient * cfg.base_price_per_credit),
+            SUM(sub.credits * sub.coefficient * cfg.base_price_per_credit),
+            'UNPAID'
+        FROM student_course_classes s
+        JOIN subjects sub ON s.subject_id = sub.id
+        JOIN tuition_fee_configs cfg 
+            ON CURRENT_DATE BETWEEN cfg.effective_from AND cfg.effective_to
+        WHERE s.semester_id = :semesterId
+        AND s.status = 'ENROLLED'
+        AND NOT EXISTS (
+            SELECT 1 FROM tuition_invoices ti 
+            WHERE ti.student_id = s.student_id 
+            AND ti.semester_id = s.semester_id
+        )
+        GROUP BY s.student_id, s.semester_id
+    """, nativeQuery = true)
+    void insertInvoicesBySemester(Long semesterId);
 }

@@ -69,4 +69,6 @@ public interface StudentCourseClassRepository extends JpaRepository<StudentCours
         @Param("semesterId") Long semesterId,
         @Param("status") Set<StudentCourseClassStatus> status
     );
+
+    List<StudentCourseClass> findByStudentIdAndSemesterIdAndStatus(Long studentId, Long semesterId, StudentCourseClassStatus status);
 }
