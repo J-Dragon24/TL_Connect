@@ -15,6 +15,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class StudentInClassDTO {
     private String studentCode;
+    private String position;
     private String fullName;
     private Gender gender;
 }

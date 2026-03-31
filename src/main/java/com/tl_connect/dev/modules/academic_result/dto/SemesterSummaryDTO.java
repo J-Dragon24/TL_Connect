@@ -18,5 +18,4 @@ public class SemesterSummaryDTO {
     private Integer creditsPassed;
     private BigDecimal semesterGpa;
     private Integer conductScore;
-    private BigDecimal cumulativeGpa;
 }

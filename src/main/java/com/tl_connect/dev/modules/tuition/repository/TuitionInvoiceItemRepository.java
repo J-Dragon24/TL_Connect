@@ -51,4 +51,6 @@ public interface TuitionInvoiceItemRepository extends JpaRepository<TuitionInvoi
     """, nativeQuery = true)
     List<TuitionItemProjection> findItemsByInvoiceId(Long invoiceId);
 
+    List<TuitionInvoiceItem> findAllByInvoiceId(Long invoiceId);
+
 }

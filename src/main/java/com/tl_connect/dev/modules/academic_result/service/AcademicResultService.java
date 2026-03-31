@@ -61,7 +61,6 @@ public class AcademicResultService {
                                         .creditsPassed(semesterSummary.getCreditsPassed())
                                         .semesterGpa(semesterSummary.getSemesterGpa())
                                         .conductScore(semesterSummary.getConductScore())
-                                        .cumulativeGpa(semesterSummary.getCumulativeGpa().setScale(2, RoundingMode.HALF_UP))
                                         .build();
                         }
                         return SemesterResultDTO.builder()

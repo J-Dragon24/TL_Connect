@@ -22,10 +22,13 @@ public interface StudentClassRepository extends JpaRepository<StudentClass, Long
     @Query(value = """
             SELECT
                 s.student_code AS studentCode,
+                ai.position AS position,
                 s.full_name AS fullName,
                 s.gender AS gender
             FROM students s
             JOIN student_classes c ON s.student_class_id = c.id
+            JOIN student_majors sm ON s.id = sm.student_id
+            JOIN academic_infos ai ON sm.id = ai.student_major_id
             WHERE c.id = :classId
             """, nativeQuery = true)
     List<StudentInClassRow> findStudentsByClassId(@Param("classId") Long classId);

@@ -414,7 +414,8 @@ CREATE TABLE payment (
   amount DECIMAL(10,2) NOT NULL,
   provider VARCHAR(20),
   transaction_code VARCHAR(100) UNIQUE NOT NULL,
-  status VARCHAR(20) NOT NULL DEFAULT 'PENDING' CHECK (status IN ('PENDING','SUCCESS','FAILED')),
+  provider_trans_id BIGINT,
+  status VARCHAR(20) NOT NULL DEFAULT 'PENDING' CHECK (status IN ('PENDING','SUCCESS','FAILED', 'REFUND_PENDING', 'REFUNDED')),
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
   FOREIGN KEY (invoice_id) REFERENCES tuition_invoices(id) ON DELETE RESTRICT

@@ -8,5 +8,4 @@ public interface SemesterSummaryView {
     Integer getCreditsPassed();
     BigDecimal getSemesterGpa();
     Integer getConductScore();
-    BigDecimal getCumulativeGpa();
 }

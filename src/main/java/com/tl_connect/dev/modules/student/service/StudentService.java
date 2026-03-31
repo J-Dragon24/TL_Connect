@@ -76,6 +76,7 @@ public class StudentService {
                                                 .build())
                                 .students(students.stream().map(student -> StudentInClassDTO.builder()
                                                 .studentCode(student.getStudentCode())
+                                                .position(student.getPosition())
                                                 .fullName(student.getFullName())
                                                 .gender(student.getGender())
                                                 .build())

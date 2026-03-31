@@ -24,7 +24,6 @@ public class StudentFullInfo {
     private Gender gender;
     private String classCode;
     private String majorCode;
-    private String academicAdvisor;
     private int startYear;
     private int endYear;
     private TrainingType trainingType;

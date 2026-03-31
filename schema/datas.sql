@@ -132,14 +132,14 @@ INSERT INTO student_contacts (student_id, phone_number, address, email_personal)
 (7,'0900000007','HCM','h1@gmail.com');
 
 -- emergency_contacts
-INSERT INTO emergency_contacts (student_id, full_name, phone_number, address) VALUES
-(1,'Bo A','0911111111','Cha'),
-(2,'Me B','0922222222','Me'),
-(3,'Bo D','0933333333','Cha'),
-(4,'Me E','0944444444','Me'),
-(5,'Bo F','0955555555','Cha'),
-(6,'Me G','0966666666','Me'),
-(7,'Bo H','0977777777','Cha');
+INSERT INTO emergency_contacts (student_id, full_name, phone_number, relationship, address) VALUES
+(1,'Bo A','0911111111','Cha', 'Ha Noi'),
+(2,'Me B','0922222222','Me', 'Ha Noi'),
+(3,'Bo D','0933333333','Cha', 'Ha Noi'),
+(4,'Me E','0944444444','Me', 'Ha Noi'),
+(5,'Bo F','0955555555','Cha', 'Ha Noi'),
+(6,'Me G','0966666666','Me', 'Ha Noi'),
+(7,'Bo H','0977777777','Cha', 'Ha Noi');
 
 -- identity_cards
 INSERT INTO identity_cards (student_id, card_number, card_type, issued_date, issued_place) VALUES

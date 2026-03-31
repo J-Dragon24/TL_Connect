@@ -4,6 +4,7 @@ import com.tl_connect.dev.core.common.enums.Gender;
 
 public interface StudentInClassRow {
     String getStudentCode();
+    String getPosition();
     String getFullName();
     Gender getGender();
 }

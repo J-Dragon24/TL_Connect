@@ -42,16 +42,10 @@ public interface AcademicResultRepository extends JpaRepository<StudentSubjectRe
         @Query(value = """
                         SELECT
                             sem.semester_name AS semester,
-                            sss.credits_registered AS credits,
+                            sss.credits_registered AS creditsRegistered,
                             sss.credits_passed AS creditsPassed,
                             sss.semester_gpa AS semesterGpa,
-                            sss.conduct_score AS conductScore,
-                            SUM(sss.semester_gpa * sss.credits_passed)
-                            OVER (ORDER BY sem.id)
-                            /
-                            NULLIF(CAST(SUM(sss.credits_passed)
-                            OVER (ORDER BY sem.id) AS decimal), 0)
-                            AS cumulativeGpa
+                            sss.conduct_score AS conductScore
                         FROM student_semester_summaries sss
                         JOIN semesters sem ON sss.semester_id = sem.id
                         JOIN study_programs tp ON sss.study_program_id = tp.id
