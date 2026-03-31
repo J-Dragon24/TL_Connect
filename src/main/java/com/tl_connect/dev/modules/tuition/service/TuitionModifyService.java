@@ -35,5 +35,99 @@ public class TuitionModifyService {
     private final TuitionFeeConfigRepository tuitionFeeConfigRepository;
     private final SubjectRepository subjectRepository;
 
-    
+    public void createInvoicesForSemester(Long semesterId) {
+
+        List<StudentCourseClass> all = studentCourseClassRepository.findAll();
+
+        Map<Long, List<StudentCourseClass>> grouped =
+                all.stream()
+                        .filter(s -> s.getSemesterId().equals(semesterId))
+                        .filter(s -> StudentCourseClassStatus.ENROLLED.equals(s.getStatus()))
+                        .collect(Collectors.groupingBy(StudentCourseClass::getStudentId));
+
+        for (Long studentId : grouped.keySet()) {
+            createInvoiceForStudent(studentId, semesterId);
+        }
+    }
+
+    public void createInvoiceForStudent(Long studentId, Long semesterId) {
+
+        Optional<TuitionInvoice> existing =
+                tuitionInvoiceRepository.findByStudentIdAndSemesterId(studentId, semesterId);
+
+        if (existing.isPresent()) {
+            throw new RuntimeException("Invoice already exists");
+        }
+
+        createInvoice(studentId, semesterId);
+    }
+
+    @Transactional
+    public void regenerateInvoice(Long studentId, Long semesterId) {
+
+        tuitionInvoiceRepository.findByStudentIdAndSemesterId(studentId, semesterId)
+                .ifPresent(invoice -> {
+                    invoice.setStatus(TuitionStatus.CANCELLED);
+                    tuitionInvoiceRepository.save(invoice);
+                });
+
+        createInvoice(studentId, semesterId);
+    }
+
+    @Transactional
+    private void createInvoice(Long studentId, Long semesterId) {
+
+        List<StudentCourseClass> enrollments = studentCourseClassRepository.findByStudentIdAndSemesterIdAndStatus(
+                        studentId, semesterId, StudentCourseClassStatus.ENROLLED
+                );
+
+        if (enrollments.isEmpty()) return;
+
+        List<Long> subjectIds = enrollments.stream().map(StudentCourseClass::getSubjectId).collect(Collectors.toList());
+
+        Map<Long, Subject> mapSubjects = subjectRepository.findAllById(subjectIds).stream().collect(Collectors.toMap(Subject::getId, s -> s));
+
+        TuitionFeeConfig config = tuitionFeeConfigRepository
+                .getActiveConfig(LocalDate.now())
+                .orElseThrow(() -> new RuntimeException("No tuition config found"));
+
+        BigDecimal total = BigDecimal.ZERO;
+
+        TuitionInvoice invoice = new TuitionInvoice();
+        invoice.setStudentId(studentId);
+        invoice.setSemesterId(semesterId);
+        invoice.setDueDate(LocalDate.now().plusDays(15));
+        invoice.setStatus(TuitionStatus.UNPAID);
+        invoice.setTotalAmount(total);
+        invoice.setFinalAmount(total);
+
+        invoice = tuitionInvoiceRepository.save(invoice);
+
+        for (StudentCourseClass scc : enrollments) {
+            Long subjectId = scc.getSubjectId();
+            Subject subject = mapSubjects.get(subjectId);
+
+            BigDecimal coefficient = subject.getCoefficient();
+            int credits = subject.getCredits();
+
+            BigDecimal price = config.getBasePricePerCredit();
+            BigDecimal amount = price.multiply(BigDecimal.valueOf(credits)).multiply(coefficient);
+
+            TuitionInvoiceItem item = new TuitionInvoiceItem();
+            item.setInvoiceId(invoice.getId());
+            item.setCourseClassId(scc.getCourseClassId());
+            item.setCredits(credits);
+            item.setPricePerCredit(price);
+            item.setAmount(amount);
+
+            tuitionInvoiceItemRepository.save(item);
+
+            total = total.add(amount);
+        }
+
+        invoice.setTotalAmount(total);
+        invoice.setFinalAmount(total);
+
+        tuitionInvoiceRepository.save(invoice);
+    }
 }

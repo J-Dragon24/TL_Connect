@@ -448,114 +448,196 @@ VALUES
 
 -- tuition_fee_configs
 INSERT INTO tuition_fee_configs
-(subject_id, price_per_credit, effective_from, effective_to)
+(base_price_per_credit, effective_from, effective_to)
 VALUES
-(1, 500000, '2025-01-01', 2025-02-01),
-(2, 520000, '2025-01-01', 2025-02-01),
-(3, 480000, '2025-01-01', 2025-01-15),
-(4, 700000, '2025-01-01', 2025-02-01),
-(5, 750000, '2025-01-01', 2025-02-01),
-(6, 450000, '2025-01-01', NULL);
+(500000, '2025-01-01', '2025-02-01'),
+(520000, '2025-01-01', '2025-02-01'),
+(480000, '2025-01-01', '2025-01-15'),
+(700000, '2025-01-01', '2025-02-01'),
+(750000, '2025-01-01', '2025-02-01'),
+(450000, '2025-01-01', '2025-02-01');
 
 -- tuition_invoices
 INSERT INTO tuition_invoices
-(student_id, semester_id, total_amount, paid_amount, status, due_date, created_at)
+(student_id, semester_id, due_date, total_amount, final_amount, status, created_at, updated_at)
 VALUES
-(1,1,4500000,4500000,'PAID','2026-01-10','2025-12-01'),
+-- đã thanh toán
+(1, 1, '2026-01-10', 4500000, 4500000, 'PAID', '2025-12-01', '2025-12-05'),
 
-(2,1,4200000,0,'OVERDUE','2026-01-05','2025-12-01'),
+-- chưa thanh toán (quá hạn)
+(2, 1, '2026-01-05', 4200000, 4200000, 'OVERDUE', '2025-12-01', '2026-01-06'),
 
-(3,1,4300000,2000000,'PARTIAL','2026-01-10','2025-12-01'),
+-- chưa thanh toán (còn hạn)
+(3, 1, '2026-01-15', 4300000, 4300000, 'UNPAID', '2025-12-01', '2025-12-01'),
 
-(4,2,5000000,0,'UNPAID','2026-05-01','2026-03-01'),
+-- học kỳ sau
+(4, 2, '2026-05-01', 5000000, 5000000, 'UNPAID', '2026-03-01', '2026-03-01'),
 
-(5,2,5200000,5200000,'PAID','2026-05-01','2026-03-01');
+-- đã thanh toán học kỳ sau
+(5, 2, '2026-05-01', 5200000, 5200000, 'PAID', '2026-03-01', '2026-03-10'),
+
+-- bị hủy
+(6, 1, '2026-01-10', 4000000, 4000000, 'CANCELLED', '2025-12-01', '2025-12-20');
 
 -- tuition_invoice_items
 INSERT INTO tuition_invoice_items
-(invoice_id, subject_id, credits, price_per_credit, amount)
+(invoice_id, course_class_id, price_per_credit, credits, coefficient, amount, created_at, updated_at)
 VALUES
--- invoice 1
-(1,1,3,500000,1500000),
-(1,2,3,520000,1560000),
-(1,3,3,480000,1440000),
+-- invoice 1 (đã paid)
+(1, 1, 500000, 3, 1.0, 1500000, '2025-12-01', '2025-12-01'),
+(1, 2, 520000, 3, 1.0, 1560000, '2025-12-01', '2025-12-01'),
+(1, 3, 480000, 3, 1.0, 1440000, '2025-12-01', '2025-12-01'),
 
--- invoice 2
-(2,1,3,500000,1500000),
-(2,2,3,520000,1560000),
+-- invoice 2 (overdue)
+(2, 1, 500000, 3, 1.0, 1500000, '2025-12-01', '2025-12-01'),
+(2, 2, 520000, 3, 1.0, 1560000, '2025-12-01', '2025-12-01'),
 
--- invoice 3
-(3,4,3,700000,2100000),
-(3,5,3,750000,2250000),
+-- invoice 3 (unpaid)
+(3, 4, 700000, 3, 1.0, 2100000, '2025-12-01', '2025-12-01'),
+(3, 5, 750000, 3, 1.0, 2250000, '2025-12-01', '2025-12-01'),
 
--- invoice 4
-(4,6,3,450000,1350000),
+-- invoice 4 (future semester)
+(4, 6, 450000, 3, 1.0, 1350000, '2026-03-01', '2026-03-01'),
 
--- invoice 5
-(5,4,3,700000,2100000),
-(5,5,3,750000,2250000);
+-- invoice 5 (paid future)
+(5, 4, 700000, 3, 1.0, 2100000, '2026-03-01', '2026-03-01'),
+(5, 5, 750000, 3, 1.0, 2250000, '2026-03-01', '2026-03-01'),
+
+-- invoice 6 (cancelled)
+(6, 1, 500000, 3, 1.0, 1500000, '2025-12-01', '2025-12-01');
 
 -- payment
 INSERT INTO payment
-(student_id, invoice_id, amount, method, status, created_at)
+(invoice_id, amount, provider, transaction_code, status, created_at, updated_at)
 VALUES
-(1,1,4500000,'ZALOPAY','SUCCESS','2025-12-05'),
+-- invoice 1: thanh toán thành công
+(1, 4500000, 'ZALOPAY', 'TXN_001_SUCCESS', 'SUCCESS', '2025-12-05', '2025-12-05'),
 
--- partial
-(3,3,2000000,'BANK','SUCCESS','2025-12-06'),
+-- invoice 2: thanh toán thất bại
+(2, 4200000, 'ZALOPAY', 'TXN_002_FAIL', 'FAILED', '2025-12-07', '2025-12-07'),
 
--- failed payment
-(2,2,4200000,'ZALOPAY','FAILED','2025-12-07'),
+-- retry nhưng vẫn pending
+(2, 4200000, 'ZALOPAY', 'TXN_002_PENDING', 'PENDING', '2025-12-08', '2025-12-08'),
 
--- retry success
-(5,5,5200000,'BANK','SUCCESS','2026-03-10');
+-- invoice 3: user vừa tạo thanh toán (chưa xong)
+(3, 4300000, 'BANK', 'TXN_003_PENDING', 'PENDING', '2025-12-09', '2025-12-09'),
+
+-- invoice 5: thanh toán thành công (future semester)
+(5, 5200000, 'BANK', 'TXN_005_SUCCESS', 'SUCCESS', '2026-03-10', '2026-03-10'),
+
+-- invoice 6: đã từng thanh toán nhưng bị hủy/refund sau
+(6, 4000000, 'ZALOPAY', 'TXN_006_SUCCESS', 'SUCCESS', '2025-12-10', '2025-12-10');
 
 -- tuition_transactions
 INSERT INTO tuition_transactions
-(invoice_id, amount, type, status, created_at)
+(student_id, invoice_id, amount, type, reference_id, reference_type, description, created_at)
 VALUES
-(1,4500000,'PAYMENT','SUCCESS','2025-12-05'),
+-- ===== INVOICE 1 =====
+-- phát sinh học phí
+(1, 1, 4500000, 'TUITION', 1, 'INVOICE', 'Tao hoa don hoc phi HK1', '2025-12-01'),
 
-(3,2000000,'PAYMENT','SUCCESS','2025-12-06'),
+-- thanh toán
+(1, 1, 4500000, 'PAYMENT', 1, 'PAYMENT', 'Thanh toan qua ZaloPay', '2025-12-05'),
 
-(2,4200000,'PAYMENT','FAILED','2025-12-07'),
+-- ===== INVOICE 2 =====
+(2, 2, 4200000, 'TUITION', 2, 'INVOICE', 'Hoc phi HK1', '2025-12-01'),
 
-(5,5200000,'PAYMENT','SUCCESS','2026-03-10');
+-- failed payment
+(2, 2, 4200000, 'PAYMENT', 2, 'PAYMENT', 'Thanh toan that bai', '2025-12-07'),
+
+-- ===== INVOICE 3 =====
+(3, 3, 4300000, 'TUITION', 3, 'INVOICE', 'Hoc phi HK1', '2025-12-01'),
+
+-- pending payment (chưa ghi nhận success)
+(3, 3, 4300000, 'PAYMENT', 4, 'PAYMENT', 'Dang xu ly thanh toan', '2025-12-09'),
+
+-- ===== INVOICE 5 =====
+(5, 5, 5200000, 'TUITION', 5, 'INVOICE', 'Hoc phi HK2', '2026-03-01'),
+
+(5, 5, 5200000, 'PAYMENT', 5, 'PAYMENT', 'Thanh toan ngan hang', '2026-03-10'),
+
+-- ===== INVOICE 6 (cancel + refund) =====
+(6, 6, 4000000, 'TUITION', 6, 'INVOICE', 'Hoc phi HK1', '2025-12-01'),
+
+-- đã thanh toán
+(6, 6, 4000000, 'PAYMENT', 6, 'PAYMENT', 'Thanh toan thanh cong', '2025-12-10'),
+
+-- refund
+(6, 6, -4000000, 'REFUND', 6, 'PAYMENT', 'Hoan tien do huy hoa don', '2025-12-20');
 
 INSERT INTO subject_prerequisite_groups
-(subject_id, group_type)
+(subject_id, min_subjects_required, description, created_at, updated_at)
 VALUES
--- AI201 cần nhóm điều kiện
-(5,'AND');
+
+(5, 2, 'Can it nhat 2 mon nen tang AI/CTDL', '2025-12-01', '2025-12-01'),
+
+
+(4, 1, 'Can 1 mon co so lap trinh', '2025-12-01', '2025-12-01'),
+
+
+(6, 1, 'Chon 1 mon marketing co ban', '2025-12-01', '2025-12-01');
 
 INSERT INTO subject_prerequisite_group_items
-(group_id, prerequisite_subject_id)
+(group_id, prerequisite_subject_id, created_at)
 VALUES
-(1,4), -- phải học AI101
-(1,2); -- và CTDL
+
+(1, 1, '2025-12-01'), -- Lap trinh co ban
+(1, 2, '2025-12-01'), -- CTDL
+(1, 4, '2025-12-01'), -- AI101
+
+
+(2, 1, '2025-12-01'),
+
+
+(3, 6, '2025-12-01'),
+(3, 3, '2025-12-01');
 
 INSERT INTO subject_enrollment_conditions
-(subject_id, min_gpa, required_credit)
+(subject_id, condition_type, condition_value, condition_operator, description, created_at, updated_at)
 VALUES
-(5, 2.5, 30), -- AI201 yêu cầu GPA + số tín chỉ
-(4, 2.0, 20);
+
+(5, 'GPA', 2.50, '>=', 'Yeu cau GPA toi thieu 2.5', '2025-12-01', '2025-12-01'),
+
+
+(5, 'TOTAL_CREDITS', 30, '>=', 'Phai tich luy it nhat 30 tin chi', '2025-12-01', '2025-12-01'),
+
+(4, 'GPA', 2.00, '>', 'Yeu cau GPA > 2.0', '2025-12-01', '2025-12-01'),
+
+(6, 'TOTAL_CREDITS', 20, '>=', 'Yeu cau >= 20 tin chi', '2025-12-01', '2025-12-01'),
+
+(6, 'CURRENT_SEMESTER', 2, '=', 'Chi duoc dang ky o HK2', '2025-12-01', '2025-12-01');
 
 INSERT INTO student_course_class_logs
-(student_id, course_class_id, action, status, message, created_at)
+(student_id, course_class_id, action, from_status, to_status, created_at)
 VALUES
+-- ===== STUDENT 1: flow chuẩn =====
+-- đăng ký thành công
+(1, 1, 'ENROLL', 'PENDING', 'ENROLLED', '2025-12-01'),
 
-(1,1,'ENROLL','SUCCESS','Dang ky thanh cong','2025-12-01'),
+-- hủy lớp
+(1, 1, 'DROP', 'ENROLLED', 'DROPPED', '2025-12-10'),
 
+-- đăng ký lại
+(1, 1, 'ENROLL', 'DROPPED', 'ENROLLED', '2025-12-15'),
 
-(3,4,'ENROLL','FAILED','Chua hoc mon tien quyet','2025-12-01'),
+-- ===== STUDENT 2: fail do GPA =====
+(2, 4, 'REJECTED', 'PENDING', 'REJECTED', '2025-12-01'),
 
+-- ===== STUDENT 3: fail prerequisite =====
+(3, 5, 'REJECTED', 'PENDING', 'REJECTED', '2025-12-01'),
 
-(2,4,'ENROLL','FAILED','Khong du GPA','2025-12-01'),
+-- ===== STUDENT 4: pending → enrolled =====
+(4, 2, 'ENROLL', 'PENDING', 'ENROLLED', '2025-12-02'),
 
+-- ===== STUDENT 5: enroll future semester =====
+(5, 4, 'ENROLL', 'PENDING', 'ENROLLED', '2026-03-05'),
 
-(1,1,'DROP','SUCCESS','Huy lop','2025-12-10'),
+-- ===== STUDENT 6: reject rồi thử lại =====
+(6, 3, 'REJECTED', 'PENDING', 'REJECTED', '2025-12-01'),
+(6, 3, 'ENROLL', 'REJECTED', 'ENROLLED', '2025-12-20'),
 
-
-(1,1,'ENROLL','SUCCESS','Dang ky lai','2025-12-15');
+-- ===== STUDENT 7: enroll rồi drop =====
+(7, 5, 'ENROLL', 'PENDING', 'ENROLLED', '2025-12-03'),
+(7, 5, 'DROP', 'ENROLLED', 'DROPPED', '2025-12-12');
 
  COMMIT;
