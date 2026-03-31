@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.tuition;
+package com.tl_connect.dev.modules.tuition.controller;
 
 import java.util.List;
 

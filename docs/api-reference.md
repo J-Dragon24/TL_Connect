@@ -129,7 +129,7 @@ JWT token được cấp sau khi đăng nhập thành công qua /api/v1/oauth2/l
 - ❌ idToken invalid / hết hạn → code -3, HTTP 401
 ---
 ## 5. Student – Quản lý thông tin
-### 5.1. GET /api/v1/student/me
+### 5.1. GET /api/v1/students/me
 Sinh viên lấy thông tin cá nhân.
 - **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
 - **Content-Type**: Không áp dụng
@@ -195,7 +195,7 @@ Sinh viên lấy thông tin cá nhân.
 - ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
 - ❌ student id không tồn tại trong db → code -2, HTTP 404
 ---
-### 5.2. GET /api/v1/student/me/class
+### 5.2. GET /api/v1/students/me/class
 Lấy thông tin lớp hành chính của sinh viên.
 - **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
 - **Content-Type**: Không áp dụng
@@ -242,7 +242,7 @@ Lấy thông tin lớp hành chính của sinh viên.
 - ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
 - ❌ Không có lớp ứng với student id → code -2, HTTP 404
 ---  
-### 5.3. POST /api/v1/admin/student/create
+### 5.3. POST /api/v1/admin/students/create
 Thêm 1 sinh viên.
 - **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
 - **Content-Type**: application/json
@@ -358,7 +358,7 @@ Thêm 1 sinh viên.
 - ❌ Trường thông tin sai hoặc bỏ trống → code -1, HTTP 400
 ---  
 
-### 5.4. POST /api/v1/admin/student/import
+### 5.4. POST /api/v1/admin/students/import
 Import danh sách sinh viên từ file xlsx/csv.
 - **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
 - **Content-Type**: multipart/form-data
@@ -433,7 +433,7 @@ Import danh sách sinh viên từ file xlsx/csv.
 - ❌ File Excel không đúng định dạng → code -1, HTTP 400
 - ❌ File Excel có dữ liệu không hợp lệ → code -1, HTTP 400
 ---  
-### 5.5. GET /api/v1/admin/student/all
+### 5.5. GET /api/v1/admin/students/all
 Lấy danh sách tất cả sinh viên.
 - **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
 - **Content-Type**: Không áp dụng
@@ -512,7 +512,7 @@ Lấy danh sách tất cả sinh viên.
 - ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
 ---  
 
-### 5.6. POST /api/v1/admin/student/update/`{studentId}`/basic
+### 5.6. POST /api/v1/admin/students/update/`{studentId}`/basic
 
 Cập nhật thông tin cá nhân sinh viên.
 
@@ -578,7 +578,7 @@ Cập nhật thông tin cá nhân sinh viên.
 - ❌ Trường thông tin sai hoặc bỏ trống → code -1, HTTP 400
 ---
 
-### 5.7. POST /api/v1/admin/student/update/`{studentId}`/academic
+### 5.7. POST /api/v1/admin/students/update/`{studentId}`/academic
 
 Cập nhật thông tin học tập.
 
@@ -636,7 +636,7 @@ Cập nhật thông tin học tập.
 - ❌ Trường thông tin sai hoặc bỏ trống → code -1, HTTP 400
 ---
 
-### 5.8. POST /api/v1/admin/student/delete/`{studentId}`
+### 5.8. POST /api/v1/admin/students/delete/`{studentId}`
 
 Xóa sinh viên.
 
@@ -3571,4 +3571,129 @@ Lấy chi tiết hóa đơn học phí.
   }
 }
 ```
+---
+### 22.3. GET /api/v1/admin/tuition/invoices
+Lấy danh sách hóa đơn học phí theo kỳ.
 
+- **Auth**: Bắt buộc (Authorization: Bearer <JWT>)
+- **Query param:**
+
+| Field | Type | Required | Description |
+|------|-----|-----|-----|
+| semesterId | long | ✅ | ID kỳ học |
+| page | int | ❌ | Trang (default: 0) |
+| size | int | ❌ | Số phần tử mỗi trang |
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Get tuition invoices successfully",
+  "data": {
+    "content": [
+      {
+        "invoiceId": 1,
+        "studentId": 101,
+        "totalAmount": 5000000,
+        "status": "UNPAID"
+      }
+    ],
+    "page": 0,
+    "size": 10,
+    "total_elements": 1,
+    "total_pages": 1
+  }
+}
+```
+---
+### 22.4. GET /api/v1/admin/tuition/invoices/{invoiceId}
+
+Lấy chi tiết hóa đơn học phí.
+
+- **Auth**: Bắt buộc (Authorization: Bearer <JWT>)
+- **Path param:**
+
+| Field | Type | Required | Description |
+|------|-----|-----|-----|
+| invoiceId | long | ✅ | ID hóa đơn |
+
+**Response thành công (code 0):**
+
+```json
+{
+  "code": 0,
+  "message": "Get tuition invoice detail successfully",
+  "data": {
+    "invoiceId": 1,
+    "studentId": 101,
+    "details": []
+  }
+}
+```
+---
+### 22.5. POST /api/v1/admin/tuition/generate
+
+Tạo hóa đơn học phí theo kỳ.
+
+- **Auth**: Bắt buộc (Authorization: Bearer <JWT>)
+- **Content-Type**: application/json
+
+**Request body:**
+
+```json
+{
+  "semesterId": 1
+}
+
+**Response thành công (code 0):**
+
+```json
+{
+  "code": 0,
+  "message": "Generate invoices successfully",
+  "data": 100
+}
+```
+---
+### 22.6. POST /api/v1/admin/tuition/regenerate/{invoiceId}
+
+Tạo lại hóa đơn học phí.
+
+- **Auth**: Bắt buộc (Authorization: Bearer <JWT>)
+- **Path param:**
+
+| Field | Type | Required | Description |
+|------|-----|-----|-----|
+| invoiceId | long | ✅ | ID hóa đơn |
+
+**Response thành công (code 0):**
+
+```json
+{
+  "code": 0,
+  "message": "Regenerate invoice successfully",
+  "data": 999
+}
+```
+---
+### 22.7. POST /api/v1/admin/tuition/delete/{invoiceId}
+
+Xóa hóa đơn học phí.
+
+- **Auth**: Bắt buộc (Authorization: Bearer <JWT>)
+- **Path param:**
+
+| Field | Type | Required | Description |
+|------|-----|-----|-----|
+| invoiceId | long | ✅ | ID hóa đơn |
+
+**Response thành công (code 0):**
+
+```json
+{
+  "code": 0,
+  "message": "Delete invoice successfully",
+  "data": null
+}
+```
+---

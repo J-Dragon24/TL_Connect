@@ -2,6 +2,7 @@ package com.tl_connect.dev.modules.student.dto;
 
 import com.tl_connect.dev.core.common.enums.TrainingType;
 
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Size;
 
 import lombok.Getter;
@@ -17,17 +18,20 @@ public class UpdateStudentAcademicDTO {
     @Size(min = 1, message = "Major code cannot be blank")
     private String majorCode;
 
-    @Size(min = 1, message = "Training type cannot be blank")
     private TrainingType trainingType;
 
-    @Size(min = 1, message = "Start year cannot be blank")
     private Integer startYear;
 
-    @Size(min = 1, message = "End year cannot be blank")
     private Integer endYear;
 
     @Size(min = 1, message = "Cohort cannot be blank")
     private String cohort;
 
     private String position;
+
+    @AssertTrue(message = "End year must be greater than start year")
+    private boolean isEndYearValid() {
+        if (startYear == null || endYear == null) return true;
+        return endYear > startYear;
+    }
 }

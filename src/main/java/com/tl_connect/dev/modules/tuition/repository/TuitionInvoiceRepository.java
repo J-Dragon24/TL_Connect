@@ -94,29 +94,21 @@ public interface TuitionInvoiceRepository extends JpaRepository<TuitionInvoice, 
             """, nativeQuery = true)
     Optional<TuitionInvoiceRow> findByTuitionInvoiceId(@Param("invoiceId") Long invoiceId);
 
+    @Query(value = "SELECT generate_tuition_invoices(:semesterId)", nativeQuery = true)
+    Long generateInvoices(@Param("semesterId") Long semesterId);
+
     @Modifying
-    @Transactional
     @Query(value = """
-        INSERT INTO tuition_invoices (student_id, semester_id, due_date, total_amount, final_amount, status)
-        SELECT 
-            s.student_id,
-            s.semester_id,
-            CURRENT_DATE + INTERVAL '15 days',
-            SUM(sub.credits * sub.coefficient * cfg.base_price_per_credit),
-            SUM(sub.credits * sub.coefficient * cfg.base_price_per_credit),
-            'UNPAID'
-        FROM student_course_classes s
-        JOIN subjects sub ON s.subject_id = sub.id
-        JOIN tuition_fee_configs cfg 
-            ON CURRENT_DATE BETWEEN cfg.effective_from AND cfg.effective_to
-        WHERE s.semester_id = :semesterId
-        AND s.status = 'ENROLLED'
-        AND NOT EXISTS (
-            SELECT 1 FROM tuition_invoices ti 
-            WHERE ti.student_id = s.student_id 
-            AND ti.semester_id = s.semester_id
-        )
-        GROUP BY s.student_id, s.semester_id
+        UPDATE tuition_invoices ti
+        SET status = 'CANCELLED',
+            updated_at = CURRENT_TIMESTAMP
+        WHERE ti.id = :invoiceId
+        AND ti.status != 'CANCELLED'
     """, nativeQuery = true)
-    void insertInvoicesBySemester(Long semesterId);
+    void cancelInvoiceById(@Param("invoiceId") Long invoiceId);
+
+    @Query(value = """
+        SELECT generate_single_tuition_invoice(:studentId, :semesterId)
+    """, nativeQuery = true)
+    Long generateSingleInvoice(@Param("studentId") Long studentId, @Param("semesterId") Long semesterId);
 }

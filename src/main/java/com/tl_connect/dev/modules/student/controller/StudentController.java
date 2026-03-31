@@ -17,7 +17,7 @@ import org.springframework.security.core.Authentication;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1/student")
+@RequestMapping("/api/v1/students")
 @RequiredArgsConstructor
 public class StudentController {
     private final StudentService studentService;

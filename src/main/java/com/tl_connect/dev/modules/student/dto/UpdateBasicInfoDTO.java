@@ -13,7 +13,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-
 public class UpdateBasicInfoDTO {
     @Size(min = 1, message = "Student code cannot be blank")
     private String studentCode;
@@ -33,7 +32,6 @@ public class UpdateBasicInfoDTO {
 
     @Past(message = "Issued date must be in the past")
     private LocalDate issuedDate;
-
 
     @Size(min = 1, message = "Issued place cannot be blank")
     private String issuedPlace;

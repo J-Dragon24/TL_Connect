@@ -395,6 +395,7 @@ CREATE TABLE tuition_invoice_items (
   amount DECIMAL(10,2) NOT NULL,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
+  UNIQUE (invoice_id, course_class_id),
   FOREIGN KEY (invoice_id) REFERENCES tuition_invoices(id) ON DELETE CASCADE,
   FOREIGN KEY (course_class_id) REFERENCES course_classes(id) ON DELETE SET NULL
 );

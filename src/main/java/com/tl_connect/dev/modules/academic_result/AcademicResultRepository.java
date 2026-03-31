@@ -49,8 +49,8 @@ public interface AcademicResultRepository extends JpaRepository<StudentSubjectRe
                             SUM(sss.semester_gpa * sss.credits_passed)
                             OVER (ORDER BY sem.id)
                             /
-                            NULLIF(SUM(sss.credits_passed)::decimal
-                            OVER (ORDER BY sem.id), 0)
+                            NULLIF(CAST(SUM(sss.credits_passed)
+                            OVER (ORDER BY sem.id) AS decimal), 0)
                             AS cumulativeGpa
                         FROM student_semester_summaries sss
                         JOIN semesters sem ON sss.semester_id = sem.id

@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import jakarta.validation.Valid;
 
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +33,7 @@ import com.tl_connect.dev.modules.student.service.StudentDeleteService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1/admin/student")
+@RequestMapping("/api/v1/admin/students")
 @RequiredArgsConstructor
 public class StudentAdminController {
 

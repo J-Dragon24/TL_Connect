@@ -109,8 +109,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             LEFT JOIN academic_infos ai ON sm.id = ai.student_major_id
             LEFT JOIN emergency_contacts ec ON s.id = ec.student_id
             ORDER BY s.student_code DESC
-            """,
-            countQuery = """
+            """, countQuery = """
                 SELECT COUNT(s.id)
                 FROM students s
                 LEFT JOIN student_classes c ON s.student_class_id = c.id
@@ -122,16 +121,14 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
                 LEFT JOIN student_contacts sc ON s.id = sc.student_id
                 LEFT JOIN academic_infos ai ON sm.id = ai.student_major_id
                 LEFT JOIN emergency_contacts ec ON s.id = ec.student_id
-            """, 
-            nativeQuery = true)
+            """, nativeQuery = true)
     Page<StudentRow> findAllStudent(Pageable pageable);
-
 
     @Query(value = """
             SELECT
                 c.id AS classId,
                 c.class_code AS classCode,
-                m.major_name AS major,
+                m.major_name AS majorName,
                 c.start_year AS startYear,
                 l.lecturer_code AS lecturerCode,
                 l.full_name AS academicAdvisor,
