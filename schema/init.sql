@@ -42,6 +42,7 @@ DROP TABLE IF EXISTS subject_prerequisite_group_items CASCADE;
 DROP TABLE IF EXISTS subject_prerequisite_groups CASCADE;
 DROP TABLE IF EXISTS subject_enrollment_conditions CASCADE;
 DROP TABLE IF EXISTS student_course_class_logs CASCADE;
+DROP TABLE IF EXISTS user_devices CASCADE;
 
 
 CREATE TABLE oauth_users (
@@ -570,16 +571,31 @@ CREATE TABLE notification_template (
   updated_at TIMESTAMP DEFAULT now()
 );
 
+CREATE TABLE user_devices (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  oauth_user_id BIGINT NOT NULL,
+  fcm_token TEXT UNIQUE NOT NULL,
+  device_type VARCHAR(20),
+  is_active BOOLEAN DEFAULT TRUE,
+  last_used_at TIMESTAMP,
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now(),
+
+  FOREIGN KEY (oauth_user_id) REFERENCES oauth_users(id) ON DELETE CASCADE
+);
+
 CREATE TABLE notifications (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   template_id BIGINT,
   title TEXT NOT NULL,
   content TEXT NOT NULL,
   created_by VARCHAR(255),
-  target_type VARCHAR(20) NOT NULL DEFAULT 'ALL' CHECK (target_type IN ('ALL', 'CLASS', 'STUDENT_CLASS', 'COURSE_CLASS', 'FACULTY')),
-  target_id BIGINT NOT NULL,
+  target_type VARCHAR(20) NOT NULL DEFAULT 'GLOBAL' CHECK (type IN ('GLOBAL','FACULTY','STUDENT_CLASS','COURSE_CLASS', 'PERSONAL')),
+  target_id BIGINT,
+  topic VARCHAR(255),
   reference_id BIGINT,
   reference_type VARCHAR(225),
+  is_important BOOLEAN DEFAULT FALSE,
   deadline DATE,
   created_at TIMESTAMP DEFAULT now(),
 

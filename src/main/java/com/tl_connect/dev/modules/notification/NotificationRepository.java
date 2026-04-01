@@ -1,10 +1,13 @@
 package com.tl_connect.dev.modules.notification;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.tl_connect.dev.modules.notification.entity.Notification;
 import com.tl_connect.dev.modules.notification.projection.NotificationRow;
 import com.tl_connect.dev.modules.notification.projection.PrepareNotificationView;
 
@@ -32,20 +35,18 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
                 n.title AS title,
                 n.content AS content,
                 n.created_by AS createdBy,
-                n.target_type AS targetType,
+                n.type AS type,
                 n.created_at AS createdAt,
                 n.deadline AS deadLine,
-                CASE 
-                    WHEN nr.notification_id IS NULL THEN false
-                    ELSE true
-                END AS isRead
+                (nr.notification_id IS NOT NULL) AS isRead
             FROM notifications n
-            LEFT JOIN notification_read nr ON n.id = nr.notification_id AND nr.oauth_user_id = :oauthUserId
+            LEFT JOIN notification_read nr ON n.id = nr.notification_id 
+                AND nr.oauth_user_id = :oauthUserId
             WHERE
 
-                n.target_type = 'ALL'
+                n.target_type = 'GLOBAL'
 
-            OR (n.target_type = 'STUDENT'
+            OR (n.target_type = 'PERSONAL'
                 AND n.target_id = :studentId)
 
             OR (n.target_type = 'STUDENT_CLASS'
@@ -55,42 +56,39 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
                 AND n.target_id = :facultyId)
 
             OR (n.target_type = 'COURSE_CLASS'
-                AND EXISTS (
-                        SELECT 1
-                        FROM student_course_classes scc
-                        WHERE scc.student_id = :studentId
-                        AND scc.course_class_id = n.target_id
-                ))
+                AND (:courseClassIds IS NOT NULL AND n.target_id IN (:courseClassIds)))
 
             ORDER BY n.created_at DESC
-            LIMIT 20
-            """, nativeQuery = true)
-    List<NotificationRow> findAllNotification(@Param("studentId") Long studentId, @Param("oauthUserId") Long oauthUserId, @Param("classId") Long classId, @Param("facultyId") Long facultyId);
+            """,
+            countQuery = """
+                    SELECT COUNT(*)
+                    FROM notifications n
+                    WHERE n.target_type = 'GLOBAL'
+                    OR (n.target_type = 'PERSONAL' AND n.target_id = :studentId)
+                    OR (n.target_type = 'STUDENT_CLASS' AND n.target_id = :classId)
+                    OR (n.target_type = 'FACULTY' AND n.target_id = :facultyId)
+                    OR (n.target_type = 'COURSE_CLASS' AND (:courseClassIds IS NOT NULL AND n.target_id IN (:courseClassIds)))
+                    """,
+            nativeQuery = true)
+    Page<NotificationRow> findAllNotification(@Param("studentId") Long studentId, @Param("oauthUserId") Long oauthUserId, @Param("classId") Long classId, @Param("facultyId") Long facultyId, @Param("courseClassIds") List<Long> courseClassIds, Pageable pageable);
 
     Optional<Notification> findById(Long id);
 
     @Query(value = """
             SELECT COUNT(*)
             FROM notifications n
-            LEFT JOIN notification_read nr
-                ON nr.notification_id = n.id
+            WHERE NOT EXISTS (
+                SELECT 1 FROM notification_read nr
+                WHERE nr.notification_id = n.id
                 AND nr.oauth_user_id = :oauthUserId
-            WHERE nr.notification_id IS NULL
-
+            )
             AND (
                 n.target_type = 'ALL'
             OR (n.target_type = 'STUDENT' AND n.target_id = :studentId)
             OR (n.target_type = 'STUDENT_CLASS' AND n.target_id = :classId)
             OR (n.target_type = 'FACULTY' AND n.target_id = :facultyId)
-            OR (n.target_type = 'COURSE_CLASS'
-                    AND EXISTS (
-                        SELECT 1
-                        FROM student_course_classes scc
-                        WHERE scc.student_id = :studentId
-                        AND scc.course_class_id = n.target_id
-                    ))
-            )
+            OR (n.target_type = 'COURSE_CLASS' AND n.target_id IN :courseClassIds)
             """, nativeQuery = true)
-    Long countUnreadNotification(@Param("studentId") Long studentId, @Param("oauthUserId") Long oauthUserId, @Param("classId") Long classId, @Param("facultyId") Long facultyId);
+    Long countUnreadNotification(@Param("studentId") Long studentId, @Param("oauthUserId") Long oauthUserId, @Param("classId") Long classId, @Param("facultyId") Long facultyId, @Param("courseClassIds") List<Long> courseClassIds);
 }
 

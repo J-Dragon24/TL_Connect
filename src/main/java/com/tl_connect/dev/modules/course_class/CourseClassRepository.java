@@ -14,6 +14,9 @@ import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -75,4 +78,15 @@ public interface CourseClassRepository extends JpaRepository<CourseClass, Long> 
                 """,
     nativeQuery = true)
     Page<CourseClassBasicInfoRow> findAllCourseClass(Pageable pageable);
+
+    @Query(value = """
+            SELECT 
+                cc.id as id
+            FROM course_classes cc
+            JOIN student_course_classes scc ON cc.id = scc.course_class_id
+            JOIN semesters sem ON cc.semester_id = sem.id
+            WHERE scc.student_id = :studentId
+            AND :now BETWEEN sem.start_date AND sem.end_date
+            """, nativeQuery = true)
+    List<Long> findIdsByStudentIdAndSemesterId(@Param("studentId") Long studentId, @Param("now") LocalDate now);
 }

@@ -31,3 +31,10 @@ CREATE INDEX IF NOT EXISTS idx_health_insurances_student_id ON health_insurances
 
 /*Students indexes*/
 CREATE INDEX IF NOT EXISTS idx_students_student_class_id ON students(student_class_id);
+
+/*Notifications indexes*/
+CREATE INDEX IF NOT EXISTS idx_notifications_type_created
+ON notifications(type, created_at DESC);
+
+CREATE INDEX IF NOT EXISTS idx_notifications_created
+ON notifications(created_at DESC);

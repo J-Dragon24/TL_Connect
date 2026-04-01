@@ -1,11 +1,11 @@
-package com.tl_connect.dev.modules.notification;
+package com.tl_connect.dev.modules.notification.entity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import com.tl_connect.dev.core.common.enums.TargetType;
+import com.tl_connect.dev.core.common.enums.NotificationType;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -27,21 +27,24 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "title")
+    @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "content")
+    @Column(name = "content", nullable = false)
     private String content;
 
     @Column(name = "created_by")
     private String createdBy;
 
-    @Column(name = "target_type")
+    @Column(name = "target_type", nullable = false)
     @Enumerated(EnumType.STRING)
-    private TargetType targetType;
+    private NotificationType targetType;
 
     @Column(name = "target_id")
     private Long targetId;
+
+    @Column(name = "topic")
+    private String topic;
 
     @Column(name = "reference_id")
     private Long referenceId;
@@ -51,6 +54,9 @@ public class Notification {
 
     @Column(name = "deadline")
     private LocalDate deadLine;
+
+    @Column(name = "is_important")
+    private Boolean isImportant;
 
     @CreationTimestamp
     @Column(name = "created_at")

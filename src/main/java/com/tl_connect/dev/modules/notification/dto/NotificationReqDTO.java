@@ -4,19 +4,16 @@ import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 @Builder
-public class PrepareNotificationDTO {
-    private Long studentClassId;
+@AllArgsConstructor
+@NoArgsConstructor
+public class NotificationReqDTO {
     private Long oauthUserId;
     private Long facultyId;
+    private Long studentClassId;
     private List<Long> courseClassIds;
-    private List<String> topics;
 }
