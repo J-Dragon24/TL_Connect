@@ -2,15 +2,2232 @@
   "info": {
     "_postman_id": "1adb2d62-e1a4-4b24-b41b-19626f917d2d",
     "name": "TL-connect",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "39878296",
+    "_collection_link": "https://go.postman.co/collection/39878296-1adb2d62-e1a4-4b24-b41b-19626f917d2d?source=collection_link"
   },
   "item": [
     {
       "name": "V1",
       "item": [
         {
+          "name": "admin",
+          "item": [
+            {
+              "name": "student",
+              "item": [
+                {
+                  "name": "import file student",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [
+                        {
+                          "key": "file",
+                          "type": "file",
+                          "uuid": "e9293a94-4d4a-48e8-aab7-36678fca57f7",
+                          "src": "/C:/Users/LongBao/Documents/data_test.xlsx"
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/students/import",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "students",
+                        "import"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "create student",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"student_code\": \"A46049\",\r\n  \"full_name\": \"Nguyễn Văn An\",\r\n  \"date_of_birth\": \"2007-01-25\",\r\n  \"gender\": \"NAM\",\r\n  \"student_class_code\": \"KHMT2021\",\r\n  \"major_code\": \"KHMT\",\r\n  \"start_year\": 2024,\r\n  \"end_year\": 2028,\r\n  \"training_type\": \"CHINH_QUY\",\r\n  \"identity_card\": {\r\n    \"card_number\": \"012345678901\",\r\n    \"card_type\": \"CCCD\",\r\n    \"issued_date\": \"2020-06-15\",\r\n    \"issued_place\": \"Cục Cảnh sát QLHC về TTXH\"\r\n  },\r\n  \"contact\": {\r\n    \"phone_number\": \"0912345678\",\r\n    \"address\": \"123 Nguyễn Trãi, Hà Nội\",\r\n    \"email\": \"an.nguyen@example.com\"\r\n  },\r\n  \"academic_info\": {\r\n    \"cohort\": \"2022-2026\",\r\n    \"position\": \"Lớp trưởng\"\r\n  },\r\n  \"emergency_contact\": {\r\n    \"name\": \"Nguyễn Văn Bình\",\r\n    \"phone_number\": \"0987654321\",\r\n    \"address\": \"123 Nguyễn Trãi, Hà Nội\",\r\n    \"relationship\": \"Cha\"\r\n  }\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/students/create",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "students",
+                        "create"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "update user basic info",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"studentCode\": \"A46049\",\r\n    \"fullName\": \"Nguyễn Trần Bảo Long\",\r\n    \"dateOfBirth\": \"2007-01-25\",\r\n    \"gender\": \"NAM\",\r\n    \"cardNumber\": \"012345678901\",\r\n    \"cardType\": \"CCCD\",\r\n    \"issuedDate\": \"2020-06-15\",\r\n    \"issuedPlace\": \"Cục Cảnh sát QLHC về TTXH\",\r\n    \"phoneNumber\": \"0912345678\",\r\n    \"address\": \"123 Nguyễn Trãi, Hà Nội\",\r\n    \"email\": \"an.nguyen@example.com\",\r\n    \"emergencyContactName\": \"Nguyễn Văn Bình\",\r\n    \"emergencyContactPhoneNumber\": \"0987654321\",\r\n    \"emergencyContactAddress\": \"123 Nguyễn Trãi, Hà Nội\",\r\n    \"emergencyContactRelationship\": \"Cha\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/students/update/1/basic",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "students",
+                        "update",
+                        "1",
+                        "basic"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "get all student",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/students/all",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "students",
+                        "all"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "delete student",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/students/delete/5",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "students",
+                        "delete",
+                        "5"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "update student academic info",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"studentClassCode\": \"AI2024A\",\r\n    \"majorCode\" : \"AI\",\r\n    \"trainingType\": \"\",\r\n    \"startYear\": 2018,\r\n    \"endYear\": 2022,\r\n    \"cohort\": \"K35\",\r\n    \"position\": \"Bộ trưởng\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/students/update/1/academic",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "students",
+                        "update",
+                        "1",
+                        "academic"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "academic result",
+              "item": [
+                {
+                  "name": "create subject result",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"studentId\": 1,\r\n  \"subjectId\": 2,\r\n  \"semesterId\": 3,\r\n  \"credits\": 3,\r\n  \"attendanceScore\": 8.5,\r\n  \"midtermScore\": 7.0,\r\n  \"finalScore\": 8.0,\r\n  \"score10\": 7.8,\r\n  \"score4\": 3.0,\r\n  \"letterGrade\": \"B\",\r\n  \"isPass\": true\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/academic-results/create",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "academic-results",
+                        "create"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "import mark",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [
+                        {
+                          "key": "file",
+                          "type": "file",
+                          "uuid": "e16a0373-ac9c-4292-8039-4550c816501d",
+                          "value": null
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/academic-results/import",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "academic-results",
+                        "import"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "update subject ressult",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"semesterId\": 3,\r\n    \"credits\": 3,\r\n    \"attendanceScore\": 8.5,\r\n    \"midtermScore\": 7.0,\r\n    \"finalScore\": 8.0,\r\n    \"letterGrade\": \"B\",\r\n    \"isPass\": true\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/academic-results/update/6",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "academic-results",
+                        "update",
+                        "6"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "delete subject result",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/academic-results/delete/6",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "academic-results",
+                        "delete",
+                        "6"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "course class",
+              "item": [
+                {
+                  "name": "get all",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/course-classes/all",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "course-classes",
+                        "all"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "get detail course class",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/course-classes/6",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "course-classes",
+                        "6"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "create course class",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"classCode\": \"CS101-01\",\r\n  \"className\": \"Introduction to Programming - Class 01\",\r\n  \"capacity\": 30,\r\n  \"subjectId\": 1,\r\n  \"semesterId\": 2,\r\n  \"lecturerId\": 3\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/course-classes/create",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "course-classes",
+                        "create"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "update course class",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"capacity\": 40\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/course-classes/update/7",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "course-classes",
+                        "update",
+                        "7"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "delete course class",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/course-classes/delete/6",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "course-classes",
+                        "delete",
+                        "6"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "department",
+              "item": [
+                {
+                  "name": "get all department",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/department/all",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "department",
+                        "all"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "create department",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "\r\n{\r\n    \"departmentCode\": \"BAC\",\r\n    \"departmentName\": \"Business Administration\",\r\n    \"facultyId\": 2\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/department/create",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "department",
+                        "create"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "update department",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"departmentCode\": \"QADP\"\r\n}\r\n",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/department/update/4",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "department",
+                        "update",
+                        "4"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "delete department",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/department/delete/4",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "department",
+                        "delete",
+                        "4"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "exam schedule",
+              "item": [
+                {
+                  "name": "get exam schedule",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/exam?semesterId=2",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "exam"
+                      ],
+                      "query": [
+                        {
+                          "key": "semesterId",
+                          "value": "2"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "create exam schedule",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"subjectId\": 1,\r\n  \"semesterId\": 2,\r\n  \"examDate\": \"2025-06-15\",\r\n  \"startTime\": \"08:00:00\",\r\n  \"endTime\": \"10:00:00\",\r\n  \"examRoom\": \"A101\",\r\n  \"examLocation\": \"Campus A - Building 1\",\r\n  \"examFormat\": \"Written\",\r\n  \"examType\": \"Final\",\r\n  \"note\": \"Bring student ID card\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/exam/create",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "exam",
+                        "create"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "update exam schedule",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"examRoom\": \"A105\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/exam/update/6",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "exam",
+                        "update",
+                        "6"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "delete exam schedule",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/exam/delete/6",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "exam",
+                        "delete",
+                        "6"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "faculty",
+              "item": [
+                {
+                  "name": "get all",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/faculty/all",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "faculty",
+                        "all"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "create faculty",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"facultyName\": \"Thanh nhạc\",\r\n    \"facultyCode\": \"ADUD\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/faculty/create",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "faculty",
+                        "create"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "update faculty",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"facultyCode\": \"ADU\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/faculty/update/3",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "faculty",
+                        "update",
+                        "3"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "delete faculty",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/faculty/delete/3",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "faculty",
+                        "delete",
+                        "3"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "lecturer",
+              "item": [
+                {
+                  "name": "get all lecturer",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/lecturers/all",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "lecturers",
+                        "all"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "get detail lecturer",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/lecturers/1",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "lecturers",
+                        "1"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "create lecturer",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"lecturerCode\": \"GV008\",\r\n  \"fullName\": \"Độ Mi Xi\",\r\n  \"email\": \"nguyenvana@gmail.com\",\r\n  \"phoneNumber\": \"0912345678\",\r\n  \"departmentId\": 1\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/lecturers/create",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "lecturers",
+                        "create"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "update lecturer",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"lecturerCode\": \"ALOVUAVU\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/lecturers/update/4",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "lecturers",
+                        "update",
+                        "4"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "delete lecturer",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/lecturers/delete/4",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "lecturers",
+                        "delete",
+                        "4"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "academic advisor",
+              "item": [
+                {
+                  "name": "get all academic adv",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/academic-advisors/all",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "academic-advisors",
+                        "all"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "get detail academic adv",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/academic-advisors/1",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "academic-advisors",
+                        "1"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "create academic adv",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"lecturerId\": 1,\r\n    \"studentClassId\": \"1\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/academic-advisors/create",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "academic-advisors",
+                        "create"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "delete academic adv",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"lecturerId\": 1,\r\n    \"studentClassId\": \"6\"\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/academic-advisors/delete/1",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "academic-advisors",
+                        "delete",
+                        "1"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "major",
+              "item": [
+                {
+                  "name": "get all major",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"lecturerId\": 1,\r\n    \"studentClassId\": \"1\"\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/majors/all",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "majors",
+                        "all"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "create major",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"majorCode\": \"TA\",\r\n    \"majorName\": \"Technical Analysis\",\r\n    \"facultyId\": 1\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/majors/create",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "majors",
+                        "create"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "update major",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"facultyId\": 2\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/majors/update/4",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "majors",
+                        "update",
+                        "4"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "delete major",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/majors/delete/4",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "majors",
+                        "delete",
+                        "4"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "schedule",
+              "item": [
+                {
+                  "name": "get schedule of class",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/schedules/1",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "schedules",
+                        "1"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "create schedule",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "[\r\n    {\r\n    \"id\": 1,\r\n    \"dayOfWeek\": 5,\r\n    \"startPeriod\": 1,\r\n    \"endPeriod\": 3,\r\n    \"startTime\": \"07:00:00\",\r\n    \"endTime\": \"09:30:00\",\r\n    \"room\": \"A101\"\r\n    }\r\n]",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/schedules/create/1",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "schedules",
+                        "create",
+                        "1"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "update schedule",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"dayOfWeek\": 5,\r\n    \"startPeriod\": 1,\r\n    \"endPeriod\": 4,\r\n    \"startTime\": \"07:00:00\",\r\n    \"endTime\": \"10:30:00\",\r\n    \"room\": \"A101\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/schedules/update/9",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "schedules",
+                        "update",
+                        "9"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "delete schedule",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/schedules/delete/9",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "schedules",
+                        "delete",
+                        "9"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "semester",
+              "item": [
+                {
+                  "name": "get all semester",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/semesters/all",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "semesters",
+                        "all"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "create semester",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"academicYears\": \"2025-2026\",\r\n  \"semesterName\": \"Học kỳ 3 2025\",\r\n  \"semesterCode\": \"HK3-2526\",\r\n  \"semesterNumber\": 3,\r\n  \"startDate\": \"2025-07-01\",\r\n  \"endDate\": \"2026-12-01\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/semesters/create",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "semesters",
+                        "create"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "update semester",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"startDate\": \"2025-07-15\",\r\n  \"endDate\": \"2026-12-01\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/semesters/update/1",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "semesters",
+                        "update",
+                        "1"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "delete semester",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/semesters/delete/4",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "semesters",
+                        "delete",
+                        "4"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "student class",
+              "item": [
+                {
+                  "name": "get all student class",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"academicYears\": \"2025-2026\",\r\n  \"semesterName\": \"Học kỳ 3 2025\",\r\n  \"semesterCode\": \"HK3-2526\",\r\n  \"semesterNumber\": 3,\r\n  \"startDate\": \"2025-07-01\",\r\n  \"endDate\": \"2026-12-01\"\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/student-class/all",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "student-class",
+                        "all"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "create student class",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"classCode\": \"TI35CL03\",\r\n  \"majorId\": \"1\",\r\n  \"startYear\": \"2022\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/student-class/create",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "student-class",
+                        "create"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "update student class",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"startYear\": \"2023\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/student-class/update/5",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "student-class",
+                        "update",
+                        "5"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "delete student class",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/student-class/delete/5",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "student-class",
+                        "delete",
+                        "5"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "study program",
+              "item": [
+                {
+                  "name": "get all study program",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/study-programs/all?startYear=2023",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "study-programs",
+                        "all"
+                      ],
+                      "query": [
+                        {
+                          "key": "startYear",
+                          "value": "2023"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "get detail study program",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/study-programs/4",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "study-programs",
+                        "4"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "create study program",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"studyProgramCode\": \"CNTT-2025\",\r\n  \"studyProgramName\": \"Công nghệ thông tin\",\r\n  \"majorId\": 1,\r\n  \"startYear\": 2025,\r\n  \"totalCredits\": 120,\r\n  \"trainingType\": \"CHINH_QUY\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/study-programs/create",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "study-programs",
+                        "create"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "update study program",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n     \"totalCredits\": 130\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/study-programs/update/4",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "study-programs",
+                        "update",
+                        "4"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "add subject",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"subjectId\": 1,\r\n  \"semesterId\": 2,\r\n  \"electiveGroup\": \"Bắt buộc\",\r\n  \"isRequired\": true\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/study-programs/4/subjects/create",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "study-programs",
+                        "4",
+                        "subjects",
+                        "create"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "update subject program",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"semesterId\": 1\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/study-programs/subjects/update/8",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "study-programs",
+                        "subjects",
+                        "update",
+                        "8"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "delete subject program",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/study-programs/subjects/delete/8",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "study-programs",
+                        "subjects",
+                        "delete",
+                        "8"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "delete study program",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/study-programs/delete/4",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "study-programs",
+                        "delete",
+                        "4"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "tuition",
+              "item": [
+                {
+                  "name": "get all invoice",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/tuition/invoices?semesterId=1",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "tuition",
+                        "invoices"
+                      ],
+                      "query": [
+                        {
+                          "key": "semesterId",
+                          "value": "1",
+                          "type": "text"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "get detail invoice",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/tuition/invoices/1",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "tuition",
+                        "invoices",
+                        "1"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "generate invoice",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"semesterId\": 3\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/tuition/generate",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "tuition",
+                        "generate"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "regenerate invoice",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/tuition/regenerate/1",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "tuition",
+                        "regenerate",
+                        "1"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "delete invoice",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/tuition/delete/1",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "tuition",
+                        "delete",
+                        "1"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "student info",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{domain}}/api/v1/students/me",
+              "host": [
+                "{{domain}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "student class info",
-          "id": "5cccf1e6-635f-45de-b088-5ced0d3922f1",
           "request": {
             "method": "GET",
             "header": [
@@ -21,14 +2238,14 @@
               }
             ],
             "url": {
-              "raw": "{{domain}}/api/v1/student/me/class",
+              "raw": "{{domain}}/api/v1/students/me/class",
               "host": [
                 "{{domain}}"
               ],
               "path": [
                 "api",
                 "v1",
-                "student",
+                "students",
                 "me",
                 "class"
               ]
@@ -38,7 +2255,6 @@
         },
         {
           "name": "get list study program",
-          "id": "e684edb4-0e9a-4bc2-916b-4cf047ac111d",
           "request": {
             "method": "GET",
             "header": [
@@ -64,7 +2280,6 @@
         },
         {
           "name": "mark",
-          "id": "57845ba9-ab1c-4a4f-8bb7-0f405c972bc6",
           "request": {
             "method": "GET",
             "header": [
@@ -75,7 +2290,7 @@
               }
             ],
             "url": {
-              "raw": "{{domain}}/api/v1/student/marks?ctdt=CTDT-KHMT-2021",
+              "raw": "{{domain}}/api/v1/student/marks?ctdt=CTDT_SE",
               "host": [
                 "{{domain}}"
               ],
@@ -88,7 +2303,7 @@
               "query": [
                 {
                   "key": "ctdt",
-                  "value": "CTDT-KHMT-2021"
+                  "value": "CTDT_SE"
                 }
               ]
             }
@@ -97,7 +2312,6 @@
         },
         {
           "name": "get detail study program",
-          "id": "e99edadf-49fb-432a-b990-626eba71c3ad",
           "request": {
             "method": "GET",
             "header": [
@@ -108,7 +2322,7 @@
               }
             ],
             "url": {
-              "raw": "{{domain}}/api/v1/study-programs/CTDT-KHMT-2021",
+              "raw": "{{domain}}/api/v1/study-programs/CTDT_SE",
               "host": [
                 "{{domain}}"
               ],
@@ -116,7 +2330,7 @@
                 "api",
                 "v1",
                 "study-programs",
-                "CTDT-KHMT-2021"
+                "CTDT_SE"
               ]
             }
           },
@@ -124,7 +2338,6 @@
         },
         {
           "name": "weekly schedule",
-          "id": "f80f6b87-6b65-4392-b89c-0183adb696c2",
           "request": {
             "method": "GET",
             "header": [
@@ -135,7 +2348,7 @@
               }
             ],
             "url": {
-              "raw": "{{domain}}/api/v1/student/schedules/weekly",
+              "raw": "{{domain}}/api/v1/student/schedules/weekly?start_date=2026-01-01&end_date=2026-09-01",
               "host": [
                 "{{domain}}"
               ],
@@ -145,6 +2358,16 @@
                 "student",
                 "schedules",
                 "weekly"
+              ],
+              "query": [
+                {
+                  "key": "start_date",
+                  "value": "2026-01-01"
+                },
+                {
+                  "key": "end_date",
+                  "value": "2026-09-01"
+                }
               ]
             }
           },
@@ -152,7 +2375,6 @@
         },
         {
           "name": "semester schedule",
-          "id": "450f6903-e413-4e32-95ee-e8cc0cce9ebd",
           "request": {
             "method": "GET",
             "header": [
@@ -177,8 +2399,7 @@
               "query": [
                 {
                   "key": "HocKy",
-                  "value": "HK1 2025-2026",
-                  "uuid": "a2919454-d703-4a77-93ca-18dd0b02142e"
+                  "value": "HK1 2025-2026"
                 }
               ]
             }
@@ -187,13 +2408,12 @@
         },
         {
           "name": "day of week schedule",
-          "id": "fe6bb989-0724-4c2a-921e-c0339a572a8c",
           "request": {
             "method": "GET",
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{auth_token}}",
+                "value": "Bearer acsjahjkhakjfhjkhjksfhhshfkh",
                 "type": "text"
               }
             ],
@@ -214,38 +2434,7 @@
           "response": []
         },
         {
-          "name": "student info",
-          "id": "7bb396ef-41dd-42ef-8ae8-2094b976386d",
-          "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{auth_token}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{domain}}/api/v1/student/me",
-              "host": [
-                "{{domain}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "student",
-                "me"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
           "name": "exam",
-          "id": "bb76cdf6-5e2d-461a-b2f8-ea8155ccc8e0",
           "request": {
             "method": "GET",
             "header": [
@@ -256,7 +2445,7 @@
               }
             ],
             "url": {
-              "raw": "{{domain}}/api/v1/student/exam?HocKy=HK1 2025-2026",
+              "raw": "{{domain}}/api/v1/student/exam?HocKy=HK1-2025",
               "host": [
                 "{{domain}}"
               ],
@@ -269,8 +2458,7 @@
               "query": [
                 {
                   "key": "HocKy",
-                  "value": "HK1 2025-2026",
-                  "uuid": "2492c2f8-a50d-44a6-bbc4-f4cb8a0f6a3e"
+                  "value": "HK1-2025"
                 }
               ]
             }
@@ -279,7 +2467,6 @@
         },
         {
           "name": "notification",
-          "id": "333b99fe-0a46-4a15-9e78-dc66268e58ac",
           "request": {
             "method": "GET",
             "header": [
@@ -305,7 +2492,6 @@
         },
         {
           "name": "notification detail",
-          "id": "e03a8d0d-9c08-4ddd-9d65-78c0466db82e",
           "request": {
             "method": "GET",
             "header": [
@@ -332,7 +2518,6 @@
         },
         {
           "name": "application types",
-          "id": "1f50e2dd-433a-45da-be5e-ce29a481efb4",
           "request": {
             "method": "GET",
             "header": [
@@ -359,7 +2544,6 @@
         },
         {
           "name": "application submit",
-          "id": "757bc5d8-66ec-4224-a22b-9546f4859a40",
           "request": {
             "method": "POST",
             "header": [
@@ -376,9 +2560,7 @@
                   "key": "file",
                   "type": "file",
                   "uuid": "42a4e1b0-0cb4-42af-9ded-4a98c5e3df51",
-                  "src": [
-                    "/C:/Users/LongBao/Documents/abc.pdf"
-                  ]
+                  "src": "/C:/Users/LongBao/Documents/abc.pdf"
                 },
                 {
                   "key": "application-type",
@@ -415,7 +2597,6 @@
             {
               "listen": "test",
               "script": {
-                "id": "dcd4897a-83b1-46b3-b0df-e9c913a45981",
                 "exec": [
                   "// Parse JSON response\r",
                   "let res = pm.response.json();\r",
@@ -435,27 +2616,14 @@
                 "packages": {},
                 "requests": {}
               }
-            },
-            {
-              "listen": "prerequest",
-              "script": {
-                "id": "a97c53a7-1e9d-4bd6-92aa-a672c326f5c5",
-                "exec": [
-                  ""
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
             }
           ],
-          "id": "dce290fc-7e1d-4da0-9424-c5b0ec58889b",
           "request": {
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"accessToken\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6InNNMV95QXhWOEdWNHlOLUI2ajJ4em1pazVBbyJ9.eyJhdWQiOiI3N2RmOTkzZC1lNzI4LTRiOGUtOTc3MC02YjQwOWFhOTk1NTIiLCJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vYWVjMDAzZWItYzUzNy00ZThhLWIwZjMtMTE0NGE5M2E2MGJjL3YyLjAiLCJpYXQiOjE3NzMxMzA4NjcsIm5iZiI6MTc3MzEzMDg2NywiZXhwIjoxNzczMTM1NjU2LCJhaW8iOiJBY1FBTy84YkFBQUEvQWlmOGh2aHJkSGROVFpPN1h4SEJTKzZ5RERNZTFNZnlla0RFRThWdlJncmtyUTFDRk9DMXRSMUU4dWt3M0poeEtEbE9IOUhCYzBjV3piSDY4OFN1UGFheW5rTzI0L1RkM0dvWWhZdW9NZG84dGFSU3FxRTdLd3R2TEtKVjN6djlsUVplUjBvVzlUUUN0OW91bitmNE1nWWhhYXlGYjVkMDNsYTFwSVNMb3lFWnhMU3N6NjJmU2N1dVpIN0F1QTVzTWpoOElOYlVuTHRqNzZyOUpSNnlaUVdKQitTWkF5a01JQlQ5cUZCTm9aenZkSDk1THZmb2ZENFQ3c0Q0T1Y2IiwiYXpwIjoiNzdkZjk5M2QtZTcyOC00YjhlLTk3NzAtNmI0MDlhYTk5NTUyIiwiYXpwYWNyIjoiMCIsImlkcCI6ImxpdmUuY29tIiwibmFtZSI6InR1YW5uZ3V5ZW5jb2RlIiwib2lkIjoiYTY1ZDAzZDQtNmEyYS00MjZmLTk2M2QtOGRjYTI0Mzk5YjgzIiwicHJlZmVycmVkX3VzZXJuYW1lIjoidHVhbm5ndXllbmNvZGVAZ21haWwuY29tIiwicmgiOiIxLkFjWUE2d1BBcmpmRmlrNnc4eEZFcVRwZ3ZEMlozM2NvNTQ1TGwzQnJRSnFwbFZJQUFNekdBQS4iLCJyb2xlcyI6WyJzdHVkZW50Il0sInNjcCI6ImFjY2Vzc19hc191c2VyIiwic2lkIjoiMDAyZTZhZWEtZGQxMC0xYWI4LTg1MzAtM2M1YTQxN2YxZjdhIiwic3ViIjoiWTVaaHlUUDg2ZHN0WVBBX2UtN2ZlRjNWLXEwMTN2T0pobmYwVzBlQ2JXMCIsInRpZCI6ImFlYzAwM2ViLWM1MzctNGU4YS1iMGYzLTExNDRhOTNhNjBiYyIsInV0aSI6IkNpc0tLS252RmtheTIyZlFOQjJ1QUEiLCJ2ZXIiOiIyLjAiLCJ4bXNfZnRkIjoiQlZ0cUc4ZURlZWxMX2F4dDVmUG5taTBwUTRkRFIxZkdlYU5JTjZhZ001SUJhMjl5WldGalpXNTBjbUZzTFdSemJYTSJ9.FFCehcDEmDg19MarvVLtUQZXPxyL1tAwsp_yX-O9NHq6_vFHP-Xplenk_-M8gRj2OxbLL9IsaYlnDAeDdJvXaRvWohtGLhUeSUaJYG6SRxM-1YFGZMkUe7x2SsuasqPLXfXhAayjz7_6tKfs-vA-StrisU3qA1Uq_ago35JxAhS_kmkP3DbJc-XHuZtaH0s54d2pJSWTglh9adZm4Tsw12DLK2iT5Vr_zMOKabB6iL7RSfe3HSaq0xIgM3dxJ0l5-rrCDb48_RAfcLciu2QpkxhqgJnDrDSKKL08_gVRx1UBI0keM_Kpg2RW_q0FbuwZErkDtfbg17YbJyH38IQ77A\"\r\n}",
+              "raw": "{\r\n    \"accessToken\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6InNNMV95QXhWOEdWNHlOLUI2ajJ4em1pazVBbyJ9.eyJhdWQiOiI3N2RmOTkzZC1lNzI4LTRiOGUtOTc3MC02YjQwOWFhOTk1NTIiLCJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vYWVjMDAzZWItYzUzNy00ZThhLWIwZjMtMTE0NGE5M2E2MGJjL3YyLjAiLCJpYXQiOjE3NzI1MjQ5MDgsIm5iZiI6MTc3MjUyNDkwOCwiZXhwIjoxNzcyNTI5NTMyLCJhaW8iOiJBY1FBTy84YkFBQUFZNlB1eml0VXZObVRBR3BlQXpRVzI4SDJ4Q0FuRFdmU05KWmlDcTRxUlhPSTF1b3ZsU2h6cWE4cFNNTzlWZUZWdUJSSEpHUHBLdXA0VDBtbFgxS0I0RFd1ZjFFem9aeGpFS25SL2Z0eFRVSUswaUVKUDQwbzhJM095ejdkeDErYk9zNk5PKzFxYlI1VHpsMWc5Z0l4aFVYakFCdG9DSTB2M0V2MUdQY0NUOVo3QkMyOGdubWhpOEV1S2RTR01pdDdFWXRmSldHZ25pYlVUTVNyUU10elNGRTlxSXlGOW5Qc2c3eWpnVUFreHhNNVRSUnlZUXdhZlhqNzMzSXd0R0xoIiwiYXpwIjoiNzdkZjk5M2QtZTcyOC00YjhlLTk3NzAtNmI0MDlhYTk5NTUyIiwiYXpwYWNyIjoiMCIsImlkcCI6ImxpdmUuY29tIiwibmFtZSI6Im5ob2sgdGhhbmgiLCJvaWQiOiIxZGViMDBhOS04MzVjLTRhYjctYTUwZi01N2MxMmE1NmM3YmQiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJuaG9rdGhhbmgzMjExQGdtYWlsLmNvbSIsInJoIjoiMS5BY1lBNndQQXJqZkZpazZ3OHhGRXFUcGd2RDJaMzNjbzU0NUxsM0JyUUpxcGxWSUFBSFRHQUEuIiwicm9sZXMiOlsiYWRtaW4iXSwic2NwIjoiYWNjZXNzX2FzX3VzZXIiLCJzaWQiOiIwMDJlNDNkYS0zZjE2LTVlMzgtZGNkZC0zOGNhMmIyOWY0MjAiLCJzdWIiOiJfdUhOeUFndzVuaEE4Z2lqSnNESjQzbkUwU3JaLUVKTVdHMEo0c01ERW9vIiwidGlkIjoiYWVjMDAzZWItYzUzNy00ZThhLWIwZjMtMTE0NGE5M2E2MGJjIiwidXRpIjoiMU82YVpjNmhxa1NoXzlnclpCd0ZBQSIsInZlciI6IjIuMCIsInhtc19mdGQiOiJ3c0ZxOFRac25YZ2FoalpXYzhMYmZrb1RDVm83bmFnWGFBcjl3WmVqQkdnQmEyOXlaV0Z6YjNWMGFDMWtjMjF6In0.B4J92_HMR-_UnBxq7t6HcvUv6Kw249AjoGxPhooq3ra6ZIBLhJXwP_OSEK8eG_SPYF7WkQTaYuYiX9ieibLuTLPREK4zHV6gKrCX_-F053fwsPYHlzBSE47Z2YcFeCf3ffBjf_5PAPR9TcfJ7By9U1Un9ah1roH1QE8ptmFPRq1FsSfoLy9cb7w3UZOtZG8ibTL6gJmFXVqT2y4IhZ57SYOarTwOUBFt3rINbcVoTAP4D7n-ajXl1NEWQ8PpRYj16mGw4VIJnlkwsk5oh7cDJpNu-xKCM-eddIyO-0W4i3nYOLvaigM1uAK2mJmqFTqLcvVEa9HpZhamCS1T8A_83A\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -478,52 +2646,14 @@
           "response": []
         },
         {
-          "name": "chatbot",
-          "id": "acdb8d6b-4834-41a5-b1f1-5e324c13632b",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{auth_token}}",
-                "type": "text",
-                "uuid": "07321f86-963f-4d0e-9b70-7e12f5aecd2b"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"prompt\": \"Thị trường chứng khoán hôm nay\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{domain}}/api/v1/chatbot",
-              "host": [
-                "{{domain}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "chatbot"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "get student semester",
-          "id": "d22cc28c-3ef3-4ee3-a3f5-defb505bcc36",
+          "name": "Student semester",
           "request": {
             "method": "GET",
             "header": [
               {
                 "key": "Authorization",
                 "value": "Bearer {{auth_token}}",
-                "type": "text",
-                "uuid": "741652b6-7af9-438c-a8cc-bbdf58b920d9"
+                "type": "text"
               }
             ],
             "url": {
@@ -542,14 +2672,19 @@
           "response": []
         },
         {
-          "name": "create student",
-          "id": "42ab3f94-a7c2-423e-a791-72081fa5987c",
+          "name": "create payment",
           "request": {
             "method": "POST",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"student_code\": \"A46049\",\r\n    \"full_name\": \"John Doe\",\r\n    \"date_of_birth\": \"2004-12-27\",\r\n    \"gender\": \"NAM\",\r\n    \"student_class_code\": \"KHMT2021\",\r\n    \"major_code\": \"KHMT\",\r\n    \"start_year\": 2023,\r\n    \"end_year\": 2028,\r\n    \"training_type\": \"CHINH_QUY\",\r\n    \"identity_card\":{\r\n        \"card_type\": \"CCCD\",\r\n        \"card_number\": \"1234567890123456\",\r\n        \"issued_date\": \"2015-12-25\",\r\n        \"issued_place\": \"Hanoi\"\r\n    },\r\n    \"contact\":{\r\n        \"email\": \"john.doe@example.com\",\r\n        \"phone_number\": \"0987654321\",\r\n        \"address\": \"123 Nguyen Huu Tho\"\r\n    },\r\n    \"academic_info\":{\r\n        \r\n    }\r\n\r\n}",
+              "raw": "{\r\n    \"studentId\": 1,\r\n    \"invoiceId\": 1\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -557,23 +2692,123 @@
               }
             },
             "url": {
-              "raw": "{{domain}}/api/v1/admin/student/create",
+              "raw": "{{domain}}/api/v1/payments/create-order",
               "host": [
                 "{{domain}}"
               ],
               "path": [
                 "api",
                 "v1",
-                "admin",
-                "student",
-                "create"
+                "payments",
+                "create-order"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get top 5 news",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{domain}}/api/v1/news/top5",
+              "host": [
+                "{{domain}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "news",
+                "top5"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get all news",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{domain}}/api/v1/news",
+              "host": [
+                "{{domain}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "news"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get invoice",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{domain}}/api/v1/tuition",
+              "host": [
+                "{{domain}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tuition"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get invoice detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{domain}}/api/v1/tuition/1",
+              "host": [
+                "{{domain}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tuition",
+                "1"
               ]
             }
           },
           "response": []
         }
-      ],
-      "id": "5ef693c3-c553-4bc4-99f6-e618c33de471"
+      ]
     }
   ]
 }
