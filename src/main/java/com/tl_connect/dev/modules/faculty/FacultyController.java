@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.tl_connect.dev.core.common.dto.PagedResponse;
 import com.tl_connect.dev.core.common.ultility.ResponseHelper;
+import com.tl_connect.dev.modules.faculty.dto.CreateFacultyDTO;
 import com.tl_connect.dev.modules.faculty.dto.FacultyDTO;
 import com.tl_connect.dev.modules.faculty.dto.UpdateFacultyDTO;
 
@@ -27,7 +28,7 @@ public class FacultyController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createFaculty(@Valid @RequestBody FacultyDTO facultyDTO) {
+    public ResponseEntity<?> createFaculty(@Valid @RequestBody CreateFacultyDTO facultyDTO) {
         Long id = facultyService.createFaculty(facultyDTO);
         return ResponseHelper.success("Create faculty successfully", id);
     }

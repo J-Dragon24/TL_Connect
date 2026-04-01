@@ -40,13 +40,13 @@ public class AcademicResultAdminController {
         return ResponseHelper.success("Academic result imported successfully", result);
     }
 
-    @PutMapping("/update/{id}")
+    @PostMapping("/update/{id}")
     public ResponseEntity<?> updateStudentSubjectResult(@PathVariable Long id, @Valid @RequestBody UpdateStudentSubjectResultDTO dto) {
         academicResultMofidyService.updateStudentSubjectResult(id, dto);
         return ResponseHelper.success("Student subject result updated successfully", null);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PostMapping("/delete/{id}")
     public ResponseEntity<?> deleteStudentSubjectResult(@PathVariable Long id) {
         academicResultMofidyService.deleteStudentSubjectResult(id);
         return ResponseHelper.success("Student subject result deleted successfully", null);

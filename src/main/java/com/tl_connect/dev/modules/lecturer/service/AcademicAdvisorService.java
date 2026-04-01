@@ -79,7 +79,7 @@ public class AcademicAdvisorService {
         try {
             academicAdvisorRepository.save(academicAdvisor);
         } catch (DataIntegrityViolationException e) {
-            throw new BadRequestException("Failed to create academic advisor");
+            throw new BadRequestException("Failed to create academic advisor" + e.getMessage());
         }
         return academicAdvisor.getId();
     }

@@ -38,13 +38,13 @@ public class LecturerController {
         return ResponseHelper.success("Create lecturer successfully", lecturerService.createLecturer(dto));
     }
 
-    @PutMapping("/update/{id}")
+    @PostMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody UpdateLecturerDTO dto) {
         lecturerService.updateLecturer(id, dto);
         return ResponseHelper.success("Update lecturer successfully", null);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PostMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         lecturerService.deleteLecturer(id);
         return ResponseHelper.success("Delete lecturer successfully", null);

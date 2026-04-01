@@ -17,7 +17,7 @@ import lombok.Setter;
 public class ExamScheduleBasicInfoDTO {
     private Long id;
     private String subjectCode;
-    private String classCode;
+    private String subjectName;
     private LocalDate examDate;
     private LocalTime startTime;
     private LocalTime endTime;

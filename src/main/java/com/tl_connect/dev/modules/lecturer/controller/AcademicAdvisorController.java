@@ -38,7 +38,7 @@ public class AcademicAdvisorController {
         return ResponseHelper.success("Create academic advisor successfully", id);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PostMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         academicAdvisorService.delete(id);
         return ResponseHelper.success("Delete academic advisor successfully", null);

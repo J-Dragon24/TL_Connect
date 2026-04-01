@@ -17,7 +17,7 @@ import com.tl_connect.dev.modules.semester.dto.CreateSemesterDTO;
 import com.tl_connect.dev.modules.semester.dto.SemesterDTO;
 import com.tl_connect.dev.modules.semester.dto.UpdateSemesterDTO;
 
-
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -34,13 +34,13 @@ public class SemesterAdminController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createSemester(@RequestBody CreateSemesterDTO createSemesterDTO){
+    public ResponseEntity<?> createSemester(@Valid @RequestBody CreateSemesterDTO createSemesterDTO){
         Long id = semesterService.createSemester(createSemesterDTO);
         return ResponseHelper.success("Semester created successfully", id);
     }
 
     @PostMapping("update/{id}")
-    public ResponseEntity<?> updateSemester(@PathVariable Long id, @RequestBody UpdateSemesterDTO updateSemesterDTO){
+    public ResponseEntity<?> updateSemester(@PathVariable Long id, @Valid @RequestBody UpdateSemesterDTO updateSemesterDTO){
         semesterService.updateSemester(id, updateSemesterDTO);
         return ResponseHelper.success("Semester updated successfully", null);
     }

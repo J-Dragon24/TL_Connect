@@ -53,7 +53,7 @@ public class TuitionService {
 
         TuitionInvoiceDetailDTO tuitionInvoiceDetail = TuitionInvoiceDetailDTO.builder()
                 .invoiceId(invoice.getInvoiceId())
-                .semesterCode(invoice.getSemesterCode())
+                .semesterName(invoice.getSemesterName())
                 .items(tuitionItems)
                 .totalAmount(invoice.getTotalAmount())
                 .finalAmount(invoice.getFinalAmount())
@@ -63,6 +63,9 @@ public class TuitionService {
 
         return tuitionInvoiceDetail;
     }
+
+
+
 
     public PagedResponse<TuitionInvoiceAdmDTO> getAllTuitionInvoices(Pageable pageable, Long semesterId) {
         Page<TuitionInvoiceRow> page = tuitionInvoiceRepository.findAllBySemesterId(semesterId, pageable);
@@ -78,11 +81,10 @@ public class TuitionService {
     }
 
     public TuitionInvoiceDetailAdmDTO getTuitionInvoiceDetail(Long invoiceId) {
-        TuitionInvoiceAdmDTO invoice = tuitionInvoiceRepository.findByTuitionInvoiceId(invoiceId)
-                .map(this::toTuitionInvoiceAdmDTO)
+        TuitionInvoiceRow invoice = tuitionInvoiceRepository.findByTuitionInvoiceId(invoiceId)
                 .orElseThrow(() -> new NotFoundException("Invoice not found"));
 
-        List<TuitionItemProjection> items = tuitionInvoiceItemRepository.findItemsByInvoiceId(invoiceId);
+        List<TuitionItemProjection> items = tuitionInvoiceItemRepository.findItemsByInvoiceId(invoiceId, invoice.getStudentId());
 
         List<TuitionItemDTO> tuitionItems = items.stream().map(item -> TuitionItemDTO.builder()
                 .id(item.getId())
@@ -95,7 +97,7 @@ public class TuitionService {
                 .build()).toList();
 
         TuitionInvoiceDetailAdmDTO tuitionInvoiceDetail = TuitionInvoiceDetailAdmDTO.builder()
-                .invoiceId(invoice.getInvoiceId())
+                .invoiceId(invoice.getId())
                 .semesterCode(invoice.getSemesterCode())
                 .studentName(invoice.getStudentName())
                 .studentCode(invoice.getStudentCode())
@@ -113,7 +115,7 @@ public class TuitionService {
     private TuitionInvoiceDTO toTuitionInvoiceDTO(TuitionInvoiceView view) {
         return TuitionInvoiceDTO.builder()
                 .invoiceId(view.getInvoiceId())
-                .semesterCode(view.getSemesterCode())
+                .semesterName(view.getSemesterName())
                 .totalAmount(view.getTotalAmount())
                 .finalAmount(view.getFinalAmount())
                 .status(view.getStatus())

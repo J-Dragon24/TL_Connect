@@ -22,14 +22,14 @@ public class ExamController {
     private final ExamService examService;
 
     @GetMapping
-    public ResponseEntity<?> getExamSchedule(Authentication authentication, @RequestParam(name = "HocKy", required = true) String semesterName) {
+    public ResponseEntity<?> getExamSchedule(Authentication authentication, @RequestParam(name = "HocKy", required = true) String semesterCode) {
         if(authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo userInfo)){
             throw new UnauthorizeException("Authentication required");
         }
         Long studentId = userInfo.userId();
 
-        ExamScheduleDTO examScheduleDTO = examService.getExamSchedule(studentId, semesterName);
+        ExamScheduleDTO examScheduleDTO = examService.getExamSchedule(studentId, semesterCode);
 
-        return ResponseHelper.success(semesterName, examScheduleDTO);
+        return ResponseHelper.success("Get exam schedule successfully!", examScheduleDTO);
     }
 }

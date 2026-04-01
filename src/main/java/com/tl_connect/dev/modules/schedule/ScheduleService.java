@@ -96,8 +96,8 @@ public class ScheduleService {
                                 .build();
         }
 
-        public SemesterScheduleDTO getSemesterSchedule(Long studentId, String semesterName) {
-                Semester semester = semesterRepository.findSemesterByName(semesterName)
+        public SemesterScheduleDTO getSemesterSchedule(Long studentId, String semesterCode) {
+                Semester semester = semesterRepository.findBySemesterCode(semesterCode)
                                 .orElseThrow(() -> new NotFoundException("Semester not found"));
 
                 List<ScheduleRow> scheduleRows = scheduleRepository.findScheduleByStudentId(studentId,
@@ -267,16 +267,10 @@ public class ScheduleService {
                 ClassSchedule classSchedule = scheduleRepository.findById(id)
                                 .orElseThrow(() -> new NotFoundException("Schedule not found"));
 
-                 Long courseClassId = classSchedule.getCourseClassId();
+                Long courseClassId = classSchedule.getCourseClassId();
 
                 CourseClass courseClass = courseClassRepository.findById(courseClassId)
                         .orElseThrow(() -> new NotFoundException("Course class not found"));
-
-                List<ClassSchedule> dbList = scheduleRepository.findForConflict(
-                        Set.of(dto.getDayOfWeek()),
-                        courseClassId,
-                        courseClass.getSemesterId()
-                );
 
                 int dayOfWeek = dto.getDayOfWeek() != null ? dto.getDayOfWeek() : classSchedule.getDayOfWeek();
                 int startPeriod = dto.getStartPeriod() != null ? dto.getStartPeriod() : classSchedule.getStartPeriod();
@@ -284,6 +278,12 @@ public class ScheduleService {
                 LocalTime startTime = dto.getStartTime() != null ? dto.getStartTime() : classSchedule.getStartTime();
                 LocalTime endTime = dto.getEndTime() != null ? dto.getEndTime() : classSchedule.getEndTime();
                 String room = dto.getRoom() != null ? dto.getRoom() : classSchedule.getRoom();
+
+                List<ClassSchedule> dbList = scheduleRepository.findForConflict(
+                        Set.of(dayOfWeek),
+                        courseClassId,
+                        courseClass.getSemesterId()
+                );
 
                 if (!startTime.isBefore(endTime) || !(startPeriod <= endPeriod)) {
                     throw new BadRequestException("Start time must be before end time");
@@ -295,7 +295,6 @@ public class ScheduleService {
 
                         if (db.getCourseClassId().equals(courseClassId)
                                 && startPeriod < db.getEndPeriod() && endPeriod > db.getStartPeriod()) {
-
                                 throw new ConflictException("Class schedule conflict");
                         }
 
@@ -317,7 +316,7 @@ public class ScheduleService {
                 try {
                         scheduleRepository.save(classSchedule);
                 } catch (DataIntegrityViolationException e) {
-                        throw new BadRequestException("Class schedule conflict");
+                        throw new BadRequestException("Update schedule failed" + e.getMessage());
                 }
         }
 

@@ -18,7 +18,7 @@ import lombok.Setter;
 @Builder
 public class TuitionInvoiceDTO {
     private Long invoiceId;
-    private String semesterCode;
+    private String semesterName;
     private BigDecimal totalAmount;
     private BigDecimal finalAmount;
     private TuitionStatus status;

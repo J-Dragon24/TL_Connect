@@ -35,14 +35,7 @@ public class OAuthService {
     @Transactional
     public OAuthUserInfoDTO loginWithMicrosoft(String accessToken) {
 
-        // UserInfo userInfo = authHelper.extractUserInfo(accessToken);
-        UserInfo userInfo = UserInfo.builder()
-                .oid("1deb00a9-835c-4ab7-a50f-57c12a56c7bd")
-                .email("[EMAIL_ADDRESS]")
-                .name("LongBao")
-                .roles(List.of("student"))
-                .avatar("https://graph.microsoft.com/v1.0/me/photo/$value")
-                .build();
+        UserInfo userInfo = authHelper.extractUserInfo(accessToken);
 
         String microsoftId = userInfo.oid();
         String email = userInfo.email();

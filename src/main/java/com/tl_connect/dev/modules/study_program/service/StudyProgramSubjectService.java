@@ -62,8 +62,12 @@ public class StudyProgramSubjectService {
                 .semesterId(createStudyProgramSubjectDTO.getSemesterId())
                 .subjectId(createStudyProgramSubjectDTO.getSubjectId())
                 .isRequired(createStudyProgramSubjectDTO.getIsRequired())
-                .electiveGroup(createStudyProgramSubjectDTO.getElectiveGroup())
                 .build();
+
+        if(createStudyProgramSubjectDTO.getElectiveGroup() != null) {
+            studyProgramSubject.setElectiveGroup(createStudyProgramSubjectDTO.getElectiveGroup());
+        }
+        
         try {
             studyProgramSubjectRepository.save(studyProgramSubject);
         } catch (DataIntegrityViolationException e) {

@@ -2,6 +2,8 @@ package com.tl_connect.dev.modules.schedule.dto;
 
 import java.time.LocalTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -33,12 +35,14 @@ public class ClassScheduleDTO {
 
 
     @AssertTrue(message = "End period must be greater than start period")
+    @JsonIgnore
     public boolean isValidPeriodRange() {
         if (startPeriod == null || endPeriod == null) return true;
         return endPeriod > startPeriod;
     }
 
     @AssertTrue(message = "End time must be greater than start time")
+    @JsonIgnore
     public boolean isValidTimeRange() {
         if (startTime == null || endTime == null) return true;
         return endTime.isAfter(startTime);

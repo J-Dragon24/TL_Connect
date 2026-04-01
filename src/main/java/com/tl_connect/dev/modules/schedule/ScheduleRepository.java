@@ -89,7 +89,9 @@ public interface ScheduleRepository extends JpaRepository<ClassSchedule, Long> {
 
     @Query(value = """
         SELECT s.* FROM class_schedules s
-        WHERE s.semester_id = :semesterId
+        JOIN course_classes cc ON s.course_class_id = cc.id
+        WHERE cc.semester_id = :semesterId
+            AND s.day_of_week IN :days   
             AND (
                 s.day_of_week IN :days
                 OR s.course_class_id = :courseClassId

@@ -16,7 +16,7 @@ public class UpdateStudentClassDTO {
     @Size(min = 1, max = 20, message = "Class code can not be blank")
     private String classCode;
 
-    @Size(min = 1, max = 20, message = "Major ID can not be blank")
+    @Min(value = 1, message = "Major ID must be greater than 0")
     private Long majorId;
 
     @Min(value = 1900, message = "Start year must be greater than or equal to 1900")

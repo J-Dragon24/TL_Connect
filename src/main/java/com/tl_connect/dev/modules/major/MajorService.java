@@ -137,8 +137,7 @@ public class MajorService {
                 .majorName(major.getMajorName())
                 .majorCode(major.getMajorCode())
                 .facultyCode(major.getFacultyCode())
-                .createdAt(major.getCreatedAt())
-                .updatedAt(major.getUpdatedAt())
+                .isActive(major.getIsActive())
                 .build();
     }
 }

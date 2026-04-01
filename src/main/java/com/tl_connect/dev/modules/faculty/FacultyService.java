@@ -14,6 +14,7 @@ import com.tl_connect.dev.core.common.exception.BadRequestException;
 import com.tl_connect.dev.core.common.exception.ConflictException;
 import com.tl_connect.dev.core.common.exception.InvalidInputException;
 import com.tl_connect.dev.core.common.exception.NotFoundException;
+import com.tl_connect.dev.modules.faculty.dto.CreateFacultyDTO;
 import com.tl_connect.dev.modules.faculty.dto.FacultyDTO;
 import com.tl_connect.dev.modules.faculty.dto.UpdateFacultyDTO;
 
@@ -41,8 +42,8 @@ public class FacultyService {
     }
 
     @Transactional
-    public Long createFaculty(FacultyDTO facultyDTO) {
-        Set<ConstraintViolation<FacultyDTO>> violations = validator.validate(facultyDTO);
+    public Long createFaculty(CreateFacultyDTO facultyDTO) {
+        Set<ConstraintViolation<CreateFacultyDTO>> violations = validator.validate(facultyDTO);
         if (!violations.isEmpty()) {
             String message = violations.stream()
                     .map(ConstraintViolation::getMessage)

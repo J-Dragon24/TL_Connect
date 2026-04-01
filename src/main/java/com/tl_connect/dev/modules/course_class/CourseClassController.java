@@ -34,13 +34,13 @@ public class CourseClassController {
         return ResponseHelper.success("Create course class successfully",courseClassService.create(dto));
     }
 
-    @PutMapping("/update/{id}")
+    @PostMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody UpdateCourseClassDTO dto) {
         courseClassService.update(id, dto);
         return ResponseHelper.success("Update course class successfully",null);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PostMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         courseClassService.delete(id);
         return ResponseHelper.success("Delete course class successfully",null);

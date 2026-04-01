@@ -2,6 +2,7 @@ package com.tl_connect.dev.modules.semester.dto;
 
 import java.time.LocalDate;
 
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -25,4 +26,9 @@ public class CreateSemesterDTO {
     private LocalDate startDate;
     @NotNull(message = "End date is required")
     private LocalDate endDate;
+
+    @AssertTrue(message = "End date must be after start date")
+    public boolean isEndDateValid() {
+        return endDate.isAfter(startDate);
+    }
 }

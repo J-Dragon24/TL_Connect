@@ -98,13 +98,13 @@ public class StudyProgramService {
                                 .map(StudyProgramSubjectRow::getSubjectId)
                                 .collect(Collectors.toList());
                 
-                List<SubjectPrerequisiteGroup> subjectPrerequisiteGroups = subjectPreGroupRepository.findBySubjectIdIn(subjectIds);
+                List<SubjectPrerequisiteGroup> subjectPrerequisiteGroups = subjectIds.isEmpty() ? List.of() : subjectPreGroupRepository.findBySubjectIdIn(subjectIds);
 
                 List<Long> groupIds = subjectPrerequisiteGroups.stream()
                                 .map(SubjectPrerequisiteGroup::getId)
                                 .collect(Collectors.toList());
 
-                List<SubjectPrerequisiteGroupItemRow> subjectPrerequisiteGroupItems = subjectPreGroupItemRepository.findByGroupIdIn(groupIds);
+                List<SubjectPrerequisiteGroupItemRow> subjectPrerequisiteGroupItems = groupIds.isEmpty() ? List.of() : subjectPreGroupItemRepository.findByGroupIdIn(groupIds);
 
                 return mapStudyProgram(header, studyProgramSubjects, subjectPrerequisiteGroups, subjectPrerequisiteGroupItems);
         }

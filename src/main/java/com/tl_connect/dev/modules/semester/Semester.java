@@ -29,7 +29,7 @@ public class Semester {
     @Column(name = "semester_name", nullable = false)
     private String semesterName;
 
-    @Column(name = "semester_code", nullable = false)
+    @Column(name = "semester_code", nullable = false, unique = true)
     private String semesterCode;
 
     @Column(name = "academic_years", nullable = false)

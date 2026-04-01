@@ -79,11 +79,12 @@ public class PaymentService {
         String itemJson = objectMapper.writeValueAsString(zaloItems);
 
         String description = "Thanh toan hoc phi - Invoice #" + req.getInvoiceId();
-            ZaloPayOrderResultDTO  zaloResult = zaloPayService.createOrder(
-                invoice.getFinalAmount().longValue(),
-                String.valueOf(req.getStudentId()),
-                description,
-                itemJson
+        
+        ZaloPayOrderResultDTO  zaloResult = zaloPayService.createOrder(
+            invoice.getFinalAmount().longValue(),
+            String.valueOf(req.getStudentId()),
+            description,
+            itemJson
         );
 
         log.info("ZaloPay createOrder response: {}", zaloResult);

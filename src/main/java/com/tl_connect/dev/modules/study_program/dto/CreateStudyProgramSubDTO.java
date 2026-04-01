@@ -11,7 +11,6 @@ public class CreateStudyProgramSubDTO {
     private Long subjectId;
     @NotNull(message = "Semester ID is required")
     private Long semesterId;
-    @NotNull(message = "Elective group is required")
     private String electiveGroup;
     @NotNull(message = "Is required is required")
     private Boolean isRequired;

@@ -52,12 +52,12 @@ public class ScheduleController {
     }
 
     @GetMapping("/semester")
-    public ResponseEntity<?> getSemesterSchedule(Authentication authentication, @RequestParam(name = "HocKy", required = true) String semesterName) {
+    public ResponseEntity<?> getSemesterSchedule(Authentication authentication, @RequestParam(name = "HocKy", required = true) String semesterCode) {
         if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo userInfo)) {
             throw new UnauthorizeException("Authentication required");
         }
         Long studentId = userInfo.userId();
-        SemesterScheduleDTO semesterSchedule = scheduleService.getSemesterSchedule(studentId, semesterName);
+        SemesterScheduleDTO semesterSchedule = scheduleService.getSemesterSchedule(studentId, semesterCode);
         return ResponseHelper.success("Semester schedule retrieved successfully", semesterSchedule);
     }
 

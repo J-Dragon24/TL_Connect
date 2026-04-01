@@ -32,7 +32,7 @@ public class RefundSyncService {
     private final ZaloPayService zaloPayService;
     private final RedisTemplate<String, String> redisTemplate;
 
-    @Scheduled(fixedDelay = 30000) // 30 giây/lần
+    // @Scheduled(fixedDelay = 30000) // 30 giây/lần
     public void syncRefundStatus() {
         List<Payment> pendingRefunds = paymentRepository.findAllByStatus(PaymentStatus.REFUND_PENDING);
 

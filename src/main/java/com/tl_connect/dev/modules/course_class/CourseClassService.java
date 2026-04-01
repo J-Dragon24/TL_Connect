@@ -109,7 +109,9 @@ public class CourseClassService {
         entity.setCapacity(dto.getCapacity());
         entity.setSubjectId(subject.getId());
         entity.setSemesterId(semester.getId());
-        entity.setLecturerId(lecturer.getId());
+        if (lecturer != null) {
+            entity.setLecturerId(lecturer.getId());
+        }
 
         try {
             courseClassRepository.save(entity);

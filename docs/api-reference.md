@@ -1171,7 +1171,7 @@ Lấy thông tin lịch học theo học kỳ của sinh viên.
 - **Query param**: 
 | Field | Type | Required | Description |
 |------|-----|-----|-----|
-| HocKy | string | ✅ | Tên học kỳ |  
+| HocKy | string | ✅ | Mã học kỳ |  
 
 **Ví dụ request:**
 ```
@@ -1384,7 +1384,7 @@ Lấy thông tin lịch thi của sinh viên.
 - **Query param**: 
 | Field | Type | Required | Description |
 |------|-----|-----|-----|
-| HocKy | string | ✅ | Tên học kỳ |  
+| HocKy | string | ✅ | Mã học kỳ |  
   
 **Ví dụ request:**
 ```
@@ -2098,7 +2098,15 @@ Lấy top 5 tin tức.
   "code": 0,
   "message": "Get top 5 news successfully",
   "data": [
-      "abc.pdf"
+    {
+        "title": "Su kien cong nghe",
+        "excerpt": "Hoi thao AI",
+        "imageUrl": "img4.jpg",
+        "newsUrl": "link4",
+        "source": "Truong",
+        "publishDate": "2026-06-01",
+        "createdAt": "2026-04-01T10:19:06.213032"
+    }
   ]
 }
 ```  
@@ -2117,20 +2125,25 @@ Lấy tất cả tin tức.
 {
   "code": 0,
   "message": "Get all news successfully",
-  "data": [
-      {
-          "id": 1,
-          "title": "Tin tức 1",
-          "content": "Nội dung tin tức 1",
-          "createdAt": "2026-02-26T11:28:45.567903"
-      },
-      {
-          "id": 2,
-          "title": "Tin tức 2",
-          "content": "Nội dung tin tức 2",
-          "createdAt": "2026-02-26T11:28:45.567903"
-      }
-  ]
+  "data": {
+      "content": [
+          {
+              "title": "Su kien cong nghe",
+              "excerpt": "Hoi thao AI",
+              "imageUrl": "img4.jpg",
+              "newsUrl": "link4",
+              "source": "Truong",
+              "publishDate": "2026-06-01",
+              "createdAt": "2026-04-01T10:19:06.213032"
+          }
+      ],
+      "page": 0,
+      "size": 10,
+      "totalElements": 4,
+      "totalPages": 1,
+      "first": true,
+      "last": true
+  }
 }
 ```  
 
@@ -3520,14 +3533,14 @@ Lấy danh sách hóa đơn học phí của sinh viên.
   "code": 0,
   "message": "Get tuition invoices successfully",
   "data": [
-    {
-      "invoice_id": 1,
-      "semester_code": "HK1 2025-2026",
-      "total_amount": 5000000,
-      "final_amount": 4500000,
-      "status": "UNPAID",
-      "due_date": "2026-01-15"
-    }
+      {
+          "invoiceId": 1,
+          "semesterName": "Hoc ky 1 2025",
+          "totalAmount": 4500000.00,
+          "finalAmount": 4500000.00,
+          "status": "PAID",
+          "dueDate": "2026-01-10"
+      }
   ]
 }
 ```
@@ -3550,19 +3563,19 @@ Lấy chi tiết hóa đơn học phí.
   "message": "Get tuition invoice detail successfully",
   "data": {
     "invoice_id": 1,
-    "semester_code": "HK1 2025-2026",
+    "semesterName": "Hoc ky 1 2025",
     "student_name": "Pham Minh Duc",
     "student_code": "SV2021001",
     "items": [
       {
-        "id": 1,
-        "subject_name": "Cơ sở dữ liệu",
-        "credits": 3,
-        "price_per_credit": 500000,
-        "coefficient": 1,
-        "amount": 1500000,
-        "is_retake": false
-      }
+          "id": 1,
+          "subjectName": "Nhap mon lap trinh",
+          "credits": 3,
+          "pricePerCredit": 500000.00,
+          "coefficient": 1.00,
+          "amount": 1500000.00,
+          "retake": false
+      },
     ],
     "total_amount": 5000000,
     "final_amount": 4500000,
@@ -3591,12 +3604,16 @@ Lấy danh sách hóa đơn học phí theo kỳ.
   "message": "Get tuition invoices successfully",
   "data": {
     "content": [
-      {
-        "invoiceId": 1,
-        "studentId": 101,
-        "totalAmount": 5000000,
-        "status": "UNPAID"
-      }
+        {
+            "invoiceId": 1,
+            "studentName": "Nguyen Van A",
+            "studentCode": "SV001",
+            "semesterCode": "HK1-2025",
+            "totalAmount": 4500000.00,
+            "finalAmount": 4500000.00,
+            "status": "CANCELLED",
+            "dueDate": "2026-01-10"
+        }
     ],
     "page": 0,
     "size": 10,
@@ -3606,7 +3623,7 @@ Lấy danh sách hóa đơn học phí theo kỳ.
 }
 ```
 ---
-### 22.4. GET /api/v1/admin/tuition/invoices/{invoiceId}
+### 22.4. GET /api/v1/admin/tuition/invoices/`{invoiceId}`
 
 Lấy chi tiết hóa đơn học phí.
 
@@ -3625,8 +3642,24 @@ Lấy chi tiết hóa đơn học phí.
   "message": "Get tuition invoice detail successfully",
   "data": {
     "invoiceId": 1,
-    "studentId": 101,
-    "details": []
+    "studentName": "Nguyen Van A",
+    "studentCode": "SV001",
+    "semesterCode": "HK1-2025",
+    "totalAmount": 4500000.00,
+    "finalAmount": 4500000.00,
+    "status": "CANCELLED",
+    "dueDate": "2026-01-10",
+    "items": [
+        {
+            "id": 1,
+            "subjectName": "Nhap mon lap trinh",
+            "credits": 3,
+            "pricePerCredit": 500000.00,
+            "coefficient": 1.00,
+            "amount": 1500000.00,
+            "retake": false
+        }
+    ]
   }
 }
 ```

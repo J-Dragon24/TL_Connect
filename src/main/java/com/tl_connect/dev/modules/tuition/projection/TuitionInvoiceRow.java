@@ -7,6 +7,7 @@ import com.tl_connect.dev.core.common.enums.TuitionStatus;
 
 public interface TuitionInvoiceRow {
     Long getId();
+    Long getStudentId();
     String getSemesterCode();
     String getStudentName();
     String getStudentCode();

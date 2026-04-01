@@ -8,7 +8,7 @@ public interface ExamScheduleAdminRow {
     
     String getSubjectCode();
 
-    String getClassCode();
+    String getSubjectName();
 
     LocalDate getExamDate();
 

@@ -278,15 +278,15 @@ VALUES
 
 -- exam_schedules
 INSERT INTO exam_schedules
-(subject_id, semester_id, exam_date, start_time, end_time, exam_room, exam_format)
+(subject_id, semester_id, exam_date, start_time, end_time, exam_room, exam_format, exam_location, exam_type)
 VALUES
-(1,1,'2026-01-10','08:00','10:00','A101','OFFLINE'),
-(2,1,'2026-01-12','13:00','15:00','A102','OFFLINE'),
-(4,1,'2026-01-15','09:00','11:00','B201','OFFLINE'),
+(1,1,'2026-01-10','08:00','10:00','A101','OFFLINE', 'Cơ sở 1', 'Final'),
+(2,1,'2026-01-12','13:00','15:00','A102','OFFLINE', 'Cơ sở 1', 'Final'),
+(4,1,'2026-01-15','09:00','11:00','B201','OFFLINE', 'Cơ sở 1', 'Midterm'),
 
 -- future
-(3,2,'2026-06-10','08:00','10:00','A201','OFFLINE'),
-(5,2,'2026-06-12','13:00','15:00','B202','OFFLINE');
+(3,2,'2026-06-10','08:00','10:00','A201','Bài tập lớn', 'Cơ sở 1', 'Final'),
+(5,2,'2026-06-12','13:00','15:00','B202','OFFLINE','Cơ sở 1', 'Final');
 
 -- student_exam_registrations
 INSERT INTO student_exam_registrations

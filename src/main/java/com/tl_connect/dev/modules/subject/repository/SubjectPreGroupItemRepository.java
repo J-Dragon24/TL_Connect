@@ -21,7 +21,7 @@ public interface SubjectPreGroupItemRepository extends JpaRepository<SubjectPrer
                 s.subject_code as subjectCode,
                 s.subject_name as subjectName
             FROM subject_prerequisite_group_items gi
-            JOIN subject s ON gi.prerequisite_subject_id = s.id
+            JOIN subjects s ON gi.prerequisite_subject_id = s.id
             WHERE gi.group_id IN :groupIds
             """, nativeQuery = true)
     List<SubjectPrerequisiteGroupItemRow> findByGroupIdIn(@Param("groupIds") List<Long> groupIds);

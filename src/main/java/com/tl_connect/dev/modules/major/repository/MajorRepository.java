@@ -29,9 +29,7 @@ public interface MajorRepository extends JpaRepository<Major, Long>{
                 m.major_name as majorName,
                 m.major_code as majorCode,
                 f.faculty_code as facultyCode,
-                m.is_active as isActive,
-                m.created_at as createdAt,
-                m.updated_at as updatedAt
+                m.is_active as isActive
             FROM majors m
             JOIN faculties f ON m.faculty_id = f.id
             """,

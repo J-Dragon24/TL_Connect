@@ -20,9 +20,9 @@ public class ScheduleAdminController {
     private final ScheduleService scheduleService;
 
     @GetMapping("/{courseClassId}")
-    public ResponseEntity<?> getDetail(@PathVariable Long courseClassId) {
+    public ResponseEntity<?> getAll(@PathVariable Long courseClassId) {
         List<ClassScheduleDTO> list = scheduleService.getAllClassSchedules(courseClassId);
-        return ResponseHelper.success("Get detail schedule successfully",list);
+        return ResponseHelper.success("Get all schedule successfully",list);
     }
 
     @PostMapping("/create/{courseClassId}")
@@ -31,15 +31,15 @@ public class ScheduleAdminController {
         return ResponseHelper.success("Create schedule successfully",null);
     }
 
-    @PutMapping("/update/{courseClassId}")
-    public ResponseEntity<?> update(@PathVariable Long courseClassId, @Valid @RequestBody UpdateScheduleDTO dto) {
-        scheduleService.updateClassSchedule(courseClassId, dto);
+    @PostMapping("/update/{id}")
+    public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody UpdateScheduleDTO dto) {
+        scheduleService.updateClassSchedule(id, dto);
         return ResponseHelper.success("Update schedule successfully",null);
     }
 
-    @DeleteMapping("/delete/{courseClassId}")
-    public ResponseEntity<?> delete(@PathVariable Long courseClassId) {
-        scheduleService.deleteClassSchedule(courseClassId);
+    @PostMapping("/delete/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        scheduleService.deleteClassSchedule(id);
         return ResponseHelper.success("Delete schedule successfully",null);
     }
 }

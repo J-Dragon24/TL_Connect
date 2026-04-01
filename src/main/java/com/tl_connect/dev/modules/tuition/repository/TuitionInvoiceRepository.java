@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.tl_connect.dev.modules.tuition.entity.TuitionInvoice;
 import com.tl_connect.dev.modules.tuition.projection.TuitionInvoiceRow;
@@ -23,8 +22,8 @@ public interface TuitionInvoiceRepository extends JpaRepository<TuitionInvoice, 
 
     @Query(value = """
             SELECT 
-                t.id as id,
-                s.semester_code as semesterCode,
+                t.id as invoiceId,
+                s.semester_name as semesterName,
                 t.total_amount as totalAmount,
                 t.final_amount as finalAmount,
                 t.status as status,
@@ -38,7 +37,7 @@ public interface TuitionInvoiceRepository extends JpaRepository<TuitionInvoice, 
 
     @Query(value = """
             SELECT 
-                t.id as id,
+                t.id as invoiceId,
                 s.semester_name as semesterName,
                 t.total_amount as totalAmount,
                 t.final_amount as finalAmount,
@@ -54,7 +53,7 @@ public interface TuitionInvoiceRepository extends JpaRepository<TuitionInvoice, 
             SELECT 
                 t.id as id,
                 s.semester_code as semesterCode,
-                st.student_name as studentName,
+                st.full_name as studentName,
                 st.student_code as studentCode,
                 t.total_amount as totalAmount,
                 t.final_amount as finalAmount,
@@ -80,8 +79,9 @@ public interface TuitionInvoiceRepository extends JpaRepository<TuitionInvoice, 
     @Query(value = """
             SELECT 
                 t.id as id,
+                st.id as studentId,
                 s.semester_code as semesterCode,
-                st.student_name as studentName,
+                st.full_name as studentName,
                 st.student_code as studentCode,
                 t.total_amount as totalAmount,
                 t.final_amount as finalAmount,

@@ -42,8 +42,8 @@ public class ExamService {
     private final FacultyRepository facultyRepository;
     private final Validator validator;
 
-    public ExamScheduleDTO getExamSchedule(Long studentId, String semesterName) {
-            Semester semester = semesterRepository.findSemesterByName(semesterName)
+    public ExamScheduleDTO getExamSchedule(Long studentId, String semesterCode) {
+            Semester semester = semesterRepository.findBySemesterCode(semesterCode)
                             .orElseThrow(() -> new NotFoundException("Semester not found"));
 
             List<ExamScheduleView> examSchedules = examRepository.findExamSchedule(studentId, semester.getId());
@@ -191,7 +191,7 @@ public class ExamService {
             return ExamScheduleBasicInfoDTO.builder()
                             .id(examSchedule.getId())
                             .subjectCode(examSchedule.getSubjectCode())
-                            .classCode(examSchedule.getClassCode())
+                            .subjectName(examSchedule.getSubjectName())
                             .examDate(examSchedule.getExamDate())
                             .startTime(examSchedule.getStartTime())
                             .endTime(examSchedule.getEndTime())

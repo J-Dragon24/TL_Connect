@@ -18,6 +18,7 @@ import com.tl_connect.dev.modules.tuition.dto.TuitionInvoiceDetailAdmDTO;
 import com.tl_connect.dev.modules.tuition.service.TuitionModifyService;
 import com.tl_connect.dev.modules.tuition.service.TuitionService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -41,7 +42,7 @@ public class TuitionControllerAdmin {
     }
 
     @PostMapping("/generate")
-    public ResponseEntity<?> generateInvoices(@RequestBody GenerateInvoiceReqDTO request) {
+    public ResponseEntity<?> generateInvoices(@Valid @RequestBody GenerateInvoiceReqDTO request) {
         Long count = tuitionModifyService.generateInvoices(request);
         return ResponseHelper.success("Generate invoices successfully", count);
     }

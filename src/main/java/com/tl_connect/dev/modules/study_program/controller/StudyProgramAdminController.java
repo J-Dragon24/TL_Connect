@@ -1,6 +1,5 @@
 package com.tl_connect.dev.modules.study_program.controller;
 
-
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -25,62 +24,66 @@ import com.tl_connect.dev.modules.study_program.service.StudyProgramModifyServic
 import com.tl_connect.dev.modules.study_program.service.StudyProgramService;
 import com.tl_connect.dev.modules.study_program.service.StudyProgramSubjectService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/admin/study-programs")
 @RequiredArgsConstructor
 public class StudyProgramAdminController {
-    
+
     private final StudyProgramModifyService studyProgramModifyService;
     private final StudyProgramService studyProgramService;
     private final StudyProgramSubjectService studyProgramSubjectService;
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAllStudyProgram(@PageableDefault(page = 0, size = 10) Pageable pageable, @RequestParam(required = true) Integer startYear){
+    public ResponseEntity<?> getAllStudyProgram(@PageableDefault(page = 0, size = 10) Pageable pageable,
+            @RequestParam(required = true) Integer startYear) {
         PagedResponse<StudyProgramAdmDTO> result = studyProgramService.getAllStudyProgram(pageable, startYear);
         return ResponseHelper.success("Study programs retrieved successfully", result);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getStudyProgram(@PathVariable Long id){
+    public ResponseEntity<?> getStudyProgram(@PathVariable Long id) {
         StudyProgramDTO result = studyProgramService.getDetailedStudyProgram(id);
         return ResponseHelper.success("Study program retrieved successfully", result);
     }
 
-
-    @PostMapping
-    public ResponseEntity<?> createStudyProgram(@RequestBody CreateStudyProgramDTO createStudyProgramDTO){
+    @PostMapping("/create")
+    public ResponseEntity<?> createStudyProgram(@Valid @RequestBody CreateStudyProgramDTO createStudyProgramDTO) {
         Long id = studyProgramModifyService.createStudyProgram(createStudyProgramDTO);
         return ResponseHelper.success("Study program created successfully", id);
     }
 
     @PostMapping("update/{id}")
-    public ResponseEntity<?> updateStudyProgram(@PathVariable Long id, @RequestBody UpdateStudyProgramDTO updateStudyProgramDTO){
+    public ResponseEntity<?> updateStudyProgram(@PathVariable Long id,
+        @Valid @RequestBody UpdateStudyProgramDTO updateStudyProgramDTO) {
         studyProgramModifyService.updateStudyProgram(id, updateStudyProgramDTO);
         return ResponseHelper.success("Study program updated successfully", null);
     }
 
     @PostMapping("delete/{id}")
-    public ResponseEntity<?> deleteStudyProgram(@PathVariable Long id){
+    public ResponseEntity<?> deleteStudyProgram(@PathVariable Long id) {
         studyProgramModifyService.deleteStudyProgram(id);
         return ResponseHelper.success("Study program deleted successfully", null);
     }
 
     @PostMapping("{id}/subjects/create")
-    public ResponseEntity<?> addSubjectToStudyProgram(@PathVariable Long id, @RequestBody CreateStudyProgramSubDTO createStudyProgramSubDTO){
+    public ResponseEntity<?> addSubjectToStudyProgram(@PathVariable Long id,
+        @Valid @RequestBody CreateStudyProgramSubDTO createStudyProgramSubDTO) {
         studyProgramSubjectService.createStudyProgramSubject(id, createStudyProgramSubDTO);
         return ResponseHelper.success("Subject added to study program successfully", null);
     }
 
     @PostMapping("subjects/update/{id}")
-    public ResponseEntity<?> updateSubjectToStudyProgram(@PathVariable Long id, @RequestBody UpdateStudyProgramSubDTO updateStudyProgramSubDTO){
+    public ResponseEntity<?> updateSubjectToStudyProgram(@PathVariable Long id,
+        @Valid @RequestBody UpdateStudyProgramSubDTO updateStudyProgramSubDTO) {
         studyProgramSubjectService.updateStudyProgramSubject(id, updateStudyProgramSubDTO);
         return ResponseHelper.success("Subject updated to study program successfully", null);
     }
 
     @PostMapping("subjects/delete/{id}")
-    public ResponseEntity<?> removeSubjectFromStudyProgram(@PathVariable Long id){
+    public ResponseEntity<?> removeSubjectFromStudyProgram(@PathVariable Long id) {
         studyProgramSubjectService.deleteStudyProgramSubject(id);
         return ResponseHelper.success("Subject removed from study program successfully", null);
     }

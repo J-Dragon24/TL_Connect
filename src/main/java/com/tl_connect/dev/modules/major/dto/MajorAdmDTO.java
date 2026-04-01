@@ -19,6 +19,4 @@ public class MajorAdmDTO {
     private String majorCode;
     private String facultyCode;
     private Boolean isActive;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 }

@@ -27,7 +27,7 @@ public class ExamAdminController {
     private final ExamService examService;
 
     @GetMapping
-    public ResponseEntity<?> getExamSchedule(@RequestParam(name = "semesterId", required = true) Long semesterId, @RequestParam(name = "facultyId") Long facultyId,
+    public ResponseEntity<?> getExamSchedule(@RequestParam(name = "semesterId", required = true) Long semesterId, @RequestParam(name = "facultyId", required = false) Long facultyId,
     @PageableDefault(page = 0, size = 10) Pageable pageable) {
 
         PagedResponse<ExamScheduleBasicInfoDTO> result = examService.getExamSchedule(semesterId, pageable, facultyId);

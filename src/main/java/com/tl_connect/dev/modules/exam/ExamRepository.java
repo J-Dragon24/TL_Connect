@@ -46,7 +46,7 @@ public interface ExamRepository extends JpaRepository<ExamSchedule, Long> {
             SELECT
                 es.id AS id,
                 s.subject_code AS subjectCode,
-                cc.class_code AS classCode,
+                s.subject_name AS subjectName,
                 es.exam_date AS examDate,
                 es.start_time AS startTime,
                 es.end_time AS endTime,
@@ -56,7 +56,6 @@ public interface ExamRepository extends JpaRepository<ExamSchedule, Long> {
                 es.exam_type AS examType
             FROM exam_schedules es
             JOIN subjects s ON es.subject_id = s.id
-            JOIN course_classes cc ON es.course_class_id = cc.id
             WHERE es.semester_id = :semesterId
             """,
             countQuery = """
@@ -64,7 +63,6 @@ public interface ExamRepository extends JpaRepository<ExamSchedule, Long> {
                         COUNT(es.id)
                     FROM exam_schedules es
                     JOIN subjects s ON es.subject_id = s.id
-                    JOIN course_classes cc ON es.course_class_id = cc.id
                     WHERE es.semester_id = :semesterId
                     """,
             nativeQuery = true)
@@ -74,7 +72,7 @@ public interface ExamRepository extends JpaRepository<ExamSchedule, Long> {
             SELECT
                 es.id AS id,
                 s.subject_code AS subjectCode,
-                cc.class_code AS classCode,
+                s.subject_name AS subjectName,
                 es.exam_date AS examDate,
                 es.start_time AS startTime,
                 es.end_time AS endTime,
@@ -84,7 +82,6 @@ public interface ExamRepository extends JpaRepository<ExamSchedule, Long> {
                 es.exam_type AS examType
             FROM exam_schedules es
             JOIN subjects s ON es.subject_id = s.id
-            JOIN course_classes cc ON es.course_class_id = cc.id
             WHERE es.semester_id = :semesterId
             AND s.faculty_id = :facultyId
             """,
@@ -93,7 +90,6 @@ public interface ExamRepository extends JpaRepository<ExamSchedule, Long> {
                         COUNT(es.id)
                     FROM exam_schedules es
                     JOIN subjects s ON es.subject_id = s.id
-                    JOIN course_classes cc ON es.course_class_id = cc.id
                     WHERE es.semester_id = :semesterId
                     AND s.faculty_id = :facultyId
                     """,

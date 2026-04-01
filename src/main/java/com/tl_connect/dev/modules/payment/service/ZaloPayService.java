@@ -1,4 +1,5 @@
 package com.tl_connect.dev.modules.payment.service;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 
 import java.util.Calendar;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import com.crypto.HMACUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tl_connect.dev.core.common.exception.ExternalException;
 import com.tl_connect.dev.core.config.ZaloPayConfig;
 import com.tl_connect.dev.modules.payment.dto.ZaloPayOrderResultDTO;
 
@@ -87,10 +89,14 @@ public class ZaloPayService{
             .addHeader("Accept", "application/json")
             .build();
         try (Response response = okHttpClient.newCall(request).execute();) {
-            String responseBody = response.body().string();
-            log.info("ZaloPay raw response: {}", responseBody);  // thêm dòng này
+            ResponseBody responseBody = response.body();
+            if (responseBody == null) {
+                throw new ExternalException("Empty response from ZaloPay createOrder API");
+            }
+            String responseBodyStr = new String(responseBody.bytes(), StandardCharsets.UTF_8);
+            log.info("ZaloPay raw response: {}", responseBodyStr);  // thêm dòng này
             log.info("ZaloPay response code: {}", response.code());  // thêm dòng này
-            Map<String, Object> result = objectMapper.readValue(responseBody, Map.class);
+            Map<String, Object> result = objectMapper.readValue(responseBodyStr, Map.class);
             return ZaloPayOrderResultDTO.builder()
                 .appTransId(transId)
                 .orderUrl((String) result.get("order_url"))
@@ -159,9 +165,9 @@ public class ZaloPayService{
         try (Response response = okHttpClient.newCall(request).execute()) {
             ResponseBody responseBody = response.body();
             if (responseBody == null) {
-                throw new RuntimeException("Empty response from ZaloPay refund API");
+                throw new ExternalException("Empty response from ZaloPay refund API");
             }
-            String result = responseBody.string();
+            String result = new String(responseBody.bytes(), StandardCharsets.UTF_8);
             return objectMapper.readValue(result, Map.class);
 
         }
@@ -197,9 +203,10 @@ public class ZaloPayService{
         try (Response response = okHttpClient.newCall(request).execute()) {
             ResponseBody responseBody = response.body();
             if (responseBody == null) {
-                throw new RuntimeException("Empty response from ZaloPay query refund API");
+                throw new ExternalException("Empty response from ZaloPay query refund API");
             }
-            return objectMapper.readValue(responseBody.string(), Map.class);
+            String result = new String(responseBody.bytes(), StandardCharsets.UTF_8);
+            return objectMapper.readValue(result, Map.class);
         }
     }
 }
