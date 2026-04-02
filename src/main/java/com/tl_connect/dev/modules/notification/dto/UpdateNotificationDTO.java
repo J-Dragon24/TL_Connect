@@ -1,0 +1,30 @@
+package com.tl_connect.dev.modules.notification.dto;
+
+import java.time.LocalDate;
+
+import com.tl_connect.dev.core.common.enums.NotificationType;
+
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class UpdateNotificationDTO {
+    @Size(min = 1, message = "Title is required")
+    private String title;
+    @Size(min = 1, message = "Content is required")
+    private String content;
+    @Size(min = 1, message = "CreatedBy is required")
+    private String createdBy;
+    private NotificationType targetType;
+    private Long targetId;
+    private Long referenceId;
+    private String referenceType;
+    private Boolean isImportant;
+    private LocalDate deadLine;
+}

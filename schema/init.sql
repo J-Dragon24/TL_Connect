@@ -304,7 +304,11 @@ CREATE TABLE semesters (
   is_active BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
-  UNIQUE(academic_years, semester_number)
+  UNIQUE(academic_years, semester_number),
+  CONSTRAINT valid_date_range CHECK (end_date > start_date),
+  EXCLUDE USING gist (
+      daterange(start_date, end_date, '[]') WITH &&
+  )
 );
 
 CREATE TABLE study_program_subjects (
@@ -574,8 +578,9 @@ CREATE TABLE notification_template (
 CREATE TABLE user_devices (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   oauth_user_id BIGINT NOT NULL,
+  device_id VARCHAR(255) UNIQUE NOT NULL,
   fcm_token TEXT UNIQUE NOT NULL,
-  device_type VARCHAR(20),
+  platform VARCHAR(20),
   is_active BOOLEAN DEFAULT TRUE,
   last_used_at TIMESTAMP,
   created_at TIMESTAMP DEFAULT now(),
@@ -586,20 +591,16 @@ CREATE TABLE user_devices (
 
 CREATE TABLE notifications (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  template_id BIGINT,
   title TEXT NOT NULL,
   content TEXT NOT NULL,
   created_by VARCHAR(255),
-  target_type VARCHAR(20) NOT NULL DEFAULT 'GLOBAL' CHECK (type IN ('GLOBAL','FACULTY','STUDENT_CLASS','COURSE_CLASS', 'PERSONAL')),
+  target_type VARCHAR(20) NOT NULL DEFAULT 'GLOBAL' CHECK (target_type IN ('GLOBAL','FACULTY','STUDENT_CLASS','COURSE_CLASS', 'STUDENT')),
   target_id BIGINT,
-  topic VARCHAR(255),
   reference_id BIGINT,
   reference_type VARCHAR(225),
   is_important BOOLEAN DEFAULT FALSE,
   deadline DATE,
-  created_at TIMESTAMP DEFAULT now(),
-
-  FOREIGN KEY (template_id) REFERENCES notification_template(id) ON DELETE SET NULL
+  created_at TIMESTAMP DEFAULT now()
 );
 
 CREATE TABLE notification_read (

@@ -43,9 +43,6 @@ public class Notification {
     @Column(name = "target_id")
     private Long targetId;
 
-    @Column(name = "topic")
-    private String topic;
-
     @Column(name = "reference_id")
     private Long referenceId;
 

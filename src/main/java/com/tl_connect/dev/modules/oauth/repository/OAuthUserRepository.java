@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.oauth;
+package com.tl_connect.dev.modules.oauth.repository;
 
 import java.util.Optional;
 

@@ -5,5 +5,5 @@ public enum NotificationType {
     FACULTY,
     STUDENT_CLASS,
     COURSE_CLASS,
-    PERSONAL
+    STUDENT
 }

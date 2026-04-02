@@ -14,10 +14,10 @@ import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.core.common.types.JwtUserInfo;
 import com.tl_connect.dev.core.common.types.UserInfo;
 import com.tl_connect.dev.core.common.ultility.AuthHelper;
-import com.tl_connect.dev.modules.oauth.OAuthUserRepository;
 import com.tl_connect.dev.modules.oauth.dto.OAuthUserInfoDTO;
 import com.tl_connect.dev.modules.oauth.entity.OAuthUser;
 import com.tl_connect.dev.modules.oauth.projection.JwtUserInfoView;
+import com.tl_connect.dev.modules.oauth.repository.OAuthUserRepository;
 import com.tl_connect.dev.modules.student.entity.Student;
 import com.tl_connect.dev.modules.student.repository.StudentRepository;
 

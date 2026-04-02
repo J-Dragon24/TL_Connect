@@ -27,7 +27,9 @@ public interface ScheduleRepository extends JpaRepository<ClassSchedule, Long> {
                 s.subject_code AS subjectCode,
                 s.subject_name AS subjectName,
                 l.full_name AS lecturerName,
-                l.email AS lecturerEmail
+                l.email AS lecturerEmail,
+                l.phone_number AS lecturerPhone,
+                l.lecturer_code AS lecturerCode
             FROM student_course_classes scc
             JOIN course_classes cc ON scc.course_class_id = cc.id
             JOIN class_schedules cs ON cc.id = cs.course_class_id

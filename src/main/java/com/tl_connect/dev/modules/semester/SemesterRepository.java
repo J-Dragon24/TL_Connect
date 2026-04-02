@@ -35,6 +35,9 @@ public interface SemesterRepository extends JpaRepository<Semester, Long> {
             SELECT *
             FROM semesters
             WHERE :date BETWEEN start_date AND end_date
+                AND is_active = true
+            ORDER BY start_date DESC
+            LIMIT 1
             """, nativeQuery = true)
     Optional<Semester> findSemesterByDate(@Param("date") LocalDate date);
     

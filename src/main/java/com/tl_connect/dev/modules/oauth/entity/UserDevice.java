@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.notification.entity;
+package com.tl_connect.dev.modules.oauth.entity;
 
 import java.time.LocalDateTime;
 
@@ -28,12 +28,15 @@ public class UserDevice {
     @Column(name = "oauth_user_id", nullable = false)
     private Long oauthUserId;
 
+    @Column(name = "device_id", nullable = false)
+    private String deviceId;
+
     @Column(name = "fcm_token", nullable = false)
     private String fcmToken;
 
-    @Column(name = "device_type")
-    private String deviceType;
-
+    @Column(name = "platform")
+    private String platform;
+    
     @Column(name = "is_active")
     private Boolean isActive;
 

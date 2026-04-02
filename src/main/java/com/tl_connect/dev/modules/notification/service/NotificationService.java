@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.notification;
+package com.tl_connect.dev.modules.notification.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -13,9 +13,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.tl_connect.dev.core.common.dto.PagedResponse;
+import com.tl_connect.dev.core.common.enums.NotificationType;
 import com.tl_connect.dev.core.common.exception.NotFoundException;
+import com.tl_connect.dev.core.common.ultility.NotificationHelper;
 import com.tl_connect.dev.modules.course_class.CourseClassRepository;
 import com.tl_connect.dev.modules.notification.dto.DetailNotifyDTO;
+import com.tl_connect.dev.modules.notification.dto.NotificationAdmDTO;
 import com.tl_connect.dev.modules.notification.dto.NotificationReqDTO;
 import com.tl_connect.dev.modules.notification.dto.PrepareNotificationDTO;
 import com.tl_connect.dev.modules.notification.dto.SummaryNotifyDTO;
@@ -23,12 +26,14 @@ import com.tl_connect.dev.modules.notification.dto.UnreadNotificationDTO;
 import com.tl_connect.dev.modules.notification.entity.Notification;
 import com.tl_connect.dev.modules.notification.projection.NotificationRow;
 import com.tl_connect.dev.modules.notification.projection.PrepareNotificationView;
+import com.tl_connect.dev.modules.notification.repository.NotificationRepository;
 
 @Service
 @RequiredArgsConstructor
 public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final CourseClassRepository courseClassRepository;
+    private final NotificationHelper notificationHelper;
 
     @Cacheable(value = "notificationTopics", key = "#studentId")
     public PrepareNotificationDTO prepareNotification(Long studentId) {
@@ -41,12 +46,12 @@ public class NotificationService {
             courseClassIds = new ArrayList<>();
         }
         List<String> topics = new ArrayList<>();
-        topics.add("GLOBAL");
-        topics.add("FACULTY_" + prepareNotificationView.getFacultyId());
-        topics.add("CLASS_" + prepareNotificationView.getStudentClassId());
+        topics.add(notificationHelper.buildTopic(NotificationType.GLOBAL, null));
+        topics.add(notificationHelper.buildTopic(NotificationType.FACULTY, prepareNotificationView.getFacultyId()));
+        topics.add(notificationHelper.buildTopic(NotificationType.STUDENT_CLASS, prepareNotificationView.getStudentClassId()));
         if (courseClassIds != null && !courseClassIds.isEmpty()) {
             for (Long courseClassId : courseClassIds) {
-                topics.add("COURSE_" + courseClassId);
+                topics.add(notificationHelper.buildTopic(NotificationType.COURSE_CLASS, courseClassId));
             }
         }
         return PrepareNotificationDTO.builder()
@@ -105,5 +110,31 @@ public class NotificationService {
     public UnreadNotificationDTO countUnreadNotification(Long studentId, NotificationReqDTO notificationReqDTO) {
         Long count = notificationRepository.countUnreadNotification(studentId, notificationReqDTO.getOauthUserId(), notificationReqDTO.getStudentClassId(), notificationReqDTO.getFacultyId(), notificationReqDTO.getCourseClassIds());
         return UnreadNotificationDTO.builder().count(count).build();
+    }
+
+    public PagedResponse<NotificationAdmDTO> getAllNotification(Pageable pageable) {
+        Page<Notification> notifications = notificationRepository.findAllByOrderByCreatedAtDesc(pageable);
+        List<NotificationAdmDTO> notificationList = notifications.stream()
+                .map(notification -> NotificationAdmDTO.builder()
+                        .id(notification.getId())
+                        .title(notification.getTitle())
+                        .content(notification.getContent())
+                        .createdBy(notification.getCreatedBy())
+                        .targetType(notification.getTargetType())
+                        .targetId(notification.getTargetId())
+                        .referenceId(notification.getReferenceId())
+                        .referenceType(notification.getReferenceType())
+                        .deadLine(notification.getDeadLine())
+                        .isImportant(notification.getIsImportant())
+                        .build())
+                .collect(Collectors.toList());
+        return new PagedResponse<>(
+            notificationList,
+            notifications.getNumber(),
+            notifications.getSize(),
+            notifications.getTotalElements(),
+            notifications.getTotalPages(),
+            notifications.isFirst(),
+            notifications.isLast());
     }
 }

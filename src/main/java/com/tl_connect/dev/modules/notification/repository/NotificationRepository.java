@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.notification;
+package com.tl_connect.dev.modules.notification.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +16,8 @@ import java.util.Optional;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
+
+    Page<Notification> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
     @Query(value = """
             SELECT DISTINCT

@@ -1,6 +1,4 @@
-package com.tl_connect.dev.modules.notification;
-
-import java.util.List;
+package com.tl_connect.dev.modules.notification.controller;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +19,7 @@ import com.tl_connect.dev.modules.notification.dto.NotificationReqDTO;
 import com.tl_connect.dev.modules.notification.dto.PrepareNotificationDTO;
 import com.tl_connect.dev.modules.notification.dto.SummaryNotifyDTO;
 import com.tl_connect.dev.modules.notification.dto.UnreadNotificationDTO;
+import com.tl_connect.dev.modules.notification.service.NotificationService;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
