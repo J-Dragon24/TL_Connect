@@ -37,7 +37,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
                 n.title AS title,
                 n.content AS content,
                 n.created_by AS createdBy,
-                n.type AS type,
+                n.target_type AS targetType,
                 n.created_at AS createdAt,
                 n.deadline AS deadLine,
                 (nr.notification_id IS NOT NULL) AS isRead
@@ -48,7 +48,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
                 n.target_type = 'GLOBAL'
 
-            OR (n.target_type = 'PERSONAL'
+            OR (n.target_type = 'STUDENT'
                 AND n.target_id = :studentId)
 
             OR (n.target_type = 'STUDENT_CLASS'
@@ -66,10 +66,10 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
                     SELECT COUNT(*)
                     FROM notifications n
                     WHERE n.target_type = 'GLOBAL'
-                    OR (n.target_type = 'PERSONAL' AND n.target_id = :studentId)
+                    OR (n.target_type = 'STUDENT' AND n.target_id = :studentId)
                     OR (n.target_type = 'STUDENT_CLASS' AND n.target_id = :classId)
                     OR (n.target_type = 'FACULTY' AND n.target_id = :facultyId)
-                    OR (n.target_type = 'COURSE_CLASS' AND (:courseClassIds IS NOT NULL AND n.target_id IN (:courseClassIds)))
+                    OR (n.target_type = 'COURSE_CLASS' AND n.target_id IN (:courseClassIds))
                     """,
             nativeQuery = true)
     Page<NotificationRow> findAllNotification(@Param("studentId") Long studentId, @Param("oauthUserId") Long oauthUserId, @Param("classId") Long classId, @Param("facultyId") Long facultyId, @Param("courseClassIds") List<Long> courseClassIds, Pageable pageable);
@@ -85,11 +85,12 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
                 AND nr.oauth_user_id = :oauthUserId
             )
             AND (
-                n.target_type = 'ALL'
-            OR (n.target_type = 'STUDENT' AND n.target_id = :studentId)
-            OR (n.target_type = 'STUDENT_CLASS' AND n.target_id = :classId)
-            OR (n.target_type = 'FACULTY' AND n.target_id = :facultyId)
-            OR (n.target_type = 'COURSE_CLASS' AND n.target_id IN :courseClassIds)
+                n.target_type = 'GLOBAL'
+                OR (n.target_type = 'STUDENT' AND n.target_id = :studentId)
+                OR (n.target_type = 'STUDENT_CLASS' AND n.target_id = :classId)
+                OR (n.target_type = 'FACULTY' AND n.target_id = :facultyId)
+                OR (n.target_type = 'COURSE_CLASS' AND n.target_id IN (:courseClassIds))
+            )
             """, nativeQuery = true)
     Long countUnreadNotification(@Param("studentId") Long studentId, @Param("oauthUserId") Long oauthUserId, @Param("classId") Long classId, @Param("facultyId") Long facultyId, @Param("courseClassIds") List<Long> courseClassIds);
 }

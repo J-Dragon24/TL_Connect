@@ -25,9 +25,6 @@ public class NotificationTemplate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "title", nullable = false)
-    private String title;
-
     @Column(name = "code", nullable = false, unique = true)
     private String code;
 

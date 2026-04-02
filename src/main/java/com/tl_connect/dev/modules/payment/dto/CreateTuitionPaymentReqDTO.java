@@ -7,8 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CreateTuitionPaymentReqDTO {
-    @NotNull(message = "Student ID is required")
-    Long studentId;
     @NotNull(message = "Invoice ID is required")
     Long invoiceId;
 }

@@ -17,6 +17,7 @@ public interface TuitionInvoiceItemRepository extends JpaRepository<TuitionInvoi
         SELECT 
             c.id as id,
             sub.subject_name as subjectName,
+            sub.subject_code as subjectCode,
             ti.credits as credits,
             ti.price_per_credit as pricePerCredit,
             ti.coefficient as coefficient,

@@ -47,9 +47,9 @@ public class PaymentService {
     private final RedisTemplate<String, String> redisTemplate;
 
     @Transactional
-    public CreateTuitionPaymentResDTO createPayment(CreateTuitionPaymentReqDTO req) throws Exception {
+    public CreateTuitionPaymentResDTO createPayment(Long studentId, CreateTuitionPaymentReqDTO req) throws Exception {
 
-        TuitionInvoiceView invoice = invoiceRepository.findByIdAndStudentId(req.getInvoiceId(), req.getStudentId())
+        TuitionInvoiceView invoice = invoiceRepository.findByIdAndStudentId(req.getInvoiceId(), studentId)
             .orElseThrow(() -> new NotFoundException("Invoice not found"));
 
         if (invoice.getStatus() == TuitionStatus.PAID) {
@@ -82,7 +82,7 @@ public class PaymentService {
         
         ZaloPayOrderResultDTO  zaloResult = zaloPayService.createOrder(
             invoice.getFinalAmount().longValue(),
-            String.valueOf(req.getStudentId()),
+            String.valueOf(studentId),
             description,
             itemJson
         );
@@ -111,7 +111,7 @@ public class PaymentService {
         paymentRepository.save(payment);
 
         TuitionTransaction tx = new TuitionTransaction();
-        tx.setStudentId(req.getStudentId());
+        tx.setStudentId(studentId);
         tx.setInvoiceId(req.getInvoiceId());
         tx.setAmount(invoice.getFinalAmount());
         tx.setType(TypeTransaction.PAYMENT);

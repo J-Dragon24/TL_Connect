@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tl_connect.dev.core.common.exception.InvalidInputException;
 import com.tl_connect.dev.core.common.ultility.ResponseHelper;
+import com.tl_connect.dev.modules.oauth.dto.LoginRequestDTO;
 import com.tl_connect.dev.modules.oauth.dto.OAuthUserInfoDTO;
 import com.tl_connect.dev.modules.oauth.service.OAuthService;
 
@@ -21,15 +22,13 @@ public class OAuthController {
 
     private final OAuthService oauthService;
 
-    public record LoginRequest(String accessToken) {}
-
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        if(request.accessToken() == null || request.accessToken().isEmpty()){
+    public ResponseEntity<?> login(@RequestBody LoginRequestDTO request) {
+        if(request.getAccessToken() == null || request.getAccessToken().isEmpty()){
             throw new InvalidInputException("token is required and must be non-empty string");
         }
 
-        OAuthUserInfoDTO userInfo = oauthService.loginWithMicrosoft(request.accessToken());
+        OAuthUserInfoDTO userInfo = oauthService.loginWithMicrosoft(request);
 
         return ResponseHelper.success("Login successful", userInfo);    
     }

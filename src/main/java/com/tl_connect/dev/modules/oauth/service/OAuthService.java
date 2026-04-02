@@ -14,6 +14,7 @@ import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.core.common.types.JwtUserInfo;
 import com.tl_connect.dev.core.common.types.UserInfo;
 import com.tl_connect.dev.core.common.ultility.AuthHelper;
+import com.tl_connect.dev.modules.oauth.dto.LoginRequestDTO;
 import com.tl_connect.dev.modules.oauth.dto.OAuthUserInfoDTO;
 import com.tl_connect.dev.modules.oauth.entity.OAuthUser;
 import com.tl_connect.dev.modules.oauth.projection.JwtUserInfoView;
@@ -32,10 +33,12 @@ public class OAuthService {
 
     private final StudentRepository studentRepository;
 
-    @Transactional
-    public OAuthUserInfoDTO loginWithMicrosoft(String accessToken) {
+    private final UserDeviceService userDeviceService;
 
-        UserInfo userInfo = authHelper.extractUserInfo(accessToken);
+    @Transactional
+    public OAuthUserInfoDTO loginWithMicrosoft(LoginRequestDTO request) {
+
+        UserInfo userInfo = authHelper.extractUserInfo(request.getAccessToken());
 
         String microsoftId = userInfo.oid();
         String email = userInfo.email();
@@ -86,7 +89,12 @@ public class OAuthService {
                     .build();
         }
 
+
         String token = jwtService.generateToken(jwtUserInfo);
+
+        String devicePlatform = request.getPlatform() != null ? request.getPlatform().toLowerCase() : "unknown";
+
+        userDeviceService.registerDevice(jwtUserInfoView.get().getOauthUserId(), request.getDeviceId(), token, devicePlatform);
 
         return OAuthUserInfoDTO.builder()
                 .microsoftId(microsoftId)

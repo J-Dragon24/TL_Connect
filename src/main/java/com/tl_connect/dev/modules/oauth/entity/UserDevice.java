@@ -36,9 +36,6 @@ public class UserDevice {
 
     @Column(name = "platform")
     private String platform;
-    
-    @Column(name = "is_active")
-    private Boolean isActive;
 
     @Column(name = "last_used_at")
     private LocalDateTime lastUsedAt;

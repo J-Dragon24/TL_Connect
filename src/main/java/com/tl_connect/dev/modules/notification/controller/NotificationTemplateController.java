@@ -24,8 +24,8 @@ public class NotificationTemplateController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createNotificationTemplate(@Valid @RequestBody CreateNotificationTemplateDTO createNotificationTemplateDTO) {
-        notificationTemplateService.createNotificationTemplate(createNotificationTemplateDTO);
-        return ResponseHelper.success("Create notification template successfully", null);
+        Long id = notificationTemplateService.createNotificationTemplate(createNotificationTemplateDTO);
+        return ResponseHelper.success("Create notification template successfully", id);
     }
 
     @PostMapping("/update/{id}")

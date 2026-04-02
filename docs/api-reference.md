@@ -1835,38 +1835,67 @@ Xóa kết quả học tập.
 ---
 
 ## 10. Notification - Thông báo
-### 10.1. GET /api/v1/student/notification
+### 10.1. GET /api/v1/notification/prepare
+
+Lấy thông tin chuẩn bị để filter notification (context của user).
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: Không áp dụng
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Get prepare notification successfully",
+  "data": {
+    "studentClassId": 1,
+    "oauthUserId": 10,
+    "facultyId": 2,
+    "courseClassIds": [101, 102],
+    "topics": ["SYSTEM", "ACADEMIC"]
+  }
+}
+```
+### 10.2. POST /api/v1/notification
 Lấy tất cả thông tin thông báo của sinh viên.  
 - **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
 - **Content-Type**: Không áp dụng
 
+**Request body:**
+```json
+{
+  "oauthUserId": 10,
+  "facultyId": 2,
+  "studentClassId": 1,
+  "courseClassIds": [101, 102]
+}
+```
+
+**Query params:**
+| Field | Type | Required | Description |
+|------|-----|-----|-----|
+| page | int | ❌ | default = 0 |
+| size | int | ❌ | default = 10 |
+
 **Response thành công (code 0):**:
 ```json
 {
-    "code": 0,
-    "message": "Get all notification successfully",
-    "data": [
-        {
-            "id": 1,
-            "title": "Thong bao he thong",
-            "content": "He thong se bao tri vao 23:00 toi nay",
-            "created_by": "Admin",
-            "target_type": "ALL",
-            "dead_line": null,
-            "created_at": "2026-03-18T08:48:44.464959",
-            "is_read": true
-        },
-        {
-            "id": 2,
-            "title": "Cap nhat cong thong tin",
-            "content": "Da cap nhat giao dien moi",
-            "created_by": "Admin",
-            "target_type": "ALL",
-            "dead_line": null,
-            "created_at": "2026-03-18T08:48:44.464959",
-            "is_read": true
-        }
-    ]
+  "code": 0,
+  "message": "Get all notification successfully",
+  "data": {
+    "content": [
+      {
+        "id": 1,
+        "title": "Thông báo học phí",
+        "isRead": false,
+        "createdAt": "2026-04-01T10:00:00"
+      }
+    ],
+    "page": 0,
+    "size": 10,
+    "totalElements": 100,
+    "totalPages": 10
+  }
 }
 ```  
 
@@ -1884,7 +1913,7 @@ Lấy tất cả thông tin thông báo của sinh viên.
 - ✅ token hợp lệ → code 0 + thông tin thông báo
 - ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
 
-### 10.2. GET /api/v1/student/notification/id
+### 10.3. GET /api/v1/notification/id
 Lấy thông tin chi tiết thông báo.
 - **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
 - **Content-Type**: Không áp dụng
@@ -1901,10 +1930,12 @@ Lấy thông tin chi tiết thông báo.
     "data": {
         "title": "Cap nhat cong thong tin",
         "content": "Da cap nhat giao dien moi",
-        "created_by": "Admin",
-        "target_type": "ALL",
-        "dead_line": null,
-        "created_at": "2026-03-18T08:48:44.464959"
+        "createdBy": "Admin",
+        "targetType": "GLOBAL",
+        "deadLine": null,
+        "referenceType": null,
+        "referenceId": null,
+        "createdAt": "2026-04-02T14:10:36.333465"
     }
 }
 ```  
@@ -1924,7 +1955,154 @@ Lấy thông tin chi tiết thông báo.
 - ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
 - ❌ thông báo không tồn tại → code -2, HTTP 404
 ---
-  
+
+### 10.4. POST /api/v1/notification/unread-count
+
+Đếm số notification chưa đọc.
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: Không áp dụng
+
+**Request body:**
+```json
+{
+  "oauthUserId": 10,
+  "facultyId": 2,
+  "studentClassId": 1,
+  "courseClassIds": [101, 102]
+}
+```
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Count unread notification successfully",
+  "data": {
+    "count": 5
+  }
+}
+```
+---
+### 10.5. GET /api/v1/admin/notification/all
+
+Lấy danh sách tất cả notification (admin).
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: Không áp dụng
+
+**Query params:**
+| Field | Type | Required | Description |
+|------|-----|-----|-----|
+| page | int | ❌ | default = 0 |
+| size | int | ❌ | default = 10 |
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Get all notification successfully",
+  "data": {
+    "content": [
+      {
+        "id": 1,
+        "title": "Thông báo học phí",
+        "content": "Đóng học phí trước ngày...",
+        "createdBy": "Admin",
+        "targetType": "STUDENT",
+        "targetId": 1001,
+        "referenceId": 55,
+        "referenceType": "TUITION",
+        "deadLine": "2026-04-10",
+        "isImportant": true
+      }
+    ],
+    "page": 0,
+    "size": 10,
+    "totalElements": 50,
+    "totalPages": 5
+  }
+}
+```
+---
+### 10.6. POST /api/v1/admin/notification/send
+
+Gửi notification.
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: application/json
+**Request body:**
+```json
+{
+  "templateId": 1,
+  "title": "Thông báo học phí",
+  "content": "Bạn cần đóng học phí",
+  "targetType": "STUDENT",
+  "targetIds": [1001, 1002],
+  "referenceId": 55,
+  "referenceType": "TUITION",
+  "createdBy": "Admin",
+  "deadLine": "2026-04-10",
+  "isImportant": true
+}
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Create notification successfully",
+  "data": null
+} 
+```
+---
+### 10.7. POST /api/v1/admin/notification/update/{id}
+
+Cập nhật notification.
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: application/json
+**Request body:**
+```json
+{
+  "title": "Thông báo mới",
+  "content": "Nội dung cập nhật",
+  "createdBy": "Admin",
+  "targetType": "STUDENT",
+  "targetId": 1001,
+  "referenceId": 55,
+  "referenceType": "TUITION",
+  "isImportant": false,
+  "deadLine": "2026-04-15"
+}
+```
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Update notification successfully",
+  "data": null
+} 
+```
+---
+### 10.8. POST /api/v1/admin/notification/delete/{id}
+
+Xóa notification.
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: Không áp dụng
+**Path param:**
+| Field | Type | Required | Description |
+|------|-----|-----|-----|
+| id | Long | ✅ | ID notification |
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Delete notification successfully",
+  "data": null
+} 
+```
+---
 ## 11. Application - Đơn từ
 ### 11.1. GET /api/v1/applications/types
 Lấy danh sách loại đơn.
@@ -2153,7 +2331,6 @@ Lấy tất cả tin tức.
 ---
 
 ## 13. Semester - Kỳ học
----
 ### 13.1. GET /api/v1/semester/student
 Lấy thông tin kỳ học của sinh viên.
 - **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
@@ -2350,7 +2527,6 @@ Xóa học kỳ.
 
 
 ## 14. Course Class - Lớp học phần
----
 ### 14.1. GET /api/v1/admin/course-classes/all
 Lấy thông tin tất cả lớp học phần.
 - **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
@@ -2565,7 +2741,6 @@ Response thành công (code 0):
 ```  
 ---  
 ## 15. Department - Bộ môn
----
 ### 15.1. GET /api/v1/admin/department/all
 Lấy danh sách khoa (phân trang).
 - **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
@@ -2727,7 +2902,6 @@ Xóa bộ môn (soft delete).
 ```
 ---
 ## 16. Faculty - Khoa
----
 ### 16.1. GET /api/v1/admin/faculty/all
 
 Lấy danh sách khoa (phân trang).
@@ -2854,7 +3028,6 @@ Xóa khoa (soft delete).
 ```
 ---  
 ## 17. Lecturer - Quản lý giảng viên
----
 ### 17.1. GET /api/v1/admin/lecturers/all
 Lấy danh sách giảng viên (phân trang).
 
@@ -3005,7 +3178,6 @@ Xóa giảng viên.
 - ❌ Trùng lecturerCode/email → code -25 (409)
 ---  
 ## 18. Academic Advisor - Cố vấn học tập
----
 ### 18.1. GET /api/v1/admin/academic-advisors/all
 Lấy danh sách cố vấn học tập (phân trang).
 
@@ -3122,7 +3294,6 @@ Xóa cố vấn học tập.
 - ❌ Trùng cố vấn (1 lớp đã có advisor) → code -25 (409)
 ---
 ## 19. Major - Quản lý ngành học
----
 ### 19.1. GET /api/v1/admin/majors/all
 Lấy danh sách ngành học (phân trang).
 
@@ -3243,9 +3414,6 @@ Xóa ngành học.
 - ❌ Validate fail → code -1 hoặc -5 (400)
 ---
 ## 20. Student Class - Quản lý lớp sinh viên
-
----
-
 ### 20.1. GET /api/student-class/all
 
 Lấy danh sách lớp sinh viên (có phân trang)
@@ -3355,7 +3523,6 @@ Xóa lớp sinh viên
 ```
 ---
 ## 21. Subject - Quản lý môn học
----
 ### 21.1. GET /api/v1/admin/subjects/all
 Lấy danh sách tất cả môn học (có phân trang).
 
@@ -3521,6 +3688,7 @@ Xóa môn học.
 - ❌ Validation lỗi → code -5 (400)
 - ❌ Subject code trùng → code -25 (409)
 ---
+## 22. Tuition - Học phí
 ### 22.1. GET /api/v1/tuition
 Lấy danh sách hóa đơn học phí của sinh viên.
 
@@ -3570,6 +3738,7 @@ Lấy chi tiết hóa đơn học phí.
       {
           "id": 1,
           "subjectName": "Nhap mon lap trinh",
+          "subjectCode": "INT1001",
           "credits": 3,
           "pricePerCredit": 500000.00,
           "coefficient": 1.00,
@@ -3729,4 +3898,214 @@ Xóa hóa đơn học phí.
   "data": null
 }
 ```
+---
+## 23. Notification Template – Quản lý template thông báo
+### 23.1. POST /api/v1/admin/notification-templates/create
+Tạo template thông báo mới
+
+**Request body:**
+```json
+{
+  "code": "WELCOME",
+  "name": "Thông báo chào mừng",
+  "content": "Chào mừng bạn đến với hệ thống"
+}
+```
+|Field | Type | Required | Description
+|---|---|---|---
+|code | string | ✅ | Mã template
+|name | string | ✅ | Tên template
+|content | string | ✅ | Nội dung template
+
+**Response thành công (code 0):**
+
+```json
+{
+  "code": 0,
+  "message": "Create notification template successfully",
+  "data": 1
+}
+```
+---
+### 23.2. POST /api/v1/admin/notification-templates/update/{id}
+
+Cập nhật template thông báo
+
+**Path param:**
+
+| Field | Type | Required | Description |
+|------|-----|-----|-----|
+| id | long | ✅ | ID template |
+
+**Request body:**
+
+```json
+{
+  "code": "WELCOME",
+  "name": "Thông báo chào mừng mới",
+  "content": "Nội dung mới"
+}
+```
+
+**Response thành công (code 0):**
+
+```json
+{
+  "code": 0,
+  "message": "Update notification template successfully",
+  "data": null
+}
+```
+---
+### 23.3. POST /api/v1/admin/notification-templates/delete/{id}
+
+Xóa template thông báo
+
+**Path param:**
+
+| Field | Type | Required | Description |
+|------|-----|-----|-----|
+| id | long | ✅ | ID template |
+
+**Response thành công (code 0):**
+
+```json
+{
+  "code": 0,
+  "message": "Delete notification template successfully",
+  "data": null
+}
+```
+---
+### 23.4. GET /api/v1/admin/notification-templates/all
+
+Lấy danh sách template (có phân trang)
+
+**Query param:**
+
+| Field | Type | Required | Description |
+|------|-----|-----|-----|
+| page | int | ❌ | Trang (default = 0) |
+| size | int | ❌ | Số phần tử mỗi trang (default = 10) |
+
+**Response thành công (code 0):**
+
+```json
+{
+  "code": 0,
+  "message": "Get all notification templates successfully",
+  "data": {
+    "content": [
+      {
+        "id": 1,
+        "code": "WELCOME",
+        "name": "Thông báo chào mừng"
+      }
+    ],
+    "page": 0,
+    "size": 10,
+    "total_elements": 1,
+    "total_pages": 1,
+    "first": true,
+    "last": true
+  }
+}
+```
+**Test cases**
+- ✅ Tạo template hợp lệ → code 0 + id
+- ❌ Thiếu field (code/name/content) → code -5
+- ❌ ID không tồn tại (update/delete) → code -2
+- ❌ Không có token → code -3
+---
+## 24. Payment - Thanh toán
+
+Base path: `/api/v1/payments`  
+- **Auth**: Bắt buộc (trừ callback)  
+- **Content-Type**: application/json  
+
+---
+
+### 24.1. POST /api/v1/payments/create-order
+Tạo đơn thanh toán học phí
+
+- **Auth**: Bắt buộc (Authorization: Bearer <JWT>)
+
+**Request body:**
+```json
+{
+  "invoiceId": 1
+}
+```
+| Field | Type | Required | Description
+|---|---|---|---|
+| invoiceId | long | ✅ | ID hóa đơn học phí
+
+**Response thành công (code 0):**
+
+```json
+{
+  "code": 0,
+  "message": "Tạo đơn thanh toán thành công",
+  "data": {
+    "orderUrl": "https://sandbox.zalopay.vn/...",
+    "appTransId": "240402_123456",
+    "amount": 500000
+  }
+} 
+```
+**Response – User chưa đăng nhập (code -3):**
+
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```
+---
+### 24.2. POST /api/v1/payments/refund
+Hoàn tiền giao dịch
+
+- **Auth**: Bắt buộc (Authorization: Bearer <JWT>)
+- **Content-Type**: application/json
+
+**Query param:**
+
+| Field | Type | Required | Description
+|---|---|---|---|
+| transCode | string | ✅ | Mã giao dịch cần hoàn tiền
+
+Ví dụ request:
+
+POST /api/v1/payments/refund?transCode=240402_123456
+
+**Response thành công (code 0):**
+
+```json
+{
+  "code": 0,
+  "message": "Hoàn tiền thành công",
+  "data": {
+    "returnCode": 1,
+    "returnMessage": "Refund success"
+  }
+}
+```
+**Response – Lỗi (code -10):**
+
+```json
+{
+  "code": -10,
+  "message": "Refund failed",
+  "data": null
+}
+```
+**Test cases**
+- ✅ Tạo payment hợp lệ → trả về URL ZaloPay
+- ❌ invoiceId null → code -5
+- ❌ chưa login → code -3
+- ✅ callback hợp lệ → update trạng thái thanh toán
+- ❌ callback sai MAC → reject
+- ✅ refund thành công → code 0
+- ❌ transCode không tồn tại → code -2
 ---

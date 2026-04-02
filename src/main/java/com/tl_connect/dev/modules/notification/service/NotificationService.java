@@ -103,11 +103,16 @@ public class NotificationService {
                 .createdBy(notification.getCreatedBy())
                 .targetType(notification.getTargetType())
                 .deadLine(notification.getDeadLine())
+                .referenceId(notification.getReferenceId())
+                .referenceType(notification.getReferenceType())
                 .createdAt(notification.getCreatedAt())
                 .build();
     }
 
     public UnreadNotificationDTO countUnreadNotification(Long studentId, NotificationReqDTO notificationReqDTO) {
+        if (notificationReqDTO.getCourseClassIds() == null || notificationReqDTO.getCourseClassIds().isEmpty()) {
+            notificationReqDTO.setCourseClassIds(List.of(-1L));
+        }
         Long count = notificationRepository.countUnreadNotification(studentId, notificationReqDTO.getOauthUserId(), notificationReqDTO.getStudentClassId(), notificationReqDTO.getFacultyId(), notificationReqDTO.getCourseClassIds());
         return UnreadNotificationDTO.builder().count(count).build();
     }

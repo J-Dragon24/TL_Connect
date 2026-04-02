@@ -22,6 +22,7 @@ import com.tl_connect.dev.modules.notification.dto.UnreadNotificationDTO;
 import com.tl_connect.dev.modules.notification.service.NotificationService;
 
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
@@ -40,7 +41,7 @@ public class NotificationController {
         return ResponseHelper.success("Get prepare notification successfully", prepareNotificationDTO);
     }
 
-    @GetMapping
+    @PostMapping
     public ResponseEntity<?> getAllNotification(Authentication authentication, @RequestBody NotificationReqDTO notificationReqDTO, @PageableDefault(page = 0, size = 10) Pageable pageable) {
         if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo userInfo)) {
             throw new UnauthorizeException("Authentication is required");
@@ -59,7 +60,7 @@ public class NotificationController {
         return ResponseHelper.success("Get detail notification successfully", notification);
     }
 
-    @GetMapping("/unread-count")
+    @PostMapping("/unread-count")
     public ResponseEntity<?> countUnreadNotification(Authentication authentication, @RequestBody NotificationReqDTO notificationReqDTO) {
         if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo userInfo)) {
             throw new UnauthorizeException("Authentication is required");

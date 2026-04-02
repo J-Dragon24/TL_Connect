@@ -14,6 +14,7 @@ import com.tl_connect.dev.modules.oauth.projection.JwtUserInfoView;
 public interface OAuthUserRepository extends JpaRepository<OAuthUser, Long> {
     @Query(value = """
             SELECT
+                ou.id AS oauthUserId,
                 s.id AS studentId
             FROM oauth_users ou
             JOIN students s ON ou.id = s.oauth_user_id

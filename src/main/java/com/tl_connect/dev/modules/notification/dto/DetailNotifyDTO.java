@@ -22,5 +22,7 @@ public class DetailNotifyDTO {
     private String createdBy;
     private NotificationType targetType;
     private LocalDate deadLine;
+    private String referenceType;
+    private Long referenceId;
     private LocalDateTime createdAt;
 }

@@ -16,6 +16,7 @@ import lombok.Setter;
 public class TuitionItemDTO {
     private Long id;
     private String subjectName;
+    private String subjectCode;
     private int credits;
     private BigDecimal pricePerCredit;
     private BigDecimal coefficient;

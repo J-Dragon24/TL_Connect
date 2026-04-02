@@ -41,7 +41,7 @@ public class NotificationAdminController {
     }
 
     @PostMapping("/update/{id}")
-    public ResponseEntity<?> updateNotification(@PathVariable Long id,@Valid @RequestBody UpdateNotificationDTO notificationReqDTO) {
+    public ResponseEntity<?> updateNotification(@PathVariable Long id, @Valid @RequestBody UpdateNotificationDTO notificationReqDTO) {
         notificationModifyService.updateNotification(id, notificationReqDTO);
         return ResponseHelper.success("Update notification successfully", null);
     }

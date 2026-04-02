@@ -44,6 +44,7 @@ public class TuitionService {
         List<TuitionItemDTO> tuitionItems = items.stream().map(item -> TuitionItemDTO.builder()
                 .id(item.getId())
                 .subjectName(item.getSubjectName())
+                .subjectCode(item.getSubjectCode())
                 .credits(item.getCredits())
                 .pricePerCredit(item.getPricePerCredit())
                 .coefficient(item.getCoefficient())

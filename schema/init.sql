@@ -581,7 +581,6 @@ CREATE TABLE user_devices (
   device_id VARCHAR(255) UNIQUE NOT NULL,
   fcm_token TEXT UNIQUE NOT NULL,
   platform VARCHAR(20),
-  is_active BOOLEAN DEFAULT TRUE,
   last_used_at TIMESTAMP,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),

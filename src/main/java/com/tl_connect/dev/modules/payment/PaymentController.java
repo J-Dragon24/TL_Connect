@@ -3,8 +3,11 @@ package com.tl_connect.dev.modules.payment;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import com.tl_connect.dev.core.common.exception.UnauthorizeException;
+import com.tl_connect.dev.core.common.types.JwtUserInfo;
 import com.tl_connect.dev.core.common.ultility.ResponseHelper;
 import com.tl_connect.dev.modules.payment.dto.CreateTuitionPaymentReqDTO;
 import com.tl_connect.dev.modules.payment.dto.CreateTuitionPaymentResDTO;
@@ -21,9 +24,12 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @PostMapping("/create-order")
-    public ResponseEntity<?> createTuitionPayment(@Valid @RequestBody CreateTuitionPaymentReqDTO req) throws Exception {
-
-        CreateTuitionPaymentResDTO res = paymentService.createPayment(req);
+    public ResponseEntity<?> createTuitionPayment(Authentication authentication, @Valid @RequestBody CreateTuitionPaymentReqDTO req) throws Exception {
+        if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo userInfo)) {
+            throw new UnauthorizeException("Authentication required");
+        }
+        Long studentId = userInfo.userId();
+        CreateTuitionPaymentResDTO res = paymentService.createPayment(studentId, req);
 
         return ResponseHelper.success("Tạo đơn thanh toán thành công", res);
     }

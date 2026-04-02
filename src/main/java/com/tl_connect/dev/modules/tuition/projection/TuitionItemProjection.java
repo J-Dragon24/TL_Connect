@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 public interface TuitionItemProjection {
     Long getId();
     String getSubjectName();
+    String getSubjectCode();
     Integer getCredits();
     BigDecimal getPricePerCredit();
     BigDecimal getCoefficient();
