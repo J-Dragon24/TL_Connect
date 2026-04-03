@@ -28,6 +28,8 @@
 20. [Student Class - Lớp sinh viên](#20-student-class---lớp-sinh-viên)
 21. [Subject - Môn học](#21-subject---môn-học)
 22. [Tuition - Học phí](#22-tuition---học-phí)
+23. [Notification Template - Mẫu thông báo](#23-notification-template---mẫu-thông-báo)
+24. [Payment - Thanh toán](#24-payment---thanh-toán)
 
 ## 1. Response Format chung
 Tất cả response đều theo cấu trúc JSON thống nhất:
@@ -2054,7 +2056,7 @@ Gửi notification.
 } 
 ```
 ---
-### 10.7. POST /api/v1/admin/notification/update/{id}
+### 10.7. POST /api/v1/admin/notification/update/`{id}`
 
 Cập nhật notification.
 
@@ -2083,7 +2085,7 @@ Cập nhật notification.
 } 
 ```
 ---
-### 10.8. POST /api/v1/admin/notification/delete/{id}
+### 10.8. POST /api/v1/admin/notification/delete/`{id}`
 
 Xóa notification.
 
@@ -3757,7 +3759,7 @@ Lấy chi tiết hóa đơn học phí.
 ### 22.3. GET /api/v1/admin/tuition/invoices
 Lấy danh sách hóa đơn học phí theo kỳ.
 
-- **Auth**: Bắt buộc (Authorization: Bearer <JWT>)
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
 - **Query param:**
 
 | Field | Type | Required | Description |
@@ -3796,7 +3798,7 @@ Lấy danh sách hóa đơn học phí theo kỳ.
 
 Lấy chi tiết hóa đơn học phí.
 
-- **Auth**: Bắt buộc (Authorization: Bearer <JWT>)
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
 - **Path param:**
 
 | Field | Type | Required | Description |
@@ -3837,7 +3839,7 @@ Lấy chi tiết hóa đơn học phí.
 
 Tạo hóa đơn học phí theo kỳ.
 
-- **Auth**: Bắt buộc (Authorization: Bearer <JWT>)
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
 - **Content-Type**: application/json
 
 **Request body:**
@@ -3857,11 +3859,11 @@ Tạo hóa đơn học phí theo kỳ.
 }
 ```
 ---
-### 22.6. POST /api/v1/admin/tuition/regenerate/{invoiceId}
+### 22.6. POST /api/v1/admin/tuition/regenerate/`{invoiceId}`
 
 Tạo lại hóa đơn học phí.
 
-- **Auth**: Bắt buộc (Authorization: Bearer <JWT>)
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
 - **Path param:**
 
 | Field | Type | Required | Description |
@@ -3878,11 +3880,11 @@ Tạo lại hóa đơn học phí.
 }
 ```
 ---
-### 22.7. POST /api/v1/admin/tuition/delete/{invoiceId}
+### 22.7. POST /api/v1/admin/tuition/delete/`{invoiceId}`
 
 Xóa hóa đơn học phí.
 
-- **Auth**: Bắt buộc (Authorization: Bearer <JWT>)
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
 - **Path param:**
 
 | Field | Type | Required | Description |
@@ -3927,7 +3929,7 @@ Tạo template thông báo mới
 }
 ```
 ---
-### 23.2. POST /api/v1/admin/notification-templates/update/{id}
+### 23.2. POST /api/v1/admin/notification-templates/update/`{id}`
 
 Cập nhật template thông báo
 
@@ -3957,7 +3959,7 @@ Cập nhật template thông báo
 }
 ```
 ---
-### 23.3. POST /api/v1/admin/notification-templates/delete/{id}
+### 23.3. POST /api/v1/admin/notification-templates/delete/`{id}`
 
 Xóa template thông báo
 
@@ -4028,7 +4030,7 @@ Base path: `/api/v1/payments`
 ### 24.1. POST /api/v1/payments/create-order
 Tạo đơn thanh toán học phí
 
-- **Auth**: Bắt buộc (Authorization: Bearer <JWT>)
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
 
 **Request body:**
 ```json
@@ -4066,7 +4068,7 @@ Tạo đơn thanh toán học phí
 ### 24.2. POST /api/v1/payments/refund
 Hoàn tiền giao dịch
 
-- **Auth**: Bắt buộc (Authorization: Bearer <JWT>)
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
 - **Content-Type**: application/json
 
 **Query param:**

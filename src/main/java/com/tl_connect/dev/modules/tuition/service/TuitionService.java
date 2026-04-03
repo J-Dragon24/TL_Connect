@@ -115,7 +115,7 @@ public class TuitionService {
 
     private TuitionInvoiceDTO toTuitionInvoiceDTO(TuitionInvoiceView view) {
         return TuitionInvoiceDTO.builder()
-                .invoiceId(view.getInvoiceId())
+                .invoiceId(view.getId())
                 .semesterName(view.getSemesterName())
                 .totalAmount(view.getTotalAmount())
                 .finalAmount(view.getFinalAmount())

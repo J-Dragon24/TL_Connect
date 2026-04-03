@@ -40,7 +40,7 @@ public class PaymentController {
             paymentService.handleCallback(callbackBody);
             return ResponseHelper.success("Thanh toán thành công", null);
         } catch (Exception e) {
-            return ResponseHelper.internalError(e.getMessage());
+            return ResponseHelper.internalError("Thanh toán thất bại");
         }
     }
 
@@ -50,7 +50,7 @@ public class PaymentController {
             Map<String, Object> result = paymentService.refund(transCode);
             return ResponseHelper.success("Hoàn tiền thành công", result);
         } catch (Exception e) {
-            return ResponseHelper.internalError(e.getMessage());
+            return ResponseHelper.internalError("Hoàn tiền thất bại");
         }
     }
 }

@@ -22,7 +22,7 @@ public interface TuitionInvoiceRepository extends JpaRepository<TuitionInvoice, 
 
     @Query(value = """
             SELECT 
-                t.id as invoiceId,
+                t.id as id,
                 s.semester_name as semesterName,
                 t.total_amount as totalAmount,
                 t.final_amount as finalAmount,
