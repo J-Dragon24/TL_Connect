@@ -3,6 +3,7 @@ package com.tl_connect.dev.modules.notification.dto;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.tl_connect.dev.core.common.enums.NotificationCreatedBy;
 import com.tl_connect.dev.core.common.enums.NotificationType;
 
 import jakarta.validation.constraints.AssertTrue;
@@ -28,7 +29,7 @@ public class CreateNotificationReqDTO {
     private List<Long> targetIds;
     private Long referenceId;
     private String referenceType;
-    private String createdBy;
+    private NotificationCreatedBy createdBy;
     private LocalDate deadLine;
     @NotNull(message = "Is important is required")
     private Boolean isImportant;

@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.notification.service;
+package com.tl_connect.dev.modules.notification.service.interfaces;
 
 import java.util.List;
 

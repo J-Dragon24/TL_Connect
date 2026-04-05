@@ -2,6 +2,7 @@ package com.tl_connect.dev.modules.notification.dto;
 
 import java.time.LocalDate;
 
+import com.tl_connect.dev.core.common.enums.NotificationCreatedBy;
 import com.tl_connect.dev.core.common.enums.NotificationType;
 
 import lombok.AllArgsConstructor;
@@ -19,7 +20,7 @@ public class NotificationAdmDTO {
     private Long id;
     private String title;
     private String content;
-    private String createdBy;
+    private NotificationCreatedBy createdBy;
     private NotificationType targetType;
     private Long targetId;
     private Long referenceId;

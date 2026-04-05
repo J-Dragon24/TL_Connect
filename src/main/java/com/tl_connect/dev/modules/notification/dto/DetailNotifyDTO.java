@@ -3,6 +3,7 @@ package com.tl_connect.dev.modules.notification.dto;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.tl_connect.dev.core.common.enums.NotificationCreatedBy;
 import com.tl_connect.dev.core.common.enums.NotificationType;
 
 import lombok.AllArgsConstructor;
@@ -19,7 +20,7 @@ import lombok.Setter;
 public class DetailNotifyDTO {
     private String title;
     private String content;
-    private String createdBy;
+    private NotificationCreatedBy createdBy;
     private NotificationType targetType;
     private LocalDate deadLine;
     private String referenceType;

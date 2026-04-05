@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.tl_connect.dev.core.common.enums.NotificationCreatedBy;
 import com.tl_connect.dev.core.common.enums.NotificationType;
 
 import jakarta.persistence.*;
@@ -34,7 +35,8 @@ public class Notification {
     private String content;
 
     @Column(name = "created_by")
-    private String createdBy;
+    @Enumerated(EnumType.STRING)
+    private NotificationCreatedBy createdBy;
 
     @Column(name = "target_type", nullable = false)
     @Enumerated(EnumType.STRING)

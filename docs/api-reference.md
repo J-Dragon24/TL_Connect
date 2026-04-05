@@ -2105,6 +2105,24 @@ Xóa notification.
 } 
 ```
 ---
+### 10.9. POST /api/v1/notification/read
+Đánh dấu notification đã đọc.
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: application/json
+**Request body:**
+| Field | Type | Required | Description |
+|------|-----|-----|-----|
+| notificationIds | List<Long> | ✅ | List ID notification |
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Mark notification as read successfully",
+  "data": null
+} 
+```
+---
 ## 11. Application - Đơn từ
 ### 11.1. GET /api/v1/applications/types
 Lấy danh sách loại đơn.

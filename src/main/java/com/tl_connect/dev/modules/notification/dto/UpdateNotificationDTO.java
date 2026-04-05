@@ -2,6 +2,7 @@ package com.tl_connect.dev.modules.notification.dto;
 
 import java.time.LocalDate;
 
+import com.tl_connect.dev.core.common.enums.NotificationCreatedBy;
 import com.tl_connect.dev.core.common.enums.NotificationType;
 
 import jakarta.validation.constraints.Size;
@@ -19,8 +20,7 @@ public class UpdateNotificationDTO {
     private String title;
     @Size(min = 1, message = "Content is required")
     private String content;
-    @Size(min = 1, message = "CreatedBy is required")
-    private String createdBy;
+    private NotificationCreatedBy createdBy;
     private NotificationType targetType;
     private Long targetId;
     private Long referenceId;

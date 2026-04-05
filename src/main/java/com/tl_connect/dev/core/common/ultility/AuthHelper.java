@@ -1,8 +1,6 @@
 package com.tl_connect.dev.core.common.ultility;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
@@ -14,7 +12,6 @@ import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.Base64;
@@ -23,8 +20,6 @@ import com.tl_connect.dev.core.common.types.UserInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tl_connect.dev.core.common.exception.UnauthorizeException;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import jakarta.annotation.PostConstruct;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;

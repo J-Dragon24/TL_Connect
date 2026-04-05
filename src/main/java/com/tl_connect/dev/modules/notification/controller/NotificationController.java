@@ -15,6 +15,7 @@ import com.tl_connect.dev.core.common.exception.UnauthorizeException;
 import com.tl_connect.dev.core.common.types.JwtUserInfo;
 import com.tl_connect.dev.core.common.ultility.ResponseHelper;
 import com.tl_connect.dev.modules.notification.dto.DetailNotifyDTO;
+import com.tl_connect.dev.modules.notification.dto.MarkNotificationsReadDTO;
 import com.tl_connect.dev.modules.notification.dto.NotificationReqDTO;
 import com.tl_connect.dev.modules.notification.dto.PrepareNotificationDTO;
 import com.tl_connect.dev.modules.notification.dto.SummaryNotifyDTO;
@@ -68,5 +69,15 @@ public class NotificationController {
         Long studentId = userInfo.userId();
         UnreadNotificationDTO count = notificationService.countUnreadNotification(studentId, notificationReqDTO);
         return ResponseHelper.success("Count unread notification successfully", count);
+    }
+
+    @PostMapping("/read")
+    public ResponseEntity<?> markNotificationAsRead(Authentication authentication, @RequestBody MarkNotificationsReadDTO markNotificationsReadDTO) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo userInfo)) {
+            throw new UnauthorizeException("Authentication is required");
+        }
+        Long studentId = userInfo.userId();
+        notificationService.markNotificationAsRead(studentId, markNotificationsReadDTO.getNotificationIds());
+        return ResponseHelper.success("Mark notification as read successfully", null);
     }
 }

@@ -592,7 +592,7 @@ CREATE TABLE notifications (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   title TEXT NOT NULL,
   content TEXT NOT NULL,
-  created_by VARCHAR(255),
+  created_by VARCHAR(255) DEFAULT 'SYSTEM' CHECK (created_by IN ('SYSTEM', 'FACULTY', 'LECTURER')),
   target_type VARCHAR(20) NOT NULL DEFAULT 'GLOBAL' CHECK (target_type IN ('GLOBAL','FACULTY','STUDENT_CLASS','COURSE_CLASS', 'STUDENT')),
   target_id BIGINT,
   reference_id BIGINT,
@@ -607,6 +607,8 @@ CREATE TABLE notification_read (
   notification_id BIGINT NOT NULL,
   oauth_user_id BIGINT NOT NULL,
   read_at TIMESTAMP DEFAULT now(),
+
+  UNIQUE (notification_id, oauth_user_id),
 
   FOREIGN KEY (notification_id) REFERENCES notifications(id) ON DELETE CASCADE,
   FOREIGN KEY (oauth_user_id) REFERENCES oauth_users(id) ON DELETE CASCADE

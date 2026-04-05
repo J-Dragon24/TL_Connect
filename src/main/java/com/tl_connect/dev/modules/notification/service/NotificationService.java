@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tl_connect.dev.core.common.dto.PagedResponse;
 import com.tl_connect.dev.core.common.enums.NotificationType;
@@ -26,13 +27,18 @@ import com.tl_connect.dev.modules.notification.dto.UnreadNotificationDTO;
 import com.tl_connect.dev.modules.notification.entity.Notification;
 import com.tl_connect.dev.modules.notification.projection.NotificationRow;
 import com.tl_connect.dev.modules.notification.projection.PrepareNotificationView;
+import com.tl_connect.dev.modules.notification.repository.NotificationReadRepository;
 import com.tl_connect.dev.modules.notification.repository.NotificationRepository;
+import com.tl_connect.dev.modules.student.entity.Student;
+import com.tl_connect.dev.modules.student.repository.StudentRepository;
 
 @Service
 @RequiredArgsConstructor
 public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final CourseClassRepository courseClassRepository;
+    private final NotificationReadRepository notificationReadRepository;
+    private final StudentRepository studentRepository;
     private final NotificationHelper notificationHelper;
 
     @Cacheable(value = "notificationTopics", key = "#studentId")
@@ -141,5 +147,19 @@ public class NotificationService {
             notifications.getTotalPages(),
             notifications.isFirst(),
             notifications.isLast());
+    }
+
+    @Transactional
+    public void markNotificationAsRead(Long studentId, List<Long> notificationIds) {
+        if (notificationIds == null || notificationIds.isEmpty()) {
+            return;
+        }
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new NotFoundException("Student not found"));
+        List<Long> validNotificationIds = notificationRepository.existsByIdIn(notificationIds.toArray(new Long[0]));
+        if (validNotificationIds.isEmpty()) {
+            return;
+        }
+        notificationReadRepository.markAsRead(student.getOauthUserId(), validNotificationIds.toArray(new Long[0]));
     }
 }

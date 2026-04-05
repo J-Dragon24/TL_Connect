@@ -17,6 +17,11 @@ import java.util.Optional;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
+    @Query(value = """
+            SELECT id FROM notifications WHERE id = ANY(:notificationIds)
+            """, nativeQuery = true)
+    List<Long> existsByIdIn(@Param("notificationIds") Long[] notificationIds);
+
     Page<Notification> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
     @Query(value = """
