@@ -2238,7 +2238,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\r\n  \"title\": \"Thông báo nghỉ lễ 30/4\",\r\n  \"content\": \"Nhà trường thông báo nghỉ lễ từ ngày 30/04 đến 02/05/2026\",\r\n  \"targetType\": \"GLOBAL\",\r\n  \"createdBy\": \"admin\",\r\n  \"isImportant\": true\r\n}",
+                      "raw": "{\r\n  \"title\": \"Thông báo nghỉ lễ 30/4\",\r\n  \"content\": \"Nhà trường thông báo nghỉ lễ từ ngày 30/04 đến 02/05/2026\",\r\n  \"targetType\": \"GLOBAL\",\r\n  \"createdBy\": \"SYSTEM\",\r\n  \"isImportant\": true\r\n}",
                       "options": {
                         "raw": {
                           "language": "json"
@@ -2454,6 +2454,440 @@
                         "notification-templates",
                         "delete",
                         "5"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "news",
+              "item": [
+                {
+                  "name": "get all news",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/news/all?page=0",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "news",
+                        "all"
+                      ],
+                      "query": [
+                        {
+                          "key": "page",
+                          "value": "0"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "create news",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [
+                        {
+                          "key": "title",
+                          "value": "THÔNG BÁO (GẤP) Gia hạn thời gian nhận hồ sơ xét tốt nghiệp hệ chính quy đợt 1 năm 2026",
+                          "type": "text",
+                          "uuid": "4a5dbce7-f278-435f-b9db-dafee48cc66e"
+                        },
+                        {
+                          "key": "excerpt",
+                          "value": "",
+                          "type": "text",
+                          "uuid": "08fbd7a6-1811-4533-b176-f201ccf4314b"
+                        },
+                        {
+                          "key": "newsUrl",
+                          "value": "https://thanglong.edu.vn/thong-bao-gap-gia-han-thoi-gian-nhan-ho-so-xet-tot-nghiep-he-chinh-quy-dot-1-nam-2026-21653.html",
+                          "type": "text",
+                          "uuid": "71ed7f2b-dbbc-4583-989f-b50c4087bf34"
+                        },
+                        {
+                          "key": "source",
+                          "value": "Phòng Đào tạo",
+                          "type": "text",
+                          "uuid": "69b5293f-8b70-4492-b376-81b98fc81bfb"
+                        },
+                        {
+                          "key": "publishDate",
+                          "value": "2025-01-31",
+                          "type": "text",
+                          "uuid": "49df4b57-e3a9-415d-b17b-216d6d4b5b9b"
+                        },
+                        {
+                          "key": "file",
+                          "type": "file",
+                          "uuid": "6dc64541-8657-4f66-bd19-b73d433bb335",
+                          "value": null
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/news/create",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "news",
+                        "create"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "update news",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [
+                        {
+                          "key": "file",
+                          "type": "file",
+                          "uuid": "8400029a-20f0-4153-9c75-f45901d6c73e",
+                          "src": "/C:/Users/LongBao/Pictures/news/608115782_1322766886556812_5292800162340264472_n.jpg"
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/news/update/4",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "news",
+                        "update",
+                        "4"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "delete news",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/news/delete/4",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "news",
+                        "delete",
+                        "4"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "application",
+              "item": [
+                {
+                  "name": "get all application",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/application/all",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "application",
+                        "all"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "get detail application",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/application/1",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "application",
+                        "1"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "update status application",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"status\": \"APPROVED\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/application/update-status/1",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "application",
+                        "update-status",
+                        "1"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "delete application",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/application/delete/1",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "application",
+                        "delete",
+                        "1"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "application type",
+              "item": [
+                {
+                  "name": "get all type",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/application-types/all",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "application-types",
+                        "all"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "create application type",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"code\" : \"BAO_LUU\",\r\n    \"name\": \"Đơn xin bảo lưu\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/application-types/create",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "application-types",
+                        "create"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "update application type",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"code\" : \"BAO_LUU_HOC_TAP\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/application-types/update/1",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "application-types",
+                        "update",
+                        "1"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "delete application type",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"code\" : \"BAO_LUU_HOC_TAP\"\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/application-types/delete/1",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "application-types",
+                        "delete",
+                        "1"
                       ]
                     }
                   },
@@ -2744,11 +3178,8 @@
               "item": [
                 {
                   "name": "notification",
-                  "protocolProfileBehavior": {
-                    "disableBodyPruning": true
-                  },
                   "request": {
-                    "method": "GET",
+                    "method": "POST",
                     "header": [
                       {
                         "key": "Authorization",
@@ -2864,6 +3295,41 @@
                         "v1",
                         "notification",
                         "prepare"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "mark read",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"notificationIds\": [14]\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/notification/read",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "notification",
+                        "read"
                       ]
                     }
                   },
