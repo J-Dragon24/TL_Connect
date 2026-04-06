@@ -89,12 +89,12 @@ public class OAuthService {
                     .build();
         }
 
-
         String token = jwtService.generateToken(jwtUserInfo);
 
         String devicePlatform = request.getPlatform() != null ? request.getPlatform().toLowerCase() : "unknown";
 
-        // userDeviceService.registerDevice(jwtUserInfoView.get().getOauthUserId(), request.getDeviceId(), token, devicePlatform);
+        userDeviceService.registerDevice(jwtUserInfoView.get().getOauthUserId(), request.getDeviceId(),
+                request.getFcmToken(), devicePlatform);
 
         return OAuthUserInfoDTO.builder()
                 .microsoftId(microsoftId)

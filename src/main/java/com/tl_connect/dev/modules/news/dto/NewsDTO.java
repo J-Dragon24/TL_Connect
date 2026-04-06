@@ -1,7 +1,6 @@
-package com.tl_connect.dev.modules.news;
+package com.tl_connect.dev.modules.news.dto;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,5 +20,4 @@ public class NewsDTO {
     private String newsUrl;
     private String source;
     private LocalDate publishDate;
-    private LocalDateTime createdAt;
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "115160598804",
+    "project_id": "tl-connect-f64e1",
+    "storage_bucket": "tl-connect-f64e1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:115160598804:android:c50d804c25be278f601a01",
+        "android_client_info": {
+          "package_name": "org.example.project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDctfNgMDJ1FMnVMAZWOWjnZ0Cekp-t1Qs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

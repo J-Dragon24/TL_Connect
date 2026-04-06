@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.news;
+package com.tl_connect.dev.modules.news.controller;
 
 import java.util.List;
 
@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tl_connect.dev.core.common.dto.PagedResponse;
 import com.tl_connect.dev.core.common.ultility.ResponseHelper;
+import com.tl_connect.dev.modules.news.NewsService;
+import com.tl_connect.dev.modules.news.dto.NewsDTO;
 
 import lombok.RequiredArgsConstructor;
 

@@ -11,4 +11,5 @@ public class LoginRequestDTO {
     private String accessToken;
     private String deviceId;
     private String platform;
+    private String fcmToken;
 }
