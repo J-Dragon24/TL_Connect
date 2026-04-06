@@ -2118,7 +2118,7 @@ Xóa notification.
 **Request body:**
 | Field | Type | Required | Description |
 |------|-----|-----|-----|
-| notificationIds | List<Long> | ✅ | List ID notification |
+| notificationIds | List\<Long\> | ✅ | List ID notification |
 
 **Response thành công (code 0):**
 ```json
@@ -4397,11 +4397,12 @@ Tạo loại đơn mới.
 - **Content-Type**: application/json
 
 **Request body:**
-
+```json
 {
   "code": "HOAN_THI",
   "name": "Đơn xin hoãn thi"
 }
+```
 
 **Response thành công (code 0):**
 
@@ -4427,12 +4428,12 @@ Cập nhật loại đơn.
 | id | long | ✅ | ID loại đơn |
 
 **Request body:**
-
+```json
 {
   "code": "NGHI_HOC",
   "name": "Đơn xin nghỉ học (cập nhật)"
 }
-
+```
 
 **Response thành công (code 0):**
 ```json
@@ -4457,3 +4458,4 @@ Xoá loại đơn.
   "data": null
 }
 ```
+---

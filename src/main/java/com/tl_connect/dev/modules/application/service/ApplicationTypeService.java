@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tl_connect.dev.core.common.exception.BadRequestException;
 import com.tl_connect.dev.core.common.exception.NotFoundException;
@@ -28,14 +29,17 @@ public class ApplicationTypeService {
                         .id(applicationType.getId())
                         .code(applicationType.getCode())
                         .name(applicationType.getName())
+                        .isActive(applicationType.getIsActive())
                         .build())
                 .toList();
     }
 
+    @Transactional
     public Long createApplicationType(CreateApplicationTypeDTO createApplicationTypeDTO) {
         ApplicationType applicationType = ApplicationType.builder()
                 .code(createApplicationTypeDTO.getCode())
                 .name(createApplicationTypeDTO.getName())
+                .isActive(true)
                 .build();
         try {
             return applicationTypeRepository.save(applicationType).getId();
@@ -44,6 +48,7 @@ public class ApplicationTypeService {
         }
     }
 
+    @Transactional
     public void updateApplicationType(Long id, UpdateApplicationTypeDTO updateApplicationTypeDTO) {
         ApplicationType applicationType = applicationTypeRepository.findById(id)
         .orElseThrow(() -> new NotFoundException("Application type not found"));
@@ -56,10 +61,16 @@ public class ApplicationTypeService {
         }
     }
 
+    @Transactional
     public void deleteApplicationType(Long id) {
-        applicationTypeRepository.findById(id)
+        ApplicationType applicationType = applicationTypeRepository.findById(id)
         .orElseThrow(() -> new NotFoundException("Application type not found"));
-        applicationTypeRepository.deleteById(id);
+        applicationType.setIsActive(false);
+        try {
+            applicationTypeRepository.save(applicationType);
+        } catch (Exception e) {
+            throw new BadRequestException("Application type code already exists" + e.getMessage());
+        }
     }
     
 }

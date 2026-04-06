@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tl_connect.dev.modules.application.dto.ApplicationDTO;
 import com.tl_connect.dev.modules.application.dto.DetailApplicationDTO;
+import com.tl_connect.dev.modules.application.dto.UpdateApplicationDTO;
 import com.tl_connect.dev.modules.application.service.ApplicationService;
 
 import lombok.RequiredArgsConstructor;
@@ -39,8 +40,8 @@ public class ApplicationAdminController {
     }
 
     @PostMapping("/update-status/{id}")
-    public ResponseEntity<?> updateStatusApplication(@PathVariable Long id, @RequestBody String status) {
-        applicationService.updateStatusApplication(id, status);
+    public ResponseEntity<?> updateStatusApplication(@PathVariable Long id, @RequestBody UpdateApplicationDTO req) {
+        applicationService.updateStatusApplication(id, req);
         return ResponseHelper.success("Application status updated successfully", null);
     }
 

@@ -15,6 +15,7 @@ import com.tl_connect.dev.modules.application.dto.ApplicationAttachmentDTO;
 import com.tl_connect.dev.modules.application.dto.ApplicationDTO;
 import com.tl_connect.dev.modules.application.dto.ApplicationSubmitDTO;
 import com.tl_connect.dev.modules.application.dto.DetailApplicationDTO;
+import com.tl_connect.dev.modules.application.dto.UpdateApplicationDTO;
 import com.tl_connect.dev.modules.application.entity.ApplicationAttachment;
 import com.tl_connect.dev.modules.application.entity.StudentApplication;
 import com.tl_connect.dev.modules.application.projection.ApplicationRow;
@@ -76,10 +77,10 @@ public class ApplicationService {
     }
 
     @Transactional
-    public void updateStatusApplication(Long id, String status) {
+    public void updateStatusApplication(Long id, UpdateApplicationDTO status) {
         StudentApplication application = applicationRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Application not found"));
-        application.setStatus(ApplicationStatus.valueOf(status.toUpperCase()));
+        application.setStatus(status.getStatus());
         try {
             applicationRepository.save(application);
         } catch (Exception e) {

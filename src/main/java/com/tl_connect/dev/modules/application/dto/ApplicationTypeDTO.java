@@ -15,4 +15,5 @@ public class ApplicationTypeDTO {
     private Long id;
     private String code;
     private String name;
+    private Boolean isActive;
 }

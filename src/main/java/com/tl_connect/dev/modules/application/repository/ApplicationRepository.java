@@ -23,13 +23,13 @@ public interface ApplicationRepository extends JpaRepository<StudentApplication,
             at.name as applicationTypeName, 
             sa.status as status 
         FROM student_applications sa 
-        JOIN student s ON sa.student_id = s.id 
+        JOIN students s ON sa.student_id = s.id 
         JOIN application_types at ON sa.application_type_id = at.id 
         ORDER BY sa.created_at DESC
     """,
     countQuery = """
         SELECT COUNT(*) FROM student_applications sa 
-        JOIN student s ON sa.student_id = s.id 
+        JOIN students s ON sa.student_id = s.id 
         JOIN application_types at ON sa.application_type_id = at.id
     """,
     nativeQuery = true)
@@ -44,7 +44,7 @@ public interface ApplicationRepository extends JpaRepository<StudentApplication,
             sa.status as status, 
             sa.content as content
         FROM student_applications sa 
-        JOIN student s ON sa.student_id = s.id 
+        JOIN students s ON sa.student_id = s.id 
         JOIN application_types at ON sa.application_type_id = at.id 
         WHERE sa.id = :id
     """,
