@@ -13,10 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tl_connect.dev.core.common.dto.PagedResponse;
+import com.tl_connect.dev.core.common.dto.UploadResult;
 import com.tl_connect.dev.core.common.exception.ExternalException;
 import com.tl_connect.dev.core.common.exception.InvalidInputException;
 import com.tl_connect.dev.core.common.ultility.FileHelper;
 import com.tl_connect.dev.modules.news.dto.CreateNewsDTO;
+import com.tl_connect.dev.modules.news.dto.NewsAdmDTO;
 import com.tl_connect.dev.modules.news.dto.NewsDTO;
 import com.tl_connect.dev.modules.news.dto.UpdateNewsDTO;
 
@@ -48,6 +50,18 @@ public class NewsService {
                 newsPage.isLast());
     }
 
+    public PagedResponse<NewsAdmDTO> getAllNewsByAdmin(Pageable pageable) {
+        Page<News> newsPage = newsRepository.findAllByOrderByPublishDateDesc(pageable);
+        return new PagedResponse<>(
+                newsPage.getContent().stream().map(this::toDTOAdmin).toList(),
+                newsPage.getNumber(),
+                newsPage.getSize(),
+                newsPage.getTotalElements(),
+                newsPage.getTotalPages(),
+                newsPage.isFirst(),
+                newsPage.isLast());
+    }
+
     @Transactional
     public Long createNews(CreateNewsDTO newsDTO, MultipartFile file) throws IOException {
         Set<ConstraintViolation<CreateNewsDTO>> violations = validator.validate(newsDTO);
@@ -66,13 +80,15 @@ public class NewsService {
                 .build();
 
         if (file != null && !file.isEmpty()) {
-            String imageUrl = fileHelper.uploadFile(file);
-            news.setImageUrl(imageUrl);
+            UploadResult uploadResult = fileHelper.uploadFile(file);
+            news.setImageUrl(uploadResult.getUrl());
+            news.setImageKey(uploadResult.getKey());
         }
 
         try{
             news = newsRepository.save(news);
         }catch(Exception e){
+            fileHelper.deleteFile(news.getImageKey());
             throw new ExternalException("Failed to create news");
         }
         return news.getId();
@@ -94,8 +110,9 @@ public class NewsService {
         Optional.ofNullable(newsDTO.getSource()).ifPresent(news::setSource);
         Optional.ofNullable(newsDTO.getPublishDate()).ifPresent(news::setPublishDate);
         if (file != null && !file.isEmpty()) {
-            String imageUrl = fileHelper.uploadFile(file);
-            news.setImageUrl(imageUrl);
+            UploadResult uploadResult = fileHelper.uploadFile(file);
+            news.setImageUrl(uploadResult.getUrl());
+            news.setImageKey(uploadResult.getKey());
         }
         try{
             newsRepository.save(news);
@@ -119,6 +136,19 @@ public class NewsService {
                 .title(news.getTitle())
                 .excerpt(news.getExcerpt())
                 .imageUrl(news.getImageUrl())
+                .newsUrl(news.getNewsUrl())
+                .source(news.getSource())
+                .publishDate(news.getPublishDate())
+                .build();
+    }
+
+    private NewsAdmDTO toDTOAdmin(News news) {
+        return NewsAdmDTO.builder()
+                .id(news.getId())
+                .title(news.getTitle())
+                .excerpt(news.getExcerpt())
+                .imageUrl(news.getImageUrl())
+                .imageKey(news.getImageKey())
                 .newsUrl(news.getNewsUrl())
                 .source(news.getSource())
                 .publishDate(news.getPublishDate())

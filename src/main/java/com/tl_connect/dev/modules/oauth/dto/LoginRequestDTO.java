@@ -1,5 +1,6 @@
 package com.tl_connect.dev.modules.oauth.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,8 +9,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginRequestDTO {
+    @NotNull(message = "Access token is required")
     private String accessToken;
+    @NotNull(message = "Device ID is required")
     private String deviceId;
     private String platform;
+    @NotNull(message = "FCM token is required")
     private String fcmToken;
 }

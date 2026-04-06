@@ -80,13 +80,19 @@ JWT token được cấp sau khi đăng nhập thành công qua /api/v1/oauth2/l
 
 ```json
 {
-  "accessToken": "eyJhbGciOiJSUzI1NiIs..."
+  "accessToken": "eyJhbGciOiJSUzI1NiIs...",
+  "deviceId": "device-id",
+  "platform": "android",
+  "fcmToken": "fcm-token"
 }
 ```  
 
 | Field | Type | Required | Description |
 |------|-----|-----|-----|
 | accessToken | string | ✅ | Microsoft OAuth2 Access Token từ Microsoft Azure AD |
+| deviceId | string | ✅ | Device ID |
+| platform | string | ❌ | Platform (android, ios, web) |
+| fcmToken | string | ✅ | FCM Token |
 
 **Response – Đăng nhập thành công (code 0):**:
 
@@ -2283,7 +2289,126 @@ Nộp đơn.
 - ❌ file rỗng / sai định dạng / quá lớn → code -1, HTTP 400
 - ❌ loại đơn rỗng → code -1, HTTP 400
 ---
+### 11.3. GET /api/v1/admin/application/all
 
+Lấy danh sách tất cả đơn (admin).
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: Không áp dụng
+
+**Query params:**
+
+| Field | Type | Required | Description |
+|------|-----|-----|-----|
+| page | int | ❌ | Mặc định 0 |
+| size | int | ❌ | Mặc định 10 |
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "List of applications",
+  "data": {
+    "content": [
+      {
+        "id": 1,
+        "studentCode": "SV001",
+        "studentName": "Nguyen Van A",
+        "applicationTypeName": "Đơn xin nghỉ học",
+        "status": "PENDING"
+      }
+    ],
+    "page": 0,
+    "size": 10,
+    "total_elements": 1,
+    "total_pages": 1,
+    "first": true,
+    "last": true
+  }
+}
+```
+---
+### 11.4. GET /api/v1/admin/application/`{id}`
+
+Lấy chi tiết đơn.
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+
+**Path param:**
+
+| Field | Type | Description |
+|------|-----|-----|
+| id | Long | ID đơn |
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Application",
+  "data": {
+    "id": 1,
+    "studentCode": "SV001",
+    "studentName": "Nguyen Van A",
+    "applicationTypeName": "Đơn xin nghỉ học",
+    "status": "PENDING",
+    "content": "Em xin nghỉ học...",
+    "attachments": [
+      {
+        "id": 10,
+        "fileKey": "applications/abc.pdf",
+        "originalFilename": "don.pdf",
+        "fileSize": 102400
+      }
+    ]
+  }
+}
+```
+---
+### 11.5. POST /api/v1/admin/application/delete/`{id}`
+
+Xoá đơn.
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Application deleted successfully",
+  "data": null
+}
+```
+---
+### 11.6. POST /api/v1/admin/application/update-status/`{id}`
+
+Cập nhật trạng thái đơn.
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: application/json
+
+**Path param:**
+
+| Field | Type | Required | Description |
+|------|-----|-----|-----|
+| id | long | ✅ | ID đơn |
+
+**Request body:**
+
+```json
+{
+  "status": "APPROVED"
+}
+```
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Application status updated successfully",
+  "data": null
+}
+```
+---
 ## 12. News - Tin tức
 ### 12.1. GET /api/v1/news/top5
 Lấy top 5 tin tức.
@@ -2348,6 +2473,113 @@ Lấy tất cả tin tức.
 **Test cases:**
 
 - ✅ không áp dụng auth → code 0 + danh sách tin tức
+---
+### 12.3. POST /api/v1/admin/news/create
+
+Tạo tin tức mới.
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: multipart/form-data
+
+**Form data fields:**
+
+| Field | Type | Required | Description |
+|------|-----|-----|-----|
+| title | string | ✅ | Tiêu đề |
+| excerpt | string | ❌ | Mô tả ngắn |
+| newsUrl | string | ❌ | Link bài viết |
+| source | string | ❌ | Nguồn |
+| publishDate | string (YYYY-MM-DD) | ❌ | Ngày đăng |
+| file | File | ❌ | Ảnh |
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "News created successfully",
+  "data": 1
+}
+```
+---
+### 12.4. POST /api/v1/admin/news/update/`{id}`
+
+Cập nhật tin tức.
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: multipart/form-data
+
+**Path param:**
+
+| Field | Type | Description |
+|------|-----|-----|
+| id | Long | ID tin tức |
+
+**Form data:** giống create
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "News updated successfully",
+  "data": null
+}
+```
+---
+### 12.5. POST /api/v1/admin/news/delete/`{id}`
+
+Xoá tin tức.
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "News deleted successfully",
+  "data": null
+}
+```
+---
+### 12.6. GET /api/v1/admin/news/all
+
+Lấy danh sách tin tức (admin).
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+
+**Query params:**
+
+| Field | Type | Description |
+|------|-----|-----|
+| page | int | mặc định 0 |
+| size | int | mặc định 10 |
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Get all news successfully",
+  "data": {
+    "content": [
+      {
+        "id": 1,
+        "title": "Tin tức",
+        "excerpt": "Mô tả",
+        "imageUrl": "https://...",
+        "imageKey": "news/abc.jpg",
+        "newsUrl": "https://...",
+        "source": "VNExpress",
+        "publishDate": "2026-04-01"
+      }
+    ],
+    "page": 0,
+    "size": 10,
+    "total_elements": 1,
+    "total_pages": 1,
+    "first": true,
+    "last": true
+  }
+}
+```
 ---
 
 ## 13. Semester - Kỳ học
@@ -4129,3 +4361,99 @@ POST /api/v1/payments/refund?transCode=240402_123456
 - ✅ refund thành công → code 0
 - ❌ transCode không tồn tại → code -2
 ---
+## 25. Application Type - Loại đơn
+### 25.1. GET /api/v1/admin/application-types/all
+
+Lấy danh sách tất cả loại đơn (admin).
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: Không áp dụng
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "List of applications",
+  "data": [
+    {
+      "id": 1,
+      "code": "HOC_BONG",
+      "name": "Đơn xin học bổng"
+    },
+    {
+      "id": 2,
+      "code": "NGHI_HOC",
+      "name": "Đơn xin nghỉ học"
+    }
+  ]
+}
+```
+---
+### 25.2. POST /api/v1/admin/application-types/create
+
+Tạo loại đơn mới.
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: application/json
+
+**Request body:**
+
+{
+  "code": "HOAN_THI",
+  "name": "Đơn xin hoãn thi"
+}
+
+**Response thành công (code 0):**
+
+```json
+{
+  "code": 0,
+  "message": "Application type created successfully",
+  "data": 1
+}
+```
+---
+### 25.3. POST /api/v1/admin/application-types/update/`{id}`
+
+Cập nhật loại đơn.
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: application/json
+
+**Path param:**
+
+| Field | Type | Required | Description |
+|------|-----|-----|-----|
+| id | long | ✅ | ID loại đơn |
+
+**Request body:**
+
+{
+  "code": "NGHI_HOC",
+  "name": "Đơn xin nghỉ học (cập nhật)"
+}
+
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Application type updated successfully",
+  "data": null
+}
+```
+---
+### 25.4. POST /api/v1/admin/application-types/delete/`{id}`
+
+Xoá loại đơn.
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Application type deleted successfully",
+  "data": null
+}
+```

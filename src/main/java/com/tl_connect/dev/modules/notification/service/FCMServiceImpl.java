@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.google.firebase.messaging.BatchResponse;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
+import com.google.firebase.messaging.MulticastMessage;
 import com.google.firebase.messaging.Notification;
 import com.tl_connect.dev.modules.notification.service.interfaces.FCMService;
 
@@ -25,6 +27,8 @@ public class FCMServiceImpl implements FCMService {
                         .setTitle(title)
                         .setBody(body)
                         .build())
+                .putData("title", title)
+                .putData("body", body)
                 .build();
 
         try {
@@ -44,8 +48,20 @@ public class FCMServiceImpl implements FCMService {
 
     @Override
     public void sendToTokens(List<String> tokens, String title, String body) {
-        for (String token : tokens) {
-            sendToToken(token, title, body);
+        MulticastMessage message = MulticastMessage.builder()
+            .addAllTokens(tokens)
+            .setNotification(Notification.builder()
+                    .setTitle(title)
+                    .setBody(body)
+                    .build())
+            .putData("title", title)
+            .putData("body", body)
+            .build();
+        try {
+            BatchResponse response = FirebaseMessaging.getInstance().sendMulticast(message);
+            log.info("FCM sent to tokens {}: {}", tokens, response);
+        } catch (Exception e) {
+            log.error("FCM send failed for tokens {}", tokens, e);
         }
     }
 
@@ -57,6 +73,8 @@ public class FCMServiceImpl implements FCMService {
                         .setTitle(title)
                         .setBody(body)
                         .build())
+                .putData("title", title)
+                .putData("body", body)
                 .build();
 
         try {

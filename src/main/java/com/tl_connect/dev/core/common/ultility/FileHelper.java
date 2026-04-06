@@ -5,6 +5,8 @@ import java.io.InputStream;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.tl_connect.dev.core.common.dto.UploadResult;
+
 
 public abstract class FileHelper {
 
@@ -46,7 +48,7 @@ public abstract class FileHelper {
         return true;
     }
 
-    public abstract String uploadFile(MultipartFile file) throws IOException;
+    public abstract UploadResult uploadFile(MultipartFile file) throws IOException;
 
     public abstract void deleteFile(String key);
     

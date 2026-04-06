@@ -628,6 +628,7 @@ CREATE TABLE news (
   title TEXT,
   excerpt TEXT,
   image_url VARCHAR(255),
+  image_key VARCHAR(255),
   source TEXT,
   publish_date DATE,
   news_url VARCHAR(255),

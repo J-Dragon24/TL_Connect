@@ -84,6 +84,7 @@ public class NotificationModifyService {
             }
         } 
         notificationRepository.saveAll(notifications);
+
         notificationPushService.pushNotifications(notifications);
     }
 

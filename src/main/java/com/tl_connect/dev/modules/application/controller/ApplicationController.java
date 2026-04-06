@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.application;
+package com.tl_connect.dev.modules.application.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -11,13 +11,16 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import com.tl_connect.dev.modules.application.dto.ApplicationSubmitDTO;
 import com.tl_connect.dev.modules.application.dto.ApplicationTypeDTO;
+import com.tl_connect.dev.modules.application.service.ApplicationService;
+import com.tl_connect.dev.modules.application.service.ApplicationTypeService;
+
 import java.util.List;
 
 import com.tl_connect.dev.core.common.exception.InvalidInputException;
 import com.tl_connect.dev.core.common.exception.UnauthorizeException;
 import com.tl_connect.dev.core.common.types.JwtUserInfo;
-import com.tl_connect.dev.core.common.ultility.BackBlazeProvider;
 import com.tl_connect.dev.core.common.ultility.ResponseHelper;
+import com.tl_connect.dev.core.common.ultility.provider.BackBlazeProvider;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,11 +29,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ApplicationController {
     private final ApplicationService applicationService;
+    private final ApplicationTypeService applicationTypeService;
     private final BackBlazeProvider fileHelper;
 
     @GetMapping("/types")
     public ResponseEntity<?> getAllApplicationType() {
-        List<ApplicationTypeDTO> applicationTypes = applicationService.getAllApplicationType();
+        List<ApplicationTypeDTO> applicationTypes = applicationTypeService.getAllApplicationType();
         return ResponseHelper.success("List of applications", applicationTypes);
     }
 

@@ -18,7 +18,7 @@ import com.tl_connect.dev.core.common.dto.PagedResponse;
 import com.tl_connect.dev.core.common.ultility.ResponseHelper;
 import com.tl_connect.dev.modules.news.NewsService;
 import com.tl_connect.dev.modules.news.dto.CreateNewsDTO;
-import com.tl_connect.dev.modules.news.dto.NewsDTO;
+import com.tl_connect.dev.modules.news.dto.NewsAdmDTO;
 import com.tl_connect.dev.modules.news.dto.UpdateNewsDTO;
 
 import jakarta.validation.Valid;
@@ -50,7 +50,7 @@ public class NewsAdminController {
 
     @GetMapping("/all")
     public ResponseEntity<?> getAllNews(@PageableDefault(page = 0, size = 10) Pageable pageable) {
-        PagedResponse<NewsDTO> allNews = newsService.getAllNews(pageable);
+        PagedResponse<NewsAdmDTO> allNews = newsService.getAllNewsByAdmin(pageable);
         return ResponseHelper.success("Get all news successfully", allNews);
     }
 }

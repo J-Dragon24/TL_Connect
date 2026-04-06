@@ -1,4 +1,4 @@
-package com.tl_connect.dev.core.common.ultility;
+package com.tl_connect.dev.core.common.ultility.provider;
 
 import java.io.IOException;
 
@@ -11,7 +11,10 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+
+import com.tl_connect.dev.core.common.dto.UploadResult;
 import com.tl_connect.dev.core.common.exception.ExternalException;
+import com.tl_connect.dev.core.common.ultility.FileHelper;
 
 @Component
 @RequiredArgsConstructor
@@ -21,7 +24,10 @@ public class BackBlazeProvider extends FileHelper {
     @Value("${b2.bucket_name}")
     private String bucketName;
 
-    public String uploadFile(MultipartFile file) throws IOException {
+    @Value("${b2.end_point}")
+    private String endPoint;
+
+    public UploadResult uploadFile(MultipartFile file) throws IOException {
         System.out.println("Uploading file: " + file.getOriginalFilename());
         try{
             String key ="uploads/" + System.currentTimeMillis() + "_" + file.getOriginalFilename();
@@ -31,7 +37,7 @@ public class BackBlazeProvider extends FileHelper {
                 .contentType(file.getContentType())
                 .build();
             s3Client.putObject(request, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
-            return key;
+            return new UploadResult(key, endPoint + "/" + key);
         }catch(Exception e){
             throw new ExternalException("Upload file failed");
         }

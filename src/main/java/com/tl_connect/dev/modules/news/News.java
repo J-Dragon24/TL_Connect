@@ -38,6 +38,9 @@ public class News {
     @Column(name = "image_url")
     private String imageUrl;
 
+    @Column(name = "image_key")
+    private String imageKey;
+
     @Column(name = "source")
     private String source;
 
