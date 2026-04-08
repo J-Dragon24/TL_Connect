@@ -31,9 +31,9 @@ public interface AcademicResultRepository extends JpaRepository<StudentSubjectRe
                         FROM student_subject_results ssr
                         JOIN subjects sub ON ssr.subject_id = sub.id
                         JOIN semesters sem ON ssr.semester_id = sem.id
-                        JOIN study_programs tp ON tp.study_program_code = :studyProgramCode
-                        JOIN study_program_subjects tps ON tps.subject_id = ssr.subject_id 
-                                AND tps.study_program_id = tp.id
+                        JOIN study_programs sp ON sp.study_program_code = :studyProgramCode
+                        JOIN study_program_subjects sps ON sps.subject_id = ssr.subject_id 
+                                AND sps.study_program_id = sp.id
                         WHERE ssr.student_id = :studentId
                         """, nativeQuery = true)
         List<SubjectResultRow> findSubjectResult(@Param("studentId") Long studentId,

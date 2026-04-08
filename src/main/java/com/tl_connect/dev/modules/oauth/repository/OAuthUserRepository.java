@@ -18,7 +18,7 @@ public interface OAuthUserRepository extends JpaRepository<OAuthUser, Long> {
                 s.id AS studentId
             FROM oauth_users ou
             JOIN students s ON ou.id = s.oauth_user_id
-            WHERE ou.user_uuid = :userUuid
+            WHERE ou.user_uuid = :userUuid AND s.status = 'ACTIVE'
             """, nativeQuery = true)
     Optional<JwtUserInfoView> findStudentByUserUuid(@Param("userUuid") String userUuid);
 

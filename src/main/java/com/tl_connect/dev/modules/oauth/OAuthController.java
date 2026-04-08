@@ -28,6 +28,14 @@ public class OAuthController {
             throw new InvalidInputException("token is required and must be non-empty string");
         }
 
+        if(request.getDeviceId() == null || request.getDeviceId().isEmpty()){
+            throw new InvalidInputException("deviceId is required and must be non-empty string");
+        }
+
+        if(request.getFcmToken() == null || request.getFcmToken().isEmpty()){
+            throw new InvalidInputException("fcmToken is required and must be non-empty string");
+        }
+
         OAuthUserInfoDTO userInfo = oauthService.loginWithMicrosoft(request);
 
         return ResponseHelper.success("Login successful", userInfo);    

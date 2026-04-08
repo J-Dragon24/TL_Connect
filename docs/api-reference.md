@@ -30,6 +30,7 @@
 22. [Tuition - Học phí](#22-tuition---học-phí)
 23. [Notification Template - Mẫu thông báo](#23-notification-template---mẫu-thông-báo)
 24. [Payment - Thanh toán](#24-payment---thanh-toán)
+25. [Chatbot - Chatbot](#25-chatbot---chatbot)
 
 ## 1. Response Format chung
 Tất cả response đều theo cấu trúc JSON thống nhất:
@@ -4458,4 +4459,69 @@ Xoá loại đơn.
   "data": null
 }
 ```
+---
+## 26. Chatbot
+### 26.1. POST /api/v1/chatbot
+**Streaming Chat (Không có session id)**
+- **Content-Type**: application/json
+- **Response**: text/event-stream (SSE)
+**Request Body**
+```json
+{
+  "prompt": "Xin chào"
+}
+```
+
+| Field | Type | Required | Description
+|---|---|---|---
+prompt | string | ✅ | Nội dung người dùng gửi tới chatbot  
+
+**Response**
+Trả về dạng Server-Sent Events (SSE)
+Dữ liệu được stream từng phần (token/message chunk)
+
+Ví dụ stream:
+
+data: Xin
+
+
+data: chào
+
+
+data: bạn
+
+**Notes**
+- Connection không timeout (SseEmitter(0L))
+- Client cần xử lý stream liên tục
+- Thường dùng với EventSource (web) hoặc OkHttp/Retrofit streaming (Android)
+---
+### 26.2. POST /api/v1/chatbot/`{id}`
+**Streaming Chat (Có session id)**
+- **Content-Type**: application/json
+- **Response**: text/event-stream (SSE)
+**Request Body**
+```json
+{
+  "prompt": "Bạn tên gì?"
+}
+```
+| Field | Type | Required | Description
+|---|---|---|---
+prompt | string | ✅ | Nội dung người dùng gửi tới chatbot  
+
+**Response**
+Trả về dạng Server-Sent Events (SSE)
+Lưu ý: Nếu chưa có session, server sẽ tự tạo mới và trả về session id trong response
+
+Ví dụ:
+
+data: Tôi tên là AI
+data: Tôi có thể giúp gì cho bạn?
+
+data: session_id: 123456789
+
+**Notes**
+- Connection không timeout (SseEmitter(0L))
+- Client cần xử lý stream liên tục
+- Thường dùng với EventSource (web) hoặc OkHttp/Retrofit streaming (Android)
 ---

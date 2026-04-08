@@ -37,7 +37,6 @@ public class OAuthService {
 
     @Transactional
     public OAuthUserInfoDTO loginWithMicrosoft(LoginRequestDTO request) {
-
         UserInfo userInfo = authHelper.extractUserInfo(request.getAccessToken());
 
         String microsoftId = userInfo.oid();
