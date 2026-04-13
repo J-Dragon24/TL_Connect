@@ -64,8 +64,8 @@ public class StudentAdminController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAllStudents(@PageableDefault(page = 0, size = 50) Pageable pageable) {
-        PagedResponse<StudentFullInfo> result = studentService.getAllStudents(pageable);
+    public ResponseEntity<?> getAllStudents(@PageableDefault(page = 0, size = 50) Pageable pageable, @RequestParam(required = false, name = "khoa") String facultyCode) {
+        PagedResponse<StudentFullInfo> result = studentService.getAllStudents(pageable, facultyCode);
         return ResponseHelper.success("Get all students successfully", result);
     }
 

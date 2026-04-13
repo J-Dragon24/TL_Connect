@@ -39,8 +39,11 @@ public class StudentService {
         private final StudentRepository studentRepository;
         private final StudentClassRepository studentClassRepository;
 
-        public PagedResponse<StudentFullInfo> getAllStudents(Pageable pageable) {
-                Page<StudentRow> students = studentRepository.findAllStudent(pageable);
+        public PagedResponse<StudentFullInfo> getAllStudents(Pageable pageable, String facultyCode) {
+                if(facultyCode == null || facultyCode.isEmpty()) {
+                        facultyCode = "";
+                }
+                Page<StudentRow> students = studentRepository.findAllStudent(pageable, facultyCode);
 
                 return new PagedResponse<>(
                                 students.getContent().stream().map(this::toFullInfo).toList(),
