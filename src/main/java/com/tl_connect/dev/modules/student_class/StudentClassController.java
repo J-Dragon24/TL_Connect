@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tl_connect.dev.core.common.dto.PagedResponse;
@@ -27,8 +28,8 @@ public class StudentClassController {
     private final StudentClassService studentClassService;
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAll(@PageableDefault(page = 0, size = 10) Pageable pageable) {
-        PagedResponse<StudentClassRow> result = studentClassService.getAll(pageable);
+    public ResponseEntity<?> getAll(@PageableDefault(page = 0, size = 10) Pageable pageable, @RequestParam(required = false, name = "khoa") String facultyCode) {
+        PagedResponse<StudentClassRow> result = studentClassService.getAll(pageable, facultyCode);
         return ResponseHelper.success("Get all student classes successfully", result);
     }
 

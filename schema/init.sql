@@ -419,7 +419,7 @@ CREATE TABLE payment (
   amount DECIMAL(10,2) NOT NULL,
   provider VARCHAR(20),
   transaction_code VARCHAR(100) UNIQUE NOT NULL,
-  provider_trans_id BIGINT,
+  provider_trans_id VARCHAR(100),
   status VARCHAR(20) NOT NULL DEFAULT 'PENDING' CHECK (status IN ('PENDING','SUCCESS','FAILED', 'REFUND_PENDING', 'REFUNDED')),
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),

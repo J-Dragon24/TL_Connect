@@ -18,10 +18,15 @@ import com.tl_connect.dev.core.common.enums.TypeTransaction;
 import com.tl_connect.dev.core.common.exception.BadRequestException;
 import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.payment.PaymentRepository;
+import com.tl_connect.dev.modules.payment.dto.CallbackPaymentDTO;
 import com.tl_connect.dev.modules.payment.dto.CreateTuitionPaymentReqDTO;
 import com.tl_connect.dev.modules.payment.dto.CreateTuitionPaymentResDTO;
-import com.tl_connect.dev.modules.payment.dto.ZaloPayOrderResultDTO;
+import com.tl_connect.dev.modules.payment.dto.PaymentRequestDTO;
+import com.tl_connect.dev.modules.payment.dto.PaymentResponseDTO;
 import com.tl_connect.dev.modules.payment.entity.Payment;
+import com.tl_connect.dev.modules.payment.provider.PaymentFactory;
+import com.tl_connect.dev.modules.payment.provider.ProviderPayment;
+import com.tl_connect.dev.modules.payment.provider.ZaloPayProvider;
 import com.tl_connect.dev.modules.tuition.entity.TuitionInvoice;
 import com.tl_connect.dev.modules.tuition.entity.TuitionInvoiceItem;
 import com.tl_connect.dev.modules.tuition.entity.TuitionTransaction;
@@ -43,8 +48,9 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final TuitionTransactionRepository tuitionTransactionRepository;
     private final ObjectMapper objectMapper;
-    private final ZaloPayService zaloPayService;
+    private final ZaloPayProvider zaloPayService;
     private final RedisTemplate<String, String> redisTemplate;
+    private final PaymentFactory paymentFactory;
 
     @Transactional
     public CreateTuitionPaymentResDTO createPayment(Long studentId, CreateTuitionPaymentReqDTO req) throws Exception {
@@ -79,31 +85,38 @@ public class PaymentService {
         String itemJson = objectMapper.writeValueAsString(zaloItems);
 
         String description = "Thanh toan hoc phi - Invoice #" + req.getInvoiceId();
+
+        ProviderPayment providerPayment = paymentFactory.getProvider(req.getProvider());
+
+        PaymentRequestDTO request = PaymentRequestDTO.builder()
+            .amount(invoice.getFinalAmount().longValue())
+            .userId(String.valueOf(studentId))
+            .description(description)
+            .language(req.getLanguage())
+            .bankCode(req.getBankCode())
+            .ipAddress(req.getIpAddress())
+            .itemJson(itemJson)
+            .build();
         
-        ZaloPayOrderResultDTO  zaloResult = zaloPayService.createOrder(
-            invoice.getFinalAmount().longValue(),
-            String.valueOf(studentId),
-            description,
-            itemJson
-        );
+        PaymentResponseDTO  paymentResponse = providerPayment.createPaymentUrl(request);
 
-        log.info("ZaloPay createOrder response: {}", zaloResult);
+        log.info("ZaloPay createOrder response: {}", paymentResponse);
 
-        Integer returnCode = (Integer) zaloResult.getRawResponse().get("return_code");
+        Integer returnCode = (Integer) paymentResponse.getRawData().get("return_code");
         if (returnCode == null || returnCode != 1) {
             throw new BadRequestException("ZaloPay error: "
-                + zaloResult.getRawResponse().get("return_message")
-                + " | sub_code: " + zaloResult.getRawResponse().get("sub_return_code")
-                + " | sub_message: " + zaloResult.getRawResponse().get("sub_return_message"));
+                + paymentResponse.getRawData().get("return_message")
+                + " | sub_code: " + paymentResponse.getRawData().get("sub_return_code")
+                + " | sub_message: " + paymentResponse.getRawData().get("sub_return_message"));
         }
 
-        String transactionCode = zaloResult.getAppTransId();
-        String orderUrl = zaloResult.getOrderUrl();
+        String transactionCode = paymentResponse.getTransactionId();
+        String orderUrl = paymentResponse.getPaymentUrl();
        
         Payment payment = new Payment();
         payment.setInvoiceId(req.getInvoiceId());
         payment.setAmount(invoice.getFinalAmount());
-        payment.setProvider("ZALOPAY");
+        payment.setProvider(req.getProvider().toUpperCase());
         payment.setTransactionCode(transactionCode);
         payment.setStatus(PaymentStatus.PENDING);
         payment.setCreatedAt(LocalDateTime.now());
@@ -133,29 +146,24 @@ public class PaymentService {
     public void handleCallback(Map<String, String> callbackBody) throws Exception {
 
         // 1. Verify MAC từ ZaloPay
-        String transId = zaloPayService.verifyCallback(callbackBody);
+        CallbackPaymentDTO callback = zaloPayService.callback(callbackBody);
 
         // 2. Tìm payment theo transaction_code
-        Payment payment = paymentRepository.findByTransactionCode(transId)
-            .orElseThrow(() -> new NotFoundException("Payment not found: " + transId));
+        Payment payment = paymentRepository.findByTransactionCode(callback.getTransactionId())
+            .orElseThrow(() -> new NotFoundException("Payment not found: " + callback.getTransactionId()));
 
         if (payment.getStatus() == PaymentStatus.SUCCESS) {
-            log.info("Callback duplicate, transId={} already SUCCESS", transId);
-            return; // idempotent — bỏ qua nếu đã xử lý
+            log.info("Callback duplicate, transId={} already SUCCESS", callback.getTransactionId());
+            return;
         }
 
-        String dataStr = callbackBody.get("data");
-        JsonNode data = objectMapper.readTree(dataStr);
-        long zptransid = data.get("zp_trans_id").asLong();
-        int orderStatus = data.get("order_status").asInt();
-
-        payment.setProviderTransId(zptransid);
+        payment.setProviderTransId(callback.getProviderTransactionId());
         payment.setUpdatedAt(LocalDateTime.now());
 
-        if (orderStatus != 1) {
+        if (callback.getResponseCode() != 0) {
             payment.setStatus(PaymentStatus.FAILED);
             paymentRepository.save(payment);
-            log.warn("Payment FAILED: transId={}, zptransid={}", transId, zptransid);
+            log.warn("Payment FAILED: transId={}, providerTransId={}", callback.getTransactionId(), callback.getProviderTransactionId());
             return;
         }
         payment.setStatus(PaymentStatus.SUCCESS);
@@ -176,11 +184,11 @@ public class PaymentService {
         tx.setType(TypeTransaction.PAYMENT);
         tx.setReferenceId(payment.getId());
         tx.setReferenceType("PAYMENT");
-        tx.setDescription("Thanh toán thành công ZaloPay - " + transId);
+        tx.setDescription("Thanh toán thành công " + payment.getProvider() + " - " + callback.getTransactionId());
         tx.setCreatedAt(LocalDateTime.now());
         tuitionTransactionRepository.save(tx);
 
-        log.info("Payment SUCCESS: invoiceId={}, transId={}", invoice.getId(), transId);
+        log.info("Payment SUCCESS: invoiceId={}, transId={}", invoice.getId(), callback.getTransactionId());
     }
 
     @Transactional

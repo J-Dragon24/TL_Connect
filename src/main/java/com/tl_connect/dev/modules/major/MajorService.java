@@ -35,8 +35,11 @@ public class MajorService {
     private final FacultyRepository facultyRepository;
     private final Validator validator;
 
-    public PagedResponse<MajorAdmDTO> getAllMajors(Pageable pageable) {
-        Page<MajorRow> majors = majorRepository.findAllMajors(pageable);
+    public PagedResponse<MajorAdmDTO> getAllMajors(Pageable pageable, String facultyCode) {
+        if(facultyCode == null || facultyCode.isEmpty()) {
+            facultyCode = "";
+        }
+        Page<MajorRow> majors = majorRepository.findAllMajors(pageable, facultyCode);
         return new PagedResponse<>(
                 majors.getContent().stream().map(this::toDTO).toList(),
                 majors.getNumber(),

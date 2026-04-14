@@ -190,6 +190,7 @@ public class StudentService {
                                                 .address(student.getEmergencyContactAddress())
                                                 .relationship(student.getRelationship())
                                                 .build())
+                                .status(student.getStatus())
                                 .build();
         }
 

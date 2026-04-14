@@ -9,4 +9,13 @@ import lombok.Setter;
 public class CreateTuitionPaymentReqDTO {
     @NotNull(message = "Invoice ID is required")
     Long invoiceId;
+
+    @NotNull(message = "Provider is required")
+    String provider;
+
+    String language;
+
+    String bankCode;
+
+    String ipAddress;
 }

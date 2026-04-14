@@ -43,8 +43,11 @@ public class StudentClassService {
     private final AcademicAdvisorRepository academicAdvisorRepository;
     private final Validator validator;
     
-    public PagedResponse<StudentClassRow> getAll(Pageable pageable) {
-        Page<StudentClassRow> studentClasses = studentClassRepository.getAllWithStudentCount(pageable);
+    public PagedResponse<StudentClassRow> getAll(Pageable pageable, String facultyCode) {
+        if(facultyCode == null || facultyCode.isEmpty()) {
+            facultyCode = "";
+        }
+        Page<StudentClassRow> studentClasses = studentClassRepository.getAllWithStudentCount(pageable, facultyCode);
         return new PagedResponse<>(
                 studentClasses.getContent(),
                 studentClasses.getNumber(),

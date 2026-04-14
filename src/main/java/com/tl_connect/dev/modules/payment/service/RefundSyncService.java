@@ -13,6 +13,7 @@ import com.tl_connect.dev.core.common.enums.TuitionStatus;
 import com.tl_connect.dev.core.common.enums.TypeTransaction;
 import com.tl_connect.dev.modules.payment.PaymentRepository;
 import com.tl_connect.dev.modules.payment.entity.Payment;
+import com.tl_connect.dev.modules.payment.provider.ZaloPayProvider;
 import com.tl_connect.dev.modules.tuition.entity.TuitionTransaction;
 import com.tl_connect.dev.modules.tuition.repository.TuitionInvoiceRepository;
 import com.tl_connect.dev.modules.tuition.repository.TuitionTransactionRepository;
@@ -28,7 +29,7 @@ public class RefundSyncService {
     private final PaymentRepository paymentRepository;
     private final TuitionInvoiceRepository invoiceRepository;
     private final TuitionTransactionRepository tuitionTransactionRepository;
-    private final ZaloPayService zaloPayService;
+    private final ZaloPayProvider zaloPayService;
     private final RedisTemplate<String, String> redisTemplate;
 
     // @Scheduled(fixedDelay = 30000) // 30 giây/lần

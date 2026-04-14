@@ -97,7 +97,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
                 ec.full_name AS emergencyContactName,
                 ec.phone_number AS emergencyContactPhoneNumber,
                 ec.address AS emergencyContactAddress,
-                ec.relationship AS relationship
+                ec.relationship AS relationship,
+                s.status AS status
             FROM students s
             LEFT JOIN student_classes c ON s.student_class_id = c.id
             LEFT JOIN student_majors sm ON s.id = sm.student_id AND sm.is_primary = true
@@ -124,7 +125,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
                 LEFT JOIN emergency_contacts ec ON s.id = ec.student_id
                 WHERE f.faculty_code = :facultyCode OR :facultyCode = ''
             """, nativeQuery = true)
-    Page<StudentRow> findAllStudent(Pageable pageable, String facultyCode);
+    Page<StudentRow> findAllStudent(Pageable pageable, @Param("facultyCode") String facultyCode);
 
     @Query(value = """
             SELECT

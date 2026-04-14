@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import com.tl_connect.dev.core.common.enums.Gender;
 import com.tl_connect.dev.core.common.enums.IdCardType;
+import com.tl_connect.dev.core.common.enums.StudentStatus;
 import com.tl_connect.dev.core.common.enums.TrainingType;
 
 public interface StudentRow {
@@ -30,4 +31,5 @@ public interface StudentRow {
     String getEmergencyContactPhoneNumber();
     String getEmergencyContactAddress();
     String getRelationship();
+    StudentStatus getStatus();
 }

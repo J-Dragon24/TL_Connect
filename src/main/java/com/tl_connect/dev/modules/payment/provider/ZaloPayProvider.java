@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.payment.service;
+package com.tl_connect.dev.modules.payment.provider;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 
@@ -16,10 +16,13 @@ import org.springframework.stereotype.Service;
 
 
 import com.crypto.HMACUtil;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tl_connect.dev.core.common.exception.ExternalException;
 import com.tl_connect.dev.core.config.ZaloPayConfig;
-import com.tl_connect.dev.modules.payment.dto.ZaloPayOrderResultDTO;
+import com.tl_connect.dev.modules.payment.dto.CallbackPaymentDTO;
+import com.tl_connect.dev.modules.payment.dto.PaymentRequestDTO;
+import com.tl_connect.dev.modules.payment.dto.PaymentResponseDTO;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,12 +36,12 @@ import okhttp3.ResponseBody;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ZaloPayService{
+public class ZaloPayProvider implements ProviderPayment{
     private final ZaloPayConfig zaloPayConfig;
     private final ObjectMapper objectMapper;
     private final OkHttpClient okHttpClient;
 
-    public ZaloPayOrderResultDTO createOrder(long amount, String userId, String description, String itemJson) throws Exception {
+    public PaymentResponseDTO createPaymentUrl(PaymentRequestDTO req) throws Exception {
 
         String transId      = getCurrentTimeString("yyMMdd") + "_" + new Date().getTime();
         long   appTime      = System.currentTimeMillis();
@@ -53,23 +56,23 @@ public class ZaloPayService{
 
         String data = appId
         + "|" + transId
-        + "|" + userId
-        + "|" + amount
+        + "|" + req.getUserId()
+        + "|" + req.getAmount()
         + "|" + appTime
         + "|" + embeddataJson 
-        + "|" + itemJson; 
+        + "|" + req.getItemJson(); 
 
         String mac = HMACUtil.HMacHexStringEncode(HMACUtil.HMACSHA256, zaloPayConfig.getKey1(), data);
 
         Map<String, Object> order = new LinkedHashMap<>();
         order.put("app_id",       appId);
         order.put("app_trans_id", transId);
-        order.put("app_user",     userId);
-        order.put("amount",       amount);
+        order.put("app_user",     req.getUserId());
+        order.put("amount",       req.getAmount());
         order.put("app_time",     appTime);
         order.put("embed_data",   embeddataJson);
-        order.put("item",         itemJson);
-        order.put("description",  description);
+        order.put("item",         req.getItemJson());
+        order.put("description",  req.getDescription());
         order.put("callback_url", zaloPayConfig.getCallbackUrl());
         order.put("mac", mac);
 
@@ -94,14 +97,15 @@ public class ZaloPayService{
                 throw new ExternalException("Empty response from ZaloPay createOrder API");
             }
             String responseBodyStr = new String(responseBody.bytes(), StandardCharsets.UTF_8);
-            log.info("ZaloPay raw response: {}", responseBodyStr);  // thêm dòng này
-            log.info("ZaloPay response code: {}", response.code());  // thêm dòng này
+            log.info("ZaloPay raw response: {}", responseBodyStr);
+            log.info("ZaloPay response code: {}", response.code());
             Map<String, Object> result = objectMapper.readValue(responseBodyStr, Map.class);
-            return ZaloPayOrderResultDTO.builder()
-                .appTransId(transId)
-                .orderUrl((String) result.get("order_url"))
-                .zpTransToken((String) result.get("zp_trans_token"))
-                .rawResponse(result)
+
+            return PaymentResponseDTO.builder()
+                .provider("ZALOPAY")
+                .transactionId(transId)
+                .paymentUrl((String) result.get("order_url"))
+                .rawData(result)
                 .build();
         }
     }
@@ -113,9 +117,9 @@ public class ZaloPayService{
         return fmt.format(cal.getTimeInMillis());
     }
 
-    public String verifyCallback(Map<String, String> cbData) throws Exception {
-        String mac = cbData.get("mac");
-        String dataStr = cbData.get("data");
+    public CallbackPaymentDTO callback(Map<String, String> params) throws Exception {
+        String mac = params.get("mac");
+        String dataStr = params.get("data");
 
         String expectedMac = HMACUtil.HMacHexStringEncode(HMACUtil.HMACSHA256, zaloPayConfig.getKey2(), dataStr);
         if (!expectedMac.equals(mac)) {
@@ -123,11 +127,29 @@ public class ZaloPayService{
         }
 
         Map<String, Object> parsed = objectMapper.readValue(dataStr, Map.class);
-        return (String) parsed.get("app_trans_id");
-    }
+        String transactionId = (String) parsed.get("app_trans_id");
+
+        JsonNode data = objectMapper.readTree(dataStr);
+        long zptransid = data.get("zp_trans_id").asLong();
+        int orderStatus = data.get("order_status").asInt();
+
+        if(orderStatus != 1) {
+            return CallbackPaymentDTO.builder()
+                .responseCode(-1)
+                .transactionId(transactionId)
+                .providerTransactionId(String.valueOf(zptransid))
+                .build();
+        }
+
+        return CallbackPaymentDTO.builder()
+                .responseCode(0)
+                .transactionId(transactionId)
+                .providerTransactionId(String.valueOf(zptransid))
+                .build();
+    } 
 
 
-    public Map<String, Object> refund(long zpTransId, long amount, String transCode) throws Exception {
+    public Map<String, Object> refund(String zpTransId, long amount, String transCode) throws Exception {
         Random rand = new Random();
         long timestamp = System.currentTimeMillis(); // miliseconds
         String uid = timestamp + "" + (111 + rand.nextInt(888)); // unique id
@@ -138,7 +160,7 @@ public class ZaloPayService{
 
         Map<String, Object> order = new HashMap<String, Object>(){{
             put("app_id", appid);
-            put("zp_trans_id", zpTransId);
+            put("zp_trans_id", Long.valueOf(zpTransId));
             put("m_refund_id", mRefundId);
             put("timestamp", timestamp);
             put("amount", amount);

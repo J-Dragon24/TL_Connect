@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.tl_connect.dev.modules.major.entity.Major;
@@ -32,12 +33,14 @@ public interface MajorRepository extends JpaRepository<Major, Long>{
                 m.is_active as isActive
             FROM majors m
             JOIN faculties f ON m.faculty_id = f.id
+            WHERE f.faculty_code = :facultyCode OR :facultyCode = ''
             """,
             countQuery = """
                     SELECT COUNT(m.id)
                     FROM majors m
                     JOIN faculties f ON m.faculty_id = f.id
+                    WHERE f.faculty_code = :facultyCode OR :facultyCode = ''
                     """, 
                     nativeQuery = true)
-    Page<MajorRow> findAllMajors(Pageable pageable);
+    Page<MajorRow> findAllMajors(Pageable pageable, @Param("facultyCode") String facultyCode);
 }

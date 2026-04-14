@@ -31,7 +31,7 @@ public class Payment {
     private String transactionCode;
 
     @Column(name = "provider_trans_id")
-    private Long providerTransId;
+    private String providerTransId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)

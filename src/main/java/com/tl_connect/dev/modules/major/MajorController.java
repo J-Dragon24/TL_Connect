@@ -22,8 +22,8 @@ public class MajorController {
     private final MajorService majorService;
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAllMajors(@PageableDefault(page = 0, size = 10) Pageable pageable) {
-        PagedResponse<MajorAdmDTO> result = majorService.getAllMajors(pageable);
+    public ResponseEntity<?> getAllMajors(@PageableDefault(page = 0, size = 10) Pageable pageable, @RequestParam(required = false, name = "khoa") String facultyCode) {
+        PagedResponse<MajorAdmDTO> result = majorService.getAllMajors(pageable, facultyCode);
         return ResponseHelper.success("Get all majors successfully", result);
     }
 
