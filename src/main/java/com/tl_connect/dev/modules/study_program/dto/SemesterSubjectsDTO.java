@@ -15,6 +15,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SemesterSubjectsDTO {
+    private Long semesterId;
     private String semesterName;
     private LocalDate semesterStartDate;
     private LocalDate semesterEndDate;

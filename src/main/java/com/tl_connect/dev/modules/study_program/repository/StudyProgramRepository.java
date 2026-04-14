@@ -115,17 +115,21 @@ public interface StudyProgramRepository extends JpaRepository<StudyProgram, Long
                 sp.training_type AS trainingType
             FROM study_programs sp
             JOIN majors m ON sp.major_id = m.id
+            JOIN faculties f ON m.faculty_id = f.id
             WHERE sp.start_year = :startYear
+            AND f.faculty_code = :facultyCode
             ORDER BY sp.study_program_code
             """,
             countQuery = """
                     SELECT COUNT(*)
                     FROM study_programs sp
                     JOIN majors m ON sp.major_id = m.id
+                    JOIN faculties f ON m.faculty_id = f.id
                     WHERE sp.start_year = :startYear
+                    AND f.faculty_code = :facultyCode
                     """,
             nativeQuery = true)
-    Page<StudyProgramAdmRow> findByStartYear(@Param("startYear") Integer startYear, Pageable pageable);
+    Page<StudyProgramAdmRow> findByStartYearAndFacultyCode(@Param("startYear") Integer startYear, @Param("facultyCode") String facultyCode, Pageable pageable);
 
     @Query(value = """
             SELECT

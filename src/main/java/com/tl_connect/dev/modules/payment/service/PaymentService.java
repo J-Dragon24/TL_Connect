@@ -1,6 +1,8 @@
 package com.tl_connect.dev.modules.payment.service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +12,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tl_connect.dev.core.common.enums.PaymentStatus;
 import com.tl_connect.dev.core.common.enums.TuitionStatus;
@@ -23,10 +24,12 @@ import com.tl_connect.dev.modules.payment.dto.CreateTuitionPaymentReqDTO;
 import com.tl_connect.dev.modules.payment.dto.CreateTuitionPaymentResDTO;
 import com.tl_connect.dev.modules.payment.dto.PaymentRequestDTO;
 import com.tl_connect.dev.modules.payment.dto.PaymentResponseDTO;
+import com.tl_connect.dev.modules.payment.dto.RefundInfoDTO;
+import com.tl_connect.dev.modules.payment.dto.RefundRequestDTO;
+import com.tl_connect.dev.modules.payment.dto.RefundResponseDTO;
 import com.tl_connect.dev.modules.payment.entity.Payment;
 import com.tl_connect.dev.modules.payment.provider.PaymentFactory;
 import com.tl_connect.dev.modules.payment.provider.ProviderPayment;
-import com.tl_connect.dev.modules.payment.provider.ZaloPayProvider;
 import com.tl_connect.dev.modules.tuition.entity.TuitionInvoice;
 import com.tl_connect.dev.modules.tuition.entity.TuitionInvoiceItem;
 import com.tl_connect.dev.modules.tuition.entity.TuitionTransaction;
@@ -48,7 +51,6 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final TuitionTransactionRepository tuitionTransactionRepository;
     private final ObjectMapper objectMapper;
-    private final ZaloPayProvider zaloPayService;
     private final RedisTemplate<String, String> redisTemplate;
     private final PaymentFactory paymentFactory;
 
@@ -100,14 +102,10 @@ public class PaymentService {
         
         PaymentResponseDTO  paymentResponse = providerPayment.createPaymentUrl(request);
 
-        log.info("ZaloPay createOrder response: {}", paymentResponse);
+        log.info("{} createOrder response: {}", req.getProvider(), paymentResponse);
 
-        Integer returnCode = (Integer) paymentResponse.getRawData().get("return_code");
-        if (returnCode == null || returnCode != 1) {
-            throw new BadRequestException("ZaloPay error: "
-                + paymentResponse.getRawData().get("return_message")
-                + " | sub_code: " + paymentResponse.getRawData().get("sub_return_code")
-                + " | sub_message: " + paymentResponse.getRawData().get("sub_return_message"));
+        if(paymentResponse.getTransactionId() == null) {
+            throw new BadRequestException("Payment response is null");
         }
 
         String transactionCode = paymentResponse.getTransactionId();
@@ -130,7 +128,7 @@ public class PaymentService {
         tx.setType(TypeTransaction.PAYMENT);
         tx.setReferenceId(payment.getId());
         tx.setReferenceType("PAYMENT");
-        tx.setDescription("Tạo lệnh thanh toán ZaloPay - " + transactionCode);
+        tx.setDescription("Tạo lệnh thanh toán " + req.getProvider().toUpperCase() + " - " + transactionCode);
         tx.setCreatedAt(LocalDateTime.now());
         tuitionTransactionRepository.save(tx);
 
@@ -145,12 +143,13 @@ public class PaymentService {
     @Transactional
     public void handleCallback(Map<String, String> callbackBody) throws Exception {
 
-        // 1. Verify MAC từ ZaloPay
-        CallbackPaymentDTO callback = zaloPayService.callback(callbackBody);
+        Payment payment = paymentRepository.findByTransactionCode(extractTxnRef(callbackBody))
+            .orElseThrow(() -> new NotFoundException("Payment not found: " + extractTxnRef(callbackBody)));
 
-        // 2. Tìm payment theo transaction_code
-        Payment payment = paymentRepository.findByTransactionCode(callback.getTransactionId())
-            .orElseThrow(() -> new NotFoundException("Payment not found: " + callback.getTransactionId()));
+        ProviderPayment providerPayment = paymentFactory.getProvider(payment.getProvider());
+
+        CallbackPaymentDTO callback = providerPayment.callback(callbackBody);
+
 
         if (payment.getStatus() == PaymentStatus.SUCCESS) {
             log.info("Callback duplicate, transId={} already SUCCESS", callback.getTransactionId());
@@ -192,8 +191,8 @@ public class PaymentService {
     }
 
     @Transactional
-    public Map<String, Object> refund(String transCode) throws Exception {
-        Payment payment = paymentRepository.findByTransactionCode(transCode)
+    public RefundResponseDTO refund(RefundRequestDTO req) throws Exception {
+        Payment payment = paymentRepository.findByTransactionCode(req.getTransactionCode())
                 .orElseThrow(() -> new NotFoundException("Payment not found"));
 
         if (payment.getStatus() != PaymentStatus.SUCCESS) {
@@ -203,22 +202,28 @@ public class PaymentService {
             throw new RuntimeException("No zptransid found for refund");
         }
 
-        Map<String, Object> zaloResult = zaloPayService.refund(
-                payment.getProviderTransId(),
-                payment.getAmount().longValue(),
-                payment.getTransactionCode()
-        );
+        RefundInfoDTO refundRequest = RefundInfoDTO.builder()
+            .transactionId(payment.getTransactionCode())
+            .amount(payment.getAmount().longValue())
+            .transactionDate(payment.getCreatedAt()
+                .atZone(ZoneId.of("Asia/Ho_Chi_Minh"))
+                .format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")))
+            .providerTransactionId(payment.getProviderTransId())
+            .orderInfo(req.getOrderInfo())
+            .createBy(req.getCreateBy())
+            .ipAddress(req.getIpAddress())
+            .type(req.getType())
+            .build();
 
-        Integer returnCode = (Integer) zaloResult.get("returncode");
-        if (returnCode == null || returnCode != 1) {
-            throw new RuntimeException("ZaloPay refund error: " + zaloResult.get("returnmessage"));
+        ProviderPayment providerPayment = paymentFactory.getProvider(payment.getProvider());
+        RefundResponseDTO refundResponse = providerPayment.refund(refundRequest);
+
+        if (refundResponse.getResponseCode() != 0) {
+            throw new RuntimeException(payment.getProvider() + " refund error: " + refundResponse.getMessage());
         }
 
-        String mRefundId = zaloResult.containsKey("refundid")
-        ? (String) zaloResult.get("refundid")
-        : (String) zaloResult.get("mrefundid");
-        if (mRefundId == null) {
-            throw new RuntimeException("ZaloPay did not return refund id");
+        if (refundResponse.getRefundId() == null) {
+            throw new RuntimeException(payment.getProvider() + " did not return refund id");
         }
         payment.setStatus(PaymentStatus.REFUND_PENDING);
         payment.setUpdatedAt(LocalDateTime.now());
@@ -226,11 +231,23 @@ public class PaymentService {
 
         redisTemplate.opsForValue().set(
             "refund:" + payment.getId(),
-            mRefundId,
+            refundResponse.getRefundId(),
             1,
             TimeUnit.HOURS
         );
 
-        return zaloResult;
+        refundResponse.setProvider(payment.getProvider());
+
+        return refundResponse;
+    }
+
+    private String extractTxnRef(Map<String, String> callbackBody) {
+        if(callbackBody.get("app_trans_id") != null) {
+            return callbackBody.get("app_trans_id");
+        }
+        if(callbackBody.get("vnp_TxnRef") != null) {
+            return callbackBody.get("vnp_TxnRef");
+        }
+        return null;
     }
 }

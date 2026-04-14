@@ -40,8 +40,8 @@ public class StudyProgramService {
         private final SubjectPreGroupRepository subjectPreGroupRepository;
         private final SubjectPreGroupItemRepository subjectPreGroupItemRepository;
 
-        public PagedResponse<StudyProgramAdmDTO> getAllStudyProgram(Pageable pageable, Integer startYear) {
-                Page<StudyProgramAdmRow> page = studyProgramRepository.findByStartYear(startYear, pageable);
+        public PagedResponse<StudyProgramAdmDTO> getAllStudyProgram(Pageable pageable, Integer startYear, String facultyCode) {
+                Page<StudyProgramAdmRow> page = studyProgramRepository.findByStartYearAndFacultyCode(startYear, facultyCode, pageable);
                 return new PagedResponse<>(
                         page.getContent().stream().map(this::toDTO).toList(),
                         page.getNumber(),
@@ -166,6 +166,7 @@ public class StudyProgramService {
                         .toList();
 
                 return SemesterSubjectsDTO.builder()
+                        .semesterId(first.getSemesterId())
                         .semesterName(first.getSemesterName())
                         .semesterStartDate(first.getSemesterStartDate())
                         .semesterEndDate(first.getSemesterEndDate())

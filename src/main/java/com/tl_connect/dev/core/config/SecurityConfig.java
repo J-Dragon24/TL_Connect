@@ -28,6 +28,7 @@ public class SecurityConfig {
                         auth -> auth
                                 .dispatcherTypeMatchers(DispatcherType.ASYNC).permitAll()
                                 .requestMatchers("/api/v1/oauth2/login").permitAll()
+                                .requestMatchers("/api/v1/payments/callback/**").permitAll()
                                 .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

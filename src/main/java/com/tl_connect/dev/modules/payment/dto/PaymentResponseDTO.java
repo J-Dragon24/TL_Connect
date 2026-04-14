@@ -10,7 +10,6 @@ import lombok.Data;
 public class PaymentResponseDTO {
     private String provider;        // VNPAY | ZALOPAY
     private String transactionId;
-
     private String paymentUrl; 
 
     private Map<String, Object> rawData;    

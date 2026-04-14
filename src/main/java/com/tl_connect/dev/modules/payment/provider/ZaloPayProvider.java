@@ -18,11 +18,14 @@ import org.springframework.stereotype.Service;
 import com.crypto.HMACUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tl_connect.dev.core.common.exception.BadRequestException;
 import com.tl_connect.dev.core.common.exception.ExternalException;
 import com.tl_connect.dev.core.config.ZaloPayConfig;
 import com.tl_connect.dev.modules.payment.dto.CallbackPaymentDTO;
 import com.tl_connect.dev.modules.payment.dto.PaymentRequestDTO;
 import com.tl_connect.dev.modules.payment.dto.PaymentResponseDTO;
+import com.tl_connect.dev.modules.payment.dto.RefundInfoDTO;
+import com.tl_connect.dev.modules.payment.dto.RefundResponseDTO;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -83,7 +86,7 @@ public class ZaloPayProvider implements ProviderPayment{
 
         String jsonBody = objectMapper.writeValueAsString(order);
 
-        RequestBody body = RequestBody.create(mediaType, jsonBody);
+        RequestBody body = RequestBody.create(jsonBody, mediaType);
 
         Request request = new Request.Builder()
             .url(zaloPayConfig.getEndpointCreate())
@@ -100,6 +103,14 @@ public class ZaloPayProvider implements ProviderPayment{
             log.info("ZaloPay raw response: {}", responseBodyStr);
             log.info("ZaloPay response code: {}", response.code());
             Map<String, Object> result = objectMapper.readValue(responseBodyStr, Map.class);
+
+            Integer returnCode = (Integer) result.get("return_code");
+            if (returnCode == null || returnCode != 1) {
+                throw new BadRequestException("ZaloPay error: "
+                    + result.get("return_message")
+                    + " | sub_code: " + result.get("sub_return_code")
+                    + " | sub_message: " + result.get("sub_return_message"));
+            }
 
             return PaymentResponseDTO.builder()
                 .provider("ZALOPAY")
@@ -149,21 +160,21 @@ public class ZaloPayProvider implements ProviderPayment{
     } 
 
 
-    public Map<String, Object> refund(String zpTransId, long amount, String transCode) throws Exception {
+    public RefundResponseDTO refund(RefundInfoDTO req) throws Exception {
         Random rand = new Random();
         long timestamp = System.currentTimeMillis(); // miliseconds
         String uid = timestamp + "" + (111 + rand.nextInt(888)); // unique id
 
         int appid = zaloPayConfig.getAppId();
         String mRefundId  = getCurrentTimeString("yyMMdd") + "_" + appid + "_" + uid;
-        String description = "Hoàn tiền giao dịch " + transCode;
+        String description = "Hoàn tiền giao dịch " + req.getTransactionId();
 
         Map<String, Object> order = new HashMap<String, Object>(){{
             put("app_id", appid);
-            put("zp_trans_id", Long.valueOf(zpTransId));
+            put("zp_trans_id", Long.valueOf(req.getProviderTransactionId()));
             put("m_refund_id", mRefundId);
             put("timestamp", timestamp);
-            put("amount", amount);
+            put("amount", req.getAmount());
             put("description", description);
         }};
 
@@ -176,11 +187,9 @@ public class ZaloPayProvider implements ProviderPayment{
 
         String jsonBody = objectMapper.writeValueAsString(order);
 
-        RequestBody body = RequestBody.create(mediaType, jsonBody);
-
         Request request = new Request.Builder()
             .url(zaloPayConfig.getEndpointPartialRefund())
-            .post(body)
+            .post(RequestBody.create(jsonBody, mediaType))
             .addHeader("Content-Type", "application/json")
             .addHeader("Accept", "application/json")
             .build();
@@ -189,9 +198,20 @@ public class ZaloPayProvider implements ProviderPayment{
             if (responseBody == null) {
                 throw new ExternalException("Empty response from ZaloPay refund API");
             }
-            String result = new String(responseBody.bytes(), StandardCharsets.UTF_8);
-            return objectMapper.readValue(result, Map.class);
+            String responseBodyStr = new String(responseBody.bytes(), StandardCharsets.UTF_8);
+            Map<String, Object> result = objectMapper.readValue(responseBodyStr, Map.class);
 
+            Integer returnCode = (Integer) result.get("returncode");
+            if (returnCode == null || returnCode != 1) {
+                throw new RuntimeException("ZaloPay refund error: " + result.get("returnmessage"));
+            }
+
+            return RefundResponseDTO.builder()
+                .refundId(result.get("refundid").toString())
+                .responseCode(0)
+                .message(result.get("returnmessage").toString())
+                .rawData(result)
+                .build();
         }
     }
 
@@ -213,7 +233,7 @@ public class ZaloPayProvider implements ProviderPayment{
         String jsonBody = objectMapper.writeValueAsString(params);
 
         MediaType mediaType = MediaType.parse("application/json");
-        RequestBody body = RequestBody.create(mediaType, jsonBody);
+        RequestBody body = RequestBody.create(jsonBody, mediaType);
 
         Request request = new Request.Builder()
                 .url(zaloPayConfig.getEndpointQueryRefund())

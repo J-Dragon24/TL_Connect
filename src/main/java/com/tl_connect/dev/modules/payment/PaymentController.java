@@ -1,6 +1,7 @@
 package com.tl_connect.dev.modules.payment;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -11,6 +12,8 @@ import com.tl_connect.dev.core.common.types.JwtUserInfo;
 import com.tl_connect.dev.core.common.ultility.ResponseHelper;
 import com.tl_connect.dev.modules.payment.dto.CreateTuitionPaymentReqDTO;
 import com.tl_connect.dev.modules.payment.dto.CreateTuitionPaymentResDTO;
+import com.tl_connect.dev.modules.payment.dto.RefundRequestDTO;
+import com.tl_connect.dev.modules.payment.dto.RefundResponseDTO;
 import com.tl_connect.dev.modules.payment.service.PaymentService;
 
 import jakarta.validation.Valid;
@@ -34,10 +37,25 @@ public class PaymentController {
         return ResponseHelper.success("Tạo đơn thanh toán thành công", res);
     }
 
-    @PostMapping("/callback")
-    public ResponseEntity<?> handleTuitionCallback(@RequestBody Map<String, String> callbackBody) throws Exception {
+    @PostMapping("/callback/zalopay")
+    public ResponseEntity<?> handleZaloPayCallback(@RequestBody Map<String, Object> callbackBody) throws Exception {
         try {
-            paymentService.handleCallback(callbackBody);
+            Map<String, String> params = callbackBody.entrySet().stream()
+                .collect(Collectors.toMap(
+                    Map.Entry::getKey,
+                    e -> String.valueOf(e.getValue())
+                ));
+            paymentService.handleCallback(params);
+            return ResponseHelper.success("Thanh toán thành công", null);
+        } catch (Exception e) {
+            return ResponseHelper.internalError("Thanh toán thất bại");
+        }
+    }
+
+    @GetMapping("/callback/vnpay")
+    public ResponseEntity<?> handleVnPayCallback(@RequestParam Map<String, String> params) throws Exception {
+        try {
+            paymentService.handleCallback(params);
             return ResponseHelper.success("Thanh toán thành công", null);
         } catch (Exception e) {
             return ResponseHelper.internalError("Thanh toán thất bại");
@@ -45,9 +63,9 @@ public class PaymentController {
     }
 
     @PostMapping("/refund")
-    public ResponseEntity<?> refund(@RequestParam String transCode) {
+    public ResponseEntity<?> refund(@RequestBody @Valid RefundRequestDTO req) {
         try {
-            Map<String, Object> result = paymentService.refund(transCode);
+            RefundResponseDTO result = paymentService.refund(req);
             return ResponseHelper.success("Hoàn tiền thành công", result);
         } catch (Exception e) {
             return ResponseHelper.internalError("Hoàn tiền thất bại");

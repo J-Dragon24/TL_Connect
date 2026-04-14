@@ -37,8 +37,8 @@ public class StudyProgramAdminController {
 
     @GetMapping("/all")
     public ResponseEntity<?> getAllStudyProgram(@PageableDefault(page = 0, size = 10) Pageable pageable,
-            @RequestParam(required = true) Integer startYear) {
-        PagedResponse<StudyProgramAdmDTO> result = studyProgramService.getAllStudyProgram(pageable, startYear);
+            @RequestParam(required = true) Integer startYear, @RequestParam(required = false, name = "khoa") String facultyCode) {
+        PagedResponse<StudyProgramAdmDTO> result = studyProgramService.getAllStudyProgram(pageable, startYear, facultyCode);
         return ResponseHelper.success("Study programs retrieved successfully", result);
     }
 

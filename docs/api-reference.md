@@ -11,26 +11,27 @@
 3. [Authentication](#3-authentication)
 4. [OAuth2 – Đăng nhập](#4-oauth2--đăng-nhập)
 5. [Student – Quản lý thông tin](#5-student--quản-lý-thông-tin)
-6. [Study Program - Chương trình đào tạo](#6-study-program--chương-trình-đào-tạo)
-7. [Schedule - Lịch học](#7-schedule--lịch-học)
-8. [Exam - Lịch thi](#8-exam--lịch-thi)
-9. [Mark - Kết quả học tập](#9-mark--kết-quả-học-tập)
+6. [Study Program - Chương trình đào tạo](#6-study-program---chương-trình-đào-tạo)
+7. [Schedule - Lịch học](#7-schedule---lịch-học)
+8. [Exam - Lịch thi](#8-exam---lịch-thi)
+9. [Mark - Kết quả học tập](#9-mark---kết-quả-học-tập)
 10. [Notification - Thông báo](#10-notification---thông-báo)
-11. [Application - Đơn từ](#11-application--đơn-từ)
-12. [News - Tin tức](#12-news--tin-tức)
-13. [Semester - Kỳ học](#13-semester---ky-hoc)
+11. [Application - Đơn từ](#11-application---đơn-từ)
+12. [News - Tin tức](#12-news---tin-tức)
+13. [Semester - Kỳ học](#13-semester---kỳ-học)
 14. [Course class - Lớp học phần](#14-course-class---lớp-học-phần)
 15. [Department - Bộ môn](#15-department---bộ-môn)
 16. [Faculty - Khoa](#16-faculty---khoa)
-17. [Lecturer - Giảng viên](#17-lecturer---giảng-viên)
+17. [Lecturer - Quản lý giảng viên](#17-lecturer---quản-lý-giảng-viên)
 18. [Academic advisor - Cố vấn học tập](#18-academic-advisor---cố-vấn-học-tập)
-19. [Major - Ngành học](#19-major---ngành-học)
-20. [Student Class - Lớp sinh viên](#20-student-class---lớp-sinh-viên)
-21. [Subject - Môn học](#21-subject---môn-học)
+19. [Major - Ngành học](#19-major---quản-lý-ngành-học)
+20. [Student Class - Quản lý lớp sinh viên](#20-student-class---quản-lý-lớp-sinh-viên)
+21. [Subject - Môn học](#21-subject---quản-lý-môn-học)
 22. [Tuition - Học phí](#22-tuition---học-phí)
-23. [Notification Template - Mẫu thông báo](#23-notification-template---mẫu-thông-báo)
+23. [Notification Template - Quản lý template thông báo](#23-notification-template---quản-lý-template-thông-báo)
 24. [Payment - Thanh toán](#24-payment---thanh-toán)
-25. [Chatbot - Chatbot](#25-chatbot---chatbot)
+25. [Application Type - Loại đơn từ](#25-application-type---loại-đơn)
+26. [Chatbot - Chatbot](#26-chatbot)
 
 ## 1. Response Format chung
 Tất cả response đều theo cấu trúc JSON thống nhất:
@@ -451,6 +452,7 @@ Lấy danh sách tất cả sinh viên.
 | Field | Type | Required | Description |
 |------|-----|-----|-----|
 | page | int | ❌ | Số trang (mặc định: 0), page size cố định 50 |
+| khoa | string | ❌ | Mã khoa |
 
 **Response thành công (code 0):**
 
@@ -472,6 +474,7 @@ Lấy danh sách tất cả sinh viên.
             "start_year": 2022,
             "end_year": 2026,
             "training_type": "CHINH_QUY",
+            "status": "ACTIVE",
             "identity_card": { 
               "card_number": "079203005555",
               "card_type": "CCCD",
@@ -803,6 +806,7 @@ Lấy danh sách chương trình đào tạo (Admin).
 | page | int | ❌ | Số trang (mặc định 0) |
 | size | int | ❌ | Số phần tử mỗi trang (mặc định 10) |
 | start_year | int | ✅ | Năm bắt đầu |
+| khoa | string | ✅ | Mã khoa |
 
 ---
 
@@ -856,6 +860,7 @@ Lấy chi tiết chương trình đào tạo theo ID.
     },
     "semesters": [
       {
+        "semesterId": 1,
         "semester_name": "HK1 2025-2026",
         "semester_start_date": "2025-09-01",
         "semester_end_date": "2026-01-15",
@@ -4286,12 +4291,20 @@ Tạo đơn thanh toán học phí
 **Request body:**
 ```json
 {
-  "invoiceId": 1
+  "invoiceId": 1,
+  "provider": "vnpay",
+  "language": "vn",
+  "bankCode": "NCB",
+  "ipAddress": "127.0.0.1"
 }
 ```
 | Field | Type | Required | Description
 |---|---|---|---|
 | invoiceId | long | ✅ | ID hóa đơn học phí
+| provider | string | ✅ | Nhà cung cấp thanh toán (vnpay, zalopay)
+| language | string | ❌ | Ngôn ngữ (vn, en) (chỉ áp dụng với vnpay)
+| bankCode | string | ❌ | Mã ngân hàng (chỉ áp dụng với vnpay)
+| ipAddress | string | ❌ | Địa chỉ IP của người dùng (chỉ áp dụng với vnpay)
 
 **Response thành công (code 0):**
 
@@ -4322,15 +4335,23 @@ Hoàn tiền giao dịch
 - **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
 - **Content-Type**: application/json
 
-**Query param:**
+**Request body:**
+```json
+{
+  "transCode": "240402_123456",
+  "orderInfo": "Hoàn tiền học phí",
+  "createBy": "user1",
+  "ipAddress": "[IP_ADDRESS]",
+  "type": "FULL"
+}
 
 | Field | Type | Required | Description
 |---|---|---|---|
 | transCode | string | ✅ | Mã giao dịch cần hoàn tiền
-
-Ví dụ request:
-
-POST /api/v1/payments/refund?transCode=240402_123456
+| orderInfo | string | ❌ | Thông tin đơn hàng
+| createBy | string | ❌ | Người tạo
+| ipAddress | string | ❌ | Địa chỉ IP
+| type | string | ❌ | Loại hoàn tiền (FULL, PARTIAL)
 
 **Response thành công (code 0):**
 
@@ -4525,3 +4546,6 @@ data: session_id: 123456789
 - Client cần xử lý stream liên tục
 - Thường dùng với EventSource (web) hoặc OkHttp/Retrofit streaming (Android)
 ---
+### 26.3. WEBSOCKET /agents/ChatAgent
+agent chatbot
+`{"type":"cf_agent_use_chat_request","id":"2","init":{"method":"POST","body":"{\"messages\":[{\"role\":\"user\",\"content\":\"chức năng của PHÒNG TÀI CHÍNH – KẾ TOÁN\"}]}"}}`
