@@ -46,6 +46,9 @@ public class StudyProgram {
     @Column(name = "total_credits")
     private Integer totalCredits;
 
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive;
+
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;

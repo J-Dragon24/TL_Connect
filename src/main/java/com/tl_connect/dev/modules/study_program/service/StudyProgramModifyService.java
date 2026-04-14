@@ -103,6 +103,14 @@ public class StudyProgramModifyService {
     public void deleteStudyProgram(Long id){
         StudyProgram studyProgram = studyProgramRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Study program not found"));
-        studyProgramRepository.delete(studyProgram);
+        if(!studyProgram.getIsActive()){
+            throw new BadRequestException("Study program is already inactive");
+        }
+        studyProgram.setIsActive(false);
+        try {
+            studyProgramRepository.save(studyProgram);
+        } catch (DataIntegrityViolationException e) {
+            throw new BadRequestException("Invalid study program data: " + e.getMessage());
+        }
     }
 }

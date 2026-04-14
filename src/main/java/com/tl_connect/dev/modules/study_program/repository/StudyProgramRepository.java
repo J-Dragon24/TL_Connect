@@ -118,6 +118,7 @@ public interface StudyProgramRepository extends JpaRepository<StudyProgram, Long
             JOIN faculties f ON m.faculty_id = f.id
             WHERE sp.start_year = :startYear
             AND f.faculty_code = :facultyCode
+            AND sp.is_active = true
             ORDER BY sp.study_program_code
             """,
             countQuery = """
@@ -127,6 +128,7 @@ public interface StudyProgramRepository extends JpaRepository<StudyProgram, Long
                     JOIN faculties f ON m.faculty_id = f.id
                     WHERE sp.start_year = :startYear
                     AND f.faculty_code = :facultyCode
+                    AND sp.is_active = true
                     """,
             nativeQuery = true)
     Page<StudyProgramAdmRow> findByStartYearAndFacultyCode(@Param("startYear") Integer startYear, @Param("facultyCode") String facultyCode, Pageable pageable);
