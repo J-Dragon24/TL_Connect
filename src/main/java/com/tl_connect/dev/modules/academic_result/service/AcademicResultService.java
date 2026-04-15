@@ -12,7 +12,6 @@ import com.tl_connect.dev.modules.academic_result.dto.SubjectResultDTO;
 import com.tl_connect.dev.modules.academic_result.projection.SemesterSummaryView;
 import com.tl_connect.dev.modules.academic_result.projection.SubjectResultRow;
 
-import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;

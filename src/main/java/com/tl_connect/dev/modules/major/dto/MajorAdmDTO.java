@@ -1,7 +1,5 @@
 package com.tl_connect.dev.modules.major.dto;
 
-import java.time.LocalDateTime;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

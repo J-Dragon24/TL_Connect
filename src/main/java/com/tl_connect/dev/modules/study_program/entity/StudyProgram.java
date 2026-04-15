@@ -46,8 +46,9 @@ public class StudyProgram {
     @Column(name = "total_credits")
     private Integer totalCredits;
 
+    @Builder.Default
     @Column(name = "is_active", nullable = false)
-    private Boolean isActive;
+    private Boolean isActive = true;
 
     @CreationTimestamp
     @Column(name = "created_at")

@@ -34,8 +34,9 @@ public class Department {
     @Column(name = "department_name", nullable = false)
     private String departmentName;
 
-    @Column(name = "is_active")
-    private Boolean isActive;
+    @Builder.Default
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive = true;
 
     @CreationTimestamp
     @Column(name = "created_at")

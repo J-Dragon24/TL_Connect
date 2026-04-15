@@ -34,8 +34,9 @@ public class Major {
     @Column(name = "faculty_id", nullable = false)
     private Long facultyId;
 
-    @Column(name = "is_active")
-    private Boolean isActive;
+    @Builder.Default
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive = true;
 
     @CreationTimestamp
     @Column(name = "created_at")

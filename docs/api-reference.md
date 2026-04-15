@@ -3564,6 +3564,7 @@ Lấy danh sách ngành học (phân trang).
 |------|-----|-----|-----|
 | page | int | ❌ | Số trang (default: 0) |
 | size | int | ❌ | Số lượng mỗi trang (default: 10) |
+| khoa | string | ❌ | Mã khoa |
 
 **Response thành công (code 0):**
 ```json

@@ -9,6 +9,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.MulticastMessage;
 import com.google.firebase.messaging.Notification;
+import com.google.firebase.messaging.SendResponse;
 import com.tl_connect.dev.modules.notification.service.interfaces.FCMService;
 
 import lombok.RequiredArgsConstructor;
@@ -58,8 +59,14 @@ public class FCMServiceImpl implements FCMService {
             .putData("body", body)
             .build();
         try {
-            BatchResponse response = FirebaseMessaging.getInstance().sendMulticast(message);
-            log.info("FCM sent to tokens {}: {}", tokens, response);
+            BatchResponse response = FirebaseMessaging.getInstance().sendEachForMulticast(message);
+            List<SendResponse> responses = response.getResponses();
+            for (int i = 0; i < responses.size(); i++) {
+                if (!responses.get(i).isSuccessful()) {
+                    String failedToken = tokens.get(i);
+                    log.error("FCM send failed for token {}", failedToken);
+                }
+            }
         } catch (Exception e) {
             log.error("FCM send failed for tokens {}", tokens, e);
         }

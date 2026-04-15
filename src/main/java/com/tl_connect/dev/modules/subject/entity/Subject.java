@@ -50,8 +50,9 @@ public class Subject {
     @Column(name = "practice_hours")
     private Integer practiceHours;
 
+    @Builder.Default
     @Column(name = "is_active")
-    private Boolean isActive;
+    private Boolean isActive = true;
 
     @CreationTimestamp
     @Column(name = "created_at")

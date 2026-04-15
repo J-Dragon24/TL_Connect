@@ -212,7 +212,7 @@ CREATE TABLE study_programs (
   total_credits INT,
   start_year INT NOT NULL,
   training_type VARCHAR(20) NOT NULL DEFAULT 'CHINH_QUY' CHECK (training_type IN ('CHINH_QUY','LIEN_THONG')),
-  is_active BOOLEAN DEFAULT TRUE,
+  is_active BOOLEAN NOT NULL DEFAULT TRUE,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
 
