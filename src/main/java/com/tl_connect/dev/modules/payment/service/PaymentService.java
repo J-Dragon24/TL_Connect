@@ -111,25 +111,10 @@ public class PaymentService {
         String transactionCode = paymentResponse.getTransactionId();
         String orderUrl = paymentResponse.getPaymentUrl();
        
-        Payment payment = new Payment();
-        payment.setInvoiceId(req.getInvoiceId());
-        payment.setAmount(invoice.getFinalAmount());
-        payment.setProvider(req.getProvider().toUpperCase());
-        payment.setTransactionCode(transactionCode);
-        payment.setStatus(PaymentStatus.PENDING);
-        payment.setCreatedAt(LocalDateTime.now());
-        payment.setUpdatedAt(LocalDateTime.now());
+        Payment payment = Payment.create(req.getInvoiceId(), invoice.getFinalAmount(), req.getProvider().toUpperCase(), transactionCode);
         paymentRepository.save(payment);
 
-        TuitionTransaction tx = new TuitionTransaction();
-        tx.setStudentId(studentId);
-        tx.setInvoiceId(req.getInvoiceId());
-        tx.setAmount(invoice.getFinalAmount());
-        tx.setType(TypeTransaction.PAYMENT);
-        tx.setReferenceId(payment.getId());
-        tx.setReferenceType("PAYMENT");
-        tx.setDescription("Tạo lệnh thanh toán " + req.getProvider().toUpperCase() + " - " + transactionCode);
-        tx.setCreatedAt(LocalDateTime.now());
+        TuitionTransaction tx = TuitionTransaction.create(studentId, req.getInvoiceId(), invoice.getFinalAmount(), TypeTransaction.PAYMENT, payment.getId(), "PAYMENT", "Tạo lệnh thanh toán " + req.getProvider().toUpperCase() + " - " + transactionCode);
         tuitionTransactionRepository.save(tx);
 
         return CreateTuitionPaymentResDTO.builder()
@@ -172,19 +157,10 @@ public class PaymentService {
             .orElseThrow(() -> new NotFoundException(
                 "Invoice not found: " + payment.getInvoiceId()));
 
-        invoice.setStatus(TuitionStatus.PAID);
-        invoice.setUpdatedAt(LocalDateTime.now());
+        invoice.updateStatus(TuitionStatus.PAID);
         invoiceRepository.save(invoice);
 
-        TuitionTransaction tx = new TuitionTransaction();
-        tx.setStudentId(invoice.getStudentId());
-        tx.setInvoiceId(invoice.getId());
-        tx.setAmount(payment.getAmount());
-        tx.setType(TypeTransaction.PAYMENT);
-        tx.setReferenceId(payment.getId());
-        tx.setReferenceType("PAYMENT");
-        tx.setDescription("Thanh toán thành công " + payment.getProvider() + " - " + callback.getTransactionId());
-        tx.setCreatedAt(LocalDateTime.now());
+        TuitionTransaction tx = TuitionTransaction.create(invoice.getStudentId(), invoice.getId(), payment.getAmount(), TypeTransaction.PAYMENT, payment.getId(), "PAYMENT", "Thanh toán thành công " + payment.getProvider() + " - " + callback.getTransactionId());
         tuitionTransactionRepository.save(tx);
 
         log.info("Payment SUCCESS: invoiceId={}, transId={}", invoice.getId(), callback.getTransactionId());

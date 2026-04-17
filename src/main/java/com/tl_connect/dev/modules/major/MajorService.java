@@ -67,11 +67,7 @@ public class MajorService {
         Faculty faculty = facultyRepository.findById(majorDTO.getFacultyId())
                 .orElseThrow(() -> new NotFoundException("Faculty not found"));
 
-        Major major = new Major();
-            major.setMajorCode(majorDTO.getMajorCode());
-            major.setMajorName(majorDTO.getMajorName());
-            major.setFacultyId(faculty.getId());
-            major.setIsActive(true);
+        Major major = Major.create(majorDTO.getMajorCode(), majorDTO.getMajorName(), faculty.getId());
 
         try {
             majorRepository.save(major);
@@ -99,17 +95,12 @@ public class MajorService {
             throw new ConflictException("Major code already exists");
         }
 
-        if(majorDTO.getMajorCode() != null){
-            major.setMajorCode(majorDTO.getMajorCode());
-        }
-        if(majorDTO.getMajorName() != null){
-            major.setMajorName(majorDTO.getMajorName());
-        }
         if(majorDTO.getFacultyId() != null){
-            Faculty faculty = facultyRepository.findById(majorDTO.getFacultyId())
+            facultyRepository.findById(majorDTO.getFacultyId())
                 .orElseThrow(() -> new NotFoundException("Faculty not found"));
-            major.setFacultyId(faculty.getId());
         }
+
+        major.update(majorDTO.getMajorCode(), majorDTO.getMajorName(), majorDTO.getFacultyId());
 
         try {
             majorRepository.save(major);
@@ -126,7 +117,7 @@ public class MajorService {
         if (!major.getIsActive()) {
             throw new BadRequestException("Major already deleted");
         }
-        major.setIsActive(false);
+        major.delete();
         try {
             majorRepository.save(major);
         } catch (DataIntegrityViolationException ex) {

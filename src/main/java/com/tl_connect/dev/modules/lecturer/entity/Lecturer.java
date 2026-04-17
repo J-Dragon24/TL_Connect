@@ -56,4 +56,27 @@ public class Lecturer {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public static Lecturer create(String lecturerCode, String fullName, String email, String phoneNumber, Long departmentId) {
+        Lecturer lecturer = new Lecturer();
+        lecturer.lecturerCode = lecturerCode;
+        lecturer.fullName = fullName;
+        lecturer.email = email;
+        lecturer.phoneNumber = phoneNumber;
+        if(departmentId != null) lecturer.departmentId = departmentId;
+        lecturer.status = LecturerStatus.ACTIVE;
+        return lecturer;
+    }
+
+    public void update(String lecturerCode, String fullName, String email, String phoneNumber, Long departmentId) {
+        if(lecturerCode != null) this.lecturerCode = lecturerCode;
+        if(fullName != null) this.fullName = fullName;
+        if(email != null) this.email = email;
+        if(phoneNumber != null) this.phoneNumber = phoneNumber;
+        if(departmentId != null) this.departmentId = departmentId;
+    }
+
+    public void deactivate() {
+        this.status = LecturerStatus.INACTIVE;
+    }
 }

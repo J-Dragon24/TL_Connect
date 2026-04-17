@@ -60,4 +60,16 @@ public class Notification {
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    public void update(String title, String content, NotificationCreatedBy createdBy, NotificationType targetType, Long targetId, Long referenceId, String referenceType, LocalDate deadLine, Boolean isImportant) {
+        if(title != null) this.title = title;
+        if(content != null) this.content = content;
+        if(createdBy != null) this.createdBy = createdBy;
+        if(targetType != null) this.targetType = targetType;
+        if(targetId != null) this.targetId = targetId;
+        if(referenceId != null) this.referenceId = referenceId;
+        if(referenceType != null) this.referenceType = referenceType;
+        if(deadLine != null) this.deadLine = deadLine;
+        if(isImportant != null) this.isImportant = isImportant;
+    }
 }

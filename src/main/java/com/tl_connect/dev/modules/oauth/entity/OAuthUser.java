@@ -47,4 +47,25 @@ public class OAuthUser {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public static OAuthUser create(String userUuid, String displayName, String email) {
+        OAuthUser oauthUser = new OAuthUser();
+        oauthUser.userUuid = userUuid;
+        oauthUser.displayName = displayName;
+        oauthUser.email = email;
+        oauthUser.status = UserStatus.ACTIVE;
+        return oauthUser;
+    }
+
+    public void update(String displayName, String email, UserStatus status) {
+        if (displayName != null) {
+            this.displayName = displayName;
+        }
+        if (email != null) {
+            this.email = email;
+        }
+        if (status != null) {
+            this.status = status;
+        }
+    }
 }

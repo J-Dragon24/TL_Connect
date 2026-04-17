@@ -61,5 +61,23 @@ public class TuitionInvoice {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public static TuitionInvoice create(Long studentId, Long semesterId, LocalDate dueDate, BigDecimal totalAmount, BigDecimal finalAmount, TuitionStatus status) {
+        TuitionInvoice tuitionInvoice = new TuitionInvoice();
+        tuitionInvoice.studentId = studentId;
+        tuitionInvoice.semesterId = semesterId;
+        tuitionInvoice.dueDate = dueDate;
+        tuitionInvoice.totalAmount = totalAmount;
+        tuitionInvoice.finalAmount = finalAmount;
+        tuitionInvoice.status = status;
+        tuitionInvoice.createdAt = LocalDateTime.now();
+        tuitionInvoice.updatedAt = LocalDateTime.now();
+        return tuitionInvoice;
+    }
+
+    public void updateStatus(TuitionStatus status) {
+        this.status = status;
+        this.updatedAt = LocalDateTime.now();
+    }
     
 }

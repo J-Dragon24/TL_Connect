@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.tl_connect.dev.core.common.enums.ConditionEnrollmentType;
+import com.tl_connect.dev.core.common.exception.InvalidInputException;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -51,4 +52,29 @@ public class SubjectEnrollmentCondition {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public static SubjectEnrollmentCondition create(Long subjectId, ConditionEnrollmentType conditionType, BigDecimal conditionValue, String conditionOperator, String description) {
+        if(conditionValue.compareTo(BigDecimal.ZERO) <= 0){
+            throw new InvalidInputException("Invalid condition value");
+        }
+        if(conditionType == null){
+            throw new InvalidInputException("Invalid condition type");
+        }
+        if(conditionOperator == null || conditionOperator.equals("")){
+            throw new InvalidInputException("Invalid condition operator");
+        }
+        if(subjectId == null){
+            throw new InvalidInputException("Invalid subject id");
+        }
+        if(description == null || description.equals("")){
+            throw new InvalidInputException("Invalid description");
+        }
+        SubjectEnrollmentCondition subjectEnrollmentCondition = new SubjectEnrollmentCondition();
+        subjectEnrollmentCondition.setSubjectId(subjectId);
+        subjectEnrollmentCondition.setConditionType(conditionType);
+        subjectEnrollmentCondition.setConditionValue(conditionValue);
+        subjectEnrollmentCondition.setConditionOperator(conditionOperator);
+        subjectEnrollmentCondition.setDescription(description);
+        return subjectEnrollmentCondition;
+    }
 }

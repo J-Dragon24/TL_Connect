@@ -43,4 +43,21 @@ public class ApplicationType {
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    public static ApplicationType create(String code, String name) {
+        return ApplicationType.builder()
+                .code(code)
+                .name(name)
+                .isActive(true)
+                .build();
+    }
+
+    public void update(String code, String name) {
+        if(code != null) this.code = code;
+        if(name != null) this.name = name;
+    }
+
+    public void deactivate() {
+        this.isActive = false;
+    }
 }

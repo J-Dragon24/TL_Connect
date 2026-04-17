@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.tl_connect.dev.core.common.exception.InvalidInputException;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -55,4 +57,51 @@ public class Semester {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public static Semester create(String semesterName, String semesterCode, String academicYears, int semesterNumber, LocalDate startDate, LocalDate endDate) {
+        if(startDate.isAfter(endDate)){
+            throw new InvalidInputException("Start date must be before end date");
+        }
+        if(semesterNumber < 1 || semesterNumber > 3){
+            throw new InvalidInputException("Semester number must be between 1 and 3");
+        }
+        Semester semester = new Semester();
+        semester.setSemesterName(semesterName);
+        semester.setSemesterCode(semesterCode);
+        semester.setAcademicYears(academicYears);
+        semester.setSemesterNumber(semesterNumber);
+        semester.setStartDate(startDate);
+        semester.setEndDate(endDate);
+        semester.setIsActive(true);
+        return semester;
+    }
+
+    public void update(String semesterName, String semesterCode, String academicYears, int semesterNumber, LocalDate startDate, LocalDate endDate) {
+        LocalDate newStartDate = startDate != null ? startDate : this.startDate;
+        LocalDate newEndDate = endDate != null ? endDate : this.endDate;
+        if (newStartDate.isAfter(newEndDate)) {
+            throw new InvalidInputException("Start date must be before end date");
+        }
+        if (semesterNumber != 0 && (semesterNumber < 1 || semesterNumber > 3)) {
+            throw new InvalidInputException("Semester number must be between 1 and 3");
+        }
+        if (semesterName != null) {
+            this.semesterName = semesterName;
+        }
+        if (semesterCode != null) {
+            this.semesterCode = semesterCode;
+        }
+        if (academicYears != null) {
+            this.academicYears = academicYears;
+        }
+        if (semesterNumber != 0) {
+            this.semesterNumber = semesterNumber;
+        }
+        if (startDate != null) {
+            this.startDate = startDate;
+        }
+        if (endDate != null) {
+            this.endDate = endDate;
+        }
+    }
 }

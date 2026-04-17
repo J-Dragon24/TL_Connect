@@ -45,4 +45,22 @@ public class Department {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public static Department create(Long facultyId, String departmentCode, String departmentName) {
+        Department department = new Department();
+        department.facultyId = facultyId;
+        department.departmentCode = departmentCode;
+        department.departmentName = departmentName;
+        department.isActive = true;
+        return department;
+    }
+
+    public void update(String departmentCode, String departmentName) {
+        if(departmentCode != null) this.departmentCode = departmentCode;
+        if(departmentName != null) this.departmentName = departmentName;
+    }
+
+    public void deactivate() {
+        this.isActive = false;
+    }
 }

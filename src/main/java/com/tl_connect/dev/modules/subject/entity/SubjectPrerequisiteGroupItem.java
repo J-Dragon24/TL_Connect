@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.tl_connect.dev.core.common.exception.InvalidInputException;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,5 +41,14 @@ public class SubjectPrerequisiteGroupItem {
 
         @Column(name = "prerequisite_subject_id")
         private Long prerequisiteSubjectId;
+    }
+
+    public static SubjectPrerequisiteGroupItem create(Long groupId, Long prerequisiteSubjectId) {
+        if(groupId == null || prerequisiteSubjectId == null){
+            throw new InvalidInputException("Invalid group id or prerequisite subject id");
+        }
+        SubjectPrerequisiteGroupItem item = new SubjectPrerequisiteGroupItem();
+        item.setId(new SubjectPrerequisiteGroupItemId(groupId, prerequisiteSubjectId));
+        return item;
     }
 }

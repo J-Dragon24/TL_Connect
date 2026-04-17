@@ -72,10 +72,7 @@ public class AcademicAdvisorService {
         }
 
 
-        AcademicAdvisor academicAdvisor = AcademicAdvisor.builder()
-                .lecturerId(dto.getLecturerId())
-                .studentClassId(dto.getStudentClassId())
-                .build();
+        AcademicAdvisor academicAdvisor = AcademicAdvisor.create(dto.getLecturerId(), dto.getStudentClassId());
         try {
             academicAdvisorRepository.save(academicAdvisor);
         } catch (DataIntegrityViolationException e) {

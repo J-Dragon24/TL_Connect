@@ -1,6 +1,5 @@
 package com.tl_connect.dev.modules.semester;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -74,14 +73,7 @@ public class SemesterService {
             throw new InvalidInputException("Semester code " + dto.getSemesterCode() + " already exists");
         }
 
-        Semester semester = new Semester();
-        semester.setAcademicYears(dto.getAcademicYears());
-        semester.setSemesterName(dto.getSemesterName());
-        semester.setSemesterCode(dto.getSemesterCode());
-        semester.setSemesterNumber(dto.getSemesterNumber());
-        semester.setStartDate(dto.getStartDate());
-        semester.setEndDate(dto.getEndDate());
-        semester.setIsActive(true);
+        Semester semester = Semester.create(dto.getSemesterName(), dto.getSemesterCode(), dto.getAcademicYears(), dto.getSemesterNumber(), dto.getStartDate(), dto.getEndDate());
         try {
             semesterRepository.save(semester);
         } catch (DataIntegrityViolationException e) {
@@ -102,36 +94,19 @@ public class SemesterService {
         Semester semester = semesterRepository.findById(id)
         .orElseThrow(() -> new InvalidInputException("Semester not found"));
 
+        semester.update(dto.getSemesterName(), dto.getSemesterCode(), dto.getAcademicYears(), dto.getSemesterNumber(), dto.getStartDate(), dto.getEndDate());
+
         if (dto.getSemesterNumber() != null || dto.getAcademicYears() != null) {
-            String academicYears = dto.getAcademicYears() != null ? dto.getAcademicYears() : semester.getAcademicYears();
-            int semesterNumber = dto.getSemesterNumber() != null ? dto.getSemesterNumber() : semester.getSemesterNumber();
             if (semesterRepository.existsByAcademicYearsAndSemesterNumber(
-                    academicYears, semesterNumber)) {
+                    dto.getAcademicYears(), dto.getSemesterNumber())) {
                 throw new InvalidInputException("Semester already exists");
             }
-            semester.setSemesterNumber(semesterNumber);
-            semester.setAcademicYears(academicYears);
-        }
-
-        if(dto.getSemesterName() != null){
-            semester.setSemesterName(dto.getSemesterName());
         }
 
         if(dto.getSemesterCode() != null){
             if (!dto.getSemesterCode().equals(semester.getSemesterCode()) && semesterRepository.existsBySemesterCode(dto.getSemesterCode())) {
                 throw new InvalidInputException("Semester code " + dto.getSemesterCode() + " already exists");
             }
-            semester.setSemesterCode(dto.getSemesterCode());
-        }
-
-        if(dto.getStartDate() != null || dto.getEndDate() != null){
-            LocalDate startDate = dto.getStartDate() != null ? dto.getStartDate() : semester.getStartDate();
-            LocalDate endDate = dto.getEndDate() != null ? dto.getEndDate() : semester.getEndDate();
-            if (startDate.isAfter(endDate)) {
-                throw new InvalidInputException("Start date must be before end date");
-            }
-            semester.setStartDate(startDate);
-            semester.setEndDate(endDate);
         }
 
         try {

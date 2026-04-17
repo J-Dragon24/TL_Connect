@@ -28,6 +28,8 @@ public interface LecturerRepository extends JpaRepository<Lecturer, Long> {
             l.status as status 
         FROM lecturers l
         LEFT JOIN departments d ON l.department_id = d.id
+        LEFT JOIN faculties f ON d.faculty_id = f.id
+        WHERE (:facultyCode = '' OR f.faculty_code = :facultyCode)
         ORDER BY l.full_name ASC
     """,
     countQuery = """
@@ -35,9 +37,11 @@ public interface LecturerRepository extends JpaRepository<Lecturer, Long> {
             COUNT(l.id) 
         FROM lecturers l
         LEFT JOIN departments d ON l.department_id = d.id
+        LEFT JOIN faculties f ON d.faculty_id = f.id
+        WHERE (:facultyCode = '' OR f.faculty_code = :facultyCode)
     """,
     nativeQuery = true)
-    Page<LecturerRow> findAllLecturer(Pageable pageable);
+    Page<LecturerRow> findAllLecturer(Pageable pageable, String facultyCode);
 
 
     @Query(value="""

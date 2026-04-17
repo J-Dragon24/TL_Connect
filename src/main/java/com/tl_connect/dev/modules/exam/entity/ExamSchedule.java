@@ -7,6 +7,8 @@ import java.time.LocalTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.tl_connect.dev.core.common.exception.InvalidInputException;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -64,4 +66,40 @@ public class ExamSchedule {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public static ExamSchedule create(Long subjectId, Long semesterId, LocalDate examDate, LocalTime startTime, LocalTime endTime, String examRoom, String examLocation, String examFormat, String examType, String note) {
+        if(startTime.isAfter(endTime)){
+            throw new InvalidInputException("Start time must be before end time");
+        }
+        ExamSchedule examSchedule = new ExamSchedule();
+        examSchedule.subjectId = subjectId;
+        examSchedule.semesterId = semesterId;
+        examSchedule.examDate = examDate;
+        examSchedule.startTime = startTime;
+        examSchedule.endTime = endTime;
+        examSchedule.examRoom = examRoom;
+        examSchedule.examLocation = examLocation;
+        examSchedule.examFormat = examFormat;
+        examSchedule.examType = examType;
+        examSchedule.note = note;
+        return examSchedule;
+    }
+
+    public void update(Long subjectId, Long semesterId, LocalDate examDate, LocalTime startTime, LocalTime endTime, String examRoom, String examLocation, String examFormat, String examType, String note) {
+        LocalTime newStartTime = startTime != null ? startTime : this.startTime;
+        LocalTime newEndTime = endTime != null ? endTime : this.endTime;
+        if(newStartTime.isAfter(newEndTime)){
+            throw new InvalidInputException("Start time must be before end time");
+        }
+        if(subjectId != null) this.subjectId = subjectId;
+        if(semesterId != null) this.semesterId = semesterId;
+        if(examDate != null) this.examDate = examDate;
+        if(startTime != null) this.startTime = startTime;
+        if(endTime != null) this.endTime = endTime;
+        if(examRoom != null) this.examRoom = examRoom;
+        if(examLocation != null) this.examLocation = examLocation;
+        if(examFormat != null) this.examFormat = examFormat;
+        if(examType != null) this.examType = examType;
+        if(note != null) this.note = note;
+    }
 }

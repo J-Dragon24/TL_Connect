@@ -38,4 +38,11 @@ public class AcademicAdvisor {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public static AcademicAdvisor create(Long lecturerId, Long studentClassId) {
+        AcademicAdvisor academicAdvisor = new AcademicAdvisor();
+        academicAdvisor.lecturerId = lecturerId;
+        academicAdvisor.studentClassId = studentClassId;
+        return academicAdvisor;
+    }
 }

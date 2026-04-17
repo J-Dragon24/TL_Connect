@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.tl_connect.dev.core.common.enums.TrainingType;
+import com.tl_connect.dev.core.common.exception.InvalidInputException;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -57,4 +58,46 @@ public class StudyProgram {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public static StudyProgram create(String studyProgramCode, String studyProgramName, Long majorId, Integer startYear, TrainingType trainingType, Integer totalCredits) {
+        if(startYear < 1900){
+            throw new InvalidInputException("Invalid start year");
+        }
+        StudyProgram studyProgram = new StudyProgram();
+        studyProgram.setStudyProgramCode(studyProgramCode);
+        studyProgram.setStudyProgramName(studyProgramName);
+        studyProgram.setMajorId(majorId);
+        studyProgram.setStartYear(startYear);
+        studyProgram.setTrainingType(trainingType);
+        studyProgram.setTotalCredits(totalCredits);
+        return studyProgram;
+    }
+
+    public void update(String studyProgramCode, String studyProgramName, Long majorId, Integer startYear, TrainingType trainingType, Integer totalCredits) {
+        if(startYear != null && startYear < 1900){
+            throw new InvalidInputException("Invalid start year");
+        }
+        if (studyProgramCode != null) {
+            this.studyProgramCode = studyProgramCode;
+        }
+        if (studyProgramName != null) {
+            this.studyProgramName = studyProgramName;
+        }
+        if (majorId != null) {
+            this.majorId = majorId;
+        }
+        if (startYear != null) {
+            this.startYear = startYear;
+        }
+        if (trainingType != null) {
+            this.trainingType = trainingType;
+        }
+        if (totalCredits != null) {
+            this.totalCredits = totalCredits;
+        }
+    }
+
+    public void deactivate() {
+        this.isActive = false;
+    }
 }

@@ -13,8 +13,7 @@ import lombok.Builder;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PreGroupUpdateDTO {
-    private Long id;
+public class PreGroupCreateDTO {
     private Integer minSubjectsRequired;
     private String description;
     private List<Long> prerequisiteSubjectIds;

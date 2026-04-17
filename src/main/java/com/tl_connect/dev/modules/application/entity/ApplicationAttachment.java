@@ -44,4 +44,13 @@ public class ApplicationAttachment {
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    public static ApplicationAttachment create(Long applicationId, String fileKey, String originalFilename, Long fileSize) {
+        return ApplicationAttachment.builder()
+                .applicationId(applicationId)
+                .fileKey(fileKey)
+                .originalFilename(originalFilename)
+                .fileSize(fileSize)
+                .build();
+    }
 }

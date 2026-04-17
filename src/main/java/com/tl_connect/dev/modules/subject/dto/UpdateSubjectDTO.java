@@ -34,8 +34,8 @@ public class UpdateSubjectDTO implements StudyDTOInterface {
     private Integer practiceHours;
 
     @Valid
-    private List<PreGroupUpdateDTO> prerequisiteGroups;
+    private List<PreGroupCreateDTO> prerequisiteGroups;
     
     @Valid
-    private List<EnrollmentConditionDTO> enrollmentConditions;
+    private List<EnrollmentConditionCreateDTO> enrollmentConditions;
 }

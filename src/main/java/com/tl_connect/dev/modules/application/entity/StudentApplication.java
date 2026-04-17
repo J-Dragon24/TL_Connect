@@ -47,4 +47,17 @@ public class StudentApplication {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public static StudentApplication create(Long studentId, Long applicationTypeId, String content) {
+        return StudentApplication.builder()
+                .studentId(studentId)
+                .applicationTypeId(applicationTypeId)
+                .content(content)
+                .status(ApplicationStatus.PENDING)
+                .build();
+    }
+
+    public void updateStatus(ApplicationStatus status) {
+        this.status = status;
+    }
 }

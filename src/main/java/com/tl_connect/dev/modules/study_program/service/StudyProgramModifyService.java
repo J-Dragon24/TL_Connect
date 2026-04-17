@@ -42,14 +42,7 @@ public class StudyProgramModifyService {
                 .orElseThrow(() -> new NotFoundException("Major not found"));
 
 
-        StudyProgram studyProgram = StudyProgram.builder()
-                .studyProgramCode(createStudyProgramDTO.getStudyProgramCode())
-                .studyProgramName(createStudyProgramDTO.getStudyProgramName())
-                .majorId(createStudyProgramDTO.getMajorId())
-                .startYear(createStudyProgramDTO.getStartYear())
-                .totalCredits(createStudyProgramDTO.getTotalCredits())
-                .trainingType(createStudyProgramDTO.getTrainingType())
-                .build();
+        StudyProgram studyProgram = StudyProgram.create(createStudyProgramDTO.getStudyProgramCode(), createStudyProgramDTO.getStudyProgramName(), createStudyProgramDTO.getMajorId(), createStudyProgramDTO.getStartYear(), createStudyProgramDTO.getTrainingType(), createStudyProgramDTO.getTotalCredits());
         try{
             studyProgramRepository.save(studyProgram);
         }catch(DataIntegrityViolationException e){
@@ -71,27 +64,11 @@ public class StudyProgramModifyService {
         StudyProgram studyProgram = studyProgramRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Study program not found"));
 
-        if (updateStudyProgramDTO.getStudyProgramCode() != null) {
-            studyProgram.setStudyProgramCode(updateStudyProgramDTO.getStudyProgramCode());
-        }
-        if (updateStudyProgramDTO.getStudyProgramName() != null) {
-            studyProgram.setStudyProgramName(updateStudyProgramDTO.getStudyProgramName());
-        }
         if (updateStudyProgramDTO.getMajorId() != null) {
             majorRepository.findById(updateStudyProgramDTO.getMajorId())
                     .orElseThrow(() -> new NotFoundException("Major not found"));
-            studyProgram.setMajorId(updateStudyProgramDTO.getMajorId());
         }
-        if (updateStudyProgramDTO.getStartYear() != null) {
-            studyProgram.setStartYear(updateStudyProgramDTO.getStartYear());
-        }
-        if (updateStudyProgramDTO.getTotalCredits() != null) {
-            studyProgram.setTotalCredits(updateStudyProgramDTO.getTotalCredits());
-        }
-        if (updateStudyProgramDTO.getTrainingType() != null) {
-            studyProgram.setTrainingType(updateStudyProgramDTO.getTrainingType());
-        }
-
+        studyProgram.update(updateStudyProgramDTO.getStudyProgramCode(), updateStudyProgramDTO.getStudyProgramName(), updateStudyProgramDTO.getMajorId(), updateStudyProgramDTO.getStartYear(), updateStudyProgramDTO.getTrainingType(), updateStudyProgramDTO.getTotalCredits());
         try {
             studyProgramRepository.save(studyProgram);
         } catch (DataIntegrityViolationException e) {
@@ -106,7 +83,7 @@ public class StudyProgramModifyService {
         if(!studyProgram.getIsActive()){
             throw new BadRequestException("Study program is already inactive");
         }
-        studyProgram.setIsActive(false);
+        studyProgram.deactivate();
         try {
             studyProgramRepository.save(studyProgram);
         } catch (DataIntegrityViolationException e) {

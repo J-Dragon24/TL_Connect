@@ -55,10 +55,7 @@ public class FacultyService {
             throw new ConflictException("Faculty code already exists");
         }
 
-        Faculty faculty = new Faculty();
-        faculty.setFacultyName(facultyDTO.getFacultyName());
-        faculty.setFacultyCode(facultyDTO.getFacultyCode());
-        faculty.setIsActive(true);
+        Faculty faculty = Faculty.create(facultyDTO.getFacultyCode(), facultyDTO.getFacultyName());
         try {
             facultyRepository.save(faculty);
             return faculty.getId();
@@ -84,12 +81,7 @@ public class FacultyService {
             throw new ConflictException("Faculty code already exists");
         }
 
-        if(facultyDTO.getFacultyName() != null){
-            faculty.setFacultyName(facultyDTO.getFacultyName());
-        }
-        if(facultyDTO.getFacultyCode() != null){
-            faculty.setFacultyCode(facultyDTO.getFacultyCode());
-        }
+        faculty.update(facultyDTO.getFacultyCode(), facultyDTO.getFacultyName());
 
         try {
             facultyRepository.save(faculty);
@@ -102,7 +94,7 @@ public class FacultyService {
     public void deleteFaculty(Long id) {
         Faculty faculty = facultyRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Faculty not found"));
-        faculty.setIsActive(false);
+        faculty.deactivate();
         try {
             facultyRepository.save(faculty);
         } catch (DataIntegrityViolationException ex) {

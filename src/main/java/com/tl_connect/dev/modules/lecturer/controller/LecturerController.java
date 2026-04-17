@@ -23,8 +23,8 @@ public class LecturerController {
     private final LecturerService lecturerService;
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAll(@PageableDefault(page = 0, size = 10) Pageable pageable) {
-        PagedResponse<LecturerAdmInfoDTO> response = lecturerService.getAllLecturers(pageable);
+    public ResponseEntity<?> getAll(@PageableDefault(page = 0, size = 10) Pageable pageable, @RequestParam(required = false, name= "khoa") String facultyCode) {
+        PagedResponse<LecturerAdmInfoDTO> response = lecturerService.getAllLecturers(pageable, facultyCode);
         return ResponseHelper.success("Get all lecturers successfully", response);
     }
 

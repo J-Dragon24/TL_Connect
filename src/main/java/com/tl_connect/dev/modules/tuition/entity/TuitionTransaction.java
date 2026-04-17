@@ -58,4 +58,17 @@ public class TuitionTransaction {
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    public static TuitionTransaction create(Long studentId, Long invoiceId, BigDecimal amount, TypeTransaction type, Long referenceId, String referenceType, String description) {
+        TuitionTransaction tuitionTransaction = new TuitionTransaction();
+        tuitionTransaction.studentId = studentId;
+        tuitionTransaction.invoiceId = invoiceId;
+        tuitionTransaction.amount = amount;
+        tuitionTransaction.type = type;
+        tuitionTransaction.referenceId = referenceId;
+        tuitionTransaction.referenceType = referenceType;
+        tuitionTransaction.description = description;
+        tuitionTransaction.createdAt = LocalDateTime.now();
+        return tuitionTransaction;
+    }
 }

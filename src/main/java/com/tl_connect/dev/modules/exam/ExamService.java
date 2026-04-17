@@ -115,18 +115,18 @@ public class ExamService {
             throw new ConflictException("Exam schedule conflict");
         }
 
-        ExamSchedule examSchedule = ExamSchedule.builder()
-        .subjectId(createExamScheduleDTO.getSubjectId())
-        .semesterId(createExamScheduleDTO.getSemesterId())
-        .examDate(createExamScheduleDTO.getExamDate())
-        .startTime(createExamScheduleDTO.getStartTime())
-        .endTime(createExamScheduleDTO.getEndTime())
-        .examRoom(createExamScheduleDTO.getExamRoom())
-        .examLocation(createExamScheduleDTO.getExamLocation())
-        .examFormat(createExamScheduleDTO.getExamFormat())
-        .examType(createExamScheduleDTO.getExamType())
-        .note(createExamScheduleDTO.getNote())
-        .build();
+        ExamSchedule examSchedule = ExamSchedule.create(
+        createExamScheduleDTO.getSubjectId(),
+        createExamScheduleDTO.getSemesterId(),
+        createExamScheduleDTO.getExamDate(),
+        createExamScheduleDTO.getStartTime(),
+        createExamScheduleDTO.getEndTime(),
+        createExamScheduleDTO.getExamRoom(),
+        createExamScheduleDTO.getExamLocation(),
+        createExamScheduleDTO.getExamFormat(),
+        createExamScheduleDTO.getExamType(),
+        createExamScheduleDTO.getNote()
+        );
 
         try{
             examRepository.save(examSchedule);
@@ -149,30 +149,28 @@ public class ExamService {
         ExamSchedule examSchedule = examRepository.findById(id)
         .orElseThrow(() -> new NotFoundException("Exam schedule not found"));
 
-        Long semesterId = updateExamScheduleDTO.getSemesterId() != null ? updateExamScheduleDTO.getSemesterId() : examSchedule.getSemesterId();
-        LocalDate examDate = updateExamScheduleDTO.getExamDate() != null ? updateExamScheduleDTO.getExamDate() : examSchedule.getExamDate();
-        LocalTime startTime = updateExamScheduleDTO.getStartTime() != null ? updateExamScheduleDTO.getStartTime() : examSchedule.getStartTime();
-        LocalTime endTime = updateExamScheduleDTO.getEndTime() != null ? updateExamScheduleDTO.getEndTime() : examSchedule.getEndTime();
-        String examRoom = updateExamScheduleDTO.getExamRoom() != null ? updateExamScheduleDTO.getExamRoom() : examSchedule.getExamRoom();
-       
-        if (!startTime.isBefore(endTime)) {
-            throw new BadRequestException("Start time must be before end time");
-        }
+        examSchedule.update(
+            updateExamScheduleDTO.getSubjectId(),
+            updateExamScheduleDTO.getSemesterId(),
+            updateExamScheduleDTO.getExamDate(),
+            updateExamScheduleDTO.getStartTime(),
+            updateExamScheduleDTO.getEndTime(),
+            updateExamScheduleDTO.getExamRoom(),
+            updateExamScheduleDTO.getExamLocation(),
+            updateExamScheduleDTO.getExamFormat(),
+            updateExamScheduleDTO.getExamType(),
+            updateExamScheduleDTO.getNote()
+        );
         
-        if(examRepository.existsConflictExcludingId(examDate, semesterId, examRoom, startTime, endTime, id)){
+        if(examRepository.existsConflictExcludingId(examSchedule.getExamDate(), examSchedule.getSemesterId(), examSchedule.getExamRoom(), examSchedule.getStartTime(), examSchedule.getEndTime(), id)){
             throw new ConflictException("Exam schedule conflict");
         }
 
-        Optional.ofNullable(updateExamScheduleDTO.getSubjectId()).ifPresent(examSchedule::setSubjectId);
-        Optional.ofNullable(updateExamScheduleDTO.getSemesterId()).ifPresent(examSchedule::setSemesterId);
-        Optional.ofNullable(updateExamScheduleDTO.getExamDate()).ifPresent(examSchedule::setExamDate);
-        Optional.ofNullable(updateExamScheduleDTO.getStartTime()).ifPresent(examSchedule::setStartTime);
-        Optional.ofNullable(updateExamScheduleDTO.getEndTime()).ifPresent(examSchedule::setEndTime);
-        Optional.ofNullable(updateExamScheduleDTO.getExamRoom()).ifPresent(examSchedule::setExamRoom);
-        Optional.ofNullable(updateExamScheduleDTO.getExamLocation()).ifPresent(examSchedule::setExamLocation);
-        Optional.ofNullable(updateExamScheduleDTO.getExamFormat()).ifPresent(examSchedule::setExamFormat);
-        Optional.ofNullable(updateExamScheduleDTO.getExamType()).ifPresent(examSchedule::setExamType);
-        Optional.ofNullable(updateExamScheduleDTO.getNote()).ifPresent(examSchedule::setNote);
+        try{
+            examRepository.save(examSchedule);
+        }catch(DataIntegrityViolationException e){
+            throw new BadRequestException("Invalid exam schedule data: " + e.getMessage());
+        }
     }
 
     @Transactional

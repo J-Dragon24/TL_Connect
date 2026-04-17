@@ -7,6 +7,9 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 @Entity
 @Table(name = "payment")
 @Data
@@ -37,9 +40,21 @@ public class Payment {
     @Column(name = "status", nullable = false)
     private PaymentStatus status;
 
+    @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    public static Payment create(Long invoiceId, BigDecimal amount, String provider, String transactionCode) {
+        Payment payment = new Payment();
+        payment.invoiceId = invoiceId;
+        payment.amount = amount;
+        payment.provider = provider;
+        payment.transactionCode = transactionCode;
+        payment.status = PaymentStatus.PENDING;
+        return payment;
+    }
 }

@@ -42,4 +42,21 @@ public class Faculty {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public static Faculty create(String facultyCode, String facultyName) {
+        Faculty faculty = new Faculty();
+        faculty.facultyCode = facultyCode;
+        faculty.facultyName = facultyName;
+        faculty.isActive = true;
+        return faculty;
+    }
+
+    public void update(String facultyCode, String facultyName) {
+        if(facultyCode != null) this.facultyCode = facultyCode;
+        if(facultyName != null) this.facultyName = facultyName;
+    }
+
+    public void deactivate() {
+        this.isActive = false;
+    }
 }

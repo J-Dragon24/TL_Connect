@@ -71,13 +71,7 @@ public class NewsService {
                     .collect(Collectors.joining(", "));
             throw new InvalidInputException("Invalid news data: " + message);
         }
-        News news = News.builder()
-                .title(newsDTO.getTitle())
-                .excerpt(newsDTO.getExcerpt())
-                .newsUrl(newsDTO.getNewsUrl())
-                .source(newsDTO.getSource())
-                .publishDate(newsDTO.getPublishDate())
-                .build();
+        News news = News.create(newsDTO.getTitle(), newsDTO.getExcerpt(), newsDTO.getSource(), newsDTO.getPublishDate(), newsDTO.getNewsUrl());
 
         if (file != null && !file.isEmpty()) {
             UploadResult uploadResult = fileHelper.uploadFile(file);
@@ -104,11 +98,7 @@ public class NewsService {
             throw new InvalidInputException("Invalid news data: " + message);
         }
         News news = newsRepository.findById(id).orElseThrow(() -> new RuntimeException("News not found"));
-        Optional.ofNullable(newsDTO.getTitle()).ifPresent(news::setTitle);
-        Optional.ofNullable(newsDTO.getExcerpt()).ifPresent(news::setExcerpt);
-        Optional.ofNullable(newsDTO.getNewsUrl()).ifPresent(news::setNewsUrl);
-        Optional.ofNullable(newsDTO.getSource()).ifPresent(news::setSource);
-        Optional.ofNullable(newsDTO.getPublishDate()).ifPresent(news::setPublishDate);
+        news.update(newsDTO.getTitle(), newsDTO.getExcerpt(), newsDTO.getSource(), newsDTO.getPublishDate(), newsDTO.getNewsUrl());
         if (file != null && !file.isEmpty()) {
             UploadResult uploadResult = fileHelper.uploadFile(file);
             news.setImageUrl(uploadResult.getUrl());

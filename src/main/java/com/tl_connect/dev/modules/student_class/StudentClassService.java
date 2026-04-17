@@ -104,11 +104,7 @@ public class StudentClassService {
             throw new InvalidInputException("Start year must be in the past or present");
         }
 
-        StudentClass sc = StudentClass.builder()
-                .classCode(dto.getClassCode())
-                .majorId(major.getId())
-                .startYear(dto.getStartYear())
-                .build();
+        StudentClass sc = StudentClass.create(dto.getClassCode(), major.getId(), dto.getStartYear());
 
         try {
             studentClassRepository.save(sc);
@@ -135,21 +131,14 @@ public class StudentClassService {
             if (studentClassRepository.existsByClassCode(dto.getClassCode())) {
                 throw new InvalidInputException("Class code already exists");
             }
-            sc.setClassCode(dto.getClassCode());
         }
 
         if (dto.getMajorId() != null) {
-            Major major = majorRepository.findById(dto.getMajorId())
+            majorRepository.findById(dto.getMajorId())
                     .orElseThrow(() -> new NotFoundException("Major not found"));
-            sc.setMajorId(major.getId());
         }
 
-        if (dto.getStartYear() != null) {
-            if (dto.getStartYear() > Year.now().getValue()) {
-                throw new InvalidInputException("Invalid start year");
-            }
-            sc.setStartYear(dto.getStartYear());
-        }
+        sc.update(dto.getClassCode(), dto.getMajorId(), dto.getStartYear());
 
         try {
             studentClassRepository.save(sc);

@@ -272,20 +272,15 @@ public class ScheduleService {
                 CourseClass courseClass = courseClassRepository.findById(courseClassId)
                         .orElseThrow(() -> new NotFoundException("Course class not found"));
 
-                int dayOfWeek = dto.getDayOfWeek() != null ? dto.getDayOfWeek() : classSchedule.getDayOfWeek();
-                int startPeriod = dto.getStartPeriod() != null ? dto.getStartPeriod() : classSchedule.getStartPeriod();
-                int endPeriod = dto.getEndPeriod() != null ? dto.getEndPeriod() : classSchedule.getEndPeriod();
-                LocalTime startTime = dto.getStartTime() != null ? dto.getStartTime() : classSchedule.getStartTime();
-                LocalTime endTime = dto.getEndTime() != null ? dto.getEndTime() : classSchedule.getEndTime();
-                String room = dto.getRoom() != null ? dto.getRoom() : classSchedule.getRoom();
+                classSchedule.update(dto.getDayOfWeek(), dto.getStartPeriod(), dto.getEndPeriod(), dto.getStartTime(), dto.getEndTime(), dto.getRoom());
 
                 List<ClassSchedule> dbList = scheduleRepository.findForConflict(
-                        Set.of(dayOfWeek),
+                        Set.of(classSchedule.getDayOfWeek()),
                         courseClassId,
                         courseClass.getSemesterId()
                 );
 
-                if (!startTime.isBefore(endTime) || !(startPeriod <= endPeriod)) {
+                if (!classSchedule.getStartTime().isBefore(classSchedule.getEndTime()) || !(classSchedule.getStartPeriod() <= classSchedule.getEndPeriod())) {
                     throw new BadRequestException("Start time must be before end time");
                 }
                 
@@ -294,25 +289,17 @@ public class ScheduleService {
                         if (db.getId().equals(id)) continue;
 
                         if (db.getCourseClassId().equals(courseClassId)
-                                && startPeriod < db.getEndPeriod() && endPeriod > db.getStartPeriod()) {
+                                && classSchedule.getStartPeriod() < db.getEndPeriod() && classSchedule.getEndPeriod() > db.getStartPeriod()) {
                                 throw new ConflictException("Class schedule conflict");
                         }
 
                         if (!db.getCourseClassId().equals(courseClassId)
-                                && room.equals(db.getRoom())
-                                && startPeriod < db.getEndPeriod() && endPeriod > db.getStartPeriod()) {
+                                && classSchedule.getRoom().equals(db.getRoom())
+                                && classSchedule.getStartPeriod() < db.getEndPeriod() && classSchedule.getEndPeriod() > db.getStartPeriod()) {
 
                                 throw new ConflictException("Room is occupied");
                         }
                 }
-
-                classSchedule.setDayOfWeek(dayOfWeek);
-                classSchedule.setStartPeriod(startPeriod);
-                classSchedule.setEndPeriod(endPeriod);
-                classSchedule.setStartTime(startTime);
-                classSchedule.setEndTime(endTime);
-                classSchedule.setRoom(room);
-
                 try {
                         scheduleRepository.save(classSchedule);
                 } catch (DataIntegrityViolationException e) {
@@ -352,14 +339,6 @@ public class ScheduleService {
         }
 
         private ClassSchedule mapToEntity(Long courseClassId, ClassScheduleDTO dto) {
-                return ClassSchedule.builder()
-                                .courseClassId(courseClassId)
-                                .dayOfWeek(dto.getDayOfWeek())
-                                .startPeriod(dto.getStartPeriod())
-                                .endPeriod(dto.getEndPeriod())
-                                .startTime(dto.getStartTime())
-                                .endTime(dto.getEndTime())
-                                .room(dto.getRoom())
-                                .build();
+                return ClassSchedule.create(courseClassId, dto.getDayOfWeek(), dto.getStartPeriod(), dto.getEndPeriod(), dto.getStartTime(), dto.getEndTime(), dto.getRoom());
         }
 }

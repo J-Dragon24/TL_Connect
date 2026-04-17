@@ -20,8 +20,8 @@ public class CourseClassController {
     private final CourseClassService courseClassService;
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAll( @PageableDefault(page = 0, size = 10) Pageable pageable) {
-        return ResponseHelper.success("Get all course classes successfully",courseClassService.getAll(pageable));
+    public ResponseEntity<?> getAll( @PageableDefault(page = 0, size = 10) Pageable pageable, @RequestParam(required = false, name = "khoa") String facultyCode) {
+        return ResponseHelper.success("Get all course classes successfully",courseClassService.getAll(pageable, facultyCode));
     }
 
     @GetMapping("/{id}")

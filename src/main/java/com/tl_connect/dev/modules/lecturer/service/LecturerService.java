@@ -35,8 +35,11 @@ public class LecturerService {
     private final DepartmentRepository departmentRepository;
     private final Validator validator;
 
-    public PagedResponse<LecturerAdmInfoDTO> getAllLecturers(Pageable pageable) {
-        Page<LecturerRow> lecturers = lecturerRepository.findAllLecturer(pageable);
+    public PagedResponse<LecturerAdmInfoDTO> getAllLecturers(Pageable pageable, String facultyCode) {
+        if (facultyCode == null) {
+            facultyCode = "";
+        }
+        Page<LecturerRow> lecturers = lecturerRepository.findAllLecturer(pageable, facultyCode);
 
         return new PagedResponse<>(
                         lecturers.getContent().stream().map(this::toFullInfo).toList(),
@@ -73,17 +76,7 @@ public class LecturerService {
             throw new ConflictException("Department not found");
         }
 
-        Lecturer lecturer = Lecturer.builder()
-                .lecturerCode(lecturerDTO.getLecturerCode())
-                .fullName(lecturerDTO.getFullName())
-                .email(lecturerDTO.getEmail())
-                .phoneNumber(lecturerDTO.getPhoneNumber())
-                .status(LecturerStatus.ACTIVE)
-                .build();
-
-        if(lecturerDTO.getDepartmentId() != null) {
-            lecturer.setDepartmentId(lecturerDTO.getDepartmentId());
-        }
+        Lecturer lecturer = Lecturer.create(lecturerDTO.getLecturerCode(), lecturerDTO.getFullName(), lecturerDTO.getEmail(), lecturerDTO.getPhoneNumber(), lecturerDTO.getDepartmentId());
 
         try {
             lecturerRepository.save(lecturer);
@@ -116,24 +109,9 @@ public class LecturerService {
             if (lecturerRepository.existsByLecturerCode(lecturerDTO.getLecturerCode())) {
                 throw new ConflictException("Lecturer code already exists");
             }
-            lecturer.setLecturerCode(lecturerDTO.getLecturerCode());
         }
 
-        if (lecturerDTO.getFullName() != null) {
-            lecturer.setFullName(lecturerDTO.getFullName());
-        }
-
-        if (lecturerDTO.getEmail() != null) {
-            lecturer.setEmail(lecturerDTO.getEmail());
-        }
-
-        if (lecturerDTO.getPhoneNumber() != null) {
-            lecturer.setPhoneNumber(lecturerDTO.getPhoneNumber());
-        }
-
-        if (lecturerDTO.getDepartmentId() != null) {
-            lecturer.setDepartmentId(lecturerDTO.getDepartmentId());
-        }
+        lecturer.update(lecturerDTO.getLecturerCode(), lecturerDTO.getFullName(), lecturerDTO.getEmail(), lecturerDTO.getPhoneNumber(), lecturerDTO.getDepartmentId());
 
         try {
             lecturerRepository.save(lecturer);
@@ -151,7 +129,7 @@ public class LecturerService {
             throw new BadRequestException("Lecturer is already inactive");
         }
 
-        lecturer.setStatus(LecturerStatus.INACTIVE);
+        lecturer.deactivate();
         
         try {
             lecturerRepository.save(lecturer);

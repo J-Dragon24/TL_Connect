@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.tl_connect.dev.core.common.exception.InvalidInputException;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,4 +43,15 @@ public class SubjectPrerequisiteGroup {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public static SubjectPrerequisiteGroup create(Long subjectId, Integer minSubjectsRequired, String description) {
+        if(minSubjectsRequired < 0){
+            throw new InvalidInputException("Invalid min subjects required");
+        }
+        SubjectPrerequisiteGroup subjectPrerequisiteGroup = new SubjectPrerequisiteGroup();
+        subjectPrerequisiteGroup.setSubjectId(subjectId);
+        subjectPrerequisiteGroup.setMinSubjectsRequired(minSubjectsRequired);
+        subjectPrerequisiteGroup.setDescription(description);
+        return subjectPrerequisiteGroup;
+    }
 }

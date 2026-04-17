@@ -1,7 +1,6 @@
 package com.tl_connect.dev.modules.application.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,11 +35,7 @@ public class ApplicationTypeService {
 
     @Transactional
     public Long createApplicationType(CreateApplicationTypeDTO createApplicationTypeDTO) {
-        ApplicationType applicationType = ApplicationType.builder()
-                .code(createApplicationTypeDTO.getCode())
-                .name(createApplicationTypeDTO.getName())
-                .isActive(true)
-                .build();
+        ApplicationType applicationType = ApplicationType.create(createApplicationTypeDTO.getCode(), createApplicationTypeDTO.getName());
         try {
             return applicationTypeRepository.save(applicationType).getId();
         } catch (Exception e) {
@@ -52,8 +47,7 @@ public class ApplicationTypeService {
     public void updateApplicationType(Long id, UpdateApplicationTypeDTO updateApplicationTypeDTO) {
         ApplicationType applicationType = applicationTypeRepository.findById(id)
         .orElseThrow(() -> new NotFoundException("Application type not found"));
-        Optional.ofNullable(updateApplicationTypeDTO.getCode()).ifPresent(applicationType::setCode);
-        Optional.ofNullable(updateApplicationTypeDTO.getName()).ifPresent(applicationType::setName);
+        applicationType.update(updateApplicationTypeDTO.getCode(), updateApplicationTypeDTO.getName());
         try {
             applicationTypeRepository.save(applicationType);
         } catch (Exception e) {
@@ -65,7 +59,7 @@ public class ApplicationTypeService {
     public void deleteApplicationType(Long id) {
         ApplicationType applicationType = applicationTypeRepository.findById(id)
         .orElseThrow(() -> new NotFoundException("Application type not found"));
-        applicationType.setIsActive(false);
+        applicationType.deactivate();
         try {
             applicationTypeRepository.save(applicationType);
         } catch (Exception e) {

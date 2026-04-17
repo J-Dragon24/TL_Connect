@@ -54,4 +54,29 @@ public class CourseClass {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public static CourseClass create(Long lecturerId, Long subjectId, Long semesterId, String classCode, String className, Integer capacity) {
+        CourseClass courseClass = new CourseClass();
+        if(lecturerId != null) courseClass.lecturerId = lecturerId;
+        courseClass.subjectId = subjectId;
+        courseClass.semesterId = semesterId;
+        courseClass.classCode = classCode;
+        courseClass.className = className;
+        courseClass.capacity = capacity;
+        courseClass.isActive = true;
+        return courseClass;
+    }
+
+    public void update(Long lecturerId, Long subjectId, Long semesterId, String classCode, String className, Integer capacity) {
+        if(lecturerId != null) this.lecturerId = lecturerId;
+        if(subjectId != null) this.subjectId = subjectId;
+        if(semesterId != null) this.semesterId = semesterId;
+        if(classCode != null) this.classCode = classCode;
+        if(className != null) this.className = className;
+        if(capacity != null) this.capacity = capacity;
+    }
+
+    public void deactivate() {
+        this.isActive = false;
+    }
 }

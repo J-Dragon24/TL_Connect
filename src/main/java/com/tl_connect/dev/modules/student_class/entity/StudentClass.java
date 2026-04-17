@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.tl_connect.dev.core.common.exception.InvalidInputException;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,4 +43,30 @@ public class StudentClass {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public static StudentClass create(String classCode, Long majorId, Integer startYear) {
+        if(startYear < 1900){
+            throw new InvalidInputException("Invalid start year");
+        }
+        return StudentClass.builder()
+                .classCode(classCode)
+                .majorId(majorId)
+                .startYear(startYear)
+                .build();
+    }
+
+    public void update(String classCode, Long majorId, Integer startYear) {
+        if(startYear != null && startYear < 1900){
+            throw new InvalidInputException("Invalid start year");
+        }
+        if (classCode != null) {
+            this.classCode = classCode;
+        }
+        if (majorId != null) {
+            this.majorId = majorId;
+        }
+        if (startYear != null) {
+            this.startYear = startYear;
+        }
+    }
 }

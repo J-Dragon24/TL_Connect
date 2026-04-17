@@ -45,4 +45,29 @@ public class Major {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public static Major create(String majorCode, String majorName, Long facultyId) {
+        Major major = new Major();
+        major.majorCode = majorCode;
+        major.majorName = majorName;
+        major.facultyId = facultyId;
+        major.isActive = true;
+        return major;
+    }
+
+    public void update(String majorCode, String majorName, Long facultyId) {
+        if (majorCode != null) {
+            this.majorCode = majorCode;
+        }
+        if (majorName != null) {
+            this.majorName = majorName;
+        }
+        if (facultyId != null) {
+            this.facultyId = facultyId;
+        }
+    }
+
+    public void delete() {
+        this.isActive = false;
+    }
 }

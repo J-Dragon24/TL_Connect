@@ -62,11 +62,7 @@ public class DepartmentService {
         Faculty faculty = facultyRepository.findById(dto.getFacultyId())
                 .orElseThrow(() -> new NotFoundException("Faculty not found"));
 
-        Department department = new Department();
-        department.setDepartmentCode(dto.getDepartmentCode());
-        department.setDepartmentName(dto.getDepartmentName());
-        department.setFacultyId(faculty.getId());
-        department.setIsActive(true);
+        Department department = Department.create(faculty.getId(), dto.getDepartmentCode(), dto.getDepartmentName());
 
         try {
             departmentRepository.save(department);
@@ -101,13 +97,7 @@ public class DepartmentService {
             department.setFacultyId(faculty.getId());
         }
 
-        if (dto.getDepartmentName() != null) {
-            department.setDepartmentName(dto.getDepartmentName());
-        }
-
-        if (dto.getDepartmentCode() != null) {
-            department.setDepartmentCode(dto.getDepartmentCode());
-        }
+        department.update(dto.getDepartmentCode(), dto.getDepartmentName());
 
         try {
             departmentRepository.save(department);
@@ -121,7 +111,7 @@ public class DepartmentService {
         Department department = departmentRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Department not found"));
 
-        department.setIsActive(false);
+        department.deactivate();
 
         try {
             departmentRepository.save(department);

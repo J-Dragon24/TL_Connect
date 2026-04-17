@@ -41,8 +41,11 @@ public class CourseClassService {
     private final LecturerRepository lecturerRepository;
     private final Validator validator;
     
-    public PagedResponse<CourseClassBasicInfoDTO> getAll(Pageable pageable) {
-        Page<CourseClassBasicInfoRow> page = courseClassRepository.findAllCourseClass(pageable);
+    public PagedResponse<CourseClassBasicInfoDTO> getAll(Pageable pageable, String facultyCode) {
+        if(facultyCode == null){
+            facultyCode = "";
+        }
+        Page<CourseClassBasicInfoRow> page = courseClassRepository.findAllCourseClass(pageable, facultyCode);
         return new PagedResponse<>(
                 page.getContent().stream().map(this::toDTO).toList(),
                 page.getNumber(),
@@ -103,15 +106,7 @@ public class CourseClassService {
                     .orElseThrow(() -> new NotFoundException("Lecturer not found"));
         }
 
-        CourseClass entity = new CourseClass();
-        entity.setClassCode(dto.getClassCode());
-        entity.setClassName(dto.getClassName());
-        entity.setCapacity(dto.getCapacity());
-        entity.setSubjectId(subject.getId());
-        entity.setSemesterId(semester.getId());
-        if (lecturer != null) {
-            entity.setLecturerId(lecturer.getId());
-        }
+        CourseClass entity = CourseClass.create(lecturer != null ? lecturer.getId() : null, subject.getId(), semester.getId(), dto.getClassCode(), dto.getClassName(), dto.getCapacity());
 
         try {
             courseClassRepository.save(entity);
@@ -141,35 +136,22 @@ public class CourseClassService {
             throw new ConflictException("Class code already exists");
         }
 
-        if (dto.getClassCode() != null) {
-            entity.setClassCode(dto.getClassCode());
-        }
-
-        if (dto.getClassName() != null) {
-            entity.setClassName(dto.getClassName());
-        }
-
-        if (dto.getCapacity() != null) {
-            entity.setCapacity(dto.getCapacity());
-        }
-
         if (dto.getSubjectId() != null) {
-            Subject subject = subjectRepository.findById(dto.getSubjectId())
+            subjectRepository.findById(dto.getSubjectId())
                     .orElseThrow(() -> new NotFoundException("Subject not found"));
-            entity.setSubjectId(subject.getId());
         }
 
         if (dto.getSemesterId() != null) {
-            Semester semester = semesterRepository.findById(dto.getSemesterId())
+            semesterRepository.findById(dto.getSemesterId())
                     .orElseThrow(() -> new NotFoundException("Semester not found"));
-            entity.setSemesterId(semester.getId());
         }
 
         if (dto.getLecturerId() != null) {
-            Lecturer lecturer = lecturerRepository.findById(dto.getLecturerId())
+            lecturerRepository.findById(dto.getLecturerId())
                     .orElseThrow(() -> new NotFoundException("Lecturer not found"));
-            entity.setLecturerId(lecturer.getId());
         }
+
+        entity.update(dto.getLecturerId(), dto.getSubjectId(), dto.getSemesterId(), dto.getClassCode(), dto.getClassName(), dto.getCapacity());
 
         try {
             courseClassRepository.save(entity);
@@ -186,7 +168,7 @@ public class CourseClassService {
         if(!entity.getIsActive()) {
             throw new BadRequestException("Course class is already inactive");
         }
-        entity.setIsActive(false);
+        entity.deactivate();
         try {
             courseClassRepository.save(entity);
         } catch (DataIntegrityViolationException ex) {

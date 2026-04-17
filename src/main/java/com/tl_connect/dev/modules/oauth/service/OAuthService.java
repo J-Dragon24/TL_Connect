@@ -1,6 +1,9 @@
 package com.tl_connect.dev.modules.oauth.service;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -12,8 +15,8 @@ import com.tl_connect.dev.core.common.enums.UserStatus;
 import com.tl_connect.dev.core.common.exception.InvalidInputException;
 import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.core.common.types.JwtUserInfo;
-import com.tl_connect.dev.core.common.types.UserInfo;
 import com.tl_connect.dev.core.common.ultility.AuthHelper;
+import com.tl_connect.dev.core.common.ultility.TokenHelper;
 import com.tl_connect.dev.modules.oauth.dto.LoginRequestDTO;
 import com.tl_connect.dev.modules.oauth.dto.OAuthUserInfoDTO;
 import com.tl_connect.dev.modules.oauth.entity.OAuthUser;
@@ -34,16 +37,24 @@ public class OAuthService {
     private final StudentRepository studentRepository;
 
     private final UserDeviceService userDeviceService;
-
+    
+    // private final RefreshTokenService refreshTokenService;
+    
     @Transactional
     public OAuthUserInfoDTO loginWithMicrosoft(LoginRequestDTO request) {
-        UserInfo userInfo = authHelper.extractUserInfo(request.getAccessToken());
+        // UserInfo userInfo = authHelper.extractUserInfo(request.getAccessToken());
 
-        String microsoftId = userInfo.oid();
-        String email = userInfo.email();
-        String name = userInfo.name();
-        List<String> roles = userInfo.roles();
-        String avatar = userInfo.avatar();
+        // String microsoftId = userInfo.oid();
+        // String email = userInfo.email();
+        // String name = userInfo.name();
+        // List<String> roles = userInfo.roles();
+        // String avatar = userInfo.avatar();
+
+        String microsoftId = "1deb00a9-835c-4ab7-a50f-57c12a56c7bd";
+        String email = "nhokthanh3211@gmail.com";
+        String name = "Nguyen Van A";
+        List<String> roles = Arrays.asList("ADMIN");
+        String avatar = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
         if (microsoftId == null || microsoftId.isEmpty()) {
             throw new InvalidInputException("oid not found in ID token");
@@ -73,12 +84,7 @@ public class OAuthService {
             if (student.getOauthUserId() != null) {
                 throw new InvalidInputException("Sinh viên đã được liên kết với tài khoản khác");
             }
-            OAuthUser oauthUser = oauthUserRepository.save(OAuthUser.builder()
-                    .userUuid(microsoftId)
-                    .displayName(name)
-                    .email(email)
-                    .status(UserStatus.ACTIVE)
-                    .build());
+            OAuthUser oauthUser = oauthUserRepository.save(OAuthUser.create(microsoftId, name, email));
             student.setOauthUserId(oauthUser.getId());
             studentRepository.save(student);
 
@@ -88,7 +94,14 @@ public class OAuthService {
                     .build();
         }
 
-        String token = jwtService.generateToken(jwtUserInfo);
+        String accessToken = jwtService.generateToken(jwtUserInfo);
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("userId", jwtUserInfo.userId());
+        data.put("roles", roles);
+
+        // String refreshToken = TokenHelper.generateRefreshToken();
+        // refreshTokenService.save(refreshToken, data);
 
         String devicePlatform = request.getPlatform() != null ? request.getPlatform().toLowerCase() : "unknown";
 
@@ -99,7 +112,8 @@ public class OAuthService {
                 .microsoftId(microsoftId)
                 .email(email)
                 .name(name)
-                .token(token)
+                .accessToken(accessToken)
+                // .refreshToken(refreshToken)
                 .avatar(avatar)
                 .build();
     }

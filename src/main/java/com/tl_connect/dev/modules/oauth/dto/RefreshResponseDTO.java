@@ -11,11 +11,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OAuthUserInfoDTO {
-    private String microsoftId;
-    private String email;
-    private String name;
+public class RefreshResponseDTO {
     private String accessToken;
     private String refreshToken;
-    private String avatar;
 }

@@ -66,4 +66,31 @@ public class StudentSubjectResult {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public static StudentSubjectResult create(Long studentId, Long subjectId, Long semesterId, Integer credits, BigDecimal attendanceScore, BigDecimal midtermScore, BigDecimal finalScore, BigDecimal score10, BigDecimal score4, String letterGrade, Boolean isPass) {
+        return StudentSubjectResult.builder()
+                .studentId(studentId)
+                .subjectId(subjectId)
+                .semesterId(semesterId)
+                .credits(credits)
+                .attendanceScore(attendanceScore)
+                .midtermScore(midtermScore)
+                .finalScore(finalScore)
+                .score10(score10)
+                .score4(score4)
+                .letterGrade(letterGrade)
+                .isPass(isPass)
+                .build();
+    }
+
+    public void update(Long semesterId, BigDecimal attendanceScore, BigDecimal midtermScore, BigDecimal finalScore, BigDecimal score10, BigDecimal score4, String letterGrade, Boolean isPass) {
+        if(this.semesterId != semesterId) this.semesterId = semesterId;
+        if(this.attendanceScore != attendanceScore) this.attendanceScore = attendanceScore;
+        if(this.midtermScore != midtermScore) this.midtermScore = midtermScore;
+        if(this.finalScore != finalScore) this.finalScore = finalScore;
+        if(this.score10 != score10) this.score10 = score10;
+        if(this.score4 != score4) this.score4 = score4;
+        if(this.letterGrade != letterGrade) this.letterGrade = letterGrade;
+        if(this.isPass != isPass) this.isPass = isPass;
+    }
 }

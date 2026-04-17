@@ -59,24 +59,24 @@ public class AcademicResultModifyService {
             throw new InvalidInputException(message);
         }
 
-        StudentSubjectResult entity = StudentSubjectResult.builder()
-                .studentId(dto.getStudentId())
-                .subjectId(dto.getSubjectId())
-                .semesterId(dto.getSemesterId())
-                .credits(dto.getCredits())
-                .attendanceScore(dto.getAttendanceScore())
-                .midtermScore(dto.getMidtermScore())
-                .finalScore(dto.getFinalScore())
-                .score10(dto.getScore10())
-                .score4(dto.getScore4())
-                .letterGrade(dto.getLetterGrade())
-                .isPass(dto.getIsPass())
-                .build();
+        StudentSubjectResult entity = StudentSubjectResult.create(
+                dto.getStudentId(),
+                dto.getSubjectId(),
+                dto.getSemesterId(),
+                dto.getCredits(),
+                dto.getAttendanceScore(),
+                dto.getMidtermScore(),
+                dto.getFinalScore(),
+                dto.getScore10(),
+                dto.getScore4(),
+                dto.getLetterGrade(),
+                dto.getIsPass()
+        );
 
         try{
             return academicResultRepository.save(entity).getId();
         }catch(DataIntegrityViolationException e){
-            throw new BadRequestException("Student subject result already exists :" + e.getMessage());
+            throw new BadRequestException("Error when create student subject result: " + e.getMessage());
         }
     }
     
@@ -133,19 +133,19 @@ public class AcademicResultModifyService {
                 Subject subject = subjectMap.get(row.getSubjectCode());
                 Long semesterId = semesterMap.get(row.getSemesterCode());
 
-                StudentSubjectResult entity = StudentSubjectResult.builder()
-                        .studentId(student.getId())
-                        .subjectId(subject.getId())
-                        .semesterId(semesterId)
-                        .credits(subject.getCredits())
-                        .attendanceScore(row.getAttendanceScore())
-                        .midtermScore(row.getMidtermScore())
-                        .finalScore(row.getFinalScore())
-                        .score10(row.getScore10())
-                        .score4(row.getScore4())
-                        .letterGrade(row.getLetterGrade())
-                        .isPass(row.getIsPass())
-                        .build();
+                StudentSubjectResult entity = StudentSubjectResult.create(
+                        student.getId(),
+                        subject.getId(),
+                        semesterId,
+                        subject.getCredits(),
+                        row.getAttendanceScore(),
+                        row.getMidtermScore(),
+                        row.getFinalScore(),
+                        row.getScore10(),
+                        row.getScore4(),
+                        row.getLetterGrade(),
+                        row.getIsPass()
+                );
 
                 toSave.add(entity);
 
@@ -182,14 +182,7 @@ public class AcademicResultModifyService {
         StudentSubjectResult entity = academicResultRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Student subject result not found"));
         
-        Optional.ofNullable(dto.getSemesterId()).ifPresent(entity::setSemesterId);
-        Optional.ofNullable(dto.getAttendanceScore()).ifPresent(entity::setAttendanceScore);
-        Optional.ofNullable(dto.getMidtermScore()).ifPresent(entity::setMidtermScore);
-        Optional.ofNullable(dto.getFinalScore()).ifPresent(entity::setFinalScore);
-        Optional.ofNullable(dto.getScore10()).ifPresent(entity::setScore10);
-        Optional.ofNullable(dto.getScore4()).ifPresent(entity::setScore4);
-        Optional.ofNullable(dto.getLetterGrade()).ifPresent(entity::setLetterGrade);
-        Optional.ofNullable(dto.getIsPass()).ifPresent(entity::setIsPass);
+        entity.update(dto.getSemesterId(), dto.getAttendanceScore(), dto.getMidtermScore(), dto.getFinalScore(), dto.getScore10(), dto.getScore4(), dto.getLetterGrade(), dto.getIsPass());
         
         academicResultRepository.save(entity);
     }

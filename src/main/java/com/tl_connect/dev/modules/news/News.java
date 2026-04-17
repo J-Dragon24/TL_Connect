@@ -53,4 +53,32 @@ public class News {
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    public static News create(String title, String excerpt, String source, LocalDate publishDate, String newsUrl) {
+        News news = new News();
+        news.title = title;
+        news.excerpt = excerpt;
+        news.source = source;
+        news.publishDate = publishDate;
+        news.newsUrl = newsUrl;
+        return news;
+    }
+
+    public void update(String title, String excerpt, String source, LocalDate publishDate, String newsUrl) {
+        if (title != null) {
+            this.title = title;
+        }
+        if (excerpt != null) {
+            this.excerpt = excerpt;
+        }
+        if (source != null) {
+            this.source = source;
+        }
+        if (publishDate != null) {
+            this.publishDate = publishDate;
+        }
+        if (newsUrl != null) {
+            this.newsUrl = newsUrl;
+        }
+    }
 }

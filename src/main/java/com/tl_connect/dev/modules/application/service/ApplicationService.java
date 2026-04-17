@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tl_connect.dev.core.common.dto.PagedResponse;
-import com.tl_connect.dev.core.common.enums.ApplicationStatus;
 import com.tl_connect.dev.core.common.exception.BadRequestException;
 import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.core.common.ultility.FileHelper;
@@ -80,7 +79,7 @@ public class ApplicationService {
     public void updateStatusApplication(Long id, UpdateApplicationDTO status) {
         StudentApplication application = applicationRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Application not found"));
-        application.setStatus(status.getStatus());
+        application.updateStatus(status.getStatus());
         try {
             applicationRepository.save(application);
         } catch (Exception e) {
@@ -105,23 +104,12 @@ public class ApplicationService {
         }
 
         StudentApplication application = applicationRepository.save(
-            StudentApplication.builder()
-            .studentId(studentId)
-            .applicationTypeId(applicationTypeId)
-            .content(content)
-            .status(ApplicationStatus.PENDING)
-            .build()
+            StudentApplication.create(studentId, applicationTypeId, content)
         );
 
-        
         List<ApplicationAttachment> attachments = new ArrayList<>();
         for (int i = 0; i < files.size(); i++) {
-            attachments.add(ApplicationAttachment.builder()
-                .applicationId(application.getId())
-                .fileKey(fileKeys.get(i))
-                .originalFilename(files.get(i).getOriginalFilename())
-                .fileSize(files.get(i).getSize())
-                .build());
+            attachments.add(ApplicationAttachment.create(application.getId(), fileKeys.get(i), files.get(i).getOriginalFilename(), files.get(i).getSize()));
         }
         
         applicationAttachmentRepository.saveAll(attachments);
