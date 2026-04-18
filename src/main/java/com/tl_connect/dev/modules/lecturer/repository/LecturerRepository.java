@@ -24,7 +24,7 @@ public interface LecturerRepository extends JpaRepository<Lecturer, Long> {
             l.full_name as fullName, 
             l.email as email, 
             l.phone_number as phoneNumber, 
-            d.department_code as departmentCode, 
+            d.department_name as departmentName, 
             l.status as status 
         FROM lecturers l
         LEFT JOIN departments d ON l.department_id = d.id

@@ -597,8 +597,6 @@ CREATE TABLE notifications (
   created_by VARCHAR(255) DEFAULT 'SYSTEM' CHECK (created_by IN ('SYSTEM', 'FACULTY', 'LECTURER')),
   target_type VARCHAR(20) NOT NULL DEFAULT 'GLOBAL' CHECK (target_type IN ('GLOBAL','FACULTY','STUDENT_CLASS','COURSE_CLASS', 'STUDENT')),
   target_id BIGINT,
-  reference_id BIGINT,
-  reference_type VARCHAR(225),
   is_important BOOLEAN DEFAULT FALSE,
   deadline DATE,
   created_at TIMESTAMP DEFAULT now()

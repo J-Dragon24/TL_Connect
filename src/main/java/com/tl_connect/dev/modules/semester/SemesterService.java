@@ -73,11 +73,15 @@ public class SemesterService {
             throw new InvalidInputException("Semester code " + dto.getSemesterCode() + " already exists");
         }
 
+        if(semesterRepository.violateDateRange(dto.getStartDate(), dto.getEndDate())){
+            throw new InvalidInputException("Semester date range is overlap with another semester");
+        }
+
         Semester semester = Semester.create(dto.getSemesterName(), dto.getSemesterCode(), dto.getAcademicYears(), dto.getSemesterNumber(), dto.getStartDate(), dto.getEndDate());
         try {
             semesterRepository.save(semester);
         } catch (DataIntegrityViolationException e) {
-            throw new BadRequestException("Failed to create semester");
+            throw new BadRequestException("Failed to create semester" + e.getMessage());
         }
         return semester.getId();
     }

@@ -23,8 +23,6 @@ public class NotificationAdmDTO {
     private NotificationCreatedBy createdBy;
     private NotificationType targetType;
     private Long targetId;
-    private Long referenceId;
-    private String referenceType;
     private LocalDate deadLine;
     private Boolean isImportant;
 }

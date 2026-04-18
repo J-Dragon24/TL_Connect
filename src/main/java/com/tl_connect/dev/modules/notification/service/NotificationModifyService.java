@@ -100,10 +100,8 @@ public class NotificationModifyService {
         Notification notification = notificationRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Notification not found"));
 
-        notification.update(req.getTitle(), req.getContent(), req.getCreatedBy(), req.getTargetType(), req.getTargetId(), req.getReferenceId(), req.getReferenceType(), req.getDeadLine(), req.getIsImportant());
+        notification.update(req.getTitle(), req.getContent(), req.getCreatedBy(), req.getTargetType(), req.getTargetId(), req.getDeadLine(), req.getIsImportant());
         notificationRepository.save(notification);
-
-        notificationPushService.pushNotifications(List.of(notification));
     }
 
     @Transactional
@@ -153,8 +151,6 @@ public class NotificationModifyService {
         n.setIsImportant(req.getIsImportant());
 
         Optional.ofNullable(req.getDeadLine()).ifPresent(n::setDeadLine);
-        Optional.ofNullable(req.getReferenceId()).ifPresent(n::setReferenceId);
-        Optional.ofNullable(req.getReferenceType()).ifPresent(n::setReferenceType);
 
         return n;
     }

@@ -27,8 +27,6 @@ public class CreateNotificationReqDTO {
     @NotNull(message = "Target type is required")
     private NotificationType targetType;
     private List<Long> targetIds;
-    private Long referenceId;
-    private String referenceType;
     private NotificationCreatedBy createdBy;
     private LocalDate deadLine;
     @NotNull(message = "Is important is required")

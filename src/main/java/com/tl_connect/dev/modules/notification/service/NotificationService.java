@@ -109,8 +109,6 @@ public class NotificationService {
                 .createdBy(notification.getCreatedBy())
                 .targetType(notification.getTargetType())
                 .deadLine(notification.getDeadLine())
-                .referenceId(notification.getReferenceId())
-                .referenceType(notification.getReferenceType())
                 .createdAt(notification.getCreatedAt())
                 .build();
     }
@@ -133,8 +131,6 @@ public class NotificationService {
                         .createdBy(notification.getCreatedBy())
                         .targetType(notification.getTargetType())
                         .targetId(notification.getTargetId())
-                        .referenceId(notification.getReferenceId())
-                        .referenceType(notification.getReferenceType())
                         .deadLine(notification.getDeadLine())
                         .isImportant(notification.getIsImportant())
                         .build())

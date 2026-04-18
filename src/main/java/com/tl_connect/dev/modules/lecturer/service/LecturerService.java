@@ -147,7 +147,7 @@ public class LecturerService {
                 .fullName(lecturer.getFullName())
                 .email(lecturer.getEmail())
                 .phoneNumber(lecturer.getPhoneNumber())
-                .departmentCode(lecturer.getDepartmentCode())
+                .departmentName(lecturer.getDepartmentName())
                 .status(lecturer.getStatus())
                 .build();
     }

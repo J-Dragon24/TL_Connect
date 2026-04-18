@@ -45,12 +45,6 @@ public class Notification {
     @Column(name = "target_id")
     private Long targetId;
 
-    @Column(name = "reference_id")
-    private Long referenceId;
-
-    @Column(name = "reference_type")
-    private String referenceType;
-
     @Column(name = "deadline")
     private LocalDate deadLine;
 
@@ -61,14 +55,12 @@ public class Notification {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    public void update(String title, String content, NotificationCreatedBy createdBy, NotificationType targetType, Long targetId, Long referenceId, String referenceType, LocalDate deadLine, Boolean isImportant) {
+    public void update(String title, String content, NotificationCreatedBy createdBy, NotificationType targetType, Long targetId, LocalDate deadLine, Boolean isImportant) {
         if(title != null) this.title = title;
         if(content != null) this.content = content;
         if(createdBy != null) this.createdBy = createdBy;
         if(targetType != null) this.targetType = targetType;
         if(targetId != null) this.targetId = targetId;
-        if(referenceId != null) this.referenceId = referenceId;
-        if(referenceType != null) this.referenceType = referenceType;
         if(deadLine != null) this.deadLine = deadLine;
         if(isImportant != null) this.isImportant = isImportant;
     }

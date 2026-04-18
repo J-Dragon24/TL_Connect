@@ -1947,7 +1947,6 @@ Lấy thông tin chi tiết thông báo.
         "createdBy": "Admin",
         "targetType": "GLOBAL",
         "deadLine": null,
-        "referenceType": null,
         "referenceId": null,
         "createdAt": "2026-04-02T14:10:36.333465"
     }
@@ -2025,8 +2024,6 @@ Lấy danh sách tất cả notification (admin).
         "createdBy": "Admin",
         "targetType": "STUDENT",
         "targetId": 1001,
-        "referenceId": 55,
-        "referenceType": "TUITION",
         "deadLine": "2026-04-10",
         "isImportant": true
       }
@@ -2053,8 +2050,6 @@ Gửi notification.
   "content": "Bạn cần đóng học phí",
   "targetType": "STUDENT",
   "targetIds": [1001, 1002],
-  "referenceId": 55,
-  "referenceType": "TUITION",
   "createdBy": "Admin",
   "deadLine": "2026-04-10",
   "isImportant": true
@@ -2082,8 +2077,6 @@ Cập nhật notification.
   "createdBy": "Admin",
   "targetType": "STUDENT",
   "targetId": 1001,
-  "referenceId": 55,
-  "referenceType": "TUITION",
   "isImportant": false,
   "deadLine": "2026-04-15"
 }

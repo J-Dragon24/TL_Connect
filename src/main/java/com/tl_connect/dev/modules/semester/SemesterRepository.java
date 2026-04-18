@@ -59,5 +59,16 @@ public interface SemesterRepository extends JpaRepository<Semester, Long> {
             """, nativeQuery = true)
     boolean existsBySemesterCode(@Param("semesterCode") String semesterCode);
 
+    @Query(value = """
+            SELECT EXISTS(
+                SELECT 1
+                FROM semesters
+                WHERE (start_date BETWEEN :startDate AND :endDate)
+                    OR (end_date BETWEEN :startDate AND :endDate)
+                    OR (start_date <= :startDate AND end_date >= :endDate)
+            )
+            """, nativeQuery = true)
+    boolean violateDateRange(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
     boolean existsById(Long id);
 }

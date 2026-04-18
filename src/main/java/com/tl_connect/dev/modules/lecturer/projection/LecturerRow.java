@@ -6,6 +6,6 @@ public interface LecturerRow {
     String getFullName();
     String getEmail();
     String getPhoneNumber();
-    String getDepartmentCode();
+    String getDepartmentName();
     String getStatus();
 }
