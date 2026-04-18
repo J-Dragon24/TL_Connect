@@ -80,7 +80,7 @@ CREATE INDEX IF NOT EXISTS idx_tuition_invoices_student_id ON tuition_invoices(s
 CREATE INDEX IF NOT EXISTS idx_tuition_invoices_semester_id ON tuition_invoices(semester_id);
 
 /*Payments indexes*/
-CREATE INDEX IF NOT EXISTS idx_payments_invoice_id ON payments(invoice_id);
+CREATE INDEX IF NOT EXISTS idx_payment_invoice_id ON payment(invoice_id);
 
 /*Student applications indexes*/
 CREATE INDEX IF NOT EXISTS idx_student_applications_student_id_application_type_id ON student_applications(student_id, application_type_id);

@@ -151,13 +151,13 @@ inserted_invoice AS (
         now(),
         now()
     FROM valid_enrollments ve
-    HAVING COUNT(*) > 0
     WHERE NOT EXISTS (
         SELECT 1 FROM tuition_invoices ti
         WHERE ti.student_id = p_student_id
         AND ti.semester_id = p_semester_id
         AND ti.status != 'CANCELLED'
     )
+	HAVING COUNT(*) > 0
     RETURNING id
 )
 
