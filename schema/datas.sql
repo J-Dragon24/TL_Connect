@@ -894,14 +894,13 @@ VALUES
 
 -- tuition_fee_configs
 INSERT INTO tuition_fee_configs
-(base_price_per_credit, effective_from, effective_to)
+(base_price_per_credit, academic_year, cohort)
 VALUES
-(500000, '2025-01-01', '2025-03-01'),
-(520000, '2025-03-02', '2025-05-01'),
-(480000, '2025-05-02', '2025-08-15'),
-(700000, '2025-08-16', '2025-12-01'),
-(750000, '2025-12-02', '2026-05-01'),
-(450000, '2026-05-02', '2026-08-01');
+(500000, '2022-2023', 2022),
+(520000, '2023-2024', 2022),
+(480000, '2024-2025', 2022),
+(700000, '2025-2026', 2022),
+(750000, '2026-2027', 2022);
 
 -- tuition_invoices
 INSERT INTO tuition_invoices

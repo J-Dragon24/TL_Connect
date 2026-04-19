@@ -3,6 +3,7 @@ package com.tl_connect.dev.modules.lecturer.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
@@ -25,11 +26,16 @@ public interface LecturerRepository extends JpaRepository<Lecturer, Long> {
             l.email as email, 
             l.phone_number as phoneNumber, 
             d.department_name as departmentName, 
-            l.status as status 
+            l.status as status,
+            (EXISTS (
+                SELECT 1 
+                FROM academic_advisors aa 
+                WHERE aa.lecturer_id = l.id
+            )) as isAcademicAdvisor
         FROM lecturers l
         LEFT JOIN departments d ON l.department_id = d.id
         LEFT JOIN faculties f ON d.faculty_id = f.id
-        WHERE (:facultyCode = '' OR f.faculty_code = :facultyCode)
+        WHERE (:facultyCode IS NULL OR f.faculty_code = :facultyCode)
         ORDER BY l.full_name ASC
     """,
     countQuery = """
@@ -38,10 +44,10 @@ public interface LecturerRepository extends JpaRepository<Lecturer, Long> {
         FROM lecturers l
         LEFT JOIN departments d ON l.department_id = d.id
         LEFT JOIN faculties f ON d.faculty_id = f.id
-        WHERE (:facultyCode = '' OR f.faculty_code = :facultyCode)
+        WHERE (:facultyCode IS NULL OR f.faculty_code = :facultyCode)
     """,
     nativeQuery = true)
-    Page<LecturerRow> findAllLecturer(Pageable pageable, String facultyCode);
+    Page<LecturerRow> findAllLecturer(Pageable pageable, @Param("facultyCode") String facultyCode);
 
 
     @Query(value="""

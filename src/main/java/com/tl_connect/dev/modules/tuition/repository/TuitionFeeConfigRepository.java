@@ -11,9 +11,4 @@ import com.tl_connect.dev.modules.tuition.entity.TuitionFeeConfig;
 
 public interface TuitionFeeConfigRepository extends JpaRepository<TuitionFeeConfig, Long> {
 
-    @Query("""
-        SELECT t FROM TuitionFeeConfig t
-        WHERE :today BETWEEN t.effectiveFrom AND t.effectiveTo
-    """)
-    Optional<TuitionFeeConfig> getActiveConfig(@Param("today") LocalDate today);
 }

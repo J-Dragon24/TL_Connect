@@ -36,9 +36,6 @@ public class LecturerService {
     private final Validator validator;
 
     public PagedResponse<LecturerAdmInfoDTO> getAllLecturers(Pageable pageable, String facultyCode) {
-        if (facultyCode == null) {
-            facultyCode = "";
-        }
         Page<LecturerRow> lecturers = lecturerRepository.findAllLecturer(pageable, facultyCode);
 
         return new PagedResponse<>(
@@ -148,6 +145,7 @@ public class LecturerService {
                 .email(lecturer.getEmail())
                 .phoneNumber(lecturer.getPhoneNumber())
                 .departmentName(lecturer.getDepartmentName())
+                .isAcademicAdvisor(lecturer.getIsAcademicAdvisor())
                 .status(lecturer.getStatus())
                 .build();
     }

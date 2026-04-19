@@ -16,5 +16,6 @@ public class LecturerAdmInfoDTO {
     private String email;
     private String phoneNumber;
     private String departmentName;
+    private Boolean isAcademicAdvisor;
     private String status;
 }

@@ -15,6 +15,7 @@ import com.tl_connect.dev.core.common.enums.UserStatus;
 import com.tl_connect.dev.core.common.exception.InvalidInputException;
 import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.core.common.types.JwtUserInfo;
+import com.tl_connect.dev.core.common.types.UserInfo;
 import com.tl_connect.dev.core.common.ultility.AuthHelper;
 import com.tl_connect.dev.core.common.ultility.TokenHelper;
 import com.tl_connect.dev.modules.oauth.dto.LoginRequestDTO;
@@ -42,19 +43,19 @@ public class OAuthService {
     
     @Transactional
     public OAuthUserInfoDTO loginWithMicrosoft(LoginRequestDTO request) {
-        // UserInfo userInfo = authHelper.extractUserInfo(request.getAccessToken());
+        UserInfo userInfo = authHelper.extractUserInfo(request.getAccessToken());
 
-        // String microsoftId = userInfo.oid();
-        // String email = userInfo.email();
-        // String name = userInfo.name();
-        // List<String> roles = userInfo.roles();
-        // String avatar = userInfo.avatar();
+        String microsoftId = userInfo.oid();
+        String email = userInfo.email();
+        String name = userInfo.name();
+        List<String> roles = userInfo.roles();
+        String avatar = userInfo.avatar();
 
-        String microsoftId = "1deb00a9-835c-4ab7-a50f-57c12a56c7bd";
-        String email = "nhokthanh3211@gmail.com";
-        String name = "Nguyen Van A";
-        List<String> roles = Arrays.asList("ADMIN");
-        String avatar = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+        // String microsoftId = "1deb00a9-835c-4ab7-a50f-57c12a56c7bd";
+        // String email = "nhokthanh3211@gmail.com";
+        // String name = "Nguyen Van A";
+        // List<String> roles = Arrays.asList("ADMIN");
+        // String avatar = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
         if (microsoftId == null || microsoftId.isEmpty()) {
             throw new InvalidInputException("oid not found in ID token");
