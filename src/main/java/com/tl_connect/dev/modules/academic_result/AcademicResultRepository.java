@@ -1,6 +1,7 @@
 package com.tl_connect.dev.modules.academic_result;
 
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.tl_connect.dev.modules.academic_result.entity.StudentSubjectResult;
 import com.tl_connect.dev.modules.academic_result.projection.SemesterSummaryView;
+import com.tl_connect.dev.modules.academic_result.projection.SubjectResultAdmRow;
 import com.tl_connect.dev.modules.academic_result.projection.SubjectResultRow;
 
 import java.math.BigDecimal;
@@ -36,8 +38,50 @@ public interface AcademicResultRepository extends JpaRepository<StudentSubjectRe
                                 AND sps.study_program_id = sp.id
                         WHERE ssr.student_id = :studentId
                         """, nativeQuery = true)
-        List<SubjectResultRow> findSubjectResult(@Param("studentId") Long studentId,
+        List<SubjectResultRow> findSubjectResultByStudentIdAndStudyProgramCode(@Param("studentId") Long studentId,
                         @Param("studyProgramCode") String studyProgramCode);
+
+        @Query(value = """
+            SELECT
+                s.id AS studentId,
+                s.student_code AS studentCode,
+                s.full_name AS studentName,
+                sm.start_year AS startYear,
+                m.major_name AS majorName,
+                sp.study_program_code AS studyProgramCode,
+                sp.study_program_name AS studyProgramName,
+                sem.semester_name AS semester,
+                sub.subject_code AS subjectCode,
+                sub.subject_name AS subjectName,
+                ssr.credits AS credits,
+                ssr.attendance_score AS attendanceScore,
+                ssr.midterm_score AS midtermScore,
+                ssr.final_score AS finalScore,
+                ssr.score_10 AS score10,
+                ssr.score_4 AS score4,
+                ssr.letter_grade AS letterGrade,
+                ssr.is_pass AS isPass
+            FROM student_subject_results ssr
+            JOIN students s ON s.id = ssr.student_id
+            JOIN subjects sub ON ssr.subject_id = sub.id
+            JOIN semesters sem ON ssr.semester_id = sem.id
+            JOIN student_majors sm ON sm.student_id = s.id
+            JOIN majors m ON m.id = sm.major_id
+            JOIN study_programs sp ON sp.id = m.study_program_id
+            ORDER BY s.student_code
+            """,
+            countQuery = """
+                SELECT COUNT(*)
+                FROM student_subject_results ssr
+                JOIN students s ON s.id = ssr.student_id
+                JOIN subjects sub ON ssr.subject_id = sub.id
+                JOIN semesters sem ON ssr.semester_id = sem.id
+                JOIN student_majors sm ON sm.student_id = s.id
+                JOIN majors m ON m.id = sm.major_id
+                JOIN study_programs sp ON sp.id = m.study_program_id
+            """,
+            nativeQuery = true)
+        List<SubjectResultAdmRow> findSubjectResult(Pageable pageable);
 
         @Query(value = """
                         SELECT
