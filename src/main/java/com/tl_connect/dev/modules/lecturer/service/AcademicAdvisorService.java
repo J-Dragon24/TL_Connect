@@ -1,5 +1,10 @@
 package com.tl_connect.dev.modules.lecturer.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +20,8 @@ import com.tl_connect.dev.modules.lecturer.dto.ClassBasicInfoDTO;
 import com.tl_connect.dev.modules.lecturer.dto.CreateAcademicAdvisorDTO;
 import com.tl_connect.dev.modules.lecturer.entity.AcademicAdvisor;
 import com.tl_connect.dev.modules.lecturer.projection.AcademicAdvisorDetailView;
-import com.tl_connect.dev.modules.lecturer.projection.AcademicAdvisorRow;
+import com.tl_connect.dev.modules.lecturer.projection.AcademicAdvisorClassRow;
+import com.tl_connect.dev.modules.lecturer.projection.LecturerRow;
 import com.tl_connect.dev.modules.lecturer.repository.AcademicAdvisorRepository;
 import com.tl_connect.dev.modules.lecturer.repository.LecturerRepository;
 
@@ -29,10 +35,21 @@ public class AcademicAdvisorService {
     private final LecturerRepository lecturerRepository;
 
     public PagedResponse<AcademicAdvisorDTO> getAll(Pageable pageable) {
-        Page<AcademicAdvisorRow> lecturers = academicAdvisorRepository.findAllAcademicAdvisors(pageable);
+        Page<LecturerRow> lecturers = lecturerRepository.findAllLecturer(pageable, null);
 
+        List<Long> lecturerIds = lecturers.getContent().stream().map(LecturerRow::getId).toList();
+
+        List<AcademicAdvisorClassRow> academicAdvisors = academicAdvisorRepository.getClassByLecturerIds(lecturerIds);
+
+        Map<Long, List<String>> academicAdvisorMap = academicAdvisors.stream()
+                .collect(Collectors.groupingBy(
+                        AcademicAdvisorClassRow::getLecturerId,
+                        Collectors.mapping(AcademicAdvisorClassRow::getStudentClassCode, Collectors.toList())));
+
+        List<AcademicAdvisorDTO> academicAdvisorDTOs = lecturers.getContent().stream()
+                .map(row -> toDTO(row, academicAdvisorMap)).toList();
         return new PagedResponse<>(
-                        lecturers.getContent().stream().map(this::toDTO).toList(),
+                        academicAdvisorDTOs,
                         lecturers.getNumber(),
                         lecturers.getSize(),
                         lecturers.getTotalElements(),
@@ -41,22 +58,26 @@ public class AcademicAdvisorService {
                         lecturers.isLast());
     }
 
-    public AcademicAdvisorDetailDTO getById(Long id) {
-        AcademicAdvisorDetailView lecturer = academicAdvisorRepository.findAcademicAdvisorById(id)
-                .orElseThrow(() -> new NotFoundException("Academic advisor not found with id: " + id));
+    public AcademicAdvisorDetailDTO getById(Long lecturerId) {
+        List<AcademicAdvisorDetailView> lecturer = academicAdvisorRepository.findAcademicAdvisorByLecturerId(lecturerId);
+        
+        if(lecturer.isEmpty()) {
+            throw new NotFoundException("Academic advisor not found with id: " + lecturerId);
+        }
+        
         return AcademicAdvisorDetailDTO.builder()
-                .id(lecturer.getId())
-                .lecturerCode(lecturer.getLecturerCode())
-                .lecturerName(lecturer.getLecturerName())
-                .lecturerEmail(lecturer.getLecturerEmail())
-                .lecturerPhoneNumber(lecturer.getLecturerPhoneNumber())
-                .departmentCode(lecturer.getDepartmentCode())
-                .lecturerStatus(lecturer.getLecturerStatus())
-                .classInfo(ClassBasicInfoDTO.builder()
-                        .classCode(lecturer.getStudentClassCode())
-                        .majorCode(lecturer.getClassMajorCode())
-                        .startYear(lecturer.getStudentClassYear())
-                        .build())
+                .id(lecturer.get(0).getLecturerId())
+                .lecturerCode(lecturer.get(0).getLecturerCode())
+                .lecturerName(lecturer.get(0).getLecturerName())
+                .lecturerEmail(lecturer.get(0).getLecturerEmail())
+                .lecturerPhoneNumber(lecturer.get(0).getLecturerPhoneNumber())
+                .departmentCode(lecturer.get(0).getDepartmentCode())
+                .lecturerStatus(lecturer.get(0).getLecturerStatus())
+                .classInfo(lecturer.stream().map(l -> ClassBasicInfoDTO.builder()
+                        .classCode(l.getStudentClassCode())
+                        .majorCode(l.getClassMajorCode())
+                        .startYear(l.getStudentClassYear())
+                        .build()).toList())
                 .build();
     }
 
@@ -96,14 +117,13 @@ public class AcademicAdvisorService {
     }
     
 
-    private AcademicAdvisorDTO toDTO(AcademicAdvisorRow row) {
+    private AcademicAdvisorDTO toDTO(LecturerRow row, Map<Long, List<String>> academicAdvisorMap) {
         return AcademicAdvisorDTO.builder()
-                .id(row.getId())
                 .lecturerCode(row.getLecturerCode())
-                .lecturerName(row.getLecturerName())
-                .lecturerEmail(row.getLecturerEmail())
-                .lecturerPhoneNumber(row.getLecturerPhoneNumber())
-                .studentClassCode(row.getStudentClassCode())
+                .lecturerName(row.getFullName())
+                .lecturerEmail(row.getEmail())
+                .lecturerPhoneNumber(row.getPhoneNumber())
+                .studentClassCodes(academicAdvisorMap.getOrDefault(row.getId(), new ArrayList<>()))
                 .build();
     }
 }

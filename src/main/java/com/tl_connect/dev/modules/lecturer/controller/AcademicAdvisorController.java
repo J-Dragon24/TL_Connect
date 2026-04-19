@@ -27,9 +27,10 @@ public class AcademicAdvisorController {
         return ResponseHelper.success("Get all academic advisors successfully", response);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getDetail(@PathVariable Long id) {
-        return ResponseHelper.success("Get detail academic advisor successfully", academicAdvisorService.getById(id));
+    @GetMapping("/{lecturerId}")
+    public ResponseEntity<?> getDetail(@PathVariable(name = "lecturerId") Long lecturerId) {
+        return ResponseHelper.success("Get detail academic advisor successfully",
+                academicAdvisorService.getById(lecturerId));
     }
 
     @PostMapping("/create")

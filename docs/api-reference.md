@@ -1947,7 +1947,6 @@ Lấy thông tin chi tiết thông báo.
         "createdBy": "Admin",
         "targetType": "GLOBAL",
         "deadLine": null,
-        "referenceId": null,
         "createdAt": "2026-04-02T14:10:36.333465"
     }
 }
@@ -3304,7 +3303,8 @@ Lấy danh sách giảng viên (phân trang).
         "fullName": "Nguyen Van A",
         "email": "a@university.edu.vn",
         "phoneNumber": "0901234567",
-        "departmentCode": "CNTT",
+        "departmentName": "Toán tin",
+        "isAcademicAdvisor": true,
         "status": "ACTIVE"
       }
     ],
@@ -3455,7 +3455,7 @@ Lấy danh sách cố vấn học tập (phân trang).
         "lecturerName": "Nguyen Van A",
         "lecturerEmail": "a@university.edu.vn",
         "lecturerPhoneNumber": "0901234567",
-        "studentClassCode": "KHMT2021"
+        "studentClassCodes": ["KHMT2021"]
       }
     ],
     "page": 0,
@@ -3468,7 +3468,7 @@ Lấy danh sách cố vấn học tập (phân trang).
 }
 ```
 ---
-### 18.2. GET /api/v1/admin/academic-advisors/`{id}`
+### 18.2. GET /api/v1/admin/academic-advisors/`{lecturerId}`
 
 Lấy chi tiết cố vấn học tập.
 
@@ -3478,7 +3478,7 @@ Lấy chi tiết cố vấn học tập.
 
 | Field | Type | Required | Description |
 |------|-----|-----|-----|
-| id | long | ✅ | ID |
+| lecturerId | long | ✅ | ID giảng viên |
 
 **Response thành công (code 0):**
 
@@ -3490,9 +3490,16 @@ Lấy chi tiết cố vấn học tập.
     "id": 1,
     "lecturerCode": "GV001",
     "lecturerName": "Nguyen Van A",
-    "lecturerEmail": "a@university.edu.vn",
+    "lecturerEmail": "a.nguyen@uni.edu.vn",
     "lecturerPhoneNumber": "0901234567",
-    "studentClassCode": "KHMT2021"
+    "departmentCode": "CNTT",
+    "lecturerStatus": "ACTIVE",
+    "classInfo": [
+      {
+        "classCode": "CNTT2021",
+        "className": "CNTT K21"
+      }
+    ]
   }
 }
 ```
@@ -4476,7 +4483,7 @@ Xoá loại đơn.
 ```
 ---
 ## 26. Chatbot
-### 26.1. POST /api/v1/chatbot
+### 26.1. POST /api/v1/agent-chat-stream
 **Streaming Chat (Không có session id)**
 - **Content-Type**: application/json
 - **Response**: text/event-stream (SSE)

@@ -1,5 +1,7 @@
 package com.tl_connect.dev.modules.lecturer.dto;
 
+import java.util.List;
+
 import com.tl_connect.dev.core.common.enums.LecturerStatus;
 
 import lombok.AllArgsConstructor;
@@ -21,5 +23,5 @@ public class AcademicAdvisorDetailDTO {
     private String lecturerPhoneNumber;
     private String departmentCode;
     private LecturerStatus lecturerStatus;
-    private ClassBasicInfoDTO classInfo;
+    private List<ClassBasicInfoDTO> classInfo;
 }
