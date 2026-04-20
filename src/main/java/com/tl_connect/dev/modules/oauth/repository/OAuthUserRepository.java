@@ -22,4 +22,7 @@ public interface OAuthUserRepository extends JpaRepository<OAuthUser, Long> {
             """, nativeQuery = true)
     Optional<JwtUserInfoView> findStudentByUserUuid(@Param("userUuid") String userUuid);
 
+    @Query(value = "SELECT * FROM oauth_users WHERE user_uuid = :userUuid", nativeQuery = true)
+    Optional<OAuthUser> findByUserUuid(@Param("userUuid") String userUuid);
+
 }

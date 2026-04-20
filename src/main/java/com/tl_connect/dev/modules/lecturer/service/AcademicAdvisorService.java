@@ -74,6 +74,7 @@ public class AcademicAdvisorService {
                 .departmentCode(lecturer.get(0).getDepartmentCode())
                 .lecturerStatus(lecturer.get(0).getLecturerStatus())
                 .classInfo(lecturer.stream().map(l -> ClassBasicInfoDTO.builder()
+                        .academicAdvisorId(l.getId())
                         .classCode(l.getStudentClassCode())
                         .majorCode(l.getClassMajorCode())
                         .startYear(l.getStudentClassYear())

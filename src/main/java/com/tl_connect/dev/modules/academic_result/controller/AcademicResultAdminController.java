@@ -1,12 +1,14 @@
 package com.tl_connect.dev.modules.academic_result.controller;
 
 import java.io.IOException;
+import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,10 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tl_connect.dev.core.common.dto.ImportResultDTO;
+import com.tl_connect.dev.core.common.dto.PagedResponse;
 import com.tl_connect.dev.core.common.ultility.ResponseHelper;
+import com.tl_connect.dev.modules.academic_result.dto.AcademicResultAdmDTO;
 import com.tl_connect.dev.modules.academic_result.dto.CreateStudentSubjectResultDTO;
 import com.tl_connect.dev.modules.academic_result.dto.UpdateStudentSubjectResultDTO;
 import com.tl_connect.dev.modules.academic_result.service.AcademicResultModifyService;
+import com.tl_connect.dev.modules.academic_result.service.AcademicResultService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +32,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AcademicResultAdminController {
     private final AcademicResultModifyService academicResultMofidyService;
+    private final AcademicResultService academicResultService;
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllAcademicResult(@PageableDefault(page = 0, size = 10) Pageable pageable) {
+        PagedResponse<AcademicResultAdmDTO> result = academicResultService.getAllAcademicResult(pageable);
+        return ResponseHelper.success("Academic result retrieved successfully", result);
+    }
 
     @PostMapping("/create")
     public ResponseEntity<?> createStudentSubjectResult(@Valid @RequestBody CreateStudentSubjectResultDTO dto) {

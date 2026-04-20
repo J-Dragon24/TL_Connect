@@ -92,9 +92,9 @@ JWT token được cấp sau khi đăng nhập thành công qua /api/v1/oauth2/l
 | Field | Type | Required | Description |
 |------|-----|-----|-----|
 | accessToken | string | ✅ | Microsoft OAuth2 Access Token từ Microsoft Azure AD |
-| deviceId | string | ✅ | Device ID |
+| deviceId | string | ❌ | Device ID |
 | platform | string | ❌ | Platform (android, ios, web) |
-| fcmToken | string | ✅ | FCM Token |
+| fcmToken | string | ❌ | FCM Token |
 
 **Response – Đăng nhập thành công (code 0):**:
 
@@ -1847,7 +1847,91 @@ Xóa kết quả học tập.
 }
 ```
 ---
+### 9.6. GET /api/v1/admin/academic-results/all
+Lấy danh sách kết quả học tập của sinh viên (dành cho admin).
 
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: Không áp dụng
+
+**Query params (optional):**
+
+| Field | Type | Required | Description |
+|------|------|----------|-------------|
+| page | int | ❌ | Số trang (mặc định: 0) |
+| size | int | ❌ | Số phần tử mỗi trang (mặc định: 10) |
+
+---
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Academic result retrieved successfully",
+  "data": {
+    "content": [
+      {
+        "studentId": 1,
+        "studentCode": "SV2021001",
+        "studentName": "Nguyễn Văn A",
+        "startYear": 2021,
+        "studyPrograms": [
+          {
+            "majorName": "Khoa học máy tính",
+            "studyProgramCode": "CTDT-KHMT-2021",
+            "studyProgramName": "Chương trình KHMT",
+            "semesterResults": [
+              {
+                "semester": "HK1 2025-2026",
+                "subjectResults": [
+                  {
+                    "subjectCode": "INT1001",
+                    "subjectName": "Nhập môn lập trình",
+                    "credits": 3,
+                    "attendanceScore": 10.0,
+                    "midtermScore": 7.0,
+                    "finalScore": 8.0,
+                    "score10": 8.0,
+                    "score4": 3.2,
+                    "letterGrade": "B+",
+                    "isPass": true
+                  }
+                ],
+                "semesterSummary": {
+                  "creditsRegistered": 15,
+                  "creditsPassed": 15,
+                  "semesterGpa": 3.2,
+                  "cumulativeGpa": 3.0
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "page": 0,
+    "size": 10,
+    "total_elements": 100,
+    "total_pages": 10,
+    "first": true,
+    "last": false
+  }
+}
+```
+**Response – User chưa đăng nhập (code -3):**
+
+```json
+{
+  "code": -3,
+  "message": "Authentication required",
+  "data": null
+}
+```
+Test cases:
+
+✅ token hợp lệ → trả về danh sách kết quả học tập
+❌ token không hợp lệ → code -3
+❌ không có dữ liệu → trả list rỗng []
+---
 ## 10. Notification - Thông báo
 ### 10.1. GET /api/v1/notification/prepare
 
@@ -3496,8 +3580,10 @@ Lấy chi tiết cố vấn học tập.
     "lecturerStatus": "ACTIVE",
     "classInfo": [
       {
+        "academicAdvisorId": 1,
         "classCode": "CNTT2021",
-        "className": "CNTT K21"
+        "majorCode": "CNTT",
+        "startYear": 2021
       }
     ]
   }
@@ -4003,7 +4089,7 @@ Lấy chi tiết hóa đơn học phí.
           "coefficient": 1.00,
           "amount": 1500000.00,
           "retake": false
-      },
+      }
     ],
     "total_amount": 5000000,
     "final_amount": 4500000,
@@ -4314,9 +4400,10 @@ Tạo đơn thanh toán học phí
   "code": 0,
   "message": "Tạo đơn thanh toán thành công",
   "data": {
-    "orderUrl": "https://sandbox.zalopay.vn/...",
-    "appTransId": "240402_123456",
-    "amount": 500000
+    "orderUrl": "https://...",
+    "transactionCode": "TXN123456",
+    "amount": 1000000,
+    "invoiceStatus": "PENDING"
   }
 } 
 ```
@@ -4339,12 +4426,13 @@ Hoàn tiền giao dịch
 **Request body:**
 ```json
 {
-  "transCode": "240402_123456",
+  "transactionCode": "TXN123456",
   "orderInfo": "Hoàn tiền học phí",
-  "createBy": "user1",
-  "ipAddress": "[IP_ADDRESS]",
+  "createBy": "admin",
+  "ipAddress": "127.0.0.1",
   "type": "FULL"
 }
+```
 
 | Field | Type | Required | Description
 |---|---|---|---|
@@ -4361,8 +4449,14 @@ Hoàn tiền giao dịch
   "code": 0,
   "message": "Hoàn tiền thành công",
   "data": {
-    "returnCode": 1,
-    "returnMessage": "Refund success"
+    "provider": "ZALOPAY",
+    "responseCode": 1,
+    "refundId": "REF123456",
+    "message": "Refund successful",
+    "status": "SUCCESS",
+    "rawData": {
+      "vd": "data từ cổng thanh toán"
+    }
   }
 }
 ```
@@ -4371,7 +4465,7 @@ Hoàn tiền giao dịch
 ```json
 {
   "code": -10,
-  "message": "Refund failed",
+  "message": "Hoàn tiền thất bại",
   "data": null
 }
 ```
@@ -4383,6 +4477,65 @@ Hoàn tiền giao dịch
 - ❌ callback sai MAC → reject
 - ✅ refund thành công → code 0
 - ❌ transCode không tồn tại → code -2
+---
+### 24.3. POST /api/v1/payments/callback/zalopay
+
+Callback từ ZaloPay sau khi thanh toán.
+
+- **Auth**: Không yêu cầu
+- **Content-Type**: application/json
+
+**Request body:**
+```json
+{
+  "data": "vd",
+  "mac": "vd"
+}
+```
+**Response thành công:**
+```json
+{
+  "code": 0,
+  "message": "Thanh toán thành công",
+  "data": null
+}
+```
+**Response thất bại:**
+```json
+{
+  "code": -10,
+  "message": "Thanh toán thất bại",
+  "data": null
+}
+```
+---
+### 24.4. GET /api/v1/payments/callback/vnpay
+
+Callback từ VNPay.
+
+- **Auth**: Không yêu cầu
+- **Content-Type**: query params
+
+**Ví dụ request:**
+
+GET /api/v1/payments/callback/vnpay?vnp_Amount=1000000&vnp_TxnRef=123456
+
+**Response thành công:**
+```json
+{
+  "code": 0,
+  "message": "Thanh toán thành công",
+  "data": null
+}
+```
+**Response thất bại:**
+```json
+{
+  "code": -10,
+  "message": "Thanh toán thất bại",
+  "data": null
+}
+```
 ---
 ## 25. Application Type - Loại đơn
 ### 25.1. GET /api/v1/admin/application-types/all

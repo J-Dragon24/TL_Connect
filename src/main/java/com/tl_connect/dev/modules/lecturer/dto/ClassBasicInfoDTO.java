@@ -12,6 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ClassBasicInfoDTO {
+    private Long academicAdvisorId;
     private String classCode;
     private String majorCode;
     private Integer startYear;

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import com.tl_connect.dev.core.common.enums.UserStatus;
+import com.tl_connect.dev.core.common.exception.ForbiddenException;
 import com.tl_connect.dev.core.common.exception.InvalidInputException;
 import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.core.common.types.JwtUserInfo;
@@ -69,6 +70,33 @@ public class OAuthService {
         System.out.println("name: " + name);
         System.out.println("roles: " + roles);
 
+        JwtUserInfo jwtUserInfo;
+        if(roles.contains("STUDENT")) {
+            jwtUserInfo = processStudentLogin(microsoftId, email, name, roles, request.getDeviceId(), request.getFcmToken(), request.getPlatform());
+        } else if(roles.contains("ADMIN")) {
+            jwtUserInfo = processAdminLogin(microsoftId, email, name, roles);
+        } else {
+            throw new ForbiddenException("Không có quyền truy cập hệ thống");
+        }
+
+        String accessToken = jwtService.generateToken(jwtUserInfo);
+
+        return OAuthUserInfoDTO.builder()
+                .microsoftId(microsoftId)
+                .email(email)
+                .name(name)
+                .accessToken(accessToken)
+                // .refreshToken(refreshToken)
+                .avatar(avatar)
+                .build();
+    }
+
+    private JwtUserInfo processStudentLogin(String microsoftId, String email, String name, List<String> roles, String deviceId, String fcmToken, String platform) {
+
+        if(deviceId == null || deviceId.isEmpty() || fcmToken == null || fcmToken.isEmpty()) {
+            throw new InvalidInputException("Device ID and FCM token are required");
+        }
+
         Optional<JwtUserInfoView> jwtUserInfoView = oauthUserRepository.findStudentByUserUuid(microsoftId);
 
         JwtUserInfo jwtUserInfo;
@@ -95,7 +123,6 @@ public class OAuthService {
                     .build();
         }
 
-        String accessToken = jwtService.generateToken(jwtUserInfo);
 
         Map<String, Object> data = new HashMap<>();
         data.put("userId", jwtUserInfo.userId());
@@ -104,19 +131,36 @@ public class OAuthService {
         // String refreshToken = TokenHelper.generateRefreshToken();
         // refreshTokenService.save(refreshToken, data);
 
-        String devicePlatform = request.getPlatform() != null ? request.getPlatform().toLowerCase() : "unknown";
+        String devicePlatform = platform != null ? platform.toLowerCase() : "unknown";
 
-        userDeviceService.registerDevice(jwtUserInfoView.get().getOauthUserId(), request.getDeviceId(),
-                request.getFcmToken(), devicePlatform);
+        userDeviceService.registerDevice(jwtUserInfoView.get().getOauthUserId(), deviceId, fcmToken, devicePlatform);
 
-        return OAuthUserInfoDTO.builder()
-                .microsoftId(microsoftId)
-                .email(email)
-                .name(name)
-                .accessToken(accessToken)
-                // .refreshToken(refreshToken)
-                .avatar(avatar)
-                .build();
+        return jwtUserInfo;
+    }
+
+    private JwtUserInfo processAdminLogin(String microsoftId, String email, String name, List<String> roles) {
+        JwtUserInfo jwtUserInfo;
+
+        Optional<OAuthUser> oauthUser = oauthUserRepository.findByUserUuid(microsoftId);
+
+        if (oauthUser.isPresent()) {
+            jwtUserInfo = JwtUserInfo.builder()
+                    .userId(oauthUser.get().getId())
+                    .roles(roles)
+                    .build();
+        } else {
+            throw new NotFoundException("Tài khoản không tồn tại trong hệ thống: " + microsoftId);
+        }
+
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("userId", jwtUserInfo.userId());
+        data.put("roles", roles);
+
+        // String refreshToken = TokenHelper.generateRefreshToken();
+        // refreshTokenService.save(refreshToken, data);
+
+        return jwtUserInfo;
     }
 
 }

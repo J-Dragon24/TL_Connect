@@ -1,6 +1,7 @@
 package com.tl_connect.dev.modules.academic_result;
 
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -8,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.tl_connect.dev.modules.academic_result.entity.StudentSubjectResult;
+import com.tl_connect.dev.modules.academic_result.projection.SemesterSummaryRow;
 import com.tl_connect.dev.modules.academic_result.projection.SemesterSummaryView;
 import com.tl_connect.dev.modules.academic_result.projection.SubjectResultAdmRow;
 import com.tl_connect.dev.modules.academic_result.projection.SubjectResultRow;
@@ -67,7 +69,7 @@ public interface AcademicResultRepository extends JpaRepository<StudentSubjectRe
             JOIN semesters sem ON ssr.semester_id = sem.id
             JOIN student_majors sm ON sm.student_id = s.id
             JOIN majors m ON m.id = sm.major_id
-            JOIN study_programs sp ON sp.id = m.study_program_id
+            JOIN study_programs sp ON sp.id = sm.study_program_id
             ORDER BY s.student_code
             """,
             countQuery = """
@@ -78,12 +80,12 @@ public interface AcademicResultRepository extends JpaRepository<StudentSubjectRe
                 JOIN semesters sem ON ssr.semester_id = sem.id
                 JOIN student_majors sm ON sm.student_id = s.id
                 JOIN majors m ON m.id = sm.major_id
-                JOIN study_programs sp ON sp.id = m.study_program_id
+                JOIN study_programs sp ON sp.id = sm.study_program_id
             """,
             nativeQuery = true)
-        List<SubjectResultAdmRow> findSubjectResult(Pageable pageable);
+        Page<SubjectResultAdmRow> findSubjectResult(Pageable pageable);
 
-        @Query(value = """
+                @Query(value = """
                         SELECT
                             sem.semester_name AS semester,
                             sss.credits_registered AS creditsRegistered,
@@ -92,12 +94,28 @@ public interface AcademicResultRepository extends JpaRepository<StudentSubjectRe
                             sss.conduct_score AS conductScore
                         FROM student_semester_summaries sss
                         JOIN semesters sem ON sss.semester_id = sem.id
-                        JOIN study_programs tp ON sss.study_program_id = tp.id
+                        JOIN study_programs sp ON sss.study_program_id = sp.id
                         WHERE sss.student_id = :studentId
-                        AND tp.study_program_code = :studyProgramCode
+                        AND sp.study_program_code = :studyProgramCode
                         """, nativeQuery = true)
-        List<SemesterSummaryView> findSemesterSummary(@Param("studentId") Long studentId,
+        List<SemesterSummaryView> findSemesterSummaryByStudentIdAndStudyProgramCode(@Param("studentId") Long studentId,
                         @Param("studyProgramCode") String studyProgramCode);
+
+        @Query(value = """
+                        SELECT
+                            sss.student_id AS studentId,
+                            sem.semester_name AS semester,
+                            sp.study_program_code AS studyProgramCode,
+                            sss.credits_registered AS creditsRegistered,
+                            sss.credits_passed AS creditsPassed,
+                            sss.semester_gpa AS semesterGpa,
+                            sss.conduct_score AS conductScore
+                        FROM student_semester_summaries sss
+                        JOIN semesters sem ON sss.semester_id = sem.id
+                        JOIN study_programs sp ON sss.study_program_id = sp.id
+                        WHERE sss.student_id IN :studentIds
+                        """, nativeQuery = true)
+        List<SemesterSummaryRow> findSemesterSummaryByStudentIds(@Param("studentIds") List<Long> studentIds);
 
         @Query(value = """
                         SELECT

@@ -1,10 +1,6 @@
 package com.tl_connect.dev.modules.lecturer.repository;
 
 import java.util.List;
-import java.util.Optional;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -43,7 +39,8 @@ public interface AcademicAdvisorRepository extends JpaRepository<AcademicAdvisor
 
 
     @Query(value="""
-        SELECT 
+        SELECT
+            a.id as id,
             l.id as lecturerId,
             l.lecturer_code as lecturerCode, 
             l.full_name as lecturerName, 

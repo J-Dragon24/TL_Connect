@@ -42,8 +42,7 @@ import okhttp3.ResponseBody;
 public class ZaloPayProvider implements ProviderPayment{
     private final ZaloPayConfig zaloPayConfig;
     private final ObjectMapper objectMapper;
-    private final OkHttpClient okHttpClient;
-
+    private final OkHttpClient okHttpClient; 
     public PaymentResponseDTO createPaymentUrl(PaymentRequestDTO req) throws Exception {
 
         String transId      = getCurrentTimeString("yyMMdd") + "_" + new Date().getTime();

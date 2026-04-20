@@ -782,10 +782,10 @@ INSERT INTO student_semester_summaries
  semester_gpa, letter_gpa, conduct_score, activity_score, letter_activity_score,
  group_contribution, letter_group_contribution)
 VALUES
-(1,1,1,6,6,3.2,'B',80,8.0,'B',7.5,'B'),
-(2,1,1,3,3,3.5,'A',85,8.5,'A',8.0,'A'),
-(5,2,1,3,3,3.0,'B',75,7.0,'B',7.0,'B'),
-(7,3,1,3,3,2.8,'C',70,6.5,'C',6.0,'C');
+(1,2,1,6,6,3.2,'B',80,8.0,'B',7.5,'B'),
+(2,5,1,3,3,3.5,'A',85,8.5,'A',8.0,'A'),
+(3,5,1,3,3,3.0,'B',75,7.0,'B',7.0,'B'),
+(4,1,1,3,3,2.8,'C',70,6.5,'C',6.0,'C');
 
 -- application_types
 INSERT INTO application_types (code, name)

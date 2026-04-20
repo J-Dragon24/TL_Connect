@@ -6,7 +6,7 @@ public interface SubjectResultAdmRow {
     Long getStudentId();
     String getStudentCode();
     String getStudentName();
-    String getStartYear();
+    Integer getStartYear();
     String getMajorName();
     String getStudyProgramCode();
     String getStudyProgramName();

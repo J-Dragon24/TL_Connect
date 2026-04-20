@@ -100,7 +100,7 @@ public class PaymentService {
             .itemJson(itemJson)
             .build();
         
-        PaymentResponseDTO  paymentResponse = providerPayment.createPaymentUrl(request);
+        PaymentResponseDTO paymentResponse = providerPayment.createPaymentUrl(request);
 
         log.info("{} createOrder response: {}", req.getProvider(), paymentResponse);
 
