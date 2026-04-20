@@ -31,8 +31,8 @@ import lombok.RequiredArgsConstructor;
 public class AcademicResultService {
         private final AcademicResultRepository resultRepository;
 
-        public PagedResponse<AcademicResultAdmDTO> getAllAcademicResult(Pageable pageable) {
-                Page<SubjectResultAdmRow> subjectResultsRows = resultRepository.findSubjectResult(pageable);
+        public PagedResponse<AcademicResultAdmDTO> getAllAcademicResult(Pageable pageable, String facultyCode) {
+                Page<SubjectResultAdmRow> subjectResultsRows = resultRepository.findSubjectResult(pageable, facultyCode);
 
                 List<Long> studentIds = subjectResultsRows.stream().map(SubjectResultAdmRow::getStudentId).collect(Collectors.toList());
                 List<SemesterSummaryRow> semesterSummaries = resultRepository.findSemesterSummaryByStudentIds(studentIds);

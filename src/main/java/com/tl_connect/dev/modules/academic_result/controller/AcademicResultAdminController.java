@@ -1,7 +1,6 @@
 package com.tl_connect.dev.modules.academic_result.controller;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -35,8 +34,8 @@ public class AcademicResultAdminController {
     private final AcademicResultService academicResultService;
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAllAcademicResult(@PageableDefault(page = 0, size = 10) Pageable pageable) {
-        PagedResponse<AcademicResultAdmDTO> result = academicResultService.getAllAcademicResult(pageable);
+    public ResponseEntity<?> getAllAcademicResult(@PageableDefault(page = 0, size = 10) Pageable pageable, @RequestParam(required = false, name = "khoa") String facultyCode) {
+        PagedResponse<AcademicResultAdmDTO> result = academicResultService.getAllAcademicResult(pageable, facultyCode);
         return ResponseHelper.success("Academic result retrieved successfully", result);
     }
 

@@ -69,7 +69,9 @@ public interface AcademicResultRepository extends JpaRepository<StudentSubjectRe
             JOIN semesters sem ON ssr.semester_id = sem.id
             JOIN student_majors sm ON sm.student_id = s.id
             JOIN majors m ON m.id = sm.major_id
+            JOIN faculties f ON f.id = m.faculty_id
             JOIN study_programs sp ON sp.id = sm.study_program_id
+            WHERE (:facultyCode IS NULL OR f.faculty_code = :facultyCode)
             ORDER BY s.student_code
             """,
             countQuery = """
@@ -81,9 +83,11 @@ public interface AcademicResultRepository extends JpaRepository<StudentSubjectRe
                 JOIN student_majors sm ON sm.student_id = s.id
                 JOIN majors m ON m.id = sm.major_id
                 JOIN study_programs sp ON sp.id = sm.study_program_id
+                JOIN faculties f ON f.id = m.faculty_id
+                WHERE (:facultyCode IS NULL OR f.faculty_code = :facultyCode)
             """,
             nativeQuery = true)
-        Page<SubjectResultAdmRow> findSubjectResult(Pageable pageable);
+        Page<SubjectResultAdmRow> findSubjectResult(Pageable pageable, String facultyCode);
 
                 @Query(value = """
                         SELECT
