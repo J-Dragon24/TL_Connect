@@ -32,6 +32,9 @@
 24. [Payment - Thanh toán](#24-payment---thanh-toán)
 25. [Application Type - Loại đơn từ](#25-application-type---loại-đơn)
 26. [Chatbot - Chatbot](#26-chatbot)
+27. [Tuition Fee Config - Quản lý học phí](#27-tuition-fee-config---quản-lý-học-phí)
+28. [Document - Quản lý tài liệu phục vụ RAG](#28-document---quản-lý-tài-liệu-phục-vụ-rag)
+
 
 ## 1. Response Format chung
 Tất cả response đều theo cấu trúc JSON thống nhất:
@@ -96,6 +99,8 @@ JWT token được cấp sau khi đăng nhập thành công qua /api/v1/oauth2/l
 | platform | string | ❌ | Platform (android, ios, web) |
 | fcmToken | string | ❌ | FCM Token |
 
+**Lưu ý**: đối với sinh viên thì deviceId và fcmToken là bắt buộc
+
 **Response – Đăng nhập thành công (code 0):**:
 
 ```json
@@ -106,7 +111,8 @@ JWT token được cấp sau khi đăng nhập thành công qua /api/v1/oauth2/l
     "email": "abc@gmail.com",
     "name": "John Doe",
     "avatar": "https://graph.microsoft.com/...",
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
   },
   "message": "Login successful"
 }
@@ -137,6 +143,31 @@ JWT token được cấp sau khi đăng nhập thành công qua /api/v1/oauth2/l
 - ❌ idToken hợp lệ, user chưa tồn tại → code -2
 - ❌ idToken rỗng / thiếu → code -1, HTTP 400
 - ❌ idToken invalid / hết hạn → code -3, HTTP 401
+---
+### 4.2. POST /api/v1/oauth2/refresh
+Refresh token.
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: application/json
+
+**Request body:**
+```json
+{
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "data": {
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  },
+  "message": "Refresh token successfully"
+}
+```
 ---
 ## 5. Student – Quản lý thông tin
 ### 5.1. GET /api/v1/students/me
@@ -1884,6 +1915,7 @@ Lấy danh sách kết quả học tập của sinh viên (dành cho admin).
                 "semester": "HK1 2025-2026",
                 "subjectResults": [
                   {
+                    "id": 1,
                     "subjectCode": "INT1001",
                     "subjectName": "Nhập môn lập trình",
                     "credits": 3,
@@ -3772,6 +3804,7 @@ Lấy danh sách lớp sinh viên (có phân trang)
 |------|-----|-----|-----|
 | page | int | ❌ | Số trang (default: 0) |
 | size | int | ❌ | Số lượng mỗi trang (default: 10) |
+| khoa | string | ❌ | Mã khoa |
 
 **Response:**
 ```json
@@ -4636,6 +4669,9 @@ Xoá loại đơn.
 ```
 ---
 ## 26. Chatbot
+
+**BaseUrl**: https://tl-chatbot.nhokthanh3211.workers.dev
+
 ### 26.1. POST /api/v1/agent-chat-stream
 **Streaming Chat (Không có session id)**
 - **Content-Type**: application/json
@@ -4643,13 +4679,26 @@ Xoá loại đơn.
 **Request Body**
 ```json
 {
-  "prompt": "Xin chào"
+  "prompt": "Xin chào",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Xin chào"
+    },
+    {
+      "role": "assistant",
+      "content": "Xin chào"
+    }
+  ]
 }
 ```
 
 | Field | Type | Required | Description
 |---|---|---|---
 prompt | string | ✅ | Nội dung người dùng gửi tới chatbot  
+messages | array | ✅ | Lịch sử trò chuyện
+  - role: string | ✅ | Vai trò (user, assistant, system)
+  - content: string | ✅ | Nội dung
 
 **Response**
 Trả về dạng Server-Sent Events (SSE)
@@ -4703,3 +4752,176 @@ data: session_id: 123456789
 ### 26.3. WEBSOCKET /agents/ChatAgent
 agent chatbot
 `{"type":"cf_agent_use_chat_request","id":"2","init":{"method":"POST","body":"{\"messages\":[{\"role\":\"user\",\"content\":\"chức năng của PHÒNG TÀI CHÍNH – KẾ TOÁN\"}]}"}}`
+## 27. Tuition Fee Config - Quản lý học phí
+### 27.1. GET /api/v1/admin/tuition-fee-configs
+Lấy danh sách học phí (có phân trang).
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: Không áp dụng
+
+**Query params (Pageable):**
+
+| Field | Type | Required | Description
+|------|-----|-----|-----|
+| page | int | ❌ | Số trang (default = 0)
+| size | int | ❌ | Số phần tử/trang (default = 10)
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Get tuition fee configs successfully",
+  "data": {
+    "content": [
+      {
+        "id": 1,
+        "basePricePerCredit": 1200000,
+        "academicYear": "2025-2026",
+        "cohort": 2022,
+        "createdAt": "2026-04-22T10:00:00",
+        "updatedAt": "2026-04-22T10:00:00"
+      }
+    ],
+    "page": 0,
+    "size": 10,
+    "total_elements": 1,
+    "total_pages": 1
+  }
+}
+```
+---
+### 27.2. POST /api/v1/admin/tuition-fee-configs/create
+Tạo học phí cấu hình
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: application/json
+
+**Request body:**
+```json
+{
+  "basePricePerCredit": 1200000,
+  "academicYear": "2025-2026",
+  "cohort": 2022
+}
+```
+
+**Fields:**
+
+| Field | Type | Required | Description
+|------|-----|-----|-----|
+| basePricePerCredit | BigDecimal | ✅ | Giá học phí 1 tín chỉ
+| academicYear | String | ✅ | Năm học
+| cohort | int | ✅ | Niên khóa
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Create tuition fee config successfully",
+  "data": 1
+}
+```
+---
+### 27.3. POST /api/v1/admin/tuition-fee-configs/update/`{id}`
+Cập nhật học phí cấu hình
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: application/json
+
+**Path param:**
+
+| Field | Type | Required | Description |
+|------|-----|-----|-----|
+| id | long | ✅ | ID học phí cấu hình |
+
+**Request body:**
+```json
+{
+  "basePricePerCredit": 1500000,
+  "academicYear": "2025-2026",
+  "cohort": 2022
+}
+```
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Update tuition fee config successfully",
+  "data": null
+}
+```
+---
+### 27.4. POST /api/v1/admin/tuition-fee-configs/delete/`{id}`
+Xóa cấu hình học phí.
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: Không áp dụng
+
+**Path param:**
+
+| Field | Type | Required | Description
+|------|-----|-----|-----|
+| id | long | ✅ | ID học phí cấu hình |
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Delete tuition fee config successfully",
+  "data": null
+}
+```
+---
+## 28. Document - Quản lý tài liệu phục vụ RAG
+**BaseUrl**: https://tl-chatbot.nhokthanh3211.workers.dev
+### 28.1. POST /api/v1/upload
+Upload tài liệu phục vụ RAG.
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: application/json
+
+**Form data:**
+
+| Field | Type | Required | Description
+|------|-----|-----|-----|
+| file | File | ✅ | File cần upload
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "data": {
+    "processedFiles": 5,
+    "totalChunks": 10
+  },
+  "message": "Operation completed successfully",
+}
+```
+---
+### 28.2. POST /api/v1/delete-document
+Xóa tài liệu.
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: application/json
+
+**Request body:**
+```json
+{
+  "source": ["source1", "source2", "source3"]
+}
+```
+
+**Fields:**
+
+| Field | Type | Required | Description
+|------|-----|-----|-----|
+| source | array | ✅ | Danh sách tên liệu cần xóa |
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Document deleted successfully",
+  "data": null
+}
+```
+---

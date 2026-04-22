@@ -178,7 +178,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             WHERE s.id = :studentId
             """, nativeQuery = true)
     Optional<StudyYearView> findYearStudy(@Param("studentId") Long studentId);
-
+ 
     @Query("SELECT s.studentCode FROM Student s WHERE s.studentCode IN :codes")
     Set<String> findExistingStudentCodes(@Param("codes") Collection<String> codes);
 }

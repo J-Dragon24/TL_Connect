@@ -19,7 +19,7 @@ import com.tl_connect.dev.core.common.exception.BadRequestException;
 import com.tl_connect.dev.core.common.exception.InvalidInputException;
 import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.core.common.ultility.importer.FileParseHelper;
-import com.tl_connect.dev.modules.academic_result.AcademicResultRepository;
+import com.tl_connect.dev.modules.academic_result.StudentSubjectResultRepository;
 import com.tl_connect.dev.modules.academic_result.dto.CreateStudentSubjectResultDTO;
 import com.tl_connect.dev.modules.academic_result.dto.ImportAcademicResultDTO;
 import com.tl_connect.dev.modules.academic_result.dto.UpdateStudentSubjectResultDTO;
@@ -41,7 +41,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class AcademicResultModifyService {
 
-    private final AcademicResultRepository academicResultRepository;
+    private final StudentSubjectResultRepository subjectResultRepository;
     private final SubjectRepository subjectRepository;
     private final StudentRepository studentRepository;
     private final FileParseHelper fileParseHelper;
@@ -73,7 +73,7 @@ public class AcademicResultModifyService {
         );
 
         try{
-            return academicResultRepository.save(entity).getId();
+            return subjectResultRepository.save(entity).getId();
         }catch(DataIntegrityViolationException e){
             throw new BadRequestException("Error when create student subject result: " + e.getMessage());
         }
@@ -155,12 +155,12 @@ public class AcademicResultModifyService {
         }
 
         try {
-            academicResultRepository.saveAll(toSave);
+            subjectResultRepository.saveAll(toSave);
             successCount = toSave.size();
         } catch (DataIntegrityViolationException e) {
             for (StudentSubjectResult rs : toSave) {
                 try {
-                    academicResultRepository.save(rs);
+                    subjectResultRepository.save(rs);
                     successCount++;
                 } catch (DataIntegrityViolationException ex) {
                     log.warn("Invalid row: {}", rs.getStudentId(), ex);
@@ -178,19 +178,19 @@ public class AcademicResultModifyService {
 
     @Transactional
     public void updateStudentSubjectResult(Long id, UpdateStudentSubjectResultDTO dto) {
-        StudentSubjectResult entity = academicResultRepository.findById(id)
+        StudentSubjectResult entity = subjectResultRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Student subject result not found"));
         
         entity.update(dto.getSemesterId(), dto.getAttendanceScore(), dto.getMidtermScore(), dto.getFinalScore(), dto.getScore10(), dto.getScore4(), dto.getLetterGrade(), dto.getIsPass());
         
-        academicResultRepository.save(entity);
+        subjectResultRepository.save(entity);
     }
 
     @Transactional
     public void deleteStudentSubjectResult(Long id) {
-        StudentSubjectResult entity = academicResultRepository.findById(id)
+        StudentSubjectResult entity = subjectResultRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Student subject result not found"));
-        academicResultRepository.delete(entity);
+        subjectResultRepository.delete(entity);
     }
 
     private void validateRow(ImportAcademicResultDTO row) {

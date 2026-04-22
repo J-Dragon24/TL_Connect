@@ -1,11 +1,12 @@
 package com.tl_connect.dev.modules.tuition.entity;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import com.tl_connect.dev.core.common.exception.InvalidInputException;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -50,4 +51,30 @@ public class TuitionFeeConfig {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public static TuitionFeeConfig create(BigDecimal basePricePerCredit, String academicYear, Integer cohort) {
+        if (basePricePerCredit == null || academicYear == null || cohort == null) {
+            throw new InvalidInputException("Base price per credit, academic year, and cohort are required");
+        }
+        TuitionFeeConfig tuitionFeeConfig = new TuitionFeeConfig();
+        tuitionFeeConfig.basePricePerCredit = basePricePerCredit;
+        tuitionFeeConfig.academicYear = academicYear;
+        tuitionFeeConfig.cohort = cohort;
+        tuitionFeeConfig.createdAt = LocalDateTime.now();
+        tuitionFeeConfig.updatedAt = LocalDateTime.now();
+        return tuitionFeeConfig;
+    }   
+
+    public void update(BigDecimal basePricePerCredit, String academicYear, Integer cohort) {
+        if(basePricePerCredit != null) {
+            this.basePricePerCredit = basePricePerCredit;
+        }
+        if(academicYear != null) {
+            this.academicYear = academicYear;
+        }
+        if(cohort != null) {
+            this.cohort = cohort;
+        }
+        this.updatedAt = LocalDateTime.now();
+    }
 }

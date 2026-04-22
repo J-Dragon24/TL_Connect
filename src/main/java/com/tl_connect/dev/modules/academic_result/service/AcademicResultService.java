@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.tl_connect.dev.core.common.dto.PagedResponse;
-import com.tl_connect.dev.modules.academic_result.AcademicResultRepository;
+import com.tl_connect.dev.modules.academic_result.StudentSubjectResultRepository;
 import com.tl_connect.dev.modules.academic_result.dto.AcademicResultAdmDTO;
 import com.tl_connect.dev.modules.academic_result.dto.AcademicResultByStudyProgramDTO;
 import com.tl_connect.dev.modules.academic_result.dto.AcademicResultDTO;
@@ -29,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class AcademicResultService {
-        private final AcademicResultRepository resultRepository;
+        private final StudentSubjectResultRepository resultRepository;
 
         public PagedResponse<AcademicResultAdmDTO> getAllAcademicResult(Pageable pageable, String facultyCode) {
                 Page<SubjectResultAdmRow> subjectResultsRows = resultRepository.findSubjectResult(pageable, facultyCode);
@@ -81,6 +81,7 @@ public class AcademicResultService {
                                         List<SubjectResultAdmRow> subjectResults = semesterEntry.getValue();
                                         List<SubjectResultDTO> subjectResultDTOs = subjectResults.stream().map(s -> {
                                                 return SubjectResultDTO.builder()
+                                                                .id(s.getStudentSubjectResultId())
                                                                 .subjectCode(s.getSubjectCode())
                                                                 .subjectName(s.getSubjectName())
                                                                 .credits(s.getCredits())

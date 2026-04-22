@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 public interface SubjectResultAdmRow {
     Long getStudentId();
+    Long getStudentSubjectResultId();
     String getStudentCode();
     String getStudentName();
     Integer getStartYear();

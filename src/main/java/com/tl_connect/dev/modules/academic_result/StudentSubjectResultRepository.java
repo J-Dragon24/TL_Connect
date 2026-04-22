@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
-public interface AcademicResultRepository extends JpaRepository<StudentSubjectResult, Long> {
+public interface StudentSubjectResultRepository extends JpaRepository<StudentSubjectResult, Long> {
         @Query(value = """
                         SELECT
                             sem.semester_name AS semester,
@@ -46,6 +46,7 @@ public interface AcademicResultRepository extends JpaRepository<StudentSubjectRe
         @Query(value = """
             SELECT
                 s.id AS studentId,
+                ssr.id AS studentSubjectResultId,
                 s.student_code AS studentCode,
                 s.full_name AS studentName,
                 sm.start_year AS startYear,

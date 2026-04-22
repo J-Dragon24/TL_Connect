@@ -29,7 +29,7 @@ public interface CourseClassRepository extends JpaRepository<CourseClass, Long> 
     Optional<CourseClass> findByIdForUpdate(@Param("id") Long id);
 
 
-        @Query(value = """
+    @Query(value = """
             SELECT 
                 cc.id as id,
                 l.lecturer_code as lecturerCode,

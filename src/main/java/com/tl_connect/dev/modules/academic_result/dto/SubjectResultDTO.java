@@ -14,6 +14,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class SubjectResultDTO {
+    private Long id;
     private String subjectCode;
     private String subjectName;
     private Integer credits;
