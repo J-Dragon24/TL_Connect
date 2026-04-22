@@ -16,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.tl_connect.dev.core.common.dto.ImportResultDTO;
 import com.tl_connect.dev.core.common.dto.PagedResponse;
+import com.tl_connect.dev.core.common.exception.InvalidInputException;
+import com.tl_connect.dev.core.common.ultility.FileHelper;
 import com.tl_connect.dev.core.common.ultility.ResponseHelper;
 import com.tl_connect.dev.modules.academic_result.dto.AcademicResultAdmDTO;
 import com.tl_connect.dev.modules.academic_result.dto.CreateStudentSubjectResultDTO;
@@ -32,6 +34,7 @@ import lombok.RequiredArgsConstructor;
 public class AcademicResultAdminController {
     private final AcademicResultModifyService academicResultMofidyService;
     private final AcademicResultService academicResultService;
+    private final FileHelper fileHelper;
 
     @GetMapping("/all")
     public ResponseEntity<?> getAllAcademicResult(@PageableDefault(page = 0, size = 10) Pageable pageable, @RequestParam(required = false, name = "khoa") String facultyCode) {
@@ -47,6 +50,13 @@ public class AcademicResultAdminController {
 
     @PostMapping("/import")
     public ResponseEntity<?> importAcademicResult(@RequestParam("file") MultipartFile file) throws IOException {
+        if (file == null || file.isEmpty()) {
+            throw new InvalidInputException("File is missing");
+        }
+        
+        if (!fileHelper.isXLSX(file) && !fileHelper.isCSV(file)) {
+            throw new InvalidInputException("File must be CSV or Excel (.csv, .xlsx, .xls)");
+        }
         ImportResultDTO result = academicResultMofidyService.importFile(file);
         return ResponseHelper.success("Academic result imported successfully", result);
     }

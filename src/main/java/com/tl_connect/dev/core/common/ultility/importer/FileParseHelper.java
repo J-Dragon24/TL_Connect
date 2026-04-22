@@ -74,7 +74,7 @@ public class FileParseHelper {
             headerIdx.put(cell.toString().trim().toLowerCase(), cell.getColumnIndex());
         }
 
-        for (int i = 1; i < sheet.getLastRowNum(); i++) {
+        for (int i = 1; i <= sheet.getLastRowNum(); i++) {
             Row row = sheet.getRow(i);
             if (row == null)
                 continue;
