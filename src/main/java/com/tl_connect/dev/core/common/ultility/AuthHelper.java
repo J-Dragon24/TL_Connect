@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Base64;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.tl_connect.dev.core.common.types.UserInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -77,10 +79,12 @@ public class AuthHelper {
     public UserInfo extractUserInfo(String accessToken) {
         Jwt jwt = verify(accessToken);
 
+        List<String> roles = jwt.getClaimAsStringList("roles").stream().map(String::toUpperCase).collect(Collectors.toList());
         return UserInfo.builder()
             .oid(jwt.getClaimAsString("oid"))
             .email(jwt.getClaimAsString("preferred_username"))
             .name(jwt.getClaimAsString("name"))
+            .roles(roles)
             .avatar(fetchAvatar(accessToken))
             .build();
     }
