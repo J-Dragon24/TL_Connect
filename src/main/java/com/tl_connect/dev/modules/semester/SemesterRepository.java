@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,6 +14,18 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SemesterRepository extends JpaRepository<Semester, Long> {
+
+    @Query(value = """
+            SELECT *
+            FROM semesters
+            ORDER BY academic_years DESC, semester_number DESC
+            """,
+            countQuery = """
+                    SELECT COUNT(id)
+                    FROM semesters
+                    """,
+            nativeQuery = true)
+    Page<Semester> findAllSemesters(Pageable pageable);
 
     List<Semester> findBySemesterCodeIn(Set<String> semesterCodes);
 
@@ -49,6 +63,24 @@ public interface SemesterRepository extends JpaRepository<Semester, Long> {
             )
             """, nativeQuery = true)
     boolean existsByAcademicYearsAndSemesterNumber(@Param("academicYears") String academicYears, @Param("semesterNumber") int semesterNumber);
+
+    @Query(value = """
+            SELECT EXISTS(
+                SELECT 1
+                FROM semesters
+                WHERE academic_years = :academicYears AND semester_number = :semesterNumber AND id != :id AND is_active = true
+            )
+            """, nativeQuery = true)
+    boolean existsByAcademicYearsAndSemesterNumberAndIdNot(@Param("academicYears") String academicYears, @Param("semesterNumber") int semesterNumber, @Param("id") Long id);
+
+        @Query(value = """
+            SELECT EXISTS(
+                SELECT 1
+                FROM semesters
+                WHERE semester_code = :semesterCode AND id != :id
+            )
+            """, nativeQuery = true)
+    boolean existsBySemesterCodeAndIdNot(@Param("semesterCode") String semesterCode, @Param("id") Long id);
 
     @Query(value = """
             SELECT EXISTS(

@@ -100,17 +100,12 @@ public class SemesterService {
 
         semester.update(dto.getSemesterName(), dto.getSemesterCode(), dto.getAcademicYears(), dto.getSemesterNumber(), dto.getStartDate(), dto.getEndDate());
 
-        if (dto.getSemesterNumber() != null || dto.getAcademicYears() != null) {
-            if (semesterRepository.existsByAcademicYearsAndSemesterNumber(
-                    dto.getAcademicYears(), dto.getSemesterNumber())) {
-                throw new InvalidInputException("Semester already exists");
-            }
+        if (semesterRepository.existsByAcademicYearsAndSemesterNumberAndIdNot(semester.getAcademicYears(), semester.getSemesterNumber(), id)) {
+            throw new InvalidInputException("Semester " + semester.getAcademicYears() + "-" + semester.getSemesterNumber() + " already exists");
         }
 
-        if(dto.getSemesterCode() != null){
-            if (!dto.getSemesterCode().equals(semester.getSemesterCode()) && semesterRepository.existsBySemesterCode(dto.getSemesterCode())) {
-                throw new InvalidInputException("Semester code " + dto.getSemesterCode() + " already exists");
-            }
+        if (semesterRepository.existsBySemesterCodeAndIdNot(semester.getSemesterCode(), id)) {
+            throw new InvalidInputException("Semester code " + semester.getSemesterCode() + " already exists");
         }
 
         try {
