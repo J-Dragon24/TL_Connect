@@ -67,7 +67,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\r\n  \"student_code\": \"A46049\",\r\n  \"full_name\": \"Nguyễn Văn An\",\r\n  \"date_of_birth\": \"2007-01-25\",\r\n  \"gender\": \"NAM\",\r\n  \"student_class_code\": \"KHMT2021\",\r\n  \"major_code\": \"KHMT\",\r\n  \"start_year\": 2024,\r\n  \"end_year\": 2028,\r\n  \"training_type\": \"CHINH_QUY\",\r\n  \"identity_card\": {\r\n    \"card_number\": \"012345678901\",\r\n    \"card_type\": \"CCCD\",\r\n    \"issued_date\": \"2020-06-15\",\r\n    \"issued_place\": \"Cục Cảnh sát QLHC về TTXH\"\r\n  },\r\n  \"contact\": {\r\n    \"phone_number\": \"0912345678\",\r\n    \"address\": \"123 Nguyễn Trãi, Hà Nội\",\r\n    \"email\": \"an.nguyen@example.com\"\r\n  },\r\n  \"academic_info\": {\r\n    \"cohort\": \"2022-2026\",\r\n    \"position\": \"Lớp trưởng\"\r\n  },\r\n  \"emergency_contact\": {\r\n    \"name\": \"Nguyễn Văn Bình\",\r\n    \"phone_number\": \"0987654321\",\r\n    \"address\": \"123 Nguyễn Trãi, Hà Nội\",\r\n    \"relationship\": \"Cha\"\r\n  }\r\n}",
+                      "raw": "{ \r\n  \"studentCode\": \"A46040\", \r\n  \"fullName\": \"Nguyễn Văn An\", \r\n  \"dateOfBirth\": \"2007-01-25\", \r\n  \"gender\": \"NAM\", \r\n  \"studentClassCode\": \"SE2024A\", \r\n  \"majorCode\": \"SE01\", \r\n  \"startYear\": 2023, \r\n  \"endYear\": 2028, \r\n  \"trainingType\": \"CHINH_QUY\", \r\n  \"identityCard\": { \r\n    \"cardNumber\": \"012345678901\", \r\n    \"cardType\": \"CCCD\", \r\n    \"issuedDate\": \"2020-06-15\", \r\n    \"issuedPlace\": \"Cục Cảnh sát QLHC về TTXH\" \r\n  }, \r\n  \"contact\": { \r\n    \"phoneNumber\": \"0912345678\", \r\n    \"address\": \"123 Nguyễn Trãi, Hà Nội\", \r\n    \"email\": \"an.nguyen@example.com\" \r\n  }, \r\n  \"academicInfo\": { \r\n    \"cohort\": \"2022-2026\", \r\n    \"position\": \"Lớp trưởng\" \r\n  }, \r\n  \"emergencyContact\": { \r\n    \"name\": \"Nguyễn Văn Bình\", \r\n    \"phoneNumber\": \"0987654321\", \r\n    \"address\": \"123 Nguyễn Trãi, Hà Nội\", \r\n    \"relationship\": \"Cha\" \r\n  } \r\n}",
                       "options": {
                         "raw": {
                           "language": "json"
@@ -140,7 +140,7 @@
                       }
                     ],
                     "url": {
-                      "raw": "{{domain}}/api/v1/admin/students/all",
+                      "raw": "{{domain}}/api/v1/admin/students/all?khoa=CNTT",
                       "host": [
                         "{{domain}}"
                       ],
@@ -150,6 +150,12 @@
                         "admin",
                         "students",
                         "all"
+                      ],
+                      "query": [
+                        {
+                          "key": "khoa",
+                          "value": "CNTT"
+                        }
                       ]
                     }
                   },
@@ -364,6 +370,33 @@
                     }
                   },
                   "response": []
+                },
+                {
+                  "name": "get all result",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/academic-results/all",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "academic-results",
+                        "all"
+                      ]
+                    }
+                  },
+                  "response": []
                 }
               ]
             },
@@ -382,7 +415,7 @@
                       }
                     ],
                     "url": {
-                      "raw": "{{domain}}/api/v1/admin/course-classes/all",
+                      "raw": "{{domain}}/api/v1/admin/course-classes/all?khoa=CNTT",
                       "host": [
                         "{{domain}}"
                       ],
@@ -392,6 +425,12 @@
                         "admin",
                         "course-classes",
                         "all"
+                      ],
+                      "query": [
+                        {
+                          "key": "khoa",
+                          "value": "CNTT"
+                        }
                       ]
                     }
                   },
@@ -1780,7 +1819,7 @@
                       }
                     ],
                     "url": {
-                      "raw": "{{domain}}/api/v1/admin/study-programs/all?startYear=2023",
+                      "raw": "{{domain}}/api/v1/admin/study-programs/all?startYear=2024&khoa=CNTT",
                       "host": [
                         "{{domain}}"
                       ],
@@ -1794,7 +1833,11 @@
                       "query": [
                         {
                           "key": "startYear",
-                          "value": "2023"
+                          "value": "2024"
+                        },
+                        {
+                          "key": "khoa",
+                          "value": "CNTT"
                         }
                       ]
                     }
@@ -1841,7 +1884,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\r\n  \"studyProgramCode\": \"CNTT-2025\",\r\n  \"studyProgramName\": \"Công nghệ thông tin\",\r\n  \"majorId\": 1,\r\n  \"startYear\": 2025,\r\n  \"totalCredits\": 120,\r\n  \"trainingType\": \"CHINH_QUY\"\r\n}",
+                      "raw": "{\r\n  \"studyProgramCode\": \"CNTT-2024\",\r\n  \"studyProgramName\": \"Công nghệ thông tin\",\r\n  \"majorId\": 1,\r\n  \"startYear\": 2024,\r\n  \"totalCredits\": 120,\r\n  \"trainingType\": \"CHINH_QUY\"\r\n}",
                       "options": {
                         "raw": {
                           "language": "json"
@@ -2018,7 +2061,7 @@
                       }
                     ],
                     "url": {
-                      "raw": "{{domain}}/api/v1/admin/study-programs/delete/4",
+                      "raw": "{{domain}}/api/v1/admin/study-programs/delete/1",
                       "host": [
                         "{{domain}}"
                       ],
@@ -2028,7 +2071,7 @@
                         "admin",
                         "study-programs",
                         "delete",
-                        "4"
+                        "1"
                       ]
                     }
                   },
@@ -2894,6 +2937,179 @@
                   "response": []
                 }
               ]
+            },
+            {
+              "name": "subject",
+              "item": [
+                {
+                  "name": "get all subject",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/subjects/all",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "subjects",
+                        "all"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "create subject",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"facultyId\": 1,\r\n  \"departmentId\": 2,\r\n  \"subjectCode\": \"CS101\",\r\n  \"subjectName\": \"Lập trình hướng đối tượng\",\r\n  \"credits\": 3,\r\n  \"coefficient\": 1.0,\r\n  \"lectureHours\": 30,\r\n  \"practiceHours\": 15\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/subjects/create",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "subjects",
+                        "create"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "get detail subject",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/subjects/1",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "subjects",
+                        "1"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "update subject",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"credits\": 3\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/subjects/update/1",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "subjects",
+                        "update",
+                        "1"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "delete subject",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/subjects/delete/8",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "subjects",
+                        "delete",
+                        "8"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "tuition fee config",
+              "item": [
+                {
+                  "name": "New Request",
+                  "request": {
+                    "method": "GET",
+                    "header": []
+                  },
+                  "response": []
+                }
+              ]
             }
           ]
         },
@@ -3132,7 +3348,7 @@
                       }
                     ],
                     "url": {
-                      "raw": "{{domain}}/api/v1/study-programs/CTDT_SE",
+                      "raw": "{{domain}}/api/v1/study-programs/DHCQK35TI",
                       "host": [
                         "{{domain}}"
                       ],
@@ -3140,7 +3356,7 @@
                         "api",
                         "v1",
                         "study-programs",
-                        "CTDT_SE"
+                        "DHCQK35TI"
                       ]
                     }
                   },
@@ -3465,7 +3681,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\r\n    \"invoiceId\": 1\r\n}",
+                      "raw": "{\r\n    \"invoiceId\": 1,\r\n    \"provider\": \"vnpay\",\r\n    \"language\": \"vn\",\r\n    \"bankCode\": \"NCB\",\r\n    \"ipAddress\": \"127.0.0.1\"\r\n}",
                       "options": {
                         "raw": {
                           "language": "json"
@@ -3609,7 +3825,7 @@
               }
             ],
             "url": {
-              "raw": "{{domain}}/api/v1/student/marks?ctdt=CTDT_SE",
+              "raw": "{{domain}}/api/v1/student/marks?ctdt=DHCQK35TI",
               "host": [
                 "{{domain}}"
               ],
@@ -3622,7 +3838,7 @@
               "query": [
                 {
                   "key": "ctdt",
-                  "value": "CTDT_SE"
+                  "value": "DHCQK35TI"
                 }
               ]
             }
