@@ -2,31 +2,24 @@ package com.tl_connect.dev.modules.notification.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tl_connect.dev.core.common.enums.NotificationType;
+import com.tl_connect.dev.core.common.exception.BadRequestException;
 import com.tl_connect.dev.core.common.exception.InvalidInputException;
 import com.tl_connect.dev.core.common.exception.NotFoundException;
-import com.tl_connect.dev.modules.course_class.CourseClass;
-import com.tl_connect.dev.modules.course_class.CourseClassRepository;
-import com.tl_connect.dev.modules.faculty.Faculty;
-import com.tl_connect.dev.modules.faculty.FacultyRepository;
 import com.tl_connect.dev.modules.notification.dto.CreateNotificationReqDTO;
 import com.tl_connect.dev.modules.notification.dto.UpdateNotificationDTO;
 import com.tl_connect.dev.modules.notification.entity.Notification;
-import com.tl_connect.dev.modules.notification.entity.NotificationTemplate;
+import com.tl_connect.dev.modules.notification.entity.NotificationTarget;
 import com.tl_connect.dev.modules.notification.repository.NotificationRepository;
-import com.tl_connect.dev.modules.notification.repository.NotificationTemplateRepository;
-import com.tl_connect.dev.modules.student.entity.Student;
-import com.tl_connect.dev.modules.student.repository.StudentRepository;
-import com.tl_connect.dev.modules.student_class.StudentClassRepository;
-import com.tl_connect.dev.modules.student_class.entity.StudentClass;
+import com.tl_connect.dev.modules.notification.repository.NotificationTargetRepository;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
@@ -37,12 +30,8 @@ import lombok.RequiredArgsConstructor;
 public class NotificationModifyService {
 
     private final NotificationRepository notificationRepository;
-    private final FacultyRepository facultyRepository;
-    private final StudentClassRepository studentClassRepository;
-    private final CourseClassRepository courseClassRepository;
-    private final StudentRepository studentRepository;
-    private final NotificationTemplateRepository notificationTemplateRepository;
     private final NotificationPushService notificationPushService;
+    private final NotificationTargetRepository notificationTargetRepository;
     private final Validator validator;
 
     @Transactional
@@ -57,35 +46,29 @@ public class NotificationModifyService {
         NotificationType type = req.getTargetType();
 
         if(type == NotificationType.GLOBAL) {
-            Notification notification = buildNotification(req, null, req.getContent());
+            Notification notification = buildNotification(req);
             notificationRepository.save(notification);
-
-            notificationPushService.pushNotifications(List.of(notification));
+            notificationPushService.pushNotifications(notification, null);
             return;
         }
-        
-        List<Notification> notifications = new ArrayList<>();
+    
+        Notification notification = buildNotification(req);
+        List<NotificationTarget> notificationTargets = new ArrayList<>();
 
-        if(req.getTemplateId() != null) {
-            NotificationTemplate template = notificationTemplateRepository.findById(req.getTemplateId())
-                    .orElseThrow(() -> new NotFoundException("Notification template not found"));
-            Map<Long, String> targetNameMap = getTargetNames(req.getTargetType(), req.getTargetIds());
-            for(Long targetId : req.getTargetIds()) {
-                String targetName = Optional.ofNullable(targetNameMap.get(targetId)).orElseThrow(() -> new NotFoundException("Target name not found"));
-                String content = renderTemplate(template.getContent(), Map.of("target_name", targetName));
-                Notification notification = buildNotification(req, targetId, content);
-                notifications.add(notification);
-            }
+        for(Long targetId : req.getTargetIds()){
+            NotificationTarget notificationTarget = NotificationTarget.create(notification.getId(), targetId);
+            notificationTargets.add(notificationTarget);
         }
-        else{
-            for(Long targetId : req.getTargetIds()) {
-                Notification notification = buildNotification(req, targetId, req.getContent());
-                notifications.add(notification);
-            }
-        } 
-        notificationRepository.saveAll(notifications);
 
-        notificationPushService.pushNotifications(notifications);
+        try{
+            notificationRepository.save(notification);
+            notificationTargetRepository.saveAll(notificationTargets);
+        }
+        catch(DataIntegrityViolationException e){
+            throw new BadRequestException("Failed to create notification" + e.getMessage());
+        }
+
+        notificationPushService.pushNotifications(notification, req.getTargetIds());
     }
 
     @Transactional
@@ -100,8 +83,31 @@ public class NotificationModifyService {
         Notification notification = notificationRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Notification not found"));
 
-        notification.update(req.getTitle(), req.getContent(), req.getCreatedBy(), req.getTargetType(), req.getTargetId(), req.getDeadLine(), req.getIsImportant());
-        notificationRepository.save(notification);
+        List<Long> targetIds = null;
+        List<NotificationTarget> notificationTargets = new ArrayList<>();
+
+        if(req.getTargetIds() != null && !req.getTargetIds().isEmpty()) {
+            List<NotificationTarget> existingTargets = notificationTargetRepository.findByNotificationIdAndTargetIdIn(id, req.getTargetIds());
+            Set<Long> existingIds = existingTargets.stream().map(nt -> nt.getTargetId()).collect(Collectors.toSet());
+            targetIds = req.getTargetIds().stream().filter(t -> !existingIds.contains(t)).collect(Collectors.toList());
+        }
+
+        if(targetIds != null && !targetIds.isEmpty()) {
+            for(Long targetId : targetIds){
+                NotificationTarget notificationTarget = NotificationTarget.create(notification.getId(), targetId);
+                notificationTargets.add(notificationTarget);
+            }
+        }
+
+        notification.update(req.getTitle(), req.getContent(), req.getCreatedBy(), req.getTargetType(), req.getDeadLine(), req.getIsImportant());
+
+        try{
+            notificationRepository.save(notification);
+            notificationTargetRepository.saveAll(notificationTargets);
+        }
+        catch(DataIntegrityViolationException e){
+            throw new BadRequestException("Failed to update notification");
+        }
     }
 
     @Transactional
@@ -111,43 +117,12 @@ public class NotificationModifyService {
         notificationRepository.delete(notification);
     }
 
-    private Map<Long, String> getTargetNames(NotificationType type, List<Long> ids) {
-    return switch (type) {
-        case FACULTY -> facultyRepository.findAllById(ids)
-                .stream().collect(Collectors.toMap(Faculty::getId, Faculty::getFacultyName));
-
-        case STUDENT_CLASS -> studentClassRepository.findAllById(ids)
-                .stream().collect(Collectors.toMap(StudentClass::getId, StudentClass::getClassCode));
-
-        case COURSE_CLASS -> courseClassRepository.findAllById(ids)
-                .stream().collect(Collectors.toMap(CourseClass::getId, CourseClass::getClassName));
-
-        case STUDENT -> studentRepository.findAllById(ids)
-                .stream().collect(Collectors.toMap(Student::getId, Student::getFullName));
-
-        default -> Map.of();
-    };
-}
-
-    private String renderTemplate(String template, Map<String, Object> params) {
-        String result = template;
-        for (Map.Entry<String, Object> entry : params.entrySet()) {
-            result = result.replace("{" + entry.getKey() + "}", String.valueOf(entry.getValue()));
-        }
-        return result;
-    }
-
-    private Notification buildNotification(
-        CreateNotificationReqDTO req,
-        Long targetId,
-        String content
-    ) {
+    private Notification buildNotification(CreateNotificationReqDTO req) {
         Notification n = new Notification();
         n.setTitle(req.getTitle());
-        n.setContent(content);
+        n.setContent(req.getContent());
         n.setCreatedBy(req.getCreatedBy());
         n.setTargetType(req.getTargetType());
-        n.setTargetId(targetId);
         n.setIsImportant(req.getIsImportant());
 
         Optional.ofNullable(req.getDeadLine()).ifPresent(n::setDeadLine);

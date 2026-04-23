@@ -1,6 +1,7 @@
 package com.tl_connect.dev.modules.notification.dto;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import com.tl_connect.dev.core.common.enums.NotificationCreatedBy;
 import com.tl_connect.dev.core.common.enums.NotificationType;
@@ -22,7 +23,7 @@ public class NotificationAdmDTO {
     private String content;
     private NotificationCreatedBy createdBy;
     private NotificationType targetType;
-    private Long targetId;
+    private List<Long> targetIds;
     private LocalDate deadLine;
     private Boolean isImportant;
 }

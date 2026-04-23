@@ -44,8 +44,8 @@ public class StudentClassService {
     private final Validator validator;
     
     public PagedResponse<StudentClassRow> getAll(Pageable pageable, String facultyCode) {
-        if(facultyCode == null || facultyCode.isEmpty()) {
-            facultyCode = "";
+        if(facultyCode == null || facultyCode.isBlank()) {
+            facultyCode = null;
         }
         Page<StudentClassRow> studentClasses = studentClassRepository.getAllWithStudentCount(pageable, facultyCode);
         return new PagedResponse<>(

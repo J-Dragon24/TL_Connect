@@ -98,3 +98,10 @@ ON notifications(created_at DESC);
 /*News indexes*/
 CREATE INDEX IF NOT EXISTS idx_news_publish_date
 ON news(publish_date DESC);
+
+/*Notification targets indexes*/
+CREATE INDEX IF NOT EXISTS idx_notification_targets_target_id 
+ON notification_targets(target_id);
+
+CREATE INDEX IF NOT EXISTS idx_notification_targets_notification_id 
+ON notification_targets(notification_id);

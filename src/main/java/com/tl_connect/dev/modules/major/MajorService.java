@@ -36,8 +36,8 @@ public class MajorService {
     private final Validator validator;
 
     public PagedResponse<MajorAdmDTO> getAllMajors(Pageable pageable, String facultyCode) {
-        if(facultyCode == null || facultyCode.isEmpty()) {
-            facultyCode = "";
+        if(facultyCode == null || facultyCode.isBlank()) {
+            facultyCode = null;
         }
         Page<MajorRow> majors = majorRepository.findAllMajors(pageable, facultyCode);
         return new PagedResponse<>(

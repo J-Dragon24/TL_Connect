@@ -31,7 +31,7 @@ DROP TABLE IF EXISTS lecturers CASCADE;
 DROP TABLE IF EXISTS student_subject_results CASCADE;
 DROP TABLE IF EXISTS grade_scale CASCADE;
 DROP TABLE IF EXISTS news CASCADE;
-DROP TABLE IF EXISTS notification_template CASCADE;
+DROP TABLE IF EXISTS notification_templates CASCADE;
 DROP TABLE IF EXISTS notification_read CASCADE;
 DROP TABLE IF EXISTS tuition_invoices CASCADE;
 DROP TABLE IF EXISTS tuition_invoice_items CASCADE;
@@ -43,6 +43,7 @@ DROP TABLE IF EXISTS subject_prerequisite_groups CASCADE;
 DROP TABLE IF EXISTS subject_enrollment_conditions CASCADE;
 DROP TABLE IF EXISTS student_course_class_logs CASCADE;
 DROP TABLE IF EXISTS user_devices CASCADE;
+DROP TABLE IF EXISTS notification_targets CASCADE;
 
 
 CREATE TABLE oauth_users (
@@ -570,7 +571,7 @@ CREATE TABLE application_attachments (
   FOREIGN KEY (application_id) REFERENCES student_applications(id) ON DELETE CASCADE
 );
 
-CREATE TABLE notification_template (
+CREATE TABLE notification_templates (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   code VARCHAR(100) UNIQUE NOT NULL,
   name VARCHAR(255) NOT NULL,
@@ -598,10 +599,18 @@ CREATE TABLE notifications (
   content TEXT NOT NULL,
   created_by VARCHAR(255) DEFAULT 'SYSTEM' CHECK (created_by IN ('SYSTEM', 'FACULTY', 'LECTURER')),
   target_type VARCHAR(20) NOT NULL DEFAULT 'GLOBAL' CHECK (target_type IN ('GLOBAL','FACULTY','STUDENT_CLASS','COURSE_CLASS', 'STUDENT')),
-  target_id BIGINT,
   is_important BOOLEAN DEFAULT FALSE,
   deadline DATE,
-  created_at TIMESTAMP DEFAULT now()
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE notification_targets (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    notification_id BIGINT NOT NULL,
+    target_id BIGINT NOT NULL,
+
+    FOREIGN KEY (notification_id) REFERENCES notifications(id) ON DELETE CASCADE
 );
 
 CREATE TABLE notification_read (

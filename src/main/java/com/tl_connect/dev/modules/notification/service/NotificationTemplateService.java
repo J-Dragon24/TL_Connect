@@ -31,7 +31,7 @@ public class NotificationTemplateService {
     private final Validator validator;
 
     public PagedResponse<NotificationTemplateDTO> getAllNotificationTemplates(Pageable pageable) {
-        Page<NotificationTemplate> notificationTemplates = notificationTemplateRepository.findAll(pageable);
+        Page<NotificationTemplate> notificationTemplates = notificationTemplateRepository.findAllTemplate(pageable);
         List<NotificationTemplateDTO> notificationTemplateDTOs = notificationTemplates.getContent().stream()
                 .map(this::toNotificationTemplateDTO)
                 .collect(Collectors.toList());
@@ -99,6 +99,7 @@ public class NotificationTemplateService {
         notificationTemplateDTO.setId(notificationTemplate.getId());
         notificationTemplateDTO.setCode(notificationTemplate.getCode());
         notificationTemplateDTO.setName(notificationTemplate.getName());
+        notificationTemplateDTO.setContent(notificationTemplate.getContent());
         return notificationTemplateDTO;
     }
 }

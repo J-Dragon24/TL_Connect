@@ -45,7 +45,8 @@ TRUNCATE TABLE
   subject_prerequisite_group_items, 
   subject_prerequisite_groups, 
   subject_enrollment_conditions, 
-  student_course_class_logs
+  student_course_class_logs,
+  notification_targets
   
 RESTART IDENTITY CASCADE;
 
@@ -444,14 +445,14 @@ VALUES
 (9,null,'AD213','Hát - Nhạc',3,1.0,45,null),
 (9,null,'AD214','Nâng cao chất lượng giọng hát',3,1.0,45,null),
 (5,null,'AD215','Kỹ năng sống',3,1.0,45,null),
-(null ,11,'GF101','Tiếng Pháp 1',2,1.0,54,null),
-(null ,11,'GF102','Tiếng Pháp 2',2,1.0,54,null),
-(null ,9,'PG102','GDTC: Thể dục cổ truyền cơ bản',1,1.0,25,null),
+(4 ,11,'GF101','Tiếng Pháp 1',2,1.0,54,null),
+(4 ,11,'GF102','Tiếng Pháp 2',2,1.0,54,null),
+(4 ,9,'PG102','GDTC: Thể dục cổ truyền cơ bản',1,1.0,25,null),
 (1 ,null,'CS100','Tin đại cương',2,1.5,18,24),
 (9 ,null,'CS102','Tin học văn phòng',2,1.5,30,null),
 (2 ,null,'EC102','Nhập môn kinh tế học',2,1.2,30,null),
-(null ,8,'GE111','Tiếng Anh sơ cấp 1',2,1.2,54,null),
-(null ,1,'MA101','Logic, suy luận toán học và kỹ thuật đếm',3,1.2,27,36),
+(4 ,8,'GE111','Tiếng Anh sơ cấp 1',2,1.2,54,null),
+(1 ,1,'MA101','Logic, suy luận toán học và kỹ thuật đếm',3,1.2,27,36),
 (9 ,null,'ML113','Triết học Mác - Lênin',3,1.2,45,null),
 (9 ,null,'NA151','Khoa học môi trường',2,1.2,30,null),
 (5 ,null,'SH131','Pháp luật đại cương',2,1.2,30,null),
@@ -459,19 +460,19 @@ VALUES
 (1 ,null,'CS121','Lập trình cơ sở 1',3,1.5,27,36),
 (1 ,null,'CS212','Kiến trúc máy tính',3,1.5,45,null),
 (1 ,null,'CS213','Cấu trúc dữ liệu và giải thuật',3,1.5,27,36),
-(null ,8,'GE112','Tiếng Anh sơ cấp 2',2,1.2,54,null),
-(null ,1,'MA120','Đại số tuyến tính',3,1.2,27,36),
+(4 ,8,'GE112','Tiếng Anh sơ cấp 2',2,1.2,54,null),
+(1 ,1,'MA120','Đại số tuyến tính',3,1.2,27,36),
 (9 ,null,'ML114','Kinh tế chính trị Mác - Lênin',2,1.2,30,null),
-(null ,8,'GE121','Tiếng Anh sơ trung cấp 1',2,1.2,54,null),
-(null ,1,'MA110','Giải tích 1',3,1.2,27,36),
-(null ,1,'MA111','Giải tích 2',3,1.2,27,36),
+(4 ,8,'GE121','Tiếng Anh sơ trung cấp 1',2,1.2,54,null),
+(1 ,1,'MA110','Giải tích 1',3,1.2,27,36),
+(1 ,1,'MA111','Giải tích 2',3,1.2,27,36),
 (1 ,null,'MI201','Toán rời rạc',3,1.2,45,null),
 (9,null,'ML115','Chủ nghĩa xã hội khoa học',2, 1.2,30,null),
 (1,null,'CS111','Kỹ thuật số',2, 1.5,18,24),
-(null ,1,'CF213','Cấu trúc dữ liệu và giải thuật',4,1.6,45,36),
-(null ,8,'GE222','Tiếng Anh sơ trung cấp 2',2,1.2,54,null),
+(1 ,1,'CF213','Cấu trúc dữ liệu và giải thuật',4,1.6,45,36),
+(4 ,8,'GE222','Tiếng Anh sơ trung cấp 2',2,1.2,54,null),
 (1 ,null,'IS222','Cơ sở dữ liệu',3,1.2,45,null),
-(null ,1,'MA239','Xác suất thống kê',4,1.6,45,27),
+(1 ,1,'MA239','Xác suất thống kê',4,1.6,45,27),
 (9 ,null,'ML202','Tư tưởng Hồ Chí Minh',2,1.2,30,null),
 (1 ,null,'CS315','Nguyên lý hệ điều hành',3,1.2,45,null),
 (1 ,null,'IS322','Hệ quản trị cơ sở dữ liệu',3,1.2,45,null),
@@ -602,7 +603,7 @@ VALUES
 (1,25,2,'252CS11101','Kỹ thuật số 01',40),
 
 (1,26,4,'252CF21301','CTDL & GT nâng cao 01',40),
-(6,27,4,'252GE22201','Tiếng Anh sơ trung cấp 2 - 01',40),
+(6,33,4,'252GE22201','Tiếng Anh sơ trung cấp 2 - 01',40),
 
 (1,28,4,'252IS22201','Cơ sở dữ liệu 01',45),
 (1,29,4,'252MA23901','Xác suất thống kê 01',45),
@@ -822,35 +823,56 @@ INSERT INTO notification_template (code, name, content) VALUES
 
 -- notifications
 INSERT INTO notifications
-(title, content, created_by, target_type, target_id, deadline)
+(title, content, created_by, target_type, deadline)
 VALUES
 
--- ALL
-('Thong bao he thong','He thong se bao tri vao 23:00 toi nay','SYSTEM','GLOBAL',NULL,NULL),
-('Cap nhat cong thong tin','Da cap nhat giao dien moi','SYSTEM','GLOBAL',NULL,NULL),
-('Thong bao nghi le','Sinh vien nghi le quoc khanh','SYSTEM','GLOBAL',NULL,NULL),
-('Lich thi HK1','Lich thi da duoc cap nhat tren portal','SYSTEM','GLOBAL',NULL,'2024-01-05'),
-('Ket qua hoc bong','Danh sach hoc bong HK1 da duoc cong bo','SYSTEM','GLOBAL',NULL,NULL),
+-- GLOBAL
+('Thong bao he thong','He thong se bao tri vao 23:00 toi nay','SYSTEM','GLOBAL',NULL),
+('Cap nhat cong thong tin','Da cap nhat giao dien moi','SYSTEM','GLOBAL',NULL),
+('Thong bao nghi le','Sinh vien nghi le quoc khanh','SYSTEM','GLOBAL',NULL),
+('Lich thi HK1','Lich thi da duoc cap nhat tren portal','SYSTEM','GLOBAL','2024-01-05'),
+('Ket qua hoc bong','Danh sach hoc bong HK1 da duoc cong bo','SYSTEM','GLOBAL',NULL),
 
 -- STUDENT_CLASS
-('Canh bao hoc vu','Ket qua hoc tap duoi muc yeu cau','SYSTEM','STUDENT_CLASS',2,'2024-03-01'),
-('Canh bao hoc vu lan 2','Sinh vien can gap co van hoc tap','SYSTEM','STUDENT_CLASS',2,'2024-03-10'),
-('Thong bao rieng','Sinh vien duoc chon tham gia workshop','SYSTEM','STUDENT_CLASS',3,NULL),
-('Thong bao rieng','Sinh vien duoc cap tai khoan lab','SYSTEM','STUDENT_CLASS',4,NULL),
-('Thong bao rieng','Sinh vien cap nhat thong tin ca nhan','SYSTEM','STUDENT_CLASS',5,NULL),
+('Canh bao hoc vu','Ket qua hoc tap duoi muc yeu cau','SYSTEM','STUDENT_CLASS','2024-03-01'),
+('Canh bao hoc vu lan 2','Sinh vien can gap co van hoc tap','SYSTEM','STUDENT_CLASS','2024-03-10'),
+('Thong bao rieng','Sinh vien duoc chon tham gia workshop','SYSTEM','STUDENT_CLASS','2024-03-10'),
+('Thong bao rieng','Sinh vien duoc cap tai khoan lab','SYSTEM','STUDENT_CLASS','2024-03-10'),
+('Thong bao rieng','Sinh vien cap nhat thong tin ca nhan','SYSTEM','STUDENT_CLASS','2024-03-10'),
 
 -- COURSE_CLASS
-('Thong bao mon hoc','Lop lap trinh web thay doi phong hoc','LECTURER','COURSE_CLASS',10,NULL),
-('Thong bao mon hoc','Buoi hoc toi se hoc online','LECTURER','COURSE_CLASS',10,NULL),
-('Thong bao mon hoc','Deadline project duoc gia han','LECTURER','COURSE_CLASS',10,'2024-04-10'),
-
+('Thong bao mon hoc','Lop lap trinh web thay doi phong hoc','LECTURER','COURSE_CLASS','2024-03-10'),
+('Thong bao mon hoc','Buoi hoc toi se hoc online','LECTURER','COURSE_CLASS','2024-03-10'),
+('Thong bao mon hoc','Deadline project duoc gia han','LECTURER','COURSE_CLASS','2024-04-10'),
 
 -- FACULTY
-('Thong bao khoa CNTT','Sinh vien tham gia hoi thao AI','FACULTY','FACULTY',1,NULL),
-('Thong bao khoa CNTT','Cuoc thi lap trinh sap dien ra','FACULTY','FACULTY',1,NULL),
-('Thong bao khoa CNTT','Mo dang ky CLB AI','FACULTY','FACULTY',1,NULL),
-('Thong bao khoa CNTT','Workshop Cloud Computing','FACULTY','FACULTY',1,NULL),
-('Thong bao khoa CNTT','Sinh vien dang ky thuc tap he','FACULTY','FACULTY',1,NULL);
+('Thong bao khoa CNTT','Sinh vien tham gia hoi thao AI','FACULTY','FACULTY',NULL),
+('Thong bao khoa CNTT','Cuoc thi lap trinh sap dien ra','FACULTY','FACULTY',NULL),
+('Thong bao khoa CNTT','Mo dang ky CLB AI','FACULTY','FACULTY',NULL),
+('Thong bao khoa CNTT','Workshop Cloud Computing','FACULTY','FACULTY',NULL),
+('Thong bao khoa CNTT','Sinh vien dang ky thuc tap he','FACULTY','FACULTY',NULL);
+
+-- notification_targets
+INSERT INTO notification_targets (notification_id, target_id) VALUES
+
+-- STUDENT_CLASS (id 6 -> 10)
+(6, 2),
+(7, 2),
+(8, 3),
+(9, 4),
+(10, 5),
+
+-- COURSE_CLASS (id 11 -> 13)
+(11, 10),
+(12, 10),
+(13, 10),
+
+-- FACULTY (id 14 -> 18)
+(14, 1),
+(15, 1),
+(16, 1),
+(17, 1),
+(18, 1);
 
 -- notification_read
 INSERT INTO notification_read (notification_id, oauth_user_id, read_at) VALUES

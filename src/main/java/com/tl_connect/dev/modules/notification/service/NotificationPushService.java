@@ -23,18 +23,18 @@ public class NotificationPushService {
     private final NotificationHelper notificationHelper;
     
     @Async
-    public void pushNotifications(List<Notification> notifications) {
+    public void pushNotifications(Notification notification, List<Long> targetIds) {
         Set<String> sentTopics = new HashSet<>();
-        for (Notification n : notifications) {
-            if(n.getTargetType() == NotificationType.STUDENT) {
-                List<String> tokens = userDeviceRepository.findTokensByUserId(n.getTargetId());
-                for (String token : tokens) {
-                    fcmService.sendToToken(token, n.getTitle(), n.getContent());
-                }
-            } else {
-                String topic = notificationHelper.buildTopic(n.getTargetType(), n.getTargetId());
+        if(notification.getTargetType() == NotificationType.STUDENT) {
+            List<String> tokens = userDeviceRepository.findTokensByUserIds(targetIds);
+            for (String token : tokens) {
+                fcmService.sendToToken(token, notification.getTitle(), notification.getContent());
+            }
+        } else {
+            for(Long id : targetIds) {
+                String topic = notificationHelper.buildTopic(notification.getTargetType(), id);
                 if(sentTopics.contains(topic)) continue;
-                fcmService.sendToTopic(topic, n.getTitle(), n.getContent());
+                fcmService.sendToTopic(topic, notification.getTitle(), notification.getContent());
                 sentTopics.add(topic);
             }
         }

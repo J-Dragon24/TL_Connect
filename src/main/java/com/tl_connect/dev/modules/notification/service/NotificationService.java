@@ -2,6 +2,7 @@ package com.tl_connect.dev.modules.notification.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +26,7 @@ import com.tl_connect.dev.modules.notification.dto.PrepareNotificationDTO;
 import com.tl_connect.dev.modules.notification.dto.SummaryNotifyDTO;
 import com.tl_connect.dev.modules.notification.dto.UnreadNotificationDTO;
 import com.tl_connect.dev.modules.notification.entity.Notification;
+import com.tl_connect.dev.modules.notification.projection.NotificationAdmRow;
 import com.tl_connect.dev.modules.notification.projection.NotificationRow;
 import com.tl_connect.dev.modules.notification.projection.PrepareNotificationView;
 import com.tl_connect.dev.modules.notification.repository.NotificationReadRepository;
@@ -75,7 +77,7 @@ public class NotificationService {
             notificationReqDTO.setCourseClassIds(List.of(-1L));
         }
 
-        Page<NotificationRow> notificationRows = notificationRepository.findAllNotification(studentId, notificationReqDTO.getOauthUserId(), notificationReqDTO.getStudentClassId(), notificationReqDTO.getFacultyId(), notificationReqDTO.getCourseClassIds(), pageable);
+        Page<NotificationRow> notificationRows = notificationRepository.findAllNotificationByStudent(studentId, notificationReqDTO.getOauthUserId(), notificationReqDTO.getStudentClassId(), notificationReqDTO.getFacultyId(), notificationReqDTO.getCourseClassIds(), pageable);
 
         List<SummaryNotifyDTO> notificationList = notificationRows.stream()
                 .map(notificationRow -> SummaryNotifyDTO.builder()
@@ -122,7 +124,7 @@ public class NotificationService {
     }
 
     public PagedResponse<NotificationAdmDTO> getAllNotification(Pageable pageable) {
-        Page<Notification> notifications = notificationRepository.findAllByOrderByCreatedAtDesc(pageable);
+        Page<NotificationAdmRow> notifications = notificationRepository.findAllNotifications(pageable);
         List<NotificationAdmDTO> notificationList = notifications.stream()
                 .map(notification -> NotificationAdmDTO.builder()
                         .id(notification.getId())
@@ -130,7 +132,7 @@ public class NotificationService {
                         .content(notification.getContent())
                         .createdBy(notification.getCreatedBy())
                         .targetType(notification.getTargetType())
-                        .targetId(notification.getTargetId())
+                        .targetIds(notification.getTargetIds())
                         .deadLine(notification.getDeadLine())
                         .isImportant(notification.getIsImportant())
                         .build())

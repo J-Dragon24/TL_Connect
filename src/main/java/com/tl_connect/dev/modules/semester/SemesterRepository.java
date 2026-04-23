@@ -31,8 +31,6 @@ public interface SemesterRepository extends JpaRepository<Semester, Long> {
 
     Optional<Semester> findBySemesterCode(String semesterCode);
 
-    List<Semester> findAll();
-
     @Query(value = """
         SELECT *
         FROM Semesters s

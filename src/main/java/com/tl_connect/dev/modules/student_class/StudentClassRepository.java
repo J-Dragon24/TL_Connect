@@ -49,16 +49,15 @@ public interface StudentClassRepository extends JpaRepository<StudentClass, Long
         LEFT JOIN majors m ON sc.major_id = m.id
         LEFT JOIN students s ON s.student_class_id = sc.id
         LEFT JOIN faculties f ON m.faculty_id = f.id
-        WHERE f.faculty_code = :facultyCode OR :facultyCode = ''
+        WHERE (:facultyCode IS NULL OR f.faculty_code = :facultyCode)
         GROUP BY sc.id, sc.class_code, m.major_name, sc.start_year
     """,
     countQuery = """
         SELECT COUNT(sc.id)
         FROM student_classes sc
         LEFT JOIN majors m ON sc.major_id = m.id
-        LEFT JOIN students s ON s.student_class_id = sc.id
         LEFT JOIN faculties f ON m.faculty_id = f.id
-        WHERE f.faculty_code = :facultyCode OR :facultyCode = ''
+        WHERE (:facultyCode IS NULL OR f.faculty_code = :facultyCode)
     """, nativeQuery = true)
     Page<StudentClassRow> getAllWithStudentCount(Pageable pageable, @Param("facultyCode") String facultyCode);
 

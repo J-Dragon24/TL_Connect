@@ -36,6 +36,10 @@ public class LecturerService {
     private final Validator validator;
 
     public PagedResponse<LecturerAdmInfoDTO> getAllLecturers(Pageable pageable, String facultyCode) {
+        if (facultyCode == null || facultyCode.isBlank()) {
+            facultyCode = null;
+        }
+
         Page<LecturerRow> lecturers = lecturerRepository.findAllLecturer(pageable, facultyCode);
 
         return new PagedResponse<>(

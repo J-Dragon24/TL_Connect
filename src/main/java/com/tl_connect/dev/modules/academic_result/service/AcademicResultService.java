@@ -32,6 +32,10 @@ public class AcademicResultService {
         private final StudentSubjectResultRepository resultRepository;
 
         public PagedResponse<AcademicResultAdmDTO> getAllAcademicResult(Pageable pageable, String facultyCode) {
+                if(facultyCode == null || facultyCode.isBlank()){
+                        facultyCode = null;
+                }
+                
                 Page<SubjectResultAdmRow> subjectResultsRows = resultRepository.findSubjectResult(pageable, facultyCode);
 
                 List<Long> studentIds = subjectResultsRows.stream().map(SubjectResultAdmRow::getStudentId).collect(Collectors.toList());

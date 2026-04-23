@@ -42,8 +42,8 @@ public class CourseClassService {
     private final Validator validator;
     
     public PagedResponse<CourseClassBasicInfoDTO> getAll(Pageable pageable, String facultyCode) {
-        if(facultyCode == null){
-            facultyCode = "";
+        if(facultyCode == null || facultyCode.isBlank()){
+            facultyCode = null;
         }
         Page<CourseClassBasicInfoRow> page = courseClassRepository.findAllCourseClass(pageable, facultyCode);
         return new PagedResponse<>(

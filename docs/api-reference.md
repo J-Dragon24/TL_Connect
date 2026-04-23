@@ -2043,7 +2043,7 @@ Lấy tất cả thông tin thông báo của sinh viên.
 - ✅ token hợp lệ → code 0 + thông tin thông báo
 - ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
 
-### 10.3. GET /api/v1/notification/id
+### 10.3. GET /api/v1/notification/detail/id
 Lấy thông tin chi tiết thông báo.
 - **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
 - **Content-Type**: Không áp dụng
@@ -2138,7 +2138,7 @@ Lấy danh sách tất cả notification (admin).
         "content": "Đóng học phí trước ngày...",
         "createdBy": "Admin",
         "targetType": "STUDENT",
-        "targetId": 1001,
+        "targetIds": [1001],
         "deadLine": "2026-04-10",
         "isImportant": true
       }
@@ -2173,7 +2173,7 @@ Gửi notification.
 ```json
 {
   "code": 0,
-  "message": "Create notification successfully",
+  "message": "Create notification successfully", 
   "data": null
 } 
 ```
@@ -2191,7 +2191,7 @@ Cập nhật notification.
   "content": "Nội dung cập nhật",
   "createdBy": "Admin",
   "targetType": "STUDENT",
-  "targetId": 1001,
+  "targetIds": [1001, 1002],
   "isImportant": false,
   "deadLine": "2026-04-15"
 }
@@ -4377,7 +4377,8 @@ Lấy danh sách template (có phân trang)
       {
         "id": 1,
         "code": "WELCOME",
-        "name": "Thông báo chào mừng"
+        "name": "Thông báo chào mừng",
+        "content": "Chào mừng bạn đến với hệ thống"
       }
     ],
     "page": 0,

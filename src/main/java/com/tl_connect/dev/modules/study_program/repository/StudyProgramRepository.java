@@ -117,7 +117,7 @@ public interface StudyProgramRepository extends JpaRepository<StudyProgram, Long
             JOIN majors m ON sp.major_id = m.id
             JOIN faculties f ON m.faculty_id = f.id
             WHERE sp.start_year = :startYear
-            AND f.faculty_code = :facultyCode
+            AND (:facultyCode IS NULL OR f.faculty_code = :facultyCode)
             AND sp.is_active = true
             ORDER BY sp.study_program_code
             """,
@@ -127,7 +127,7 @@ public interface StudyProgramRepository extends JpaRepository<StudyProgram, Long
                     JOIN majors m ON sp.major_id = m.id
                     JOIN faculties f ON m.faculty_id = f.id
                     WHERE sp.start_year = :startYear
-                    AND f.faculty_code = :facultyCode
+                    AND (:facultyCode IS NULL OR f.faculty_code = :facultyCode)
                     AND sp.is_active = true
                     """,
             nativeQuery = true)

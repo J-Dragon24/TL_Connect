@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.tl_connect.dev.modules.notification.entity.Notification;
+import com.tl_connect.dev.modules.notification.projection.NotificationAdmRow;
 import com.tl_connect.dev.modules.notification.projection.NotificationRow;
 import com.tl_connect.dev.modules.notification.projection.PrepareNotificationView;
 
@@ -22,7 +23,27 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
             """, nativeQuery = true)
     List<Long> existsByIdIn(@Param("notificationIds") Long[] notificationIds);
 
-    Page<Notification> findAllByOrderByCreatedAtDesc(Pageable pageable);
+    @Query(value = """
+           SELECT 
+                n.id AS id,
+                n.title AS title,
+                n.content AS content,
+                ARRAY_AGG(nt.target_id) AS targetIds,
+                n.target_type AS targetType,
+                n.deadline AS deadline,
+                n.created_by AS createdBy,
+                n.is_important AS isImportant
+            FROM notifications n
+            LEFT JOIN notification_targets nt 
+                ON n.id = nt.notification_id
+            GROUP BY n.id, n.title, n.content, n.target_type, n.deadline, n.created_by, n.is_important
+            ORDER BY n.created_at DESC
+            """,
+            countQuery = """
+                    SELECT COUNT(*) FROM notifications
+                    """,
+            nativeQuery = true)
+    Page<NotificationAdmRow> findAllNotifications(Pageable pageable);
 
     @Query(value = """
             SELECT DISTINCT
@@ -47,43 +68,51 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
                 n.deadline AS deadLine,
                 (nr.notification_id IS NOT NULL) AS isRead
             FROM notifications n
-            LEFT JOIN notification_read nr ON n.id = nr.notification_id 
+
+            LEFT JOIN notification_targets nt 
+                ON n.id = nt.notification_id
+
+            LEFT JOIN notification_read nr 
+                ON n.id = nr.notification_id 
                 AND nr.oauth_user_id = :oauthUserId
             WHERE
 
                 n.target_type = 'GLOBAL'
 
             OR (n.target_type = 'STUDENT'
-                AND n.target_id = :studentId)
+                AND nt.target_id = :studentId)
 
             OR (n.target_type = 'STUDENT_CLASS'
-                AND n.target_id = :classId)
+                AND nt.target_id = :classId)
 
             OR (n.target_type = 'FACULTY'
-                AND n.target_id = :facultyId)
+                AND nt.target_id = :facultyId)
 
             OR (n.target_type = 'COURSE_CLASS'
-                AND (:courseClassIds IS NOT NULL AND n.target_id IN (:courseClassIds)))
+                AND nt.target_id IN (:courseClassIds))
 
             ORDER BY n.created_at DESC
             """,
             countQuery = """
                     SELECT COUNT(*)
                     FROM notifications n
+                    LEFT JOIN notification_targets nt ON n.id = nt.notification_id
                     WHERE n.target_type = 'GLOBAL'
-                    OR (n.target_type = 'STUDENT' AND n.target_id = :studentId)
-                    OR (n.target_type = 'STUDENT_CLASS' AND n.target_id = :classId)
-                    OR (n.target_type = 'FACULTY' AND n.target_id = :facultyId)
-                    OR (n.target_type = 'COURSE_CLASS' AND n.target_id IN (:courseClassIds))
+                    OR (n.target_type = 'STUDENT' AND nt.target_id = :studentId)
+                    OR (n.target_type = 'STUDENT_CLASS' AND nt.target_id = :classId)
+                    OR (n.target_type = 'FACULTY' AND nt.target_id = :facultyId)
+                    OR (n.target_type = 'COURSE_CLASS' AND nt.target_id IN (:courseClassIds))
                     """,
             nativeQuery = true)
-    Page<NotificationRow> findAllNotification(@Param("studentId") Long studentId, @Param("oauthUserId") Long oauthUserId, @Param("classId") Long classId, @Param("facultyId") Long facultyId, @Param("courseClassIds") List<Long> courseClassIds, Pageable pageable);
+    Page<NotificationRow> findAllNotificationByStudent(@Param("studentId") Long studentId, @Param("oauthUserId") Long oauthUserId, @Param("classId") Long classId, @Param("facultyId") Long facultyId, @Param("courseClassIds") List<Long> courseClassIds, Pageable pageable);
 
     Optional<Notification> findById(Long id);
 
     @Query(value = """
             SELECT COUNT(*)
             FROM notifications n
+            LEFT JOIN notification_targets nt ON n.id = nt.notification_id
+
             WHERE NOT EXISTS (
                 SELECT 1 FROM notification_read nr
                 WHERE nr.notification_id = n.id
@@ -91,10 +120,10 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
             )
             AND (
                 n.target_type = 'GLOBAL'
-                OR (n.target_type = 'STUDENT' AND n.target_id = :studentId)
-                OR (n.target_type = 'STUDENT_CLASS' AND n.target_id = :classId)
-                OR (n.target_type = 'FACULTY' AND n.target_id = :facultyId)
-                OR (n.target_type = 'COURSE_CLASS' AND n.target_id IN (:courseClassIds))
+                OR (n.target_type = 'STUDENT' AND nt.target_id = :studentId)
+                OR (n.target_type = 'STUDENT_CLASS' AND nt.target_id = :classId)
+                OR (n.target_type = 'FACULTY' AND nt.target_id = :facultyId)
+                OR (n.target_type = 'COURSE_CLASS' AND nt.target_id IN (:courseClassIds))
             )
             """, nativeQuery = true)
     Long countUnreadNotification(@Param("studentId") Long studentId, @Param("oauthUserId") Long oauthUserId, @Param("classId") Long classId, @Param("facultyId") Long facultyId, @Param("courseClassIds") List<Long> courseClassIds);

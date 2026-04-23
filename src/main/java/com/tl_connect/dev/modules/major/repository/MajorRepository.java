@@ -33,13 +33,13 @@ public interface MajorRepository extends JpaRepository<Major, Long>{
                 m.is_active as isActive
             FROM majors m
             JOIN faculties f ON m.faculty_id = f.id
-            WHERE f.faculty_code = :facultyCode OR :facultyCode = ''
+            WHERE (:facultyCode IS NULL OR f.faculty_code = :facultyCode)
             """,
             countQuery = """
                     SELECT COUNT(m.id)
                     FROM majors m
                     JOIN faculties f ON m.faculty_id = f.id
-                    WHERE f.faculty_code = :facultyCode OR :facultyCode = ''
+                    WHERE (:facultyCode IS NULL OR f.faculty_code = :facultyCode)
                     """, 
                     nativeQuery = true)
     Page<MajorRow> findAllMajors(Pageable pageable, @Param("facultyCode") String facultyCode);

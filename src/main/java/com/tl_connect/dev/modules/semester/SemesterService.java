@@ -41,7 +41,7 @@ public class SemesterService {
     }
 
     public PagedResponse<SemesterDTO> getAll(Pageable pageable) {
-        Page<Semester> semesters = semesterRepository.findAll(pageable);
+        Page<Semester> semesters = semesterRepository.findAllSemesters(pageable);
         return new PagedResponse<>(
                 semesters.getContent().stream().map(this::toDTO).collect(Collectors.toList()),
                 semesters.getNumber(),

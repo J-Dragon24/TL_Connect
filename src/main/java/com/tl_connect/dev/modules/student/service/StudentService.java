@@ -40,8 +40,8 @@ public class StudentService {
         private final StudentClassRepository studentClassRepository;
 
         public PagedResponse<StudentFullInfo> getAllStudents(Pageable pageable, String facultyCode) {
-                if(facultyCode == null || facultyCode.isEmpty()) {
-                        facultyCode = "";
+                if(facultyCode == null || facultyCode.isBlank()) {
+                        facultyCode = null;
                 }
                 Page<StudentRow> students = studentRepository.findAllStudent(pageable, facultyCode);
 

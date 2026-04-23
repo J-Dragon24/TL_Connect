@@ -78,7 +78,7 @@ public interface CourseClassRepository extends JpaRepository<CourseClass, Long> 
                 JOIN subjects s ON cc.subject_id = s.id
                 JOIN semesters sem ON cc.semester_id = sem.id
                 JOIN faculties f ON s.faculty_id = f.id
-                WHERE (:facultyCode IS NULL OR :facultyCode = '' OR f.faculty_code = :facultyCode)
+                WHERE (:facultyCode IS NULL OR f.faculty_code = :facultyCode)
                 """,
     nativeQuery = true)
     Page<CourseClassBasicInfoRow> findAllCourseClass(Pageable pageable, @Param("facultyCode") String facultyCode);

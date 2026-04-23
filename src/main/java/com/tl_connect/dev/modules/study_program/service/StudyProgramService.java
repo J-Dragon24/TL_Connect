@@ -41,6 +41,9 @@ public class StudyProgramService {
         private final SubjectPreGroupItemRepository subjectPreGroupItemRepository;
 
         public PagedResponse<StudyProgramAdmDTO> getAllStudyProgram(Pageable pageable, Integer startYear, String facultyCode) {
+                if(facultyCode == null || facultyCode.isBlank()) {
+                        facultyCode = null;
+                }
                 Page<StudyProgramAdmRow> page = studyProgramRepository.findByStartYearAndFacultyCode(startYear, facultyCode, pageable);
                 return new PagedResponse<>(
                         page.getContent().stream().map(this::toDTO).toList(),

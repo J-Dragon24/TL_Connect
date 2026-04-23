@@ -20,7 +20,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateNotificationReqDTO {
-    private Long templateId;
     @NotNull(message = "Title is required")
     private String title;
     private String content;
@@ -32,19 +31,11 @@ public class CreateNotificationReqDTO {
     @NotNull(message = "Is important is required")
     private Boolean isImportant;
 
-    @AssertTrue(message = "Target id is required")
-    public boolean isTargetIdValid() {
+    @AssertTrue(message = "Target ids is required")
+    public boolean isTargetIdsValid() {
         if (targetType == NotificationType.GLOBAL) {
             return true;
         }
         return targetIds != null && !targetIds.isEmpty();
-    }
-
-    @AssertTrue(message = "Content is required")
-    public boolean isContentValid() {
-        if (templateId != null) {
-            return true;
-        }
-        return content != null && !content.isEmpty();
     }
 }

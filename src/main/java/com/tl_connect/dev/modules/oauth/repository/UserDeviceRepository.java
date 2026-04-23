@@ -12,9 +12,9 @@ import com.tl_connect.dev.modules.oauth.entity.UserDevice;
 @Repository
 public interface UserDeviceRepository extends JpaRepository<UserDevice, Long> {
     @Query(value = """
-            SELECT fcm_token FROM user_devices WHERE oauth_user_id = :userId AND is_active = true
+            SELECT fcm_token FROM user_devices WHERE oauth_user_id IN :userIds AND is_active = true
             """, nativeQuery = true)
-    List<String> findTokensByUserId(Long userId);
+    List<String> findTokensByUserIds(List<Long> userIds);
 
     Optional<UserDevice> findByDeviceId(String deviceId);
 
