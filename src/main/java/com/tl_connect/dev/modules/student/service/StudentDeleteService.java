@@ -32,8 +32,10 @@ public class StudentDeleteService {
 
         student.setStatus(StudentStatus.DELETED);
 
-        OAuthUser oauthUser = oauthUserRepository.findById(student.getOauthUserId())
-                .orElseThrow(() -> new NotFoundException("OAuth user not found"));
-        oauthUser.setStatus(UserStatus.BLOCKED);
+        if (student.getOauthUserId() != null) {
+            OAuthUser oauthUser = oauthUserRepository.findById(student.getOauthUserId())
+                    .orElseThrow(() -> new NotFoundException("Oauth user not found"));
+            oauthUser.setStatus(UserStatus.BLOCKED);
+        }
     }
 }
