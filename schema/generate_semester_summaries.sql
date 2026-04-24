@@ -61,7 +61,7 @@ SELECT
     0,
     NULL
 
-FROM gpa_calc
+FROM inserted_invoice
 
 ON CONFLICT (student_id, semester_id)
 DO UPDATE SET

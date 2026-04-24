@@ -24,7 +24,7 @@ WITH valid_enrollments AS (
     JOIN semesters sem ON sem.id = s.semester_id
     JOIN tuition_fee_configs cfg 
         ON cfg.cohort = sc.start_year
-        AND cfg.academic_year = sem.academic_year
+        AND cfg.academic_year = sem.academic_years
     WHERE s.semester_id = p_semester_id
     AND s.status = 'ENROLLED'
 ),
@@ -122,7 +122,7 @@ WITH valid_enrollments AS (
     JOIN subjects sub ON s.subject_id = sub.id
     JOIN tuition_fee_configs cfg 
         ON cfg.cohort = sc.start_year 
-        AND cfg.academic_year = sem.academic_year
+        AND cfg.academic_year = sem.academic_years
     WHERE s.student_id = p_student_id
     AND s.semester_id = p_semester_id
     AND s.status = 'ENROLLED'
@@ -157,28 +157,31 @@ inserted_invoice AS (
     )
 	HAVING COUNT(*) > 0
     RETURNING id
-)
+),
 
-INSERT INTO tuition_invoice_items (
-    invoice_id,
-    course_class_id,
-    credits,
-    price_per_credit,
-    amount,
-    created_at,
-    updated_at
+
+insert_items AS (
+    INSERT INTO tuition_invoice_items (
+        invoice_id,
+        course_class_id,
+        credits,
+        price_per_credit,
+        amount,
+        created_at,
+        updated_at
+    )
+    SELECT 
+        ii.id,
+        ve.course_class_id,
+        ve.credits,
+        ve.base_price_per_credit,
+        ve.amount,
+        now(),
+        now()
+    FROM valid_enrollments ve
+    JOIN inserted_invoice ii ON true
+    ON CONFLICT (invoice_id, course_class_id) DO NOTHING
 )
-SELECT 
-    ii.id,
-    ve.course_class_id,
-    ve.credits,
-    ve.base_price_per_credit,
-    ve.amount,
-    now(),
-    now()
-FROM valid_enrollments ve
-JOIN inserted_invoice ii ON true
-ON CONFLICT (invoice_id, course_class_id) DO NOTHING;
 
 SELECT id INTO v_invoice_id FROM inserted_invoice LIMIT 1;
 

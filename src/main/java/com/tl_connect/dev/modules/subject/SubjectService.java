@@ -1,8 +1,10 @@
 package com.tl_connect.dev.modules.subject;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.dao.DataIntegrityViolationException;
@@ -170,11 +172,12 @@ public class SubjectService {
 
         if(dto.getPrerequisiteGroups() != null){
             subjectPreGroupRepository.deleteBySubjectId(id);
+            subjectPreGroupRepository.flush();
 
             for (PreGroupCreateDTO prerequisiteGroup : dto.getPrerequisiteGroups()) {
 
                 SubjectPrerequisiteGroup subjectPrerequisiteGroup = SubjectPrerequisiteGroup.create(id, prerequisiteGroup.getMinSubjectsRequired(), prerequisiteGroup.getDescription());
-                subjectPreGroupRepository.saveAndFlush(subjectPrerequisiteGroup);
+                subjectPreGroupRepository.save(subjectPrerequisiteGroup);
 
                 List<Long> ids = prerequisiteGroup.getPrerequisiteSubjectIds();
 
@@ -208,9 +211,15 @@ public class SubjectService {
             }
         }
 
+        Set<String> types = new HashSet<>();
+
         if(dto.getEnrollmentConditions() != null){
             subjectEnrollmentConditionRepository.deleteBySubjectId(id);
+            subjectEnrollmentConditionRepository.flush();
             for (EnrollmentConditionCreateDTO enrollmentCondition : dto.getEnrollmentConditions()) {
+                if (!types.add(enrollmentCondition.getConditionType().name())) {
+                    throw new InvalidInputException("Duplicate condition type: " + enrollmentCondition.getConditionType());
+                }
                 SubjectEnrollmentCondition subjectEnrollmentCondition = SubjectEnrollmentCondition.create(id, enrollmentCondition.getConditionType(), enrollmentCondition.getConditionValue(), enrollmentCondition.getConditionOperator(), enrollmentCondition.getDescription());
                 try {
                     subjectEnrollmentConditionRepository.save(subjectEnrollmentCondition);

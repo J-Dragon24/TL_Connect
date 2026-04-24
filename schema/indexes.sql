@@ -14,7 +14,7 @@ CREATE INDEX IF NOT EXISTS idx_exam_schedules_semester_id ON exam_schedules(seme
 CREATE INDEX IF NOT EXISTS idx_exam_schedules_subject_id ON exam_schedules(subject_id);
 
 /*Notifications indexes*/
-CREATE INDEX IF NOT EXISTS idx_notifications_type_target ON notifications(target_type, target_id);
+CREATE INDEX IF NOT EXISTS idx_notifications_target_type ON notifications(target_type);
 
 /*Class Schedules indexes*/
 CREATE INDEX IF NOT EXISTS idx_class_schedules_course_class_day ON class_schedules(course_class_id, day_of_week);
@@ -99,9 +99,6 @@ ON notifications(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_news_publish_date
 ON news(publish_date DESC);
 
-/*Notification targets indexes*/
-CREATE INDEX IF NOT EXISTS idx_notification_targets_target_id 
-ON notification_targets(target_id);
-
+/* Notification Targets indexes*/
 CREATE INDEX IF NOT EXISTS idx_notification_targets_notification_id 
 ON notification_targets(notification_id);
