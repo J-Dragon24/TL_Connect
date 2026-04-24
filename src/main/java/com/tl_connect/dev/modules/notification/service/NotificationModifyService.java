@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.tl_connect.dev.core.common.enums.NotificationType;
 import com.tl_connect.dev.core.common.exception.BadRequestException;
-import com.tl_connect.dev.core.common.exception.InvalidInputException;
 import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.notification.dto.CreateNotificationReqDTO;
 import com.tl_connect.dev.modules.notification.dto.UpdateNotificationDTO;
@@ -21,8 +20,6 @@ import com.tl_connect.dev.modules.notification.entity.NotificationTarget;
 import com.tl_connect.dev.modules.notification.repository.NotificationRepository;
 import com.tl_connect.dev.modules.notification.repository.NotificationTargetRepository;
 
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -32,17 +29,9 @@ public class NotificationModifyService {
     private final NotificationRepository notificationRepository;
     private final NotificationPushService notificationPushService;
     private final NotificationTargetRepository notificationTargetRepository;
-    private final Validator validator;
 
     @Transactional
     public void sendNotification(CreateNotificationReqDTO req) {
-        Set<ConstraintViolation<CreateNotificationReqDTO>> violations = validator.validate(req);
-        if (!violations.isEmpty()) {
-            String message = violations.stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.joining(", "));
-            throw new InvalidInputException(message);
-        }
         NotificationType type = req.getTargetType();
 
         if(type == NotificationType.GLOBAL) {
@@ -73,13 +62,6 @@ public class NotificationModifyService {
 
     @Transactional
     public void updateNotification(Long id, UpdateNotificationDTO req) {
-        Set<ConstraintViolation<UpdateNotificationDTO>> violations = validator.validate(req);
-        if (!violations.isEmpty()) {
-            String message = violations.stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.joining(", "));
-            throw new InvalidInputException(message);
-        }
         Notification notification = notificationRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Notification not found"));
 

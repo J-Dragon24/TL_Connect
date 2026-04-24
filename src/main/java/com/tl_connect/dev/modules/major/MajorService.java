@@ -1,7 +1,5 @@
 package com.tl_connect.dev.modules.major;
 
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -12,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tl_connect.dev.core.common.dto.PagedResponse;
 import com.tl_connect.dev.core.common.exception.BadRequestException;
 import com.tl_connect.dev.core.common.exception.ConflictException;
-import com.tl_connect.dev.core.common.exception.InvalidInputException;
+
 import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.faculty.Faculty;
 import com.tl_connect.dev.modules.faculty.FacultyRepository;
@@ -23,8 +21,6 @@ import com.tl_connect.dev.modules.major.entity.Major;
 import com.tl_connect.dev.modules.major.projection.MajorRow;
 import com.tl_connect.dev.modules.major.repository.MajorRepository;
 
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -33,7 +29,6 @@ public class MajorService {
 
     private final MajorRepository majorRepository;
     private final FacultyRepository facultyRepository;
-    private final Validator validator;
 
     public PagedResponse<MajorAdmDTO> getAllMajors(Pageable pageable, String facultyCode) {
         if(facultyCode == null || facultyCode.isBlank()) {
@@ -52,14 +47,6 @@ public class MajorService {
 
     @Transactional
     public Long createMajor(CreateMajorDTO majorDTO) {
-        Set<ConstraintViolation<CreateMajorDTO>> violations = validator.validate(majorDTO);
-        if (!violations.isEmpty()) {
-            String message = violations.stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.joining(", "));
-            throw new InvalidInputException(message);
-        }
-
         if (majorRepository.existsByMajorCode(majorDTO.getMajorCode())) {
             throw new ConflictException("Major code already exists");
         }
@@ -80,13 +67,6 @@ public class MajorService {
 
     @Transactional
     public void updateMajor(Long id, UpdateMajorDTO majorDTO) {
-        Set<ConstraintViolation<UpdateMajorDTO>> violations = validator.validate(majorDTO);
-        if (!violations.isEmpty()) {
-            String message = violations.stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.joining(", "));
-            throw new InvalidInputException(message);
-        }
 
         Major major = majorRepository.findById(id)
         .orElseThrow(() -> new NotFoundException("Major not found"));

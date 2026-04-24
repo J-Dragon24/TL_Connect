@@ -50,13 +50,6 @@ public class AcademicResultModifyService {
 
     @Transactional
     public Long createStudentSubjectResult(CreateStudentSubjectResultDTO dto) {
-        Set<ConstraintViolation<CreateStudentSubjectResultDTO>> violations = validator.validate(dto);
-        if (!violations.isEmpty()) {
-            String message = violations.stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.joining(", "));
-            throw new InvalidInputException(message);
-        }
 
         StudentSubjectResult entity = StudentSubjectResult.create(
                 dto.getStudentId(),
@@ -197,8 +190,9 @@ public class AcademicResultModifyService {
         Set<ConstraintViolation<ImportAcademicResultDTO>> violations = validator.validate(row);
         if (!violations.isEmpty()) {
             String message = violations.stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.joining(", "));
+                .map(ConstraintViolation::getMessage)
+                .findFirst()
+                .orElse("Invalid input");
             throw new InvalidInputException(message);
         }
     }

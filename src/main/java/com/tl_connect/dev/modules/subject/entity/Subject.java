@@ -88,17 +88,17 @@ public class Subject {
         if(departmentId != null){
             this.departmentId = departmentId;
         }
-        if(credits != null && credits < 0){
-            throw new InvalidInputException("Invalid credits");
+        if(credits != null && credits > 0){
+            this.credits = credits;
         }
-        if(coefficient != null && coefficient.compareTo(BigDecimal.ZERO) <= 0){
-            throw new InvalidInputException("Invalid coefficient");
+        if(coefficient != null && coefficient.compareTo(BigDecimal.ZERO) > 0){
+            this.coefficient = coefficient;
         }
-        if(lectureHours != null && lectureHours < 0){
-            throw new InvalidInputException("Invalid lecture hours");
+        if(lectureHours != null && lectureHours > 0){
+            this.lectureHours = lectureHours;
         }
-        if(practiceHours != null && practiceHours < 0){
-            throw new InvalidInputException("Invalid practice hours");
+        if(practiceHours != null && practiceHours > 0){
+            this.practiceHours = practiceHours;
         }
         if (subjectCode != null) {
             this.subjectCode = subjectCode;

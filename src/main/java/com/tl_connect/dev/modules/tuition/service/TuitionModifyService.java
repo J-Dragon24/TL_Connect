@@ -1,9 +1,5 @@
 package com.tl_connect.dev.modules.tuition.service;
 
-
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,8 +11,6 @@ import com.tl_connect.dev.modules.tuition.dto.GenerateInvoiceReqDTO;
 import com.tl_connect.dev.modules.tuition.entity.TuitionInvoice;
 import com.tl_connect.dev.modules.tuition.repository.TuitionInvoiceRepository;
 
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -24,17 +18,9 @@ import lombok.RequiredArgsConstructor;
 public class TuitionModifyService {
     
     private final TuitionInvoiceRepository tuitionInvoiceRepository;
-    private final Validator validator;
 
     @Transactional
     public Long generateInvoices(GenerateInvoiceReqDTO request) {
-        Set<ConstraintViolation<GenerateInvoiceReqDTO>> violations = validator.validate(request);
-        if (!violations.isEmpty()) {
-            String message = violations.stream()
-                .map(ConstraintViolation::getMessage)
-                .collect(Collectors.joining(", "));
-            throw new InvalidInputException(message);
-        }
 
         try{
             return tuitionInvoiceRepository.generateInvoices(request.getSemesterId());

@@ -35,8 +35,6 @@ import com.tl_connect.dev.modules.study_program.repository.StudyProgramRepositor
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
 
 import com.tl_connect.dev.core.common.ultility.importer.FileParseHelper;
 import com.tl_connect.dev.modules.student.repository.AcademicInfoRepository;
@@ -69,22 +67,12 @@ public class StudentWriteService {
         private final AcademicInfoRepository academicInfoRepository;
         private final StudyProgramRepository studyProgramRepository;
         private final FileParseHelper fileParseHelper;
-        private final Validator validator;
         
         @PersistenceContext
         private EntityManager entityManager;
 
         @Transactional
         public Long createStudent(StudentImportDTO dto) {
-
-                Set<ConstraintViolation<StudentImportDTO>> violations = validator.validate(dto);
-                if (!violations.isEmpty()) {
-                        String message = violations.stream()
-                                        .map(ConstraintViolation::getMessage)
-                                        .collect(Collectors.joining(", "));
-                        throw new InvalidInputException(message);
-                }
-
                 Major major = majorRepository.findByMajorCode(dto.getMajorCode())
                         .orElseThrow(() -> new NotFoundException("Major not found"));
                 
@@ -202,14 +190,6 @@ public class StudentWriteService {
                 Map<String, Long> studentClassMap,
                 Map<String, Long> studyProgramMap,
                 Set<String> existingCodes) {
-
-                Set<ConstraintViolation<StudentImportDTO>> violations = validator.validate(row);
-                if (!violations.isEmpty()) {
-                        String message = violations.stream()
-                                        .map(ConstraintViolation::getMessage)
-                                        .collect(Collectors.joining(", "));
-                        throw new IllegalArgumentException(message);
-                }
 
                 if (row.getStudentCode() == null || row.getStudentCode().isBlank())
                         throw new NotFoundException("StudentCode is null");

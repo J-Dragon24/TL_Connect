@@ -1,7 +1,5 @@
 package com.tl_connect.dev.modules.student.service;
 
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,8 +29,6 @@ import com.tl_connect.dev.modules.major.repository.StudentMajorRepository;
 import com.tl_connect.dev.modules.student.dto.UpdateBasicInfoDTO;
 import com.tl_connect.dev.modules.student.dto.UpdateStudentAcademicDTO;
 
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -49,17 +45,9 @@ public class StudentUpdateService {
     private final IdentityCardRepository identityCardRepository;
     private final StudentMajorRepository studentMajorRepository;
     private final StudyProgramRepository studyProgramRepository;
-    private final Validator validator;
 
     @Transactional
     public void updateBasicInfo(Long studentId, UpdateBasicInfoDTO dto) {
-        Set<ConstraintViolation<UpdateBasicInfoDTO>> violations = validator.validate(dto);
-        if (!violations.isEmpty()) {
-            String message = violations.stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.joining(", "));
-            throw new InvalidInputException(message);
-        }
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new NotFoundException("Student not found"));
 

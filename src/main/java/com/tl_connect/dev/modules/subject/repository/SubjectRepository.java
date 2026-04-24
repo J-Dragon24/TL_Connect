@@ -6,6 +6,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,6 +18,17 @@ import com.tl_connect.dev.modules.subject.projection.SubjectPrerequisiteConditio
 
 @Repository
 public interface SubjectRepository extends JpaRepository<Subject, Long> {
+
+    @Query(value = """
+            SELECT * 
+            FROM subjects
+            ORDER BY subject_name ASC
+            """,
+            countQuery = """
+                SELECT COUNT(*) FROM subjects
+                """,
+            nativeQuery = true)
+    Page<Subject> findAllSubjects(Pageable pageable);
 
     List<Subject> findBySubjectCodeIn(Set<String> subjectCodes);
 

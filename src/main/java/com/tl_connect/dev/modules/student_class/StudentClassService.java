@@ -2,8 +2,6 @@ package com.tl_connect.dev.modules.student_class;
 
 import java.time.Year;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -29,8 +27,6 @@ import com.tl_connect.dev.modules.student.repository.StudentRepository;
 import com.tl_connect.dev.modules.lecturer.repository.AcademicAdvisorRepository;
 
 import jakarta.transaction.Transactional;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -41,7 +37,6 @@ public class StudentClassService {
     private final MajorRepository majorRepository;
     private final StudentRepository studentRepository;
     private final AcademicAdvisorRepository academicAdvisorRepository;
-    private final Validator validator;
     
     public PagedResponse<StudentClassRow> getAll(Pageable pageable, String facultyCode) {
         if(facultyCode == null || facultyCode.isBlank()) {
@@ -85,13 +80,6 @@ public class StudentClassService {
 
     @Transactional
     public Long create(CreateStudentClassDTO dto) {
-        Set<ConstraintViolation<CreateStudentClassDTO>> violations = validator.validate(dto);
-        if (!violations.isEmpty()) {
-            String message = violations.stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.joining(", "));
-            throw new InvalidInputException(message);
-        }
         if (studentClassRepository.existsByClassCode(dto.getClassCode())) {
             throw new InvalidInputException("Class code already exists");
         }
@@ -116,13 +104,6 @@ public class StudentClassService {
 
     @Transactional
     public void update(Long id, UpdateStudentClassDTO dto) {
-        Set<ConstraintViolation<UpdateStudentClassDTO>> violations = validator.validate(dto);
-        if (!violations.isEmpty()) {
-            String message = violations.stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.joining(", "));
-            throw new InvalidInputException(message);
-        }
         StudentClass sc = studentClassRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Student class not found"));
 

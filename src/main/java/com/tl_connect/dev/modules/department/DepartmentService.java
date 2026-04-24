@@ -1,8 +1,5 @@
 package com.tl_connect.dev.modules.department;
 
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +8,6 @@ import org.springframework.stereotype.Service;
 import com.tl_connect.dev.core.common.dto.PagedResponse;
 import com.tl_connect.dev.core.common.exception.BadRequestException;
 import com.tl_connect.dev.core.common.exception.ConflictException;
-import com.tl_connect.dev.core.common.exception.InvalidInputException;
 import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.department.dto.CreateDepartmentDTO;
 import com.tl_connect.dev.modules.department.dto.DepartmentDTO;
@@ -21,8 +17,6 @@ import com.tl_connect.dev.modules.faculty.Faculty;
 import com.tl_connect.dev.modules.faculty.FacultyRepository;
 
 import jakarta.transaction.Transactional;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -31,7 +25,6 @@ public class DepartmentService {
     
     private final DepartmentRepository departmentRepository;
     private final FacultyRepository facultyRepository;
-    private final Validator validator;
 
     public PagedResponse<DepartmentDTO> getAllDepartments(Pageable pageable) {
         Page<DepartmentRow> departments = departmentRepository.findAllDepartment(pageable);
@@ -47,13 +40,6 @@ public class DepartmentService {
 
     @Transactional
     public Long createDepartment(CreateDepartmentDTO dto) {
-        Set<ConstraintViolation<CreateDepartmentDTO>> violations = validator.validate(dto);
-        if (!violations.isEmpty()) {
-            String message = violations.stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.joining(", "));
-            throw new InvalidInputException(message);
-        }
 
         if (departmentRepository.existsByDepartmentCode(dto.getDepartmentCode())) {
             throw new ConflictException("Department code already exists");
@@ -74,13 +60,6 @@ public class DepartmentService {
 
     @Transactional
     public void updateDepartment(Long id, UpdateDepartmentDTO dto) {
-        Set<ConstraintViolation<UpdateDepartmentDTO>> violations = validator.validate(dto);
-        if (!violations.isEmpty()) {
-            String message = violations.stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.joining(", "));
-            throw new InvalidInputException(message);
-        }
 
         Department department = departmentRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Department not found"));

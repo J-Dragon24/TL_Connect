@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.cloudinary.Cloudinary;
@@ -25,15 +26,24 @@ public class CloudinaryProvider extends FileHelper {
     @Override
     public UploadResult uploadFile(MultipartFile file) throws IOException {
         try {
-            String fileName = file.getOriginalFilename().split(".")[0];
+            String original = file.getOriginalFilename();
+            String fileName = StringUtils.stripFilenameExtension(original);
+            String ext = StringUtils.getFilenameExtension(original);
+
+            fileName = fileName.replaceAll("[^a-zA-Z0-9_-]", "_");
+            ext = ext != null ? ext.toLowerCase() : "";
+
             String key = System.currentTimeMillis() + "_" + fileName;
+            String resourceType = ext.equals("pdf") ? "raw" : "image";
+
             Map<?, ?> result = cloudinary.uploader().upload(
                 file.getBytes(),
                 ObjectUtils.asMap(
                     "folder", "uploads",
-                    "resource_type", "raw",
+                    "resource_type", resourceType,
                     "public_id", key,
-                    "type", "upload"
+                    "type", "upload",
+                    "format", ext
                 )
             );
             return new UploadResult(result.get("public_id").toString(), result.get("secure_url").toString());

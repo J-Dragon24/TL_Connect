@@ -1,7 +1,5 @@
 package com.tl_connect.dev.modules.lecturer.service;
 
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -12,7 +10,6 @@ import com.tl_connect.dev.core.common.dto.PagedResponse;
 import com.tl_connect.dev.core.common.enums.LecturerStatus;
 import com.tl_connect.dev.core.common.exception.BadRequestException;
 import com.tl_connect.dev.core.common.exception.ConflictException;
-import com.tl_connect.dev.core.common.exception.InvalidInputException;
 import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.lecturer.dto.CreateLecturerDTO;
 import com.tl_connect.dev.modules.lecturer.dto.LecturerAdmInfoDTO;
@@ -23,8 +20,7 @@ import com.tl_connect.dev.modules.lecturer.repository.LecturerRepository;
 import com.tl_connect.dev.modules.department.DepartmentRepository;
 
 import jakarta.transaction.Transactional;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -33,7 +29,6 @@ public class LecturerService {
 
     private final LecturerRepository lecturerRepository;
     private final DepartmentRepository departmentRepository;
-    private final Validator validator;
 
     public PagedResponse<LecturerAdmInfoDTO> getAllLecturers(Pageable pageable, String facultyCode) {
         if (facultyCode == null || facultyCode.isBlank()) {
@@ -61,14 +56,6 @@ public class LecturerService {
     @Transactional
     public Long createLecturer(CreateLecturerDTO lecturerDTO) {
 
-        Set<ConstraintViolation<CreateLecturerDTO>> violations = validator.validate(lecturerDTO);
-        if (!violations.isEmpty()) {
-            String message = violations.stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.joining(", "));
-            throw new InvalidInputException(message);
-        }
-
         if (lecturerRepository.existsByLecturerCode(lecturerDTO.getLecturerCode())) {
             throw new ConflictException("Lecturer code already exists");
         }
@@ -90,14 +77,6 @@ public class LecturerService {
 
     @Transactional
     public void updateLecturer(Long id, UpdateLecturerDTO lecturerDTO) {
-
-        Set<ConstraintViolation<UpdateLecturerDTO>> violations = validator.validate(lecturerDTO);
-        if (!violations.isEmpty()) {
-            String message = violations.stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.joining(", "));
-            throw new InvalidInputException(message);
-        }
 
         Lecturer lecturer = lecturerRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Lecturer not found with id: " + id));

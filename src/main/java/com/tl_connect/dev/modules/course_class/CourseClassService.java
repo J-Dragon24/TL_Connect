@@ -1,8 +1,5 @@
 package com.tl_connect.dev.modules.course_class;
 
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +8,6 @@ import org.springframework.stereotype.Service;
 import com.tl_connect.dev.core.common.dto.PagedResponse;
 import com.tl_connect.dev.core.common.exception.BadRequestException;
 import com.tl_connect.dev.core.common.exception.ConflictException;
-import com.tl_connect.dev.core.common.exception.InvalidInputException;
 import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.course_class.dto.CourseClassBasicInfoDTO;
 import com.tl_connect.dev.modules.course_class.dto.CourseClassDTO;
@@ -28,8 +24,6 @@ import com.tl_connect.dev.modules.subject.entity.Subject;
 import com.tl_connect.dev.modules.subject.repository.SubjectRepository;
 
 import jakarta.transaction.Transactional;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -39,7 +33,6 @@ public class CourseClassService {
     private final SubjectRepository subjectRepository;
     private final SemesterRepository semesterRepository;
     private final LecturerRepository lecturerRepository;
-    private final Validator validator;
     
     public PagedResponse<CourseClassBasicInfoDTO> getAll(Pageable pageable, String facultyCode) {
         if(facultyCode == null || facultyCode.isBlank()){
@@ -82,13 +75,6 @@ public class CourseClassService {
 
     @Transactional
     public Long create(CreateCourseClassDTO dto) {
-        Set<ConstraintViolation<CreateCourseClassDTO>> violations = validator.validate(dto);
-        if (!violations.isEmpty()) {
-            String message = violations.stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.joining(", "));
-            throw new InvalidInputException(message);
-        }
 
         if (courseClassRepository.existsByClassCode(dto.getClassCode())) {
             throw new ConflictException("Class code already exists");
@@ -118,13 +104,6 @@ public class CourseClassService {
 
     @Transactional
     public void update(Long id, UpdateCourseClassDTO dto) {
-        Set<ConstraintViolation<UpdateCourseClassDTO>> violations = validator.validate(dto);
-        if (!violations.isEmpty()) {
-            String message = violations.stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.joining(", "));
-            throw new InvalidInputException(message);
-        }
 
         CourseClass entity = courseClassRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Course class not found"));

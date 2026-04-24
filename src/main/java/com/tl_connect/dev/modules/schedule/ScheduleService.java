@@ -1,7 +1,6 @@
 package com.tl_connect.dev.modules.schedule;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import com.tl_connect.dev.core.common.exception.BadRequestException;
 import com.tl_connect.dev.core.common.exception.ConflictException;
-import com.tl_connect.dev.core.common.exception.InvalidInputException;
 import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.course_class.CourseClass;
 import com.tl_connect.dev.modules.course_class.CourseClassRepository;
@@ -30,8 +28,6 @@ import com.tl_connect.dev.modules.semester.Semester;
 import com.tl_connect.dev.modules.semester.SemesterRepository;
 
 import jakarta.transaction.Transactional;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 
 
@@ -41,7 +37,6 @@ public class ScheduleService {
         private final ScheduleRepository scheduleRepository;
         private final SemesterRepository semesterRepository;
         private final CourseClassRepository courseClassRepository;
-        private final Validator validator;
 
         public WeeklyScheduleDTO getWeeklySchedule(Long studentId, LocalDate startDate, LocalDate endDate) {
 
@@ -186,14 +181,6 @@ public class ScheduleService {
         @Transactional
         public void createClassSchedule(Long courseClassId, List<ClassScheduleDTO> newSchedules) {
 
-                Set<ConstraintViolation<List<ClassScheduleDTO>>> violations = validator.validate(newSchedules);
-                if (!violations.isEmpty()) {
-                        String message = violations.stream()
-                                        .map(ConstraintViolation::getMessage)
-                                        .collect(Collectors.joining(", "));
-                        throw new InvalidInputException(message);
-                }
-
                 CourseClass courseClass = courseClassRepository.findById(courseClassId)
                                 .orElseThrow(() -> new NotFoundException("Course class not found"));
 
@@ -256,13 +243,6 @@ public class ScheduleService {
 
         @Transactional
         public void updateClassSchedule(Long id, UpdateScheduleDTO dto) {
-                Set<ConstraintViolation<UpdateScheduleDTO>> violations = validator.validate(dto);
-                if (!violations.isEmpty()) {
-                        String message = violations.stream()
-                                        .map(ConstraintViolation::getMessage)
-                                        .collect(Collectors.joining(", "));
-                        throw new InvalidInputException(message);
-                }
 
                 ClassSchedule classSchedule = scheduleRepository.findById(id)
                                 .orElseThrow(() -> new NotFoundException("Schedule not found"));

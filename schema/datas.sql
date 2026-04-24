@@ -35,7 +35,7 @@ TRUNCATE TABLE
   student_subject_results, 
   grade_scale, 
   news, 
-  notification_template, 
+  notification_templates, 
   notification_read, 
   tuition_invoices, 
   tuition_invoice_items, 
@@ -812,8 +812,8 @@ VALUES
 (2,'file2.pdf','phuc_khao.pdf',223456),
 (3,'file3.pdf','giay_xac_nhan.pdf',323456);
 
--- notification_template
-INSERT INTO notification_template (code, name, content) VALUES
+-- notification_templates
+INSERT INTO notification_templates (code, name, content) VALUES
 ('GENERAL', 'Thong bao chung', '{{content}}'),
 ('EXAM', 'Thong bao lich thi', 'Lich thi: {{content}}'),
 ('FEE', 'Nhac nop hoc phi', 'Sinh vien can nop hoc phi truoc {{deadline}}'),

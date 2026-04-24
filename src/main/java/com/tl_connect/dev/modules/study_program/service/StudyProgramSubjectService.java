@@ -14,15 +14,10 @@ import com.tl_connect.dev.modules.study_program.repository.StudyProgramSubjectRe
 import com.tl_connect.dev.modules.subject.repository.SubjectRepository;
 
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import com.tl_connect.dev.core.common.exception.InvalidInputException;
 import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.core.common.exception.BadRequestException;
 
 import jakarta.transaction.Transactional;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -32,17 +27,9 @@ public class StudyProgramSubjectService {
     private final StudyProgramRepository studyProgramRepository;
     private final SemesterRepository semesterRepository;
     private final SubjectRepository subjectRepository;
-    private final Validator validator;
 
     @Transactional
     public Long createStudyProgramSubject(Long studyProgramId, CreateStudyProgramSubDTO createStudyProgramSubjectDTO){
-        Set<ConstraintViolation<CreateStudyProgramSubDTO>> violations = validator.validate(createStudyProgramSubjectDTO);
-        if (!violations.isEmpty()) {
-            String message = violations.stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.joining(", "));
-            throw new InvalidInputException(message);
-        }
 
         StudyProgram program = studyProgramRepository.findById(studyProgramId)
                 .orElseThrow(() -> new NotFoundException("Study program not found"));
@@ -78,13 +65,6 @@ public class StudyProgramSubjectService {
 
     @Transactional
     public void updateStudyProgramSubject(Long studyProgramSubjectId, UpdateStudyProgramSubDTO updateStudyProgramSubjectDTO){
-        Set<ConstraintViolation<UpdateStudyProgramSubDTO>> violations = validator.validate(updateStudyProgramSubjectDTO);
-        if (!violations.isEmpty()) {
-            String message = violations.stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.joining(", "));
-            throw new InvalidInputException(message);
-        }
 
         StudyProgramSubject studyProgramSubject = studyProgramSubjectRepository.findById(studyProgramSubjectId)
                 .orElseThrow(() -> new NotFoundException("Study program subject not found"));

@@ -1,7 +1,6 @@
 package com.tl_connect.dev.modules.semester;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.dao.DataIntegrityViolationException;
@@ -21,8 +20,6 @@ import com.tl_connect.dev.modules.student.dto.YearStudyDTO;
 import com.tl_connect.dev.modules.student.service.StudentService;
 
 import jakarta.transaction.Transactional;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
 
 
 @Service
@@ -31,7 +28,6 @@ public class SemesterService {
     
     private final SemesterRepository semesterRepository;
     private final StudentService studentInfoService;
-    private final Validator validator;
     
     public List<SemesterDTO> getAllStudentSemesters(Long studentId) {
         YearStudyDTO yearStudy = studentInfoService.getYearStudy(studentId);
@@ -54,13 +50,6 @@ public class SemesterService {
 
     @Transactional
     public Long createSemester(CreateSemesterDTO dto) {
-        Set<ConstraintViolation<CreateSemesterDTO>> violations = validator.validate(dto);
-        if (!violations.isEmpty()) {
-            String message = violations.stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.joining(", "));
-            throw new InvalidInputException(message);
-        }
         if (semesterRepository.existsByAcademicYearsAndSemesterNumber(dto.getAcademicYears(), dto.getSemesterNumber())) {
             throw new InvalidInputException("Semester " + dto.getAcademicYears() + "-" + dto.getSemesterNumber() + " already exists");
         }
@@ -88,13 +77,6 @@ public class SemesterService {
 
     @Transactional
     public void updateSemester(Long id, UpdateSemesterDTO dto) {
-        Set<ConstraintViolation<UpdateSemesterDTO>> violations = validator.validate(dto);
-        if (!violations.isEmpty()) {
-            String message = violations.stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.joining(", "));
-            throw new InvalidInputException(message);
-        }
         Semester semester = semesterRepository.findById(id)
         .orElseThrow(() -> new InvalidInputException("Semester not found"));
 
