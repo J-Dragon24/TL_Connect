@@ -25,18 +25,20 @@ public class CloudinaryProvider extends FileHelper {
     @Override
     public UploadResult uploadFile(MultipartFile file) throws IOException {
         try {
-            String key = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+            String fileName = file.getOriginalFilename().split(".")[0];
+            String key = System.currentTimeMillis() + "_" + fileName;
             Map<?, ?> result = cloudinary.uploader().upload(
                 file.getBytes(),
                 ObjectUtils.asMap(
                     "folder", "uploads",
-                    "resource_type", "auto",
-                    "public_id", key
+                    "resource_type", "raw",
+                    "public_id", key,
+                    "type", "upload"
                 )
             );
             return new UploadResult(result.get("public_id").toString(), result.get("secure_url").toString());
         } catch (Exception e) {
-            throw new ExternalException("Upload file failed");
+            throw new ExternalException("Upload file failed" + e.getMessage());
         }
     }
 

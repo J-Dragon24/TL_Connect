@@ -1068,7 +1068,7 @@ VALUES
 
 (6, 'TOTAL_CREDITS', 20, '>=', 'Yeu cau >= 20 tin chi', '2025-12-01', '2025-12-01'),
 
-(6, 'CURRENT_SEMESTER', 2, '=', 'Chi duoc dang ky o HK2', '2025-12-01', '2025-12-01');
+(6, 'GPA', 2, '=', 'Yeu cau GPA toi thieu 2', '2025-12-01', '2025-12-01');
 
 INSERT INTO student_course_class_logs
 (student_id, course_class_id, action, from_status, to_status, created_at)

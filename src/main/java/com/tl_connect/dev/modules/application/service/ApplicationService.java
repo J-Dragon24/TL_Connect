@@ -1,5 +1,6 @@
 package com.tl_connect.dev.modules.application.service;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -100,7 +101,7 @@ public class ApplicationService {
             }
         } catch (Exception e) {
             fileKeys.forEach(fileHelper::deleteFile);
-            throw new RuntimeException("Upload file thất bại", e);
+            throw new RuntimeException("Upload file thất bại" + e.getMessage(), e);
         }
 
         StudentApplication application = applicationRepository.save(
@@ -112,7 +113,13 @@ public class ApplicationService {
             attachments.add(ApplicationAttachment.create(application.getId(), fileKeys.get(i), files.get(i).getOriginalFilename(), files.get(i).getSize()));
         }
         
-        applicationAttachmentRepository.saveAll(attachments);
+        try{
+            applicationRepository.save(application);
+            applicationAttachmentRepository.saveAll(attachments);
+        }catch(DataIntegrityViolationException e){
+            fileKeys.forEach(fileHelper::deleteFile);
+            throw new BadRequestException("Save application attachments failed" + e.getMessage());
+        }
 
         return ApplicationSubmitDTO.builder()
         .success(true)

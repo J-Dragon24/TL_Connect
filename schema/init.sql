@@ -285,7 +285,7 @@ CREATE TABLE subject_prerequisite_group_items (
 CREATE TABLE subject_enrollment_conditions (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   subject_id BIGINT NOT NULL,
-  condition_type VARCHAR(50) NOT NULL,
+  condition_type VARCHAR(50) NOT NULL CHECK (condition_type IN ('GPA','TOTAL_CREDITS')),
   condition_value DECIMAL(6,2) NOT NULL,
   condition_operator VARCHAR(5) DEFAULT '>=' CHECK (condition_operator IN ('>=', '>', '=', '<=')),
   description TEXT,
