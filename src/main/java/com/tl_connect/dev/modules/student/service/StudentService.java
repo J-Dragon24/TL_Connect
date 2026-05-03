@@ -4,8 +4,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import com.tl_connect.dev.core.common.dto.PagedResponse;
-import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.lecturer.dto.LecturerDTO;
 import com.tl_connect.dev.modules.student.dto.AcademicInfoDTO;
 import com.tl_connect.dev.modules.student.dto.ContactDTO;
@@ -27,6 +25,9 @@ import com.tl_connect.dev.modules.student_class.dto.StudentClassInfoDTO;
 import com.tl_connect.dev.modules.student_class.dto.StudentInClassDTO;
 import com.tl_connect.dev.modules.student_class.projection.ClassHeaderView;
 import com.tl_connect.dev.modules.student_class.projection.StudentInClassRow;
+import com.tl_connect.dev.shared.common.dto.PagedResponse;
+import com.tl_connect.dev.shared.common.exception.NotFoundException;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

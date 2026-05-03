@@ -1,6 +1,6 @@
 package com.tl_connect.dev.modules.lecturer.projection;
 
-import com.tl_connect.dev.core.common.enums.LecturerStatus;
+import com.tl_connect.dev.shared.common.enums.LecturerStatus;
 
 public interface AcademicAdvisorDetailView {
     Long getId();

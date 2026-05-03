@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tl_connect.dev.core.common.exception.UnauthorizeException;
-import com.tl_connect.dev.core.common.types.JwtUserInfo;
-import com.tl_connect.dev.core.common.ultility.ResponseHelper;
 import com.tl_connect.dev.modules.study_program.dto.StudyProgramDTO;
 import com.tl_connect.dev.modules.study_program.dto.StudyProgramListItemDTO;
 import com.tl_connect.dev.modules.study_program.service.StudyProgramService;
+import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
+import com.tl_connect.dev.shared.common.types.JwtUserInfo;
+import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 
 import org.springframework.security.core.Authentication;
 

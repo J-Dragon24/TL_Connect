@@ -6,13 +6,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.tl_connect.dev.core.common.dto.PagedResponse;
-import com.tl_connect.dev.core.common.exception.BadRequestException;
-import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.tuition.dto.CreateTuitionFeeConfig;
 import com.tl_connect.dev.modules.tuition.dto.UpdateTuitionFeeConfig;
 import com.tl_connect.dev.modules.tuition.entity.TuitionFeeConfig;
 import com.tl_connect.dev.modules.tuition.repository.TuitionFeeConfigRepository;
+import com.tl_connect.dev.shared.common.dto.PagedResponse;
+import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 

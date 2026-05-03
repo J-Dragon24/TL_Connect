@@ -1,6 +1,6 @@
 package com.tl_connect.dev.modules.application.dto;
 
-import com.tl_connect.dev.core.common.enums.ApplicationStatus;
+import com.tl_connect.dev.shared.common.enums.ApplicationStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

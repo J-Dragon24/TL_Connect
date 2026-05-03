@@ -17,14 +17,14 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tl_connect.dev.core.common.enums.RefundType;
-import com.tl_connect.dev.core.common.exception.ExternalException;
-import com.tl_connect.dev.core.config.VNPayConfig;
 import com.tl_connect.dev.modules.payment.dto.CallbackPaymentDTO;
 import com.tl_connect.dev.modules.payment.dto.PaymentRequestDTO;
 import com.tl_connect.dev.modules.payment.dto.PaymentResponseDTO;
 import com.tl_connect.dev.modules.payment.dto.RefundInfoDTO;
 import com.tl_connect.dev.modules.payment.dto.RefundResponseDTO;
+import com.tl_connect.dev.shared.common.enums.RefundType;
+import com.tl_connect.dev.shared.common.exception.ExternalException;
+import com.tl_connect.dev.shared.config.VNPayConfig;
 
 import lombok.RequiredArgsConstructor;
 import okhttp3.MediaType;

@@ -6,12 +6,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.tl_connect.dev.modules.course_class.dto.CourseClassForEnrollDTO;
 import com.tl_connect.dev.modules.course_class.projection.CourseClassBasicInfoRow;
 import com.tl_connect.dev.modules.course_class.projection.CourseClassRow;
-
-import jakarta.persistence.LockModeType;
-
-import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -24,9 +21,23 @@ public interface CourseClassRepository extends JpaRepository<CourseClass, Long> 
 
     boolean existsByClassCode(String classCode);
 
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("SELECT cc FROM CourseClass cc WHERE cc.id = :id")
-    Optional<CourseClass> findByIdForUpdate(@Param("id") Long id);
+    @Query(value = """
+            SELECT cc.id as id,
+            cc.subject_id as subjectId,
+            cc.class_code as classCode,
+            cc.semester_id as semesterId,
+            cs.id as classScheduleId,
+            cc.capacity as capacity,
+            s.credits as credits,
+            cs.day_of_week as dayOfWeek,
+            cs.start_period as startPeriod,
+            cs.end_period as endPeriod
+            FROM course_classes cc
+            LEFT JOIN class_schedules cs ON cs.course_class_id = cc.id
+            LEFT JOIN subjects s ON cc.subject_id = s.id
+            WHERE cc.id = :id
+            """,nativeQuery = true)
+    List<CourseClassForEnrollDTO> findDetailForEnrollmentById(@Param("id") Long id);
 
 
     @Query(value = """

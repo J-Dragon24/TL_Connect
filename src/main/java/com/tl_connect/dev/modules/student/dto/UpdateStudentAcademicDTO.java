@@ -1,6 +1,6 @@
 package com.tl_connect.dev.modules.student.dto;
 
-import com.tl_connect.dev.core.common.enums.TrainingType;
+import com.tl_connect.dev.shared.common.enums.TrainingType;
 
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Size;

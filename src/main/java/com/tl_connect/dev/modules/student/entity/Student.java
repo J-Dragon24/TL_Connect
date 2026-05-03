@@ -6,8 +6,8 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.tl_connect.dev.core.common.enums.Gender;
-import com.tl_connect.dev.core.common.enums.StudentStatus;
+import com.tl_connect.dev.shared.common.enums.Gender;
+import com.tl_connect.dev.shared.common.enums.StudentStatus;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

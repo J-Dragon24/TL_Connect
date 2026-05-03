@@ -14,11 +14,10 @@ import com.tl_connect.dev.modules.application.dto.ApplicationDTO;
 import com.tl_connect.dev.modules.application.dto.DetailApplicationDTO;
 import com.tl_connect.dev.modules.application.dto.UpdateApplicationDTO;
 import com.tl_connect.dev.modules.application.service.ApplicationService;
+import com.tl_connect.dev.shared.common.dto.PagedResponse;
+import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 
 import lombok.RequiredArgsConstructor;
-
-import com.tl_connect.dev.core.common.dto.PagedResponse;
-import com.tl_connect.dev.core.common.ultility.ResponseHelper;
 
 @RestController
 @RequestMapping("/api/v1/admin/application")

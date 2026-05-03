@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import com.tl_connect.dev.core.common.enums.EnrollAction;
-import com.tl_connect.dev.core.common.enums.StudentCourseClassStatus;
+import com.tl_connect.dev.shared.common.enums.EnrollAction;
+import com.tl_connect.dev.shared.common.enums.StudentCourseClassStatus;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -48,4 +48,14 @@ public class StudentCourseClassLog {
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    public static StudentCourseClassLog create(Long studentId, Long courseClassId, EnrollAction action, StudentCourseClassStatus fromStatus, StudentCourseClassStatus toStatus) {
+        StudentCourseClassLog log = new StudentCourseClassLog();
+        log.setStudentId(studentId);
+        log.setCourseClassId(courseClassId);
+        log.setAction(action);
+        log.setFromStatus(fromStatus);
+        log.setToStatus(toStatus);
+        return log;
+    }
 }

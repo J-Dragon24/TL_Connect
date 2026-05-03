@@ -14,10 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.tl_connect.dev.core.common.dto.PagedResponse;
-import com.tl_connect.dev.core.common.enums.NotificationType;
-import com.tl_connect.dev.core.common.exception.NotFoundException;
-import com.tl_connect.dev.core.common.ultility.NotificationHelper;
 import com.tl_connect.dev.modules.course_class.CourseClassRepository;
 import com.tl_connect.dev.modules.notification.dto.DetailNotifyDTO;
 import com.tl_connect.dev.modules.notification.dto.NotificationAdmDTO;
@@ -33,6 +29,10 @@ import com.tl_connect.dev.modules.notification.repository.NotificationReadReposi
 import com.tl_connect.dev.modules.notification.repository.NotificationRepository;
 import com.tl_connect.dev.modules.student.entity.Student;
 import com.tl_connect.dev.modules.student.repository.StudentRepository;
+import com.tl_connect.dev.shared.common.dto.PagedResponse;
+import com.tl_connect.dev.shared.common.enums.NotificationType;
+import com.tl_connect.dev.shared.common.exception.NotFoundException;
+import com.tl_connect.dev.shared.common.ultility.NotificationHelper;
 
 @Service
 @RequiredArgsConstructor

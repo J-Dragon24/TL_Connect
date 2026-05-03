@@ -10,15 +10,15 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.tl_connect.dev.core.common.enums.NotificationType;
-import com.tl_connect.dev.core.common.exception.BadRequestException;
-import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.notification.dto.CreateNotificationReqDTO;
 import com.tl_connect.dev.modules.notification.dto.UpdateNotificationDTO;
 import com.tl_connect.dev.modules.notification.entity.Notification;
 import com.tl_connect.dev.modules.notification.entity.NotificationTarget;
 import com.tl_connect.dev.modules.notification.repository.NotificationRepository;
 import com.tl_connect.dev.modules.notification.repository.NotificationTargetRepository;
+import com.tl_connect.dev.shared.common.enums.NotificationType;
+import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 

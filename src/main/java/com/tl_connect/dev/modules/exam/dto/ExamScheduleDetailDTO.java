@@ -3,7 +3,7 @@ package com.tl_connect.dev.modules.exam.dto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import com.tl_connect.dev.core.common.enums.AttendanceStatus;
+import com.tl_connect.dev.shared.common.enums.AttendanceStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

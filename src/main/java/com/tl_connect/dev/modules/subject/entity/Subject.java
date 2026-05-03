@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.tl_connect.dev.core.common.exception.InvalidInputException;
+import com.tl_connect.dev.shared.common.exception.InvalidInputException;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

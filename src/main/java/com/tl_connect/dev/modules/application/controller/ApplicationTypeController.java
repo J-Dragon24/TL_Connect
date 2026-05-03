@@ -12,7 +12,7 @@ import com.tl_connect.dev.modules.application.dto.ApplicationTypeDTO;
 import com.tl_connect.dev.modules.application.dto.CreateApplicationTypeDTO;
 import com.tl_connect.dev.modules.application.dto.UpdateApplicationTypeDTO;
 import com.tl_connect.dev.modules.application.service.ApplicationTypeService;
-import com.tl_connect.dev.core.common.ultility.ResponseHelper;
+import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 
 import java.util.List;
 

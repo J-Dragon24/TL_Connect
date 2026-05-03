@@ -2,7 +2,7 @@ package com.tl_connect.dev.modules.academic_result.dto;
 
 import java.math.BigDecimal;
 
-import com.tl_connect.dev.core.common.ultility.importer.annotation.ImportColumn;
+import com.tl_connect.dev.shared.common.ultility.importer.annotation.ImportColumn;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

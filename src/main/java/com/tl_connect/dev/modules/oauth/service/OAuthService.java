@@ -11,14 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import com.tl_connect.dev.core.common.enums.UserStatus;
-import com.tl_connect.dev.core.common.exception.ForbiddenException;
-import com.tl_connect.dev.core.common.exception.InvalidInputException;
-import com.tl_connect.dev.core.common.exception.NotFoundException;
-import com.tl_connect.dev.core.common.types.JwtUserInfo;
-import com.tl_connect.dev.core.common.types.UserInfo;
-import com.tl_connect.dev.core.common.ultility.AuthHelper;
-import com.tl_connect.dev.core.common.ultility.TokenHelper;
 import com.tl_connect.dev.modules.oauth.dto.LoginRequestDTO;
 import com.tl_connect.dev.modules.oauth.dto.OAuthUserInfoDTO;
 import com.tl_connect.dev.modules.oauth.entity.OAuthUser;
@@ -26,6 +18,14 @@ import com.tl_connect.dev.modules.oauth.projection.JwtUserInfoView;
 import com.tl_connect.dev.modules.oauth.repository.OAuthUserRepository;
 import com.tl_connect.dev.modules.student.entity.Student;
 import com.tl_connect.dev.modules.student.repository.StudentRepository;
+import com.tl_connect.dev.shared.common.enums.UserStatus;
+import com.tl_connect.dev.shared.common.exception.ForbiddenException;
+import com.tl_connect.dev.shared.common.exception.InvalidInputException;
+import com.tl_connect.dev.shared.common.exception.NotFoundException;
+import com.tl_connect.dev.shared.common.types.JwtUserInfo;
+import com.tl_connect.dev.shared.common.types.UserInfo;
+import com.tl_connect.dev.shared.common.ultility.AuthHelper;
+import com.tl_connect.dev.shared.common.ultility.TokenHelper;
 
 @Service
 @RequiredArgsConstructor

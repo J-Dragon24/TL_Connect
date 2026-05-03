@@ -6,8 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.tl_connect.dev.core.common.dto.PagedResponse;
-import com.tl_connect.dev.modules.academic_result.StudentSubjectResultRepository;
 import com.tl_connect.dev.modules.academic_result.dto.AcademicResultAdmDTO;
 import com.tl_connect.dev.modules.academic_result.dto.AcademicResultByStudyProgramDTO;
 import com.tl_connect.dev.modules.academic_result.dto.AcademicResultDTO;
@@ -18,6 +16,9 @@ import com.tl_connect.dev.modules.academic_result.projection.SemesterSummaryRow;
 import com.tl_connect.dev.modules.academic_result.projection.SemesterSummaryView;
 import com.tl_connect.dev.modules.academic_result.projection.SubjectResultAdmRow;
 import com.tl_connect.dev.modules.academic_result.projection.SubjectResultRow;
+import com.tl_connect.dev.modules.academic_result.repository.StudentSemesterSummaryRepository;
+import com.tl_connect.dev.modules.academic_result.repository.StudentSubjectResultRepository;
+import com.tl_connect.dev.shared.common.dto.PagedResponse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AcademicResultService {
         private final StudentSubjectResultRepository resultRepository;
+        private final StudentSemesterSummaryRepository semesterSummaryRepository;
 
         public PagedResponse<AcademicResultAdmDTO> getAllAcademicResult(Pageable pageable, String facultyCode) {
                 if(facultyCode == null || facultyCode.isBlank()){
@@ -39,7 +41,7 @@ public class AcademicResultService {
                 Page<SubjectResultAdmRow> subjectResultsRows = resultRepository.findSubjectResult(pageable, facultyCode);
 
                 List<Long> studentIds = subjectResultsRows.stream().map(SubjectResultAdmRow::getStudentId).collect(Collectors.toList());
-                List<SemesterSummaryRow> semesterSummaries = resultRepository.findSemesterSummaryByStudentIds(studentIds);
+                List<SemesterSummaryRow> semesterSummaries = semesterSummaryRepository.findSemesterSummaryByStudentIds(studentIds);
 
                 Map<Long, Map<String, Map<String, List<SubjectResultAdmRow>>>> grouped =
                         subjectResultsRows.stream()
@@ -145,7 +147,7 @@ public class AcademicResultService {
         public AcademicResultDTO getSubjectResult(Long studentId, String studyProgramCode) {
                 List<SubjectResultRow> subjectResultsRows = resultRepository.findSubjectResultByStudentIdAndStudyProgramCode(studentId,
                                 studyProgramCode);
-                List<SemesterSummaryView> semesterSummaries = resultRepository.findSemesterSummaryByStudentIdAndStudyProgramCode(studentId,
+                List<SemesterSummaryView> semesterSummaries = semesterSummaryRepository.findSemesterSummaryByStudentIdAndStudyProgramCode(studentId,
                                 studyProgramCode);
 
                 System.out.println("Semester Summaries: " + semesterSummaries);

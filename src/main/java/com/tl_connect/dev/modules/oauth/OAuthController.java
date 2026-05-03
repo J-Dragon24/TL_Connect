@@ -7,13 +7,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tl_connect.dev.core.common.exception.InvalidInputException;
-import com.tl_connect.dev.core.common.ultility.ResponseHelper;
 import com.tl_connect.dev.modules.oauth.dto.LoginRequestDTO;
 import com.tl_connect.dev.modules.oauth.dto.OAuthUserInfoDTO;
 import com.tl_connect.dev.modules.oauth.dto.RefreshResponseDTO;
 import com.tl_connect.dev.modules.oauth.service.OAuthService;
 // import com.tl_connect.dev.modules.oauth.service.RefreshTokenService;
+import com.tl_connect.dev.shared.common.exception.InvalidInputException;
+import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 
 import lombok.RequiredArgsConstructor;
 

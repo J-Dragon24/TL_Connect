@@ -3,8 +3,8 @@ package com.tl_connect.dev.modules.notification.dto;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.tl_connect.dev.core.common.enums.NotificationCreatedBy;
-import com.tl_connect.dev.core.common.enums.NotificationType;
+import com.tl_connect.dev.shared.common.enums.NotificationCreatedBy;
+import com.tl_connect.dev.shared.common.enums.NotificationType;
 
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotNull;

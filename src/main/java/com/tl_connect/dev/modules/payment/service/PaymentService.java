@@ -13,11 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tl_connect.dev.core.common.enums.PaymentStatus;
-import com.tl_connect.dev.core.common.enums.TuitionStatus;
-import com.tl_connect.dev.core.common.enums.TypeTransaction;
-import com.tl_connect.dev.core.common.exception.BadRequestException;
-import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.payment.PaymentRepository;
 import com.tl_connect.dev.modules.payment.dto.CallbackPaymentDTO;
 import com.tl_connect.dev.modules.payment.dto.CreateTuitionPaymentReqDTO;
@@ -37,6 +32,11 @@ import com.tl_connect.dev.modules.tuition.projection.TuitionInvoiceView;
 import com.tl_connect.dev.modules.tuition.repository.TuitionInvoiceItemRepository;
 import com.tl_connect.dev.modules.tuition.repository.TuitionInvoiceRepository;
 import com.tl_connect.dev.modules.tuition.repository.TuitionTransactionRepository;
+import com.tl_connect.dev.shared.common.enums.PaymentStatus;
+import com.tl_connect.dev.shared.common.enums.TuitionStatus;
+import com.tl_connect.dev.shared.common.enums.TypeTransaction;
+import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

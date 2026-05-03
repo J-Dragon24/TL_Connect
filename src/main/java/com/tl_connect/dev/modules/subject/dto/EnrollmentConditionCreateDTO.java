@@ -2,7 +2,7 @@ package com.tl_connect.dev.modules.subject.dto;
 
 import java.math.BigDecimal;
 
-import com.tl_connect.dev.core.common.enums.SubjectConditionType;
+import com.tl_connect.dev.shared.common.enums.SubjectConditionType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

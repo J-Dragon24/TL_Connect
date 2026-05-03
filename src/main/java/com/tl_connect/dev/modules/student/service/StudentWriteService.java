@@ -15,10 +15,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.tl_connect.dev.core.common.dto.ImportResultDTO;
-import com.tl_connect.dev.core.common.enums.StudentMajorStatus;
-import com.tl_connect.dev.core.common.enums.StudentStatus;
-import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.student.dto.ResolvedStudent;
 import com.tl_connect.dev.modules.student.dto.StudentImportDTO;
 import com.tl_connect.dev.modules.student.entity.AcademicInfo;
@@ -32,11 +28,18 @@ import com.tl_connect.dev.modules.student_class.StudentClassRepository;
 import com.tl_connect.dev.modules.student_class.entity.StudentClass;
 import com.tl_connect.dev.modules.study_program.entity.StudyProgram;
 import com.tl_connect.dev.modules.study_program.repository.StudyProgramRepository;
+import com.tl_connect.dev.shared.common.dto.ImportResultDTO;
+import com.tl_connect.dev.shared.common.enums.StudentMajorStatus;
+import com.tl_connect.dev.shared.common.enums.StudentStatus;
+import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.exception.ConflictException;
+import com.tl_connect.dev.shared.common.exception.InvalidInputException;
+import com.tl_connect.dev.shared.common.exception.NotFoundException;
+import com.tl_connect.dev.shared.common.ultility.importer.FileParseHelper;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
-import com.tl_connect.dev.core.common.ultility.importer.FileParseHelper;
 import com.tl_connect.dev.modules.student.repository.AcademicInfoRepository;
 import com.tl_connect.dev.modules.student.repository.EmergencyContactRepository;
 import com.tl_connect.dev.modules.student.repository.IdentityCardRepository;
@@ -44,9 +47,6 @@ import com.tl_connect.dev.modules.major.entity.Major;
 import com.tl_connect.dev.modules.major.entity.StudentMajor;
 import com.tl_connect.dev.modules.major.repository.MajorRepository;
 import com.tl_connect.dev.modules.major.repository.StudentMajorRepository;
-import com.tl_connect.dev.core.common.exception.ConflictException;
-import com.tl_connect.dev.core.common.exception.InvalidInputException;
-import com.tl_connect.dev.core.common.exception.BadRequestException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

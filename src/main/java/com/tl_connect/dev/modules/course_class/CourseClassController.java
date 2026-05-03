@@ -5,9 +5,9 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.tl_connect.dev.core.common.ultility.ResponseHelper;
 import com.tl_connect.dev.modules.course_class.dto.CreateCourseClassDTO;
 import com.tl_connect.dev.modules.course_class.dto.UpdateCourseClassDTO;
+import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

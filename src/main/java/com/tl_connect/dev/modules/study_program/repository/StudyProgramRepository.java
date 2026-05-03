@@ -12,12 +12,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.tl_connect.dev.core.common.enums.TrainingType;
 import com.tl_connect.dev.modules.study_program.entity.StudyProgram;
 import com.tl_connect.dev.modules.study_program.projection.StudyProgramAdmRow;
 import com.tl_connect.dev.modules.study_program.projection.StudyProgramHeaderView;
 import com.tl_connect.dev.modules.study_program.projection.StudyProgramRow;
 import com.tl_connect.dev.modules.study_program.projection.StudyProgramSubjectRow;
+import com.tl_connect.dev.shared.common.enums.TrainingType;
 
 @Repository
 public interface StudyProgramRepository extends JpaRepository<StudyProgram, Long> {

@@ -14,16 +14,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.tl_connect.dev.core.common.dto.ImportResultDTO;
-import com.tl_connect.dev.core.common.dto.PagedResponse;
-import com.tl_connect.dev.core.common.exception.InvalidInputException;
-import com.tl_connect.dev.core.common.ultility.FileHelper;
-import com.tl_connect.dev.core.common.ultility.ResponseHelper;
 import com.tl_connect.dev.modules.academic_result.dto.AcademicResultAdmDTO;
 import com.tl_connect.dev.modules.academic_result.dto.CreateStudentSubjectResultDTO;
 import com.tl_connect.dev.modules.academic_result.dto.UpdateStudentSubjectResultDTO;
 import com.tl_connect.dev.modules.academic_result.service.AcademicResultModifyService;
 import com.tl_connect.dev.modules.academic_result.service.AcademicResultService;
+import com.tl_connect.dev.shared.common.dto.ImportResultDTO;
+import com.tl_connect.dev.shared.common.dto.PagedResponse;
+import com.tl_connect.dev.shared.common.exception.InvalidInputException;
+import com.tl_connect.dev.shared.common.ultility.FileHelper;
+import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

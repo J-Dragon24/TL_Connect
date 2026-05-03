@@ -8,15 +8,15 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.tl_connect.dev.core.common.enums.PaymentStatus;
-import com.tl_connect.dev.core.common.enums.TuitionStatus;
-import com.tl_connect.dev.core.common.enums.TypeTransaction;
 import com.tl_connect.dev.modules.payment.PaymentRepository;
 import com.tl_connect.dev.modules.payment.entity.Payment;
 import com.tl_connect.dev.modules.payment.provider.ZaloPayProvider;
 import com.tl_connect.dev.modules.tuition.entity.TuitionTransaction;
 import com.tl_connect.dev.modules.tuition.repository.TuitionInvoiceRepository;
 import com.tl_connect.dev.modules.tuition.repository.TuitionTransactionRepository;
+import com.tl_connect.dev.shared.common.enums.PaymentStatus;
+import com.tl_connect.dev.shared.common.enums.TuitionStatus;
+import com.tl_connect.dev.shared.common.enums.TypeTransaction;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

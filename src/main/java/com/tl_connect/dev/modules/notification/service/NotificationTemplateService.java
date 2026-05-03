@@ -9,14 +9,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.tl_connect.dev.core.common.dto.PagedResponse;
-import com.tl_connect.dev.core.common.exception.BadRequestException;
-import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.notification.dto.CreateNotificationTemplateDTO;
 import com.tl_connect.dev.modules.notification.dto.NotificationTemplateDTO;
 import com.tl_connect.dev.modules.notification.dto.UpdateNotificationTemplateDTO;
 import com.tl_connect.dev.modules.notification.entity.NotificationTemplate;
 import com.tl_connect.dev.modules.notification.repository.NotificationTemplateRepository;
+import com.tl_connect.dev.shared.common.dto.PagedResponse;
+import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 

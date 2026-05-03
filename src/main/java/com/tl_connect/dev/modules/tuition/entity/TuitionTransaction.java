@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import com.tl_connect.dev.core.common.enums.TypeTransaction;
+import com.tl_connect.dev.shared.common.enums.TypeTransaction;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -1,6 +1,6 @@
 package com.tl_connect.dev.modules.student.dto;
 
-import com.tl_connect.dev.core.common.ultility.importer.annotation.ImportColumn;
+import com.tl_connect.dev.shared.common.ultility.importer.annotation.ImportColumn;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

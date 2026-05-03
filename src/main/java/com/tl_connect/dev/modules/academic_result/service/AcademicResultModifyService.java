@@ -14,22 +14,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.tl_connect.dev.core.common.dto.ImportResultDTO;
-import com.tl_connect.dev.core.common.exception.BadRequestException;
-import com.tl_connect.dev.core.common.exception.InvalidInputException;
-import com.tl_connect.dev.core.common.exception.NotFoundException;
-import com.tl_connect.dev.core.common.ultility.importer.FileParseHelper;
-import com.tl_connect.dev.modules.academic_result.StudentSubjectResultRepository;
 import com.tl_connect.dev.modules.academic_result.dto.CreateStudentSubjectResultDTO;
 import com.tl_connect.dev.modules.academic_result.dto.ImportAcademicResultDTO;
 import com.tl_connect.dev.modules.academic_result.dto.UpdateStudentSubjectResultDTO;
 import com.tl_connect.dev.modules.academic_result.entity.StudentSubjectResult;
+import com.tl_connect.dev.modules.academic_result.repository.StudentSubjectResultRepository;
 import com.tl_connect.dev.modules.semester.Semester;
 import com.tl_connect.dev.modules.semester.SemesterRepository;
 import com.tl_connect.dev.modules.student.entity.Student;
 import com.tl_connect.dev.modules.student.repository.StudentRepository;
 import com.tl_connect.dev.modules.subject.entity.Subject;
 import com.tl_connect.dev.modules.subject.repository.SubjectRepository;
+import com.tl_connect.dev.shared.common.dto.ImportResultDTO;
+import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.exception.InvalidInputException;
+import com.tl_connect.dev.shared.common.exception.NotFoundException;
+import com.tl_connect.dev.shared.common.ultility.importer.FileParseHelper;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;

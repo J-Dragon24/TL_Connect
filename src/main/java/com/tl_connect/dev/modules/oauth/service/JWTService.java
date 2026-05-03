@@ -11,10 +11,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tl_connect.dev.core.common.exception.InvalidInputException;
-import com.tl_connect.dev.core.common.exception.UnauthorizeException;
-import com.tl_connect.dev.core.common.types.JwtPayload;
-import com.tl_connect.dev.core.common.types.JwtUserInfo;
+import com.tl_connect.dev.shared.common.exception.InvalidInputException;
+import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
+import com.tl_connect.dev.shared.common.types.JwtPayload;
+import com.tl_connect.dev.shared.common.types.JwtUserInfo;
 
 import java.util.Base64;
 

@@ -7,11 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.tl_connect.dev.core.common.dto.PagedResponse;
-import com.tl_connect.dev.core.common.exception.BadRequestException;
-import com.tl_connect.dev.core.common.exception.ConflictException;
-
-import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.faculty.Faculty;
 import com.tl_connect.dev.modules.faculty.FacultyRepository;
 import com.tl_connect.dev.modules.major.dto.CreateMajorDTO;
@@ -20,6 +15,10 @@ import com.tl_connect.dev.modules.major.dto.UpdateMajorDTO;
 import com.tl_connect.dev.modules.major.entity.Major;
 import com.tl_connect.dev.modules.major.projection.MajorRow;
 import com.tl_connect.dev.modules.major.repository.MajorRepository;
+import com.tl_connect.dev.shared.common.dto.PagedResponse;
+import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.exception.ConflictException;
+import com.tl_connect.dev.shared.common.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 

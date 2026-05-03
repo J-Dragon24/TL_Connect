@@ -3,7 +3,6 @@ package com.tl_connect.dev.modules.schedule;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -71,7 +70,6 @@ public interface ScheduleRepository extends JpaRepository<ClassSchedule, Long> {
             """, nativeQuery = true)
     List<ScheduleRow> findDayOfWeekSchedule(@Param("studentId") Long studentId, @Param("semesterId") Long semesterId, @Param("dayOfWeek") int dayOfWeek);
 
-    @Cacheable("schedule")
     List<ClassSchedule> findByCourseClassId(Long courseClassId);
 
     @Query(value = """

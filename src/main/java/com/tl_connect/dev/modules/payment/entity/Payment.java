@@ -1,6 +1,5 @@
 package com.tl_connect.dev.modules.payment.entity;
 
-import com.tl_connect.dev.core.common.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,6 +8,8 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import com.tl_connect.dev.shared.common.enums.PaymentStatus;
 
 @Entity
 @Table(name = "payment")

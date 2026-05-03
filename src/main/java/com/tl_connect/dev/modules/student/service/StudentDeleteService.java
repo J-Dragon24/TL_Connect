@@ -3,14 +3,14 @@ package com.tl_connect.dev.modules.student.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.tl_connect.dev.core.common.enums.StudentStatus;
-import com.tl_connect.dev.core.common.enums.UserStatus;
-import com.tl_connect.dev.core.common.exception.BadRequestException;
-import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.oauth.entity.OAuthUser;
 import com.tl_connect.dev.modules.oauth.repository.OAuthUserRepository;
 import com.tl_connect.dev.modules.student.entity.Student;
 import com.tl_connect.dev.modules.student.repository.StudentRepository;
+import com.tl_connect.dev.shared.common.enums.StudentStatus;
+import com.tl_connect.dev.shared.common.enums.UserStatus;
+import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 

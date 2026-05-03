@@ -12,10 +12,10 @@ import com.tl_connect.dev.modules.study_program.entity.StudyProgramSubject;
 import com.tl_connect.dev.modules.study_program.repository.StudyProgramRepository;
 import com.tl_connect.dev.modules.study_program.repository.StudyProgramSubjectRepository;
 import com.tl_connect.dev.modules.subject.repository.SubjectRepository;
+import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.exception.NotFoundException;
 
 import java.util.Optional;
-import com.tl_connect.dev.core.common.exception.NotFoundException;
-import com.tl_connect.dev.core.common.exception.BadRequestException;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

@@ -5,8 +5,8 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import com.tl_connect.dev.core.common.enums.NotificationCreatedBy;
-import com.tl_connect.dev.core.common.enums.NotificationType;
+import com.tl_connect.dev.shared.common.enums.NotificationCreatedBy;
+import com.tl_connect.dev.shared.common.enums.NotificationType;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

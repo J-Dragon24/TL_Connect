@@ -5,10 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.tl_connect.dev.core.common.dto.PagedResponse;
-import com.tl_connect.dev.core.common.exception.BadRequestException;
-import com.tl_connect.dev.core.common.exception.ConflictException;
-import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.course_class.dto.CourseClassBasicInfoDTO;
 import com.tl_connect.dev.modules.course_class.dto.CourseClassDTO;
 import com.tl_connect.dev.modules.course_class.dto.CreateCourseClassDTO;
@@ -22,6 +18,10 @@ import com.tl_connect.dev.modules.semester.SemesterRepository;
 import com.tl_connect.dev.modules.semester.dto.SemesterDTO;
 import com.tl_connect.dev.modules.subject.entity.Subject;
 import com.tl_connect.dev.modules.subject.repository.SubjectRepository;
+import com.tl_connect.dev.shared.common.dto.PagedResponse;
+import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.exception.ConflictException;
+import com.tl_connect.dev.shared.common.exception.NotFoundException;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

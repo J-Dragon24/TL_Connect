@@ -9,8 +9,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.tl_connect.dev.core.common.enums.StudentCourseClassStatus;
 import com.tl_connect.dev.modules.enroll.entity.StudentCourseClass;
+import com.tl_connect.dev.shared.common.enums.StudentCourseClassStatus;
+import com.tl_connect.dev.shared.datastructure.intervaltree.ScheduleInterval;
 
 @Repository
 public interface StudentCourseClassRepository extends JpaRepository<StudentCourseClass, Long> {
@@ -71,4 +72,24 @@ public interface StudentCourseClassRepository extends JpaRepository<StudentCours
     );
 
     List<StudentCourseClass> findByStudentIdAndSemesterIdAndStatus(Long studentId, Long semesterId, StudentCourseClassStatus status);
+
+    @Query(value = """
+        SELECT 
+            cs.id as classScheduleId,
+            cs.course_class_id as courseClassId,
+            cc.class_code as classCode,
+            cs.day_of_week as dayOfWeek,
+            cs.start_period as startPeriod,
+            cs.end_period as endPeriod
+        FROM student_course_classes scc
+        JOIN course_classes cc ON cc.id = scc.course_class_id
+        JOIN class_schedules cs ON cs.course_class_id = cc.id
+        WHERE scc.student_id = :studentId
+        AND scc.semester_id = :semesterId
+        AND scc.status IN ('PENDING', 'ENROLLED')
+        """, nativeQuery = true)
+    List<ScheduleInterval> findCurrentSchedule(
+        @Param("studentId") Long studentId,
+        @Param("semesterId") Long semesterId
+    );
 }

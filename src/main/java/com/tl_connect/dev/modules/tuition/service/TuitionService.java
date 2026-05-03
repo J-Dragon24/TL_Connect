@@ -6,9 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.tl_connect.dev.core.common.dto.PagedResponse;
-import com.tl_connect.dev.core.common.exception.ForbiddenException;
-import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.tuition.dto.TuitionInvoiceAdmDTO;
 import com.tl_connect.dev.modules.tuition.dto.TuitionInvoiceDTO;
 import com.tl_connect.dev.modules.tuition.dto.TuitionInvoiceDetailAdmDTO;
@@ -19,6 +16,9 @@ import com.tl_connect.dev.modules.tuition.projection.TuitionInvoiceView;
 import com.tl_connect.dev.modules.tuition.projection.TuitionItemProjection;
 import com.tl_connect.dev.modules.tuition.repository.TuitionInvoiceItemRepository;
 import com.tl_connect.dev.modules.tuition.repository.TuitionInvoiceRepository;
+import com.tl_connect.dev.shared.common.dto.PagedResponse;
+import com.tl_connect.dev.shared.common.exception.ForbiddenException;
+import com.tl_connect.dev.shared.common.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 

@@ -10,8 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.tl_connect.dev.core.common.dto.PagedResponse;
-import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.study_program.projection.StudyProgramRow;
 import com.tl_connect.dev.modules.study_program.dto.StudyProgramListItemDTO;
 import com.tl_connect.dev.modules.study_program.dto.StudyProgramSubjectDTO;
@@ -25,6 +23,8 @@ import com.tl_connect.dev.modules.subject.entity.SubjectPrerequisiteGroup;
 import com.tl_connect.dev.modules.subject.projection.SubjectPrerequisiteGroupItemRow;
 import com.tl_connect.dev.modules.subject.repository.SubjectPreGroupItemRepository;
 import com.tl_connect.dev.modules.subject.repository.SubjectPreGroupRepository;
+import com.tl_connect.dev.shared.common.dto.PagedResponse;
+import com.tl_connect.dev.shared.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.study_program.projection.StudyProgramHeaderView;
 import com.tl_connect.dev.modules.study_program.projection.StudyProgramSubjectRow;
 import com.tl_connect.dev.modules.study_program.repository.StudyProgramRepository;

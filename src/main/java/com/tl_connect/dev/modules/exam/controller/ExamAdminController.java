@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tl_connect.dev.core.common.dto.PagedResponse;
-import com.tl_connect.dev.core.common.ultility.ResponseHelper;
 import com.tl_connect.dev.modules.exam.ExamService;
 import com.tl_connect.dev.modules.exam.dto.CreateExamScheduleDTO;
 import com.tl_connect.dev.modules.exam.dto.ExamScheduleBasicInfoDTO;
 import com.tl_connect.dev.modules.exam.dto.UpdateExamScheduleDTO;
+import com.tl_connect.dev.shared.common.dto.PagedResponse;
+import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 
 import lombok.RequiredArgsConstructor;
 

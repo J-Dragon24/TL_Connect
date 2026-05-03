@@ -9,14 +9,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.tl_connect.dev.core.common.dto.PagedResponse;
-import com.tl_connect.dev.core.common.dto.UploadResult;
-import com.tl_connect.dev.core.common.exception.ExternalException;
-import com.tl_connect.dev.core.common.ultility.FileHelper;
 import com.tl_connect.dev.modules.news.dto.CreateNewsDTO;
 import com.tl_connect.dev.modules.news.dto.NewsAdmDTO;
 import com.tl_connect.dev.modules.news.dto.NewsDTO;
 import com.tl_connect.dev.modules.news.dto.UpdateNewsDTO;
+import com.tl_connect.dev.shared.common.dto.PagedResponse;
+import com.tl_connect.dev.shared.common.dto.UploadResult;
+import com.tl_connect.dev.shared.common.exception.ExternalException;
+import com.tl_connect.dev.shared.common.ultility.FileHelper;
 
 import lombok.RequiredArgsConstructor;
 

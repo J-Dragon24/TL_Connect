@@ -5,12 +5,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tl_connect.dev.core.common.exception.UnauthorizeException;
-import com.tl_connect.dev.core.common.types.JwtUserInfo;
-import com.tl_connect.dev.core.common.ultility.ResponseHelper;
 import com.tl_connect.dev.modules.student.dto.StudentInfoDTO;
 import com.tl_connect.dev.modules.student.service.StudentService;
 import com.tl_connect.dev.modules.student_class.dto.StudentClassInfoDTO;
+import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
+import com.tl_connect.dev.shared.common.types.JwtUserInfo;
+import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 
 import org.springframework.security.core.Authentication;
 

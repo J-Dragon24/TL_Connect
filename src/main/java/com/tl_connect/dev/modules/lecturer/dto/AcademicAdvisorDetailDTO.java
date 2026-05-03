@@ -2,7 +2,7 @@ package com.tl_connect.dev.modules.lecturer.dto;
 
 import java.util.List;
 
-import com.tl_connect.dev.core.common.enums.LecturerStatus;
+import com.tl_connect.dev.shared.common.enums.LecturerStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -2,9 +2,9 @@ package com.tl_connect.dev.modules.student.dto;
 
 import java.time.LocalDate;
 
-import com.tl_connect.dev.core.common.enums.IdCardType;
+import com.tl_connect.dev.shared.common.enums.IdCardType;
+import com.tl_connect.dev.shared.common.ultility.importer.annotation.ImportColumn;
 
-import com.tl_connect.dev.core.common.ultility.importer.annotation.ImportColumn;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

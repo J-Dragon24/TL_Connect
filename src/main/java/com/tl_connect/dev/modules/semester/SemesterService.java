@@ -10,14 +10,14 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
-import com.tl_connect.dev.core.common.dto.PagedResponse;
-import com.tl_connect.dev.core.common.exception.BadRequestException;
-import com.tl_connect.dev.core.common.exception.InvalidInputException;
 import com.tl_connect.dev.modules.semester.dto.CreateSemesterDTO;
 import com.tl_connect.dev.modules.semester.dto.SemesterDTO;
 import com.tl_connect.dev.modules.semester.dto.UpdateSemesterDTO;
 import com.tl_connect.dev.modules.student.dto.YearStudyDTO;
 import com.tl_connect.dev.modules.student.service.StudentService;
+import com.tl_connect.dev.shared.common.dto.PagedResponse;
+import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.exception.InvalidInputException;
 
 import jakarta.transaction.Transactional;
 

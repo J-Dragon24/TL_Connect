@@ -6,12 +6,12 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.tl_connect.dev.core.common.dto.PagedResponse;
-import com.tl_connect.dev.core.common.ultility.ResponseHelper;
 import com.tl_connect.dev.modules.notification.dto.CreateNotificationTemplateDTO;
 import com.tl_connect.dev.modules.notification.dto.NotificationTemplateDTO;
 import com.tl_connect.dev.modules.notification.dto.UpdateNotificationTemplateDTO;
 import com.tl_connect.dev.modules.notification.service.NotificationTemplateService;
+import com.tl_connect.dev.shared.common.dto.PagedResponse;
+import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 
 import jakarta.validation.Valid;
 

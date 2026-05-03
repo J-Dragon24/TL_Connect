@@ -4,13 +4,13 @@ package com.tl_connect.dev.modules.study_program.service;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import com.tl_connect.dev.core.common.exception.BadRequestException;
-import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.major.repository.MajorRepository;
 import com.tl_connect.dev.modules.study_program.dto.CreateStudyProgramDTO;
 import com.tl_connect.dev.modules.study_program.dto.UpdateStudyProgramDTO;
 import com.tl_connect.dev.modules.study_program.entity.StudyProgram;
 import com.tl_connect.dev.modules.study_program.repository.StudyProgramRepository;
+import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.exception.NotFoundException;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

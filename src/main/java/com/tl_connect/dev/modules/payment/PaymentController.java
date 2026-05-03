@@ -7,14 +7,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import com.tl_connect.dev.core.common.exception.UnauthorizeException;
-import com.tl_connect.dev.core.common.types.JwtUserInfo;
-import com.tl_connect.dev.core.common.ultility.ResponseHelper;
 import com.tl_connect.dev.modules.payment.dto.CreateTuitionPaymentReqDTO;
 import com.tl_connect.dev.modules.payment.dto.CreateTuitionPaymentResDTO;
 import com.tl_connect.dev.modules.payment.dto.RefundRequestDTO;
 import com.tl_connect.dev.modules.payment.dto.RefundResponseDTO;
 import com.tl_connect.dev.modules.payment.service.PaymentService;
+import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
+import com.tl_connect.dev.shared.common.types.JwtUserInfo;
+import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

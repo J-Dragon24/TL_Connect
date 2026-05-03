@@ -16,17 +16,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.tl_connect.dev.core.common.dto.ImportResultDTO;
-import com.tl_connect.dev.core.common.dto.PagedResponse;
-import com.tl_connect.dev.core.common.exception.InvalidInputException;
-import com.tl_connect.dev.core.common.ultility.FileHelper;
-import com.tl_connect.dev.core.common.ultility.ResponseHelper;
 import com.tl_connect.dev.modules.student.dto.StudentFullInfo;
 import com.tl_connect.dev.modules.student.dto.StudentImportDTO;
 import com.tl_connect.dev.modules.student.dto.UpdateBasicInfoDTO;
 import com.tl_connect.dev.modules.student.dto.UpdateStudentAcademicDTO;
 import com.tl_connect.dev.modules.student.service.StudentService;
 import com.tl_connect.dev.modules.student.service.StudentWriteService;
+import com.tl_connect.dev.shared.common.dto.ImportResultDTO;
+import com.tl_connect.dev.shared.common.dto.PagedResponse;
+import com.tl_connect.dev.shared.common.exception.InvalidInputException;
+import com.tl_connect.dev.shared.common.ultility.FileHelper;
+import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 import com.tl_connect.dev.modules.student.service.StudentUpdateService;
 import com.tl_connect.dev.modules.student.service.StudentDeleteService;
 

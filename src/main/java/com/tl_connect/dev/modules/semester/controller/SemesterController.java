@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tl_connect.dev.core.common.exception.UnauthorizeException;
-import com.tl_connect.dev.core.common.types.JwtUserInfo;
-import com.tl_connect.dev.core.common.ultility.ResponseHelper;
 import com.tl_connect.dev.modules.semester.SemesterService;
 import com.tl_connect.dev.modules.semester.dto.SemesterDTO;
+import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
+import com.tl_connect.dev.shared.common.types.JwtUserInfo;
+import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 
 import lombok.RequiredArgsConstructor;
 

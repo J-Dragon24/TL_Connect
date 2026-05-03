@@ -8,10 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.tl_connect.dev.core.common.dto.PagedResponse;
-import com.tl_connect.dev.core.common.exception.BadRequestException;
-import com.tl_connect.dev.core.common.exception.InvalidInputException;
-import com.tl_connect.dev.core.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.lecturer.dto.LecturerDTO;
 import com.tl_connect.dev.modules.major.entity.Major;
 import com.tl_connect.dev.modules.major.repository.MajorRepository;
@@ -23,6 +19,10 @@ import com.tl_connect.dev.modules.student_class.entity.StudentClass;
 import com.tl_connect.dev.modules.student_class.projection.ClassHeaderView;
 import com.tl_connect.dev.modules.student_class.projection.StudentClassRow;
 import com.tl_connect.dev.modules.student_class.projection.StudentInClassRow;
+import com.tl_connect.dev.shared.common.dto.PagedResponse;
+import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.exception.InvalidInputException;
+import com.tl_connect.dev.shared.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.student.repository.StudentRepository;
 import com.tl_connect.dev.modules.lecturer.repository.AcademicAdvisorRepository;
 

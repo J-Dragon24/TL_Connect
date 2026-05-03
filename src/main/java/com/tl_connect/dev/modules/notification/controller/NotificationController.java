@@ -10,10 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tl_connect.dev.core.common.dto.PagedResponse;
-import com.tl_connect.dev.core.common.exception.UnauthorizeException;
-import com.tl_connect.dev.core.common.types.JwtUserInfo;
-import com.tl_connect.dev.core.common.ultility.ResponseHelper;
 import com.tl_connect.dev.modules.notification.dto.DetailNotifyDTO;
 import com.tl_connect.dev.modules.notification.dto.MarkNotificationsReadDTO;
 import com.tl_connect.dev.modules.notification.dto.NotificationReqDTO;
@@ -21,6 +17,10 @@ import com.tl_connect.dev.modules.notification.dto.PrepareNotificationDTO;
 import com.tl_connect.dev.modules.notification.dto.SummaryNotifyDTO;
 import com.tl_connect.dev.modules.notification.dto.UnreadNotificationDTO;
 import com.tl_connect.dev.modules.notification.service.NotificationService;
+import com.tl_connect.dev.shared.common.dto.PagedResponse;
+import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
+import com.tl_connect.dev.shared.common.types.JwtUserInfo;
+import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
