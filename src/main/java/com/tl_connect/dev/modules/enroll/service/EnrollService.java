@@ -1,21 +1,31 @@
 package com.tl_connect.dev.modules.enroll.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tl_connect.dev.modules.enroll.dto.CourseClassForEnrollDTO;
+import com.tl_connect.dev.modules.enroll.dto.DetailsForCheckEnrollDTO;
+import com.tl_connect.dev.modules.enroll.dto.EnrollViewDTO;
 import com.tl_connect.dev.modules.enroll.dto.ScheduleForCheckDTO;
+import com.tl_connect.dev.modules.enroll.dto.ScheduleForEnrollDTO;
 import com.tl_connect.dev.modules.enroll.dto.StudentEnrollmentProfile;
+import com.tl_connect.dev.modules.enroll.dto.SubjectForEnrollDTO;
 import com.tl_connect.dev.modules.enroll.entity.EnrollmentPeriod;
 import com.tl_connect.dev.modules.enroll.entity.StudentCourseClass;
 import com.tl_connect.dev.modules.enroll.entity.StudentCourseClassLog;
+import com.tl_connect.dev.modules.enroll.projection.CourseClassForEnrollRow;
+import com.tl_connect.dev.modules.enroll.projection.SubjectForEnrollRow;
 import com.tl_connect.dev.modules.enroll.repository.CourseClassLogRepository;
-import com.tl_connect.dev.modules.enroll.repository.EnrollmentPeriodRepository;
 import com.tl_connect.dev.modules.enroll.repository.StudentCourseClassRepository;
 import com.tl_connect.dev.modules.study_program.projection.StudyProgramHeaderView;
 import com.tl_connect.dev.modules.study_program.repository.StudyProgramRepository;
@@ -28,7 +38,6 @@ import com.tl_connect.dev.shared.datastructure.intervaltree.ScheduleInterval;
 
 import com.tl_connect.dev.modules.course_class.CourseClass;
 import com.tl_connect.dev.modules.course_class.CourseClassRepository;
-import com.tl_connect.dev.modules.course_class.dto.CourseClassForEnrollDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -45,20 +54,72 @@ public class EnrollService {
     private final StudentScheduleService studentScheduleService;
     private final ScheduleConflictService scheduleConflictService;
     private final EnrollmentPeriodService enrollmentPeriodService;
-
-    @Transactional
-    public void enroll(Long studentId, Long courseClassId, String studyProgramCode) {
-
-        CourseClass courseClass = courseClassRepository.findById(courseClassId)
-                .orElseThrow(() -> new NotFoundException("Course class not found"));
-
-        checkEnrollmentPeriod(courseClass.getSemesterId());
+    
+    public EnrollViewDTO getAvailableSubjects(Long studentId, String studyProgramCode) {
 
         StudyProgramHeaderView header = studyProgramRepository
                 .findByStudyProgramCodeAndStudentId(studyProgramCode, studentId)
                 .orElseThrow(() -> new NotFoundException("Study program not found"));
 
-        List<CourseClassForEnrollDTO> details = courseClassRepository.findDetailForEnrollmentById(courseClassId);
+        StudentEnrollmentProfile profile = profileService.getProfile(studentId, header.getId());
+
+        List<SubjectForEnrollRow> subjects = studyProgramRepository.findSubjectsByStudyProgramId(header.getId());
+
+        List<SubjectForEnrollDTO> subjectForEnrollDTOS = subjects.stream()
+        .filter(subject -> !profile.getPassedSubjectIds().contains(subject.getSubjectId()))
+        .map(SubjectForEnrollDTO::from).toList();
+
+        return EnrollViewDTO.builder()
+                .studyProgramId(subjects.get(0).getStudyProgramId())
+                .studyProgramCode(subjects.get(0).getStudyProgramCode())
+                .studyProgramName(subjects.get(0).getStudyProgramName())
+                .semesterId(profile.getSemesterId())
+                .subjects(subjectForEnrollDTOS)
+                .build();
+    }
+
+    public List<CourseClassForEnrollDTO> getAvailableCourseClasses(Long subjectId, Long semesterId) {
+        List<CourseClassForEnrollRow> rows  = courseClassRepository.findCourseClassForEnrollment(subjectId, semesterId);
+        Map<Long, CourseClassForEnrollDTO> map = new LinkedHashMap<>();
+        for (CourseClassForEnrollRow row : rows) {
+            map.computeIfAbsent(row.getId(), id ->
+                    CourseClassForEnrollDTO.builder()
+                            .id(row.getId())
+                            .lecturerCode(row.getLecturerCode())
+                            .lecturerName(row.getLecturerName())
+                            .classCode(row.getClassCode())
+                            .className(row.getClassName())
+                            .capacity(row.getCapacity())
+                            .enrolledCount(row.getEnrolledCount())
+                            .schedules(new ArrayList<>())
+                            .build()
+            );
+
+            map.get(row.getId()).getSchedules().add(
+                    ScheduleForEnrollDTO.builder()
+                            .dayOfWeek(row.getDayOfWeek())
+                            .startPeriod(row.getStartPeriod())
+                            .endPeriod(row.getEndPeriod())
+                            .startTime(row.getStartTime())
+                            .endTime(row.getEndTime())
+                            .room(row.getRoom())
+                            .build()
+            );
+        }
+        return new ArrayList<>(map.values());
+    }
+
+    @Transactional
+    public void enroll(Long studentId, Long courseClassId, Long studyProgramId) {
+
+        CourseClass courseClass = courseClassRepository.findById(courseClassId)
+                .orElseThrow(() -> new NotFoundException("Course class not found"));
+
+        EnrollmentPeriod period = enrollmentPeriodService.getPeriod(courseClass.getSemesterId());
+
+        checkEnrollmentPeriod(period);
+
+        List<DetailsForCheckEnrollDTO> details = courseClassRepository.findDetailForEnrollmentById(courseClassId);
 
         if (details.isEmpty()) {
             throw new NotFoundException("Course class not found");
@@ -95,7 +156,7 @@ public class EnrollService {
         if (alreadyEnrollSameSubject) {
             throw new ForbiddenException("You already enrolled this subject");
         }
-        StudentEnrollmentProfile profile = profileService.getProfile(studentId, header.getId());
+        StudentEnrollmentProfile profile = profileService.getProfile(studentId, studyProgramId);
 
         boolean hasPassed = profile.getPassedSubjectIds().contains(courseClass.getSubjectId());
 
@@ -115,7 +176,7 @@ public class EnrollService {
         // check subject condition
         checkSubjectCondition(profile, courseClass.getSubjectId());
         // check max credits
-        checkMaxCredits(studentId, courseClass.getSemesterId(), details.get(0).getCredits());
+        checkMaxCredits(studentId, courseClass.getSemesterId(), details.get(0).getCredits(), period.getMaxCredits());
 
         if (courseClass.getEnrolledCount() >= courseClass.getCapacity()) {
             throw new BadRequestException("Course class is full");
@@ -191,22 +252,21 @@ public class EnrollService {
         scheduleConflictService.check(studentId, semesterId, newSchedules);
     }
 
-    private void checkMaxCredits(Long studentId, Long semesterId, int newCredits) {
+    private void checkMaxCredits(Long studentId, Long semesterId, int newCredits, int maxCredits) {
         Integer creditsRegistered = studentCourseClassRepository.findCreditsRegistered(studentId, semesterId);
-        if (creditsRegistered + newCredits > 18) {
+        if (creditsRegistered + newCredits > maxCredits) {
             throw new ForbiddenException("You have exceeded the maximum number of credits");
         }
     }
 
-    private void checkEnrollmentPeriod(Long semesterId) {
-    EnrollmentPeriod period = enrollmentPeriodService.getPeriod(semesterId);
+    private void checkEnrollmentPeriod(EnrollmentPeriod period) {
 
-    LocalDateTime now = LocalDateTime.now();
-    if (now.isBefore(period.getStartTime())) {
-        throw new ForbiddenException("Chưa đến thời gian đăng ký");
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isBefore(period.getStartTime())) {
+            throw new ForbiddenException("Chưa đến thời gian đăng ký");
+        }
+        if (now.isAfter(period.getEndTime())) {
+            throw new ForbiddenException("Đã hết thời gian đăng ký");
+        }
     }
-    if (now.isAfter(period.getEndTime())) {
-        throw new ForbiddenException("Đã hết thời gian đăng ký");
-    }
-}
 }

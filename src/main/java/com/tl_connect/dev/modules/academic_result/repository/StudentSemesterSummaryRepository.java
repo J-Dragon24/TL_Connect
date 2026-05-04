@@ -52,7 +52,7 @@ public interface StudentSemesterSummaryRepository extends JpaRepository<StudentS
             AND tp.id = :studyProgramId
                 """, nativeQuery = true)
     BigDecimal calculateCumulativeGpa(@Param("studentId") Long studentId,
-                    @Param("studyProgramId") Long studyProgramId);
+            @Param("studyProgramId") Long studyProgramId);
 
     @Query(value = """
             SELECT

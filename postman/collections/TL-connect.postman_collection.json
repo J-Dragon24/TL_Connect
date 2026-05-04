@@ -286,7 +286,7 @@
                           "key": "file",
                           "type": "file",
                           "uuid": "e16a0373-ac9c-4292-8039-4550c816501d",
-                          "value": null
+                          "src": "/C:/Users/LongBao/Documents/mark.xlsx"
                         }
                       ]
                     },
@@ -415,7 +415,7 @@
                       }
                     ],
                     "url": {
-                      "raw": "{{domain}}/api/v1/admin/course-classes/all?khoa=CNTT",
+                      "raw": "{{domain}}/api/v1/admin/course-classes/all?page=3",
                       "host": [
                         "{{domain}}"
                       ],
@@ -428,8 +428,8 @@
                       ],
                       "query": [
                         {
-                          "key": "khoa",
-                          "value": "CNTT"
+                          "key": "page",
+                          "value": "3"
                         }
                       ]
                     }
@@ -448,7 +448,7 @@
                       }
                     ],
                     "url": {
-                      "raw": "{{domain}}/api/v1/admin/course-classes/6",
+                      "raw": "{{domain}}/api/v1/admin/course-classes/37",
                       "host": [
                         "{{domain}}"
                       ],
@@ -457,7 +457,7 @@
                         "v1",
                         "admin",
                         "course-classes",
-                        "6"
+                        "37"
                       ]
                     }
                   },
@@ -476,7 +476,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\r\n  \"classCode\": \"CS101-01\",\r\n  \"className\": \"Introduction to Programming - Class 01\",\r\n  \"capacity\": 30,\r\n  \"subjectId\": 1,\r\n  \"semesterId\": 2,\r\n  \"lecturerId\": 3\r\n}",
+                      "raw": "{\r\n  \"classCode\": \"NA151-01\",\r\n  \"className\": \"Khoa học môi trường - 01\",\r\n  \"capacity\": 30,\r\n  \"subjectId\": 17,\r\n  \"semesterId\": 6,\r\n  \"lecturerId\": 1\r\n}",
                       "options": {
                         "raw": {
                           "language": "json"
@@ -852,7 +852,7 @@
                       }
                     ],
                     "url": {
-                      "raw": "{{domain}}/api/v1/admin/faculty/all",
+                      "raw": "{{domain}}/api/v1/admin/faculty/all?page=1",
                       "host": [
                         "{{domain}}"
                       ],
@@ -862,6 +862,12 @@
                         "admin",
                         "faculty",
                         "all"
+                      ],
+                      "query": [
+                        {
+                          "key": "page",
+                          "value": "1"
+                        }
                       ]
                     }
                   },
@@ -1440,7 +1446,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "[\r\n    {\r\n    \"id\": 1,\r\n    \"dayOfWeek\": 5,\r\n    \"startPeriod\": 1,\r\n    \"endPeriod\": 3,\r\n    \"startTime\": \"07:00:00\",\r\n    \"endTime\": \"09:30:00\",\r\n    \"room\": \"A101\"\r\n    }\r\n]",
+                      "raw": "[\r\n    {\r\n    \"dayOfWeek\": 1,\r\n    \"startPeriod\": 1,\r\n    \"endPeriod\": 3,\r\n    \"startTime\": \"07:00:00\",\r\n    \"endTime\": \"09:30:00\",\r\n    \"room\": \"A101\"\r\n    },\r\n    {\r\n    \"dayOfWeek\": 3,\r\n    \"startPeriod\": 6,\r\n    \"endPeriod\": 7,\r\n    \"startTime\": \"13:30:00\",\r\n    \"endTime\": \"14:20:00\",\r\n    \"room\": \"A101\"\r\n    }\r\n]",
                       "options": {
                         "raw": {
                           "language": "json"
@@ -1448,7 +1454,7 @@
                       }
                     },
                     "url": {
-                      "raw": "{{domain}}/api/v1/admin/schedules/create/1",
+                      "raw": "{{domain}}/api/v1/admin/schedules/create/37",
                       "host": [
                         "{{domain}}"
                       ],
@@ -1458,7 +1464,7 @@
                         "admin",
                         "schedules",
                         "create",
-                        "1"
+                        "37"
                       ]
                     }
                   },
@@ -1686,7 +1692,7 @@
                       "raw": "{\r\n  \"academicYears\": \"2025-2026\",\r\n  \"semesterName\": \"Học kỳ 3 2025\",\r\n  \"semesterCode\": \"HK3-2526\",\r\n  \"semesterNumber\": 3,\r\n  \"startDate\": \"2025-07-01\",\r\n  \"endDate\": \"2026-12-01\"\r\n}"
                     },
                     "url": {
-                      "raw": "{{domain}}/api/v1/admin/student-class/all",
+                      "raw": "{{domain}}/api/v1/admin/student-class/all?page=1",
                       "host": [
                         "{{domain}}"
                       ],
@@ -1696,6 +1702,12 @@
                         "admin",
                         "student-class",
                         "all"
+                      ],
+                      "query": [
+                        {
+                          "key": "page",
+                          "value": "1"
+                        }
                       ]
                     }
                   },
@@ -1819,7 +1831,7 @@
                       }
                     ],
                     "url": {
-                      "raw": "{{domain}}/api/v1/admin/study-programs/all?startYear=2024&khoa=CNTT",
+                      "raw": "{{domain}}/api/v1/admin/study-programs/all?startYear=2022&khoa=CNTT",
                       "host": [
                         "{{domain}}"
                       ],
@@ -1833,7 +1845,7 @@
                       "query": [
                         {
                           "key": "startYear",
-                          "value": "2024"
+                          "value": "2022"
                         },
                         {
                           "key": "khoa",
@@ -2626,12 +2638,19 @@
                           "key": "file",
                           "type": "file",
                           "uuid": "8400029a-20f0-4153-9c75-f45901d6c73e",
-                          "src": "/C:/Users/LongBao/Pictures/news/608115782_1322766886556812_5292800162340264472_n.jpg"
+                          "src": "/C:/Users/LongBao/Pictures/news/608115782_1322766886556812_5292800162340264472_n.jpg",
+                          "disabled": true
+                        },
+                        {
+                          "key": "publishDate",
+                          "value": "2026-01-02",
+                          "type": "text",
+                          "uuid": "3e0e589b-488f-43c2-9d02-1d4fe8ce61bd"
                         }
                       ]
                     },
                     "url": {
-                      "raw": "{{domain}}/api/v1/admin/news/update/4",
+                      "raw": "{{domain}}/api/v1/admin/news/update/5",
                       "host": [
                         "{{domain}}"
                       ],
@@ -2641,7 +2660,7 @@
                         "admin",
                         "news",
                         "update",
-                        "4"
+                        "5"
                       ]
                     }
                   },
@@ -2953,7 +2972,7 @@
                       }
                     ],
                     "url": {
-                      "raw": "{{domain}}/api/v1/admin/subjects/all",
+                      "raw": "{{domain}}/api/v1/admin/subjects/all?page=1",
                       "host": [
                         "{{domain}}"
                       ],
@@ -2963,6 +2982,12 @@
                         "admin",
                         "subjects",
                         "all"
+                      ],
+                      "query": [
+                        {
+                          "key": "page",
+                          "value": "1"
+                        }
                       ]
                     }
                   },
@@ -3016,7 +3041,7 @@
                       }
                     ],
                     "url": {
-                      "raw": "{{domain}}/api/v1/admin/subjects/1",
+                      "raw": "{{domain}}/api/v1/admin/subjects/6",
                       "host": [
                         "{{domain}}"
                       ],
@@ -3025,7 +3050,7 @@
                         "v1",
                         "admin",
                         "subjects",
-                        "1"
+                        "6"
                       ]
                     }
                   },
@@ -3044,7 +3069,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\r\n    \"credits\": 3\r\n}",
+                      "raw": "{\r\n    \"enrollmentConditions\": [\r\n            {\r\n                \"conditionType\": \"TOTAL_CREDITS\",\r\n                \"conditionValue\": 100.00,\r\n                \"conditionOperator\": \">=\",\r\n                \"description\": \"Yeu cau >= 100 tin chi\"\r\n            }\r\n    ]\r\n}",
                       "options": {
                         "raw": {
                           "language": "json"
@@ -3106,6 +3131,142 @@
                   "request": {
                     "method": "GET",
                     "header": []
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "enrollment",
+              "item": [
+                {
+                  "name": "get period",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/enrollment/periods",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "enrollment",
+                        "periods"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "create period",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"semesterId\": 5,\r\n  \"startTime\": \"2026-02-01T08:00:00\",\r\n  \"endTime\": \"2026-02-04T23:59:59\",\r\n  \"maxCredits\": 18\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/enrollment/periods/create",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "enrollment",
+                        "periods",
+                        "create"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "update period",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"maxCredits\": 20\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/enrollment/periods/update/1",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "enrollment",
+                        "periods",
+                        "update",
+                        "1"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "delete period",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/enrollment/periods/delete/2",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "enrollment",
+                        "periods",
+                        "delete",
+                        "2"
+                      ]
+                    }
                   },
                   "response": []
                 }
@@ -3180,7 +3341,7 @@
                     "header": [],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\r\n    \"accessToken\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6InNNMV95QXhWOEdWNHlOLUI2ajJ4em1pazVBbyJ9.eyJhdWQiOiI3N2RmOTkzZC1lNzI4LTRiOGUtOTc3MC02YjQwOWFhOTk1NTIiLCJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vYWVjMDAzZWItYzUzNy00ZThhLWIwZjMtMTE0NGE5M2E2MGJjL3YyLjAiLCJpYXQiOjE3NzI1MjQ5MDgsIm5iZiI6MTc3MjUyNDkwOCwiZXhwIjoxNzcyNTI5NTMyLCJhaW8iOiJBY1FBTy84YkFBQUFZNlB1eml0VXZObVRBR3BlQXpRVzI4SDJ4Q0FuRFdmU05KWmlDcTRxUlhPSTF1b3ZsU2h6cWE4cFNNTzlWZUZWdUJSSEpHUHBLdXA0VDBtbFgxS0I0RFd1ZjFFem9aeGpFS25SL2Z0eFRVSUswaUVKUDQwbzhJM095ejdkeDErYk9zNk5PKzFxYlI1VHpsMWc5Z0l4aFVYakFCdG9DSTB2M0V2MUdQY0NUOVo3QkMyOGdubWhpOEV1S2RTR01pdDdFWXRmSldHZ25pYlVUTVNyUU10elNGRTlxSXlGOW5Qc2c3eWpnVUFreHhNNVRSUnlZUXdhZlhqNzMzSXd0R0xoIiwiYXpwIjoiNzdkZjk5M2QtZTcyOC00YjhlLTk3NzAtNmI0MDlhYTk5NTUyIiwiYXpwYWNyIjoiMCIsImlkcCI6ImxpdmUuY29tIiwibmFtZSI6Im5ob2sgdGhhbmgiLCJvaWQiOiIxZGViMDBhOS04MzVjLTRhYjctYTUwZi01N2MxMmE1NmM3YmQiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJuaG9rdGhhbmgzMjExQGdtYWlsLmNvbSIsInJoIjoiMS5BY1lBNndQQXJqZkZpazZ3OHhGRXFUcGd2RDJaMzNjbzU0NUxsM0JyUUpxcGxWSUFBSFRHQUEuIiwicm9sZXMiOlsiYWRtaW4iXSwic2NwIjoiYWNjZXNzX2FzX3VzZXIiLCJzaWQiOiIwMDJlNDNkYS0zZjE2LTVlMzgtZGNkZC0zOGNhMmIyOWY0MjAiLCJzdWIiOiJfdUhOeUFndzVuaEE4Z2lqSnNESjQzbkUwU3JaLUVKTVdHMEo0c01ERW9vIiwidGlkIjoiYWVjMDAzZWItYzUzNy00ZThhLWIwZjMtMTE0NGE5M2E2MGJjIiwidXRpIjoiMU82YVpjNmhxa1NoXzlnclpCd0ZBQSIsInZlciI6IjIuMCIsInhtc19mdGQiOiJ3c0ZxOFRac25YZ2FoalpXYzhMYmZrb1RDVm83bmFnWGFBcjl3WmVqQkdnQmEyOXlaV0Z6YjNWMGFDMWtjMjF6In0.B4J92_HMR-_UnBxq7t6HcvUv6Kw249AjoGxPhooq3ra6ZIBLhJXwP_OSEK8eG_SPYF7WkQTaYuYiX9ieibLuTLPREK4zHV6gKrCX_-F053fwsPYHlzBSE47Z2YcFeCf3ffBjf_5PAPR9TcfJ7By9U1Un9ah1roH1QE8ptmFPRq1FsSfoLy9cb7w3UZOtZG8ibTL6gJmFXVqT2y4IhZ57SYOarTwOUBFt3rINbcVoTAP4D7n-ajXl1NEWQ8PpRYj16mGw4VIJnlkwsk5oh7cDJpNu-xKCM-eddIyO-0W4i3nYOLvaigM1uAK2mJmqFTqLcvVEa9HpZhamCS1T8A_83A\"\r\n}",
+                      "raw": "{\r\n    \"accessToken\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlUxc1g4WUZIUzdaNlZsN1ZITEl6VGVqYnZqMCJ9.eyJhdWQiOiI3N2RmOTkzZC1lNzI4LTRiOGUtOTc3MC02YjQwOWFhOTk1NTIiLCJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vYWVjMDAzZWItYzUzNy00ZThhLWIwZjMtMTE0NGE5M2E2MGJjL3YyLjAiLCJpYXQiOjE3NzY4NDUxNDQsIm5iZiI6MTc3Njg0NTE0NCwiZXhwIjoxNzc2ODUwNTA4LCJhaW8iOiJBY1FBTy84YkFBQUFiT09Pby9aT0U0WTY2Wk9oOFdhSkhSRFdpUk8wOGVpSWZuM0VSb3UrNGEybHlPU05TWmhCQ1VuTGlKSFk5Q3phRU5YaVlOdlpOQm5TckZoWW9aeUpWeHQvcnVwdThwc3Fjb0hsVUN3VW9rQUFDV1VDZmVVUXFJbFhWSTdpNlU2NzRNTzZkMk1PVk5nR3pNcW1JWWI4V3VNOGdKdTlzZUQxcGdvN0dqNjdWL3RnVlg4cGVRQkJjbkVGbW1XNTBTUmc4VUlIZTNHSG4rQnpkMFI5eDg2d0I2dzZ6aTBTZzZJQmJjOW1ncDVZYXZTMkNlZkhNbWtENlZoeVF1VmJCT0dlIiwiYXpwIjoiNzdkZjk5M2QtZTcyOC00YjhlLTk3NzAtNmI0MDlhYTk5NTUyIiwiYXpwYWNyIjoiMCIsImlkcCI6ImxpdmUuY29tIiwibmFtZSI6InR1YW5uZ3V5ZW5jb2RlIiwib2lkIjoiYTY1ZDAzZDQtNmEyYS00MjZmLTk2M2QtOGRjYTI0Mzk5YjgzIiwicHJlZmVycmVkX3VzZXJuYW1lIjoidHVhbm5ndXllbmNvZGVAZ21haWwuY29tIiwicmgiOiIxLkFjWUE2d1BBcmpmRmlrNnc4eEZFcVRwZ3ZEMlozM2NvNTQ1TGwzQnJRSnFwbFZJQUFNekdBQS4iLCJyb2xlcyI6WyJzdHVkZW50Il0sInNjcCI6ImFjY2Vzc19hc191c2VyIiwic2lkIjoiMDA0MDFlMmEtODc5ZC02MDE3LTBjMGYtZmRlM2U2YjIwOWQ2Iiwic3ViIjoiWTVaaHlUUDg2ZHN0WVBBX2UtN2ZlRjNWLXEwMTN2T0pobmYwVzBlQ2JXMCIsInRpZCI6ImFlYzAwM2ViLWM1MzctNGU4YS1iMGYzLTExNDRhOTNhNjBiYyIsInV0aSI6IjVFX2RGUThGV0VtdThQRVNMZkJUQUEiLCJ2ZXIiOiIyLjAiLCJ4bXNfZnRkIjoiTm03X0tjUDBmSU9MLXQxczhaLXdOM09ReXE1Umh1M2hGQkNaazA4MGxMUUJhMjl5WldGemIzVjBhQzFrYzIxeiJ9.KYlPdohr6LD-evAaJ-VTWPy9IFKJNsJKAqDhOcYiERbPBV8vEXGXASE1tanl_QeFUEwbKjS7TGcgmeaJruCzbKRRIIZw57XB0lAwigL8fmFyXnWNaSt1g1pTb0ayBPBMLbjgfgozJAsyN2KA7XJ290gzHWeX_jL110aljVNsMQjeRzXrGOaPGyine_VC-yx5ODMjAf7MOvKaen-aVcPkjA1Fh6iDKtzhsMk-6i5nlt-BEmq5yNcbiG7SonE-iSo7heEf574_HtiIZlNn3UWiprPtEuBIuMl_mU9jpAokOcoRf65FoF_GDEQrlQvaH-bZhW3Qc55cYdrJrx9RA3HeTw\",\r\n    \"deviceId\":\"abc\",\r\n    \"fcmToken\": \"abc\"\r\n}",
                       "options": {
                         "raw": {
                           "language": "json"
@@ -3246,7 +3407,7 @@
                       }
                     ],
                     "url": {
-                      "raw": "{{domain}}/api/v1/student/schedules/weekly?start_date=2026-01-01&end_date=2026-09-01",
+                      "raw": "{{domain}}/api/v1/student/schedules/weekly",
                       "host": [
                         "{{domain}}"
                       ],
@@ -3256,16 +3417,6 @@
                         "student",
                         "schedules",
                         "weekly"
-                      ],
-                      "query": [
-                        {
-                          "key": "start_date",
-                          "value": "2026-01-01"
-                        },
-                        {
-                          "key": "end_date",
-                          "value": "2026-09-01"
-                        }
                       ]
                     }
                   },
@@ -3283,7 +3434,7 @@
                       }
                     ],
                     "url": {
-                      "raw": "{{domain}}/api/v1/student/schedules/semester?HocKy=HK1 2025-2026",
+                      "raw": "{{domain}}/api/v1/student/schedules/semester?HocKy=HK2-2025-2026",
                       "host": [
                         "{{domain}}"
                       ],
@@ -3297,7 +3448,7 @@
                       "query": [
                         {
                           "key": "HocKy",
-                          "value": "HK1 2025-2026"
+                          "value": "HK2-2025-2026"
                         }
                       ]
                     }
@@ -3454,11 +3605,8 @@
                 },
                 {
                   "name": "unread notification",
-                  "protocolProfileBehavior": {
-                    "disableBodyPruning": true
-                  },
                   "request": {
-                    "method": "GET",
+                    "method": "POST",
                     "header": [
                       {
                         "key": "Authorization",
@@ -3804,6 +3952,153 @@
                         "v1",
                         "applications",
                         "types"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "enroll",
+              "item": [
+                {
+                  "name": "get all subjcet",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/student/enrollment/all?studyProgramCode=DHCQK35TI",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "student",
+                        "enrollment",
+                        "all"
+                      ],
+                      "query": [
+                        {
+                          "key": "studyProgramCode",
+                          "value": "DHCQK35TI",
+                          "type": "text"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "get course class",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"subjectId\": 17,\r\n    \"semesterId\": 6\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/student/enrollment/course-classes",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "student",
+                        "enrollment",
+                        "course-classes"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "enroll",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"studyProgramId\": 2,\r\n    \"courseClassId\": 37\r\n} ",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/student/enrollment/enroll",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "student",
+                        "enrollment",
+                        "enroll"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "drop",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"courseClassId\": 37\r\n} ",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/student/enrollment/drop",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "student",
+                        "enrollment",
+                        "drop"
                       ]
                     }
                   },

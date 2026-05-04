@@ -8,6 +8,8 @@ import java.util.Map;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tl_connect.dev.modules.enroll.dto.dag.PrerequisiteGroup;
 import com.tl_connect.dev.modules.subject.projection.PrerequisiteRow;
 import com.tl_connect.dev.modules.enroll.dto.dag.SubjectNode;
@@ -21,6 +23,7 @@ public class PrerequisiteDAGService {
 
     private final SubjectRepository subjectRepository;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final ObjectMapper objectMapper;
 
     private static final String DAG_CACHE_KEY = "prereq:dag";
 
@@ -28,7 +31,7 @@ public class PrerequisiteDAGService {
         // Thử lấy từ Redis trước
         Object cached = redisTemplate.opsForValue().get(DAG_CACHE_KEY);
         if (cached != null) {
-            return (Map<Long, SubjectNode>) cached;
+            return objectMapper.convertValue(cached, new TypeReference<Map<Long, SubjectNode>>() {});
         }
 
         List<PrerequisiteRow> rows = subjectRepository.findAllPrerequisiteRows();

@@ -1,6 +1,6 @@
 package com.tl_connect.dev.modules.academic_result.repository;
 
-import org.springframework.cache.annotation.Cacheable;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -97,7 +97,6 @@ public interface StudentSubjectResultRepository extends JpaRepository<StudentSub
         ORDER BY sem.start_date DESC
         LIMIT 1
         """, nativeQuery = true)
-    @Cacheable("latest_subject_result")
     Boolean getLatestSubjectResult(@Param("studentId") Long studentId, @Param("subjectId") Long subjectId);
 
     @Query(value = """

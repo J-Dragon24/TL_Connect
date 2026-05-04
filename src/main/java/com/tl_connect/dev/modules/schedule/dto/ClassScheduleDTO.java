@@ -18,8 +18,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class ClassScheduleDTO {
-    @NotNull(message = "Id is required")
-    private Long id;
     @NotNull(message = "Day of week is required")
     private Integer dayOfWeek;
     @NotNull(message = "Start period is required")

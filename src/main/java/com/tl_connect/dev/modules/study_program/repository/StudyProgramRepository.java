@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.tl_connect.dev.modules.enroll.projection.SubjectForEnrollRow;
 import com.tl_connect.dev.modules.study_program.entity.StudyProgram;
 import com.tl_connect.dev.modules.study_program.projection.StudyProgramAdmRow;
 import com.tl_connect.dev.modules.study_program.projection.StudyProgramHeaderView;
@@ -69,7 +69,6 @@ public interface StudyProgramRepository extends JpaRepository<StudyProgram, Long
             WHERE sp.study_program_code = :studyProgramCode
             AND sm.student_id = :studentId
             """, nativeQuery = true)
-    @Cacheable("study_program")
     Optional<StudyProgramHeaderView> findByStudyProgramCodeAndStudentId(@Param("studyProgramCode") String studyProgramCode, @Param("studentId") Long studentId);
 
     @Query(value = """
@@ -149,4 +148,33 @@ public interface StudyProgramRepository extends JpaRepository<StudyProgram, Long
             WHERE sp.id = :studyProgramId
             """, nativeQuery = true)
     Optional<StudyProgramHeaderView> findStudyProgramHeaderById(@Param("studyProgramId") Long studyProgramId);
+
+    @Query(value = """
+            SELECT
+                sp.id AS studyProgramId,
+                sp.study_program_name AS studyProgramName,
+                sp.study_program_code AS studyProgramCode,
+                s.id AS subjectId,
+                s.subject_name AS subjectName,
+                s.subject_code AS subjectCode,
+                s.credits AS credits,
+                sps.is_required AS isRequired,
+                sps.elective_group AS electiveGroup,
+                s.coefficient AS coefficient,
+                s.lecture_hours AS lectureHours,
+                s.practice_hours AS practiceHours,
+                f.faculty_name AS facultyName,
+                f.faculty_code AS facultyCode,
+                d.department_name AS department,
+                d.department_code AS departmentCode
+            FROM study_programs sp
+            JOIN study_program_subjects sps ON sp.id = sps.study_program_id
+            JOIN subjects s ON sps.subject_id = s.id AND s.is_active = true
+            LEFT JOIN faculties f ON s.faculty_id = f.id
+            LEFT JOIN departments d ON s.department_id = d.id
+            WHERE sp.id = :studyProgramId
+            AND sp.is_active = true
+            ORDER BY s.subject_code
+            """, nativeQuery = true)
+    List<SubjectForEnrollRow> findSubjectsByStudyProgramId(@Param("studyProgramId") Long studyProgramId);
 }

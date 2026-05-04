@@ -1,13 +1,11 @@
 package com.tl_connect.dev.modules.enroll.dto;
 
-import com.tl_connect.dev.modules.course_class.dto.CourseClassForEnrollDTO;
-
 public record ScheduleForCheckDTO(
     int dayOfWeek,
     int startPeriod,
     int endPeriod
 ) {
-    public static ScheduleForCheckDTO from(CourseClassForEnrollDTO dto) {
+    public static ScheduleForCheckDTO from(DetailsForCheckEnrollDTO dto) {
         return new ScheduleForCheckDTO(
             dto.getDayOfWeek(),
             dto.getStartPeriod(),

@@ -6,6 +6,8 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tl_connect.dev.modules.enroll.cache.StudentScheduleCache;
 import com.tl_connect.dev.modules.enroll.repository.StudentCourseClassRepository;
 import com.tl_connect.dev.shared.datastructure.intervaltree.ScheduleInterval;
@@ -18,6 +20,7 @@ public class StudentScheduleService {
 
     private final StudentCourseClassRepository studentCourseClassRepository;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final ObjectMapper objectMapper;
 
     private static final String CACHE_KEY_PREFIX = "schedule:student:";
 
@@ -36,7 +39,7 @@ public class StudentScheduleService {
 
         Object cached = redisTemplate.opsForValue().get(cacheKey);
         if (cached != null) {
-            return (List<ScheduleInterval>) cached;
+            return objectMapper.convertValue(cached, new TypeReference<List<ScheduleInterval>>() {});
         }
 
         List<ScheduleInterval> intervals = studentCourseClassRepository.findCurrentSchedule(studentId, semesterId);
@@ -51,7 +54,7 @@ public class StudentScheduleService {
         Object cached = redisTemplate.opsForValue().get(cacheKey);
         if (cached == null) return;
 
-        List<ScheduleInterval> intervals = (List<ScheduleInterval>) cached;
+        List<ScheduleInterval> intervals = objectMapper.convertValue(cached, new TypeReference<List<ScheduleInterval>>() {});
         intervals.addAll(newSchedules);
 
         redisTemplate.opsForValue().set(cacheKey, intervals, 7, TimeUnit.DAYS);
@@ -63,7 +66,7 @@ public class StudentScheduleService {
         Object cached = redisTemplate.opsForValue().get(cacheKey);
         if (cached == null) return;
 
-        List<ScheduleInterval> intervals = (List<ScheduleInterval>) cached;
+        List<ScheduleInterval> intervals = objectMapper.convertValue(cached, new TypeReference<List<ScheduleInterval>>() {});
         intervals.removeIf(i -> i.getCourseClassId().equals(courseClassId));
 
         redisTemplate.opsForValue().set(cacheKey, intervals, 7, TimeUnit.DAYS);

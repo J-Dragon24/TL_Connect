@@ -1,9 +1,12 @@
 package com.tl_connect.dev.modules.enroll.entity;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import com.tl_connect.dev.shared.common.exception.InvalidInputException;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -47,4 +50,38 @@ public class EnrollmentPeriod {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+    public static EnrollmentPeriod create(Long semesterId, LocalDateTime startTime, LocalDateTime endTime, int maxCredits) {
+        if(semesterId <= 0) {
+            throw new InvalidInputException("Semester ID must be positive");
+        }
+        if(startTime.isAfter(endTime)) {
+            throw new InvalidInputException("Start time must be before end time");
+        }
+
+        if(maxCredits < 1) {
+            throw new InvalidInputException("Max credits must be at least 1");
+        }
+
+        EnrollmentPeriod period = new EnrollmentPeriod();
+        period.setSemesterId(semesterId);
+        period.setStartTime(startTime);
+        period.setEndTime(endTime);
+        period.setMaxCredits(maxCredits);
+        return period;
+    }
+
+
+    public void update(Long semesterId, LocalDateTime startTime, LocalDateTime endTime, int maxCredits) {
+        LocalDateTime newStartTime = startTime == null ? this.startTime : startTime;
+        LocalDateTime newEndTime = endTime == null ? this.endTime : endTime;
+
+        if(newStartTime.isAfter(newEndTime)) {
+            throw new InvalidInputException("Start time must be before end time");
+        }
+
+        Optional.ofNullable(semesterId).ifPresent(this::setSemesterId);
+        Optional.ofNullable(startTime).ifPresent(this::setStartTime);
+        Optional.ofNullable(endTime).ifPresent(this::setEndTime);
+        Optional.ofNullable(maxCredits).ifPresent(this::setMaxCredits);
+    }
 }

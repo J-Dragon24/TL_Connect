@@ -6,9 +6,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.tl_connect.dev.modules.course_class.dto.CourseClassForEnrollDTO;
 import com.tl_connect.dev.modules.course_class.projection.CourseClassBasicInfoRow;
 import com.tl_connect.dev.modules.course_class.projection.CourseClassRow;
+import com.tl_connect.dev.modules.enroll.dto.DetailsForCheckEnrollDTO;
+import com.tl_connect.dev.modules.enroll.projection.CourseClassForEnrollRow;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -33,7 +35,7 @@ public interface CourseClassRepository extends JpaRepository<CourseClass, Long> 
             JOIN subjects s ON s.id = cc.subject_id
             WHERE cs.course_class_id = :id
             """,nativeQuery = true)
-    List<CourseClassForEnrollDTO> findDetailForEnrollmentById(@Param("id") Long id);
+    List<DetailsForCheckEnrollDTO> findDetailForEnrollmentById(@Param("id") Long id);
 
 
     @Query(value = """
@@ -102,4 +104,28 @@ public interface CourseClassRepository extends JpaRepository<CourseClass, Long> 
             AND :now BETWEEN sem.start_date AND sem.end_date
             """, nativeQuery = true)
     List<Long> findIdsByStudentIdAndSemesterId(@Param("studentId") Long studentId, @Param("now") LocalDate now);
+
+    @Query(value = """
+            SELECT 
+                cc.id as id,
+                l.lecturer_code as lecturerCode,
+                l.full_name as lecturerName,
+                cc.class_code as classCode,
+                cc.class_name as className,
+                cc.capacity as capacity,
+                cc.enrolled_count as enrolledCount,
+                cs.day_of_week AS dayOfWeek,
+                cs.start_period AS startPeriod,
+                cs.end_period AS endPeriod,
+                cs.start_time AS startTime,
+                cs.end_time AS endTime,
+                cs.room AS room
+            FROM course_classes cc
+            LEFT JOIN lecturers l ON cc.lecturer_id = l.id
+            LEFT JOIN class_schedules cs ON cs.course_class_id = cc.id
+            WHERE cc.subject_id = :subjectId
+            AND cc.semester_id = :semesterId
+            AND cc.is_active = true
+            """, nativeQuery = true)
+    List<CourseClassForEnrollRow> findCourseClassForEnrollment(@Param("subjectId") Long subjectId, @Param("semesterId") Long semesterId);
 }

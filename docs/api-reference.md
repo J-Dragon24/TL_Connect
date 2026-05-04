@@ -1328,7 +1328,6 @@ Tạo mới lịch học cho lớp học phần.
 
 | Field | Type | Required | Description |
 |------|-----|-----|-----|
-| id | long | ✅ | ID schedule |
 | dayOfWeek | int | ✅ | Thứ trong tuần (1-7) |
 | startPeriod | int | ✅ | Tiết bắt đầu |
 | endPeriod | int | ✅ | Tiết kết thúc |

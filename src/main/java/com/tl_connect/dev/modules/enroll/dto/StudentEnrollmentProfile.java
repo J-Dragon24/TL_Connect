@@ -4,14 +4,19 @@ import java.util.Set;
 
 import java.math.BigDecimal;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class StudentEnrollmentProfile {
     private Set<Long> passedSubjectIds;
     private Set<Long> failedSubjectIds;
+    private Long semesterId;
     private BigDecimal cumulativeGpa;
     private int totalCredits;
 }

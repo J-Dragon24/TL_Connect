@@ -8,10 +8,14 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tl_connect.dev.modules.academic_result.entity.StudentSubjectResult;
 import com.tl_connect.dev.modules.academic_result.repository.StudentSemesterSummaryRepository;
 import com.tl_connect.dev.modules.academic_result.repository.StudentSubjectResultRepository;
 import com.tl_connect.dev.modules.enroll.dto.StudentEnrollmentProfile;
+import com.tl_connect.dev.modules.enroll.entity.EnrollmentPeriod;
+import com.tl_connect.dev.modules.enroll.repository.EnrollmentPeriodRepository;
+import com.tl_connect.dev.shared.common.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +25,8 @@ public class StudentEnrollmentProfileService {
     private final StudentSubjectResultRepository subjectResultRepository;
     private final StudentSemesterSummaryRepository summaryRepository;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final EnrollmentPeriodRepository enrollmentPeriodRepository;
+    private final ObjectMapper objectMapper;
 
     private static final String CACHE_KEY_PREFIX = "enrollment_profile:student:";
 
@@ -29,8 +35,11 @@ public class StudentEnrollmentProfileService {
         Object cached = redisTemplate.opsForValue().get(cacheKey);
 
         if (cached != null) {
-            return (StudentEnrollmentProfile) cached;
+            return objectMapper.convertValue(cached, StudentEnrollmentProfile.class);
         }
+
+        EnrollmentPeriod period = enrollmentPeriodRepository.findCurrent()
+                .orElseThrow(() -> new NotFoundException("Enrollment period not found"));
 
         List<StudentSubjectResult> results = subjectResultRepository.findAllByStudentId(studentId);
 
@@ -52,7 +61,9 @@ public class StudentEnrollmentProfileService {
                 .failedSubjectIds(failedSubjectIds)
                 .cumulativeGpa(summaryRepository.calculateCumulativeGpa(studentId, studyProgramId))
                 .totalCredits(summaryRepository.sumTotalCredits(studentId, studyProgramId))
+                .semesterId(period.getId())
                 .build();
+
 
         redisTemplate.opsForValue().set(cacheKey, profile, 7, TimeUnit.DAYS);
         return profile;

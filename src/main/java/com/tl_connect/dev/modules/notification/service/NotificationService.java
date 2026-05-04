@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -43,7 +42,6 @@ public class NotificationService {
     private final StudentRepository studentRepository;
     private final NotificationHelper notificationHelper;
 
-    @Cacheable(value = "notificationTopics", key = "#studentId")
     public PrepareNotificationDTO prepareNotification(Long studentId) {
         LocalDate now = LocalDate.now();
         PrepareNotificationView prepareNotificationView = notificationRepository.getStudentInfo(studentId)

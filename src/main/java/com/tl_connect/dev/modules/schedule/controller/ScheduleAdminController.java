@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.tl_connect.dev.modules.schedule.ScheduleService;
+import com.tl_connect.dev.modules.schedule.dto.ClassScheduleAdminDTO;
 import com.tl_connect.dev.modules.schedule.dto.ClassScheduleDTO;
 import com.tl_connect.dev.modules.schedule.dto.UpdateScheduleDTO;
 import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
@@ -21,7 +22,7 @@ public class ScheduleAdminController {
 
     @GetMapping("/{courseClassId}")
     public ResponseEntity<?> getAll(@PathVariable Long courseClassId) {
-        List<ClassScheduleDTO> list = scheduleService.getAllClassSchedules(courseClassId);
+        List<ClassScheduleAdminDTO> list = scheduleService.getAllClassSchedules(courseClassId);
         return ResponseHelper.success("Get all schedule successfully",list);
     }
 

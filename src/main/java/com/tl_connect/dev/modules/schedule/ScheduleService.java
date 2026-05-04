@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.tl_connect.dev.modules.course_class.CourseClass;
 import com.tl_connect.dev.modules.course_class.CourseClassRepository;
 import com.tl_connect.dev.modules.lecturer.dto.LecturerDTO;
+import com.tl_connect.dev.modules.schedule.dto.ClassScheduleAdminDTO;
 import com.tl_connect.dev.modules.schedule.dto.ClassScheduleDTO;
 import com.tl_connect.dev.modules.schedule.dto.CourseClassDTO;
 import com.tl_connect.dev.modules.schedule.dto.DayOfWeekScheduleDTO;
@@ -172,7 +173,7 @@ public class ScheduleService {
                                 .build();
         }
 
-        public List<ClassScheduleDTO> getAllClassSchedules(Long courseClassId) {
+        public List<ClassScheduleAdminDTO> getAllClassSchedules(Long courseClassId) {
                 List<ClassSchedule> schedules = scheduleRepository.findByCourseClassId(courseClassId);
                 return schedules.stream()
                                 .map(this::toDTO)
@@ -307,8 +308,8 @@ public class ScheduleService {
             return a.getStartPeriod() < b.getEndPeriod() && a.getEndPeriod() > b.getStartPeriod();
         }
 
-        private ClassScheduleDTO toDTO(ClassSchedule schedule) {
-                return ClassScheduleDTO.builder()
+        private ClassScheduleAdminDTO toDTO(ClassSchedule schedule) {
+                return ClassScheduleAdminDTO.builder()
                                 .id(schedule.getId())
                                 .dayOfWeek(schedule.getDayOfWeek())
                                 .startPeriod(schedule.getStartPeriod())

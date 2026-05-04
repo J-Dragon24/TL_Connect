@@ -2,13 +2,21 @@ package com.tl_connect.dev.modules.enroll.service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tl_connect.dev.modules.enroll.dto.CreateEnrollPeriodDTO;
+import com.tl_connect.dev.modules.enroll.dto.UpdateEnrollPeriodDTO;
 import com.tl_connect.dev.modules.enroll.entity.EnrollmentPeriod;
 import com.tl_connect.dev.modules.enroll.repository.EnrollmentPeriodRepository;
+import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -19,6 +27,7 @@ public class EnrollmentPeriodService {
 
     private final EnrollmentPeriodRepository enrollmentPeriodRepository;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final ObjectMapper objectMapper;
 
     private static final String CACHE_KEY_PREFIX = "enrollment:period:";
 
@@ -26,7 +35,7 @@ public class EnrollmentPeriodService {
         String cacheKey = CACHE_KEY_PREFIX + semesterId;
 
         Object cached = redisTemplate.opsForValue().get(cacheKey);
-        if (cached != null) return (EnrollmentPeriod) cached;
+        if (cached != null) return objectMapper.convertValue(cached, EnrollmentPeriod.class);
 
         EnrollmentPeriod period = enrollmentPeriodRepository.findBySemesterId(semesterId)
             .orElseThrow(() -> new NotFoundException("Enrollment period not found"));
@@ -37,6 +46,52 @@ public class EnrollmentPeriodService {
         redisTemplate.opsForValue().set(cacheKey, period, secondsUntilEnd, TimeUnit.SECONDS);
 
         return period;
+    }
+
+    public PagedResponse<EnrollmentPeriod> getAllPeriods(Pageable pageable, String semesterCode) {
+        if (semesterCode == null || semesterCode.trim().isEmpty()) {
+            semesterCode = null;
+        }
+
+        Page<EnrollmentPeriod> page = enrollmentPeriodRepository.findAllPeriods(pageable, semesterCode);
+        return new PagedResponse<>(
+            page.getContent(), 
+            page.getNumber(), 
+            page.getSize(), 
+            page.getTotalElements(), 
+            page.getTotalPages(), 
+            page.isLast(), 
+            page.isFirst()
+        );
+    }
+
+    @Transactional
+    public EnrollmentPeriod createPeriod(CreateEnrollPeriodDTO dto) {
+        EnrollmentPeriod period = EnrollmentPeriod.create(dto.getSemesterId(), dto.getStartTime(), dto.getEndTime(), dto.getMaxCredits());
+
+        EnrollmentPeriod saved = enrollmentPeriodRepository.save(period);
+
+        return saved;
+    }
+
+    @Transactional
+    public EnrollmentPeriod updatePeriod(Long id, UpdateEnrollPeriodDTO dto) {
+        EnrollmentPeriod period = enrollmentPeriodRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException("Enrollment period not found"));
+
+        period.update(dto.getSemesterId(), dto.getStartTime(), dto.getEndTime(), dto.getMaxCredits());
+
+        EnrollmentPeriod saved = enrollmentPeriodRepository.save(period);
+
+        return saved;
+    }
+
+    @Transactional
+    public void deletePeriod(Long id) {
+        EnrollmentPeriod period = enrollmentPeriodRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException("Enrollment period not found"));
+
+        enrollmentPeriodRepository.delete(period);
     }
 
     public void invalidate(Long semesterId) {
