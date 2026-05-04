@@ -17,5 +17,6 @@ public interface CourseClassRow {
     String getClassCode();
     String getClassName();
     Integer getCapacity();
+    Integer getEnrolledCount();
     Boolean getIsActive();
 }

@@ -11,6 +11,7 @@ import lombok.Data;
 @Builder
 public class StudentEnrollmentProfile {
     private Set<Long> passedSubjectIds;
+    private Set<Long> failedSubjectIds;
     private BigDecimal cumulativeGpa;
     private int totalCredits;
 }

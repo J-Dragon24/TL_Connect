@@ -22,20 +22,16 @@ public interface CourseClassRepository extends JpaRepository<CourseClass, Long> 
     boolean existsByClassCode(String classCode);
 
     @Query(value = """
-            SELECT cc.id as id,
-            cc.subject_id as subjectId,
-            cc.class_code as classCode,
-            cc.semester_id as semesterId,
+            SELECT
             cs.id as classScheduleId,
-            cc.capacity as capacity,
             s.credits as credits,
             cs.day_of_week as dayOfWeek,
             cs.start_period as startPeriod,
             cs.end_period as endPeriod
-            FROM course_classes cc
-            LEFT JOIN class_schedules cs ON cs.course_class_id = cc.id
-            LEFT JOIN subjects s ON cc.subject_id = s.id
-            WHERE cc.id = :id
+            FROM class_schedules cs
+            JOIN course_classes cc ON cc.id = cs.course_class_id
+            JOIN subjects s ON s.id = cc.subject_id
+            WHERE cs.course_class_id = :id
             """,nativeQuery = true)
     List<CourseClassForEnrollDTO> findDetailForEnrollmentById(@Param("id") Long id);
 
@@ -56,6 +52,7 @@ public interface CourseClassRepository extends JpaRepository<CourseClass, Long> 
                 cc.class_code as classCode,
                 cc.class_name as className,
                 cc.capacity as capacity,
+                cc.enrolled_count as enrolledCount,
                 cc.is_active as isActive
             FROM course_classes cc
             JOIN lecturers l ON cc.lecturer_id = l.id
@@ -75,6 +72,7 @@ public interface CourseClassRepository extends JpaRepository<CourseClass, Long> 
             cc.class_code as classCode,
             cc.class_name as className,
             cc.capacity as capacity,
+            cc.enrolled_count as enrolledCount,
             cc.is_active as isActive
         FROM course_classes cc
         JOIN lecturers l ON cc.lecturer_id = l.id

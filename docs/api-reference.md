@@ -2916,6 +2916,7 @@ Lấy thông tin tất cả lớp học phần.
                 "classCode": "INT1001-01",
                 "className": "Nhập môn lập trình - Lớp 1",
                 "capacity": 50,
+                "enrolledCount": 45,
                 "lecturerCode": "GV001",
                 "subjectCode": "INT1001",
                 "semesterCode": "HK1-2025",
@@ -2953,6 +2954,7 @@ Lấy chi tiết lớp học phần.
         "classCode": "INT1001-01",
         "className": "Nhập môn lập trình - Lớp 1",
         "capacity": 50,
+        "enrolledCount": 45,
         "isActive": true,
         "lecturerCode": "GV001",
         "lecturerName": "Nguyen Van A",
@@ -4120,8 +4122,7 @@ Lấy chi tiết hóa đơn học phí.
           "credits": 3,
           "pricePerCredit": 500000.00,
           "coefficient": 1.00,
-          "amount": 1500000.00,
-          "retake": false
+          "amount": 1500000.00
       }
     ],
     "total_amount": 5000000,
@@ -4203,8 +4204,7 @@ Lấy chi tiết hóa đơn học phí.
             "credits": 3,
             "pricePerCredit": 500000.00,
             "coefficient": 1.00,
-            "amount": 1500000.00,
-            "retake": false
+            "amount": 1500000.00
         }
     ]
   }

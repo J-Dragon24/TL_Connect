@@ -33,9 +33,9 @@ public class CourseClassService {
     private final SubjectRepository subjectRepository;
     private final SemesterRepository semesterRepository;
     private final LecturerRepository lecturerRepository;
-    
+
     public PagedResponse<CourseClassBasicInfoDTO> getAll(Pageable pageable, String facultyCode) {
-        if(facultyCode == null || facultyCode.isBlank()){
+        if (facultyCode == null || facultyCode.isBlank()) {
             facultyCode = null;
         }
         Page<CourseClassBasicInfoRow> page = courseClassRepository.findAllCourseClass(pageable, facultyCode);
@@ -69,6 +69,7 @@ public class CourseClassService {
                 .classCode(courseClass.getClassCode())
                 .className(courseClass.getClassName())
                 .capacity(courseClass.getCapacity())
+                .enrolledCount(courseClass.getEnrolledCount())
                 .isActive(courseClass.getIsActive())
                 .build();
     }
@@ -165,6 +166,7 @@ public class CourseClassService {
                 .classCode(courseClass.getClassCode())
                 .className(courseClass.getClassName())
                 .capacity(courseClass.getCapacity())
+                .enrolledCount(courseClass.getEnrolledCount())
                 .isActive(courseClass.getIsActive())
                 .build();
     }

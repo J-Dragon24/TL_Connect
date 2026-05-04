@@ -113,6 +113,7 @@ public class ScheduleService {
                                                         .subjectCode(row.getSubjectCode())
                                                         .startPeriod(row.getStartPeriod())
                                                         .endPeriod(row.getEndPeriod())
+                                                        .credits(row.getCredits())
                                                         .startTime(row.getStartTime())
                                                         .endTime(row.getEndTime())
                                                         .room(row.getRoom())

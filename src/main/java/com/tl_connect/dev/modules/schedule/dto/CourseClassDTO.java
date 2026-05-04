@@ -22,6 +22,7 @@ public class CourseClassDTO {
     String subjectCode;
     int startPeriod;
     int endPeriod;
+    int credits;
     LocalTime startTime;
     LocalTime endTime;
     String room;

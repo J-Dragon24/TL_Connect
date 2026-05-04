@@ -43,9 +43,18 @@ public class CourseClass {
     @Column(name = "capacity", nullable = false)
     private Integer capacity;
 
+    @Column(name = "enrolled_count", nullable = false)
+    @Builder.Default
+    private Integer enrolledCount = 0;
+
     @Column(name = "is_active", nullable = false)
     @Builder.Default
     private Boolean isActive = true;
+
+    @Version
+    @Column(name = "version")
+    @Builder.Default
+    private Long version = 0L;
 
     @CreationTimestamp
     @Column(name = "created_at")

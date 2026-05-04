@@ -9,6 +9,7 @@ public interface ScheduleRow {
     String getSubjectCode();
     int getStartPeriod();
     int getEndPeriod();
+    int getCredits();
     LocalTime getStartTime();
     LocalTime getEndTime();
     String getRoom();

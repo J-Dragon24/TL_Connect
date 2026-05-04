@@ -5,6 +5,7 @@ public interface CourseClassBasicInfoRow {
     String getClassCode();
     String getClassName();
     Integer getCapacity();
+    Integer getEnrolledCount();
     String getLecturerCode();
     String getSubjectCode();
     String getSemesterCode();

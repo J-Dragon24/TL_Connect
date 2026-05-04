@@ -57,6 +57,18 @@ public class StudentScheduleService {
         redisTemplate.opsForValue().set(cacheKey, intervals, 7, TimeUnit.DAYS);
     }
 
+    public void removeFromCache(Long studentId, Long semesterId, Long courseClassId) {
+        String cacheKey = CACHE_KEY_PREFIX + studentId + ":" + semesterId;
+
+        Object cached = redisTemplate.opsForValue().get(cacheKey);
+        if (cached == null) return;
+
+        List<ScheduleInterval> intervals = (List<ScheduleInterval>) cached;
+        intervals.removeIf(i -> i.getCourseClassId().equals(courseClassId));
+
+        redisTemplate.opsForValue().set(cacheKey, intervals, 7, TimeUnit.DAYS);
+    }
+
     public void invalidate(Long studentId, Long semesterId) {
         redisTemplate.delete(CACHE_KEY_PREFIX + studentId + ":" + semesterId);
     }

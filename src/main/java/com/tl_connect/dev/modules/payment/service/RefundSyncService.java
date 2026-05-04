@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +31,7 @@ public class RefundSyncService {
     private final TuitionInvoiceRepository invoiceRepository;
     private final TuitionTransactionRepository tuitionTransactionRepository;
     private final ZaloPayProvider zaloPayService;
-    private final RedisTemplate<String, String> redisTemplate;
+    private final StringRedisTemplate redisTemplate;
 
     // @Scheduled(fixedDelay = 30000) // 30 giây/lần
     public void syncRefundStatus() {

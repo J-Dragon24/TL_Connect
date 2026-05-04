@@ -23,5 +23,6 @@ public class CourseClassDTO {
     private String classCode;
     private String className;
     private Integer capacity;
+    private Integer enrolledCount;
     private Boolean isActive;
 }

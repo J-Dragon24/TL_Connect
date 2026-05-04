@@ -39,7 +39,7 @@ public interface SemesterRepository extends JpaRepository<Semester, Long> {
             OR (EXTRACT(YEAR FROM s.start_date) = :startYear AND s.semester_number >= 1))
         AND 
             (EXTRACT(YEAR FROM s.start_date) < :endYear
-            OR (EXTRACT(YEAR FROM s.start_date) = :endYear AND s.semester_number <= 2))
+            OR (EXTRACT(YEAR FROM s.start_date) = :endYear AND s.semester_number <= 3))
     """, nativeQuery = true)
     List<Semester> findAllStudentSemester(@Param("startYear") int startYear, @Param("endYear") int endYear);
 

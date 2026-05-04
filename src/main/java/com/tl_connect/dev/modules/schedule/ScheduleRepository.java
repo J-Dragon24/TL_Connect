@@ -24,6 +24,7 @@ public interface ScheduleRepository extends JpaRepository<ClassSchedule, Long> {
                 cs.room AS room,
                 cc.class_code AS classCode,
                 s.subject_code AS subjectCode,
+                s.credits AS credits,
                 s.subject_name AS subjectName,
                 l.full_name AS lecturerName,
                 l.email AS lecturerEmail,
