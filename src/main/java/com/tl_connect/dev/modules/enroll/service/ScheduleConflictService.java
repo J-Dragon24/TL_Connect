@@ -31,7 +31,7 @@ public class ScheduleConflictService {
                 throw new ConflictException(String.format(
                     "Tiết %d-%d thứ %d trùng với lớp %s",
                     s.startPeriod(), s.endPeriod(),
-                    s.dayOfWeek(), overlap.getClassCode()
+                    s.dayOfWeek() + 1, overlap.getClassCode()
                 ));
             }
         }

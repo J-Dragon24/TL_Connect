@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.tl_connect.dev.shared.common.enums.NotificationCreatedBy;
 import com.tl_connect.dev.shared.common.enums.NotificationType;
+import com.tl_connect.dev.shared.common.enums.ReferenceTypeNotification;
 
 public interface NotificationAdmRow {
     Long getId();
@@ -15,4 +16,5 @@ public interface NotificationAdmRow {
     List<Long> getTargetIds();
     LocalDate getDeadLine();
     Boolean getIsImportant();
+    ReferenceTypeNotification getReferenceType();
 }

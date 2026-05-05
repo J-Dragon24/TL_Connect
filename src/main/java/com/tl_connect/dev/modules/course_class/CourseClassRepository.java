@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import com.tl_connect.dev.modules.course_class.projection.CourseClassBasicInfoRow;
 import com.tl_connect.dev.modules.course_class.projection.CourseClassRow;
-import com.tl_connect.dev.modules.enroll.dto.DetailsForCheckEnrollDTO;
 import com.tl_connect.dev.modules.enroll.projection.CourseClassForEnrollRow;
+import com.tl_connect.dev.modules.enroll.projection.DetailsForCheckEnrollRow;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -35,7 +35,7 @@ public interface CourseClassRepository extends JpaRepository<CourseClass, Long> 
             JOIN subjects s ON s.id = cc.subject_id
             WHERE cs.course_class_id = :id
             """,nativeQuery = true)
-    List<DetailsForCheckEnrollDTO> findDetailForEnrollmentById(@Param("id") Long id);
+    List<DetailsForCheckEnrollRow> findDetailForEnrollmentById(@Param("id") Long id);
 
 
     @Query(value = """

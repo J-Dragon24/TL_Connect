@@ -15,7 +15,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CourseClassDTO {
+public class ScheduleCourseClassDTO {
     String classCode;
     int dayOfWeek;
     String subjectName;

@@ -34,6 +34,7 @@
 26. [Chatbot - Chatbot](#26-chatbot)
 27. [Tuition Fee Config - Quản lý học phí](#27-tuition-fee-config---quản-lý-học-phí)
 28. [Document - Quản lý tài liệu phục vụ RAG](#28-document---quản-lý-tài-liệu-phục-vụ-rag)
+29. [Enrollment - Đăng ký học](#29-enrollment---đăng-ký-học)
 
 
 ## 1. Response Format chung
@@ -2015,15 +2016,23 @@ Lấy tất cả thông tin thông báo của sinh viên.
     "content": [
       {
         "id": 1,
-        "title": "Thông báo học phí",
-        "isRead": false,
-        "createdAt": "2026-04-01T10:00:00"
+        "title": "Thông báo hệ thống",
+        "content": "Bảo trì hệ thống",
+        "createdBy": "Admin",
+        "targetType": "GLOBAL",
+        "isImportant": true,
+        "referenceType": "TUITION",
+        "deadLine": "2026-05-10",
+        "createdAt": "2026-05-01T08:30:00",
+        "isRead": false
       }
     ],
     "page": 0,
     "size": 10,
-    "totalElements": 100,
-    "totalPages": 10
+    "totalElements": 1,
+    "totalPages": 1,
+    "first": true,
+    "last": true
   }
 }
 ```  
@@ -2139,7 +2148,8 @@ Lấy danh sách tất cả notification (admin).
         "targetType": "STUDENT",
         "targetIds": [1001],
         "deadLine": "2026-04-10",
-        "isImportant": true
+        "isImportant": true,
+        "referenceType": "TUITION"
       }
     ],
     "page": 0,
@@ -2166,7 +2176,8 @@ Gửi notification.
   "targetIds": [1001, 1002],
   "createdBy": "Admin",
   "deadLine": "2026-04-10",
-  "isImportant": true
+  "isImportant": true,
+  "referenceType": "TUITION"
 }
 **Response thành công (code 0):**
 ```json
@@ -2192,7 +2203,8 @@ Cập nhật notification.
   "targetType": "STUDENT",
   "targetIds": [1001, 1002],
   "isImportant": false,
-  "deadLine": "2026-04-15"
+  "deadLine": "2026-04-15",
+  "referenceType": "TUITION"
 }
 ```
 **Response thành công (code 0):**
@@ -4921,6 +4933,450 @@ Xóa tài liệu.
 {
   "code": 0,
   "message": "Document deleted successfully",
+  "data": null
+}
+```
+---
+## 29. Enrollment - Đăng ký học
+### 29.1. POST /api/v1/admin/enrollment/periods/create
+
+Tạo đợt đăng ký học mới.
+
+- **Auth**: Bắt buộc (Admin JWT)
+- **Content-Type**: application/json
+
+**Request body:**
+```json
+{
+  "semesterId": 1,
+  "startTime": "2026-05-10T08:00:00",
+  "endTime": "2026-05-15T23:59:59",
+  "maxCredits": 24
+}
+```
+
+**Fields:**
+
+| Field | Type | Required | Description
+|------|-----|-----|-----|
+| semesterId | long | ✅ | ID học kỳ
+| startTime | datetime | ✅ | Thời gian bắt đầu đăng ký
+| endTime | datetime | ✅ | Thời gian kết thúc đăng ký
+| maxCredits | int | ✅ | Số tín chỉ tối đa
+
+**Response thành công (code 0):**
+
+```json
+{
+  "code": 0,
+  "message": "Period created successfully",
+  "data": 1
+}
+```
+---
+### 29.2. GET /api/v1/admin/enrollment/periods
+
+Lấy danh sách đợt đăng ký học.
+
+- **Auth**: Bắt buộc (Admin JWT)
+- **Content-Type**: Không áp dụng
+
+**Query params (optional):**
+
+| Field | Type | Required | Description
+|------|-----|-----|-----|
+| HocKy | string | ❌ | Mã học kỳ để filter
+| page | int | ❌ | Trang hiện tại (mặc định 0)
+| size | int | ❌ | Số phần tử/trang (mặc định 10)
+
+**Response thành công (code 0):**
+
+```json
+{
+  "code": 0,
+  "message": "Periods retrieved successfully",
+  "data": {
+    "content": [
+      {
+        "id": 1,
+        "semesterId": 1,
+        "startTime": "2026-05-10T08:00:00",
+        "endTime": "2026-05-15T23:59:59",
+        "maxCredits": 24,
+        "createdAt": "2026-05-01T10:00:00"
+      }
+    ],
+    "page": 0,
+    "size": 10,
+    "totalElements": 1,
+    "totalPages": 1,
+    "first": true,
+    "last": true
+  }
+}
+```
+---
+### 29.3. POST /api/v1/admin/enrollment/periods/update/`{id}`
+
+Cập nhật đợt đăng ký học.
+
+- **Auth**: Bắt buộc (Admin JWT)
+- **Content-Type**: application/json
+
+**Path param:**
+
+| Field | Type | Required | Description
+|------|-----|-----|-----|
+id	long	✅	ID đợt đăng ký
+
+**Request body:**
+```json
+{
+  "semesterId": 1,
+  "startTime": "2026-05-11T08:00:00",
+  "endTime": "2026-05-16T23:59:59",
+  "maxCredits": 25
+}
+```
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Period updated successfully",
+  "data": 1
+}
+```
+---
+### 29.4. POST /api/v1/admin/enrollment/periods/delete/`{id}`
+
+- **Auth**: Bắt buộc (Admin JWT)
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Period deleted successfully",
+  "data": null
+}
+```
+---  
+### 29.5. POST /api/v1/admin/enrollment/periods/clear-cache/`{semesterId}`
+
+Xóa cache đợt đăng ký của học kỳ.
+
+- **Auth**: Bắt buộc (Admin JWT)
+
+**Response thành công (code 0):**
+```json
+
+{
+  "code": 0,
+  "message": "Period cache invalidated successfully",
+  "data": null
+}
+```
+---
+### 29.6. POST /api/v1/admin/enrollment/schedule/clear-cache/`{semesterId}`
+
+Xóa cache lịch học của sinh viên theo học kỳ.
+
+- **Auth**: Bắt buộc (Admin JWT)
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Schedule cache invalidated successfully",
+  "data": null
+}
+```
+---
+### 29.7. POST /api/v1/admin/enrollment/prerequisite/clear-cache
+
+Xóa cache DAG môn tiên quyết.
+
+- **Auth**: Bắt buộc (Admin JWT)
+
+Response thành công:
+```json
+{
+  "code": 0,
+  "message": "Prerequisite cache invalidated successfully",
+  "data": null
+}
+```
+---
+### 29.8. GET /api/v1/admin/enrollment/all
+
+Lấy danh sách đăng ký học của sinh viên.
+
+- **Auth**: Bắt buộc (Admin JWT)
+- **Content-Type**: Không áp dụng
+
+Query params:
+(Toàn bộ field của StudentCourseClassFilter được bind qua query string)
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Student enrollments retrieved successfully",
+  "data": {
+    "content": [
+      {
+        "id": 1,
+        "studentCode": "SV001",
+        "studentName": "Nguyen Van A",
+        "classCode": "INT2204-01",
+        "className": "Lập trình Java",
+        "subjectCode": "INT2204",
+        "subjectName": "Lập trình Java",
+        "semesterCode": "HK1-2026",
+        "semesterName": "Học kỳ 1 năm 2026",
+        "status": "PENDING",
+        "isRetake": false,
+        "createdAt": "2026-05-01T10:00:00",
+        "updatedAt": "2026-05-01T10:00:00"
+      }
+    ]
+  }
+}
+```
+---
+### 29.9. POST /api/v1/admin/enrollment/confirm
+
+Xác nhận toàn bộ đăng ký học của học kỳ.
+
+- **Auth**: Bắt buộc (Admin JWT)
+- **Content-Type**: application/json
+
+**Request body:**
+```json
+{
+  "semesterId": 1
+}
+```
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Confirmed successfully",
+  "data": null
+}
+```
+---
+### 29.10. POST /api/v1/admin/enrollment/cancel/`{id}`
+
+Hủy một đăng ký học của sinh viên.
+
+- **Auth**: Bắt buộc (Admin JWT)
+
+**Path param:**
+
+| Field | Type | Required | Description
+|------|-----|-----|----|
+| id | long | ✅ | ID bản ghi đăng ký học
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Cancelled successfully",
+  "data": null
+}
+```
+---
+
+### 29.11. GET /api/v1/student/enrollment/all
+
+Lấy danh sách môn học có thể đăng ký theo chương trình đào tạo.
+
+- **Auth**: Bắt buộc (Authorization: Bearer JWT)
+- **Content-Type**: Không áp dụng
+
+**Query params:**
+
+| Field | Type | Required | Description
+|------|-----|-----|----|
+| studyProgramCode | string | ✅ | Mã chương trình đào tạo
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Available course classes retrieved successfully",
+  "data": {
+    "studyProgramId": 1,
+    "studyProgramCode": "CTDT-KTPM-2024",
+    "studyProgramName": "Chương trình đào tạo KTPM 2024",
+    "semesterId": 5,
+    "subjects": [
+      {
+        "id": 101,
+        "facultyName": "Công nghệ thông tin",
+        "facultyCode": "CNTT",
+        "departmentName": "Kỹ thuật phần mềm",
+        "departmentCode": "KTPM",
+        "subjectCode": "INT2204",
+        "subjectName": "Lập trình Java",
+        "credits": 3,
+        "isRequired": true,
+        "electiveGroup": null,
+        "coefficient": 1.0,
+        "lectureHours": 30,
+        "practiceHours": 15
+      }
+    ]
+  }
+}
+```
+---
+### 29.12. POST /api/v1/student/enrollment/course-classes
+
+Lấy danh sách lớp học phần khả dụng của một môn học trong học kỳ.
+
+- **Auth**: Bắt buộc (Authorization: Bearer JWT)
+- **Content-Type**: application/json
+
+**Request body:**
+```json
+{
+  "subjectId": 101,
+  "semesterId": 5
+}
+```
+
+**Fields:**
+
+| Field | Type | Required | Description
+|------|-----|-----|----|
+| subjectId | long | ✅ | ID môn học
+| semesterId | long | ✅ | ID học kỳ
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Available course classes retrieved successfully",
+  "data": [
+    {
+      "id": 11,
+      "lecturerCode": "GV001",
+      "lecturerName": "Nguyen Van A",
+      "classCode": "INT2204-01",
+      "className": "Lập trình Java - Nhóm 1",
+      "capacity": 60,
+      "enrolledCount": 45,
+      "schedules": [
+        {
+          "dayOfWeek": 2,
+          "startPeriod": 1,
+          "endPeriod": 3,
+          "room": "A101"
+        }
+      ]
+    }
+  ]
+}
+```
+---
+### 29.13. POST /api/v1/student/enrollment/schedule
+
+Lấy thời khóa biểu tạm thời của sinh viên trong quá trình đăng ký học.
+
+- **Auth**: Bắt buộc (Authorization: Bearer JWT)
+- **Content-Type**: application/json
+
+**Request body:**
+```json
+{
+  "semesterId": 5
+}
+```
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Available course classes retrieved successfully",
+  "data": [
+    {
+      "classCode": "INT2204-01",
+      "dayOfWeek": 2,
+      "subjectName": "Lập trình Java",
+      "subjectCode": "INT2204",
+      "startPeriod": 1,
+      "endPeriod": 3,
+      "credits": 3,
+      "startTime": "07:00:00",
+      "endTime": "09:30:00",
+      "room": "A101",
+      "lecturer": {
+        "lecturerCode": "GV001",
+        "fullName": "Nguyen Van A"
+      }
+    }
+  ]
+}
+```
+---
+### 29.14. POST /api/v1/student/enrollment/enroll
+
+Đăng ký lớp học phần.
+
+- **Auth**: Bắt buộc (Authorization: Bearer JWT)
+- **Content-Type**: application/json
+
+**Request body:**
+```json
+{
+  "studyProgramId": 1,
+  "courseClassId": 11
+}
+```
+
+**Fields:**
+
+| Field | Type | Required | Description
+|------|-----|-----|----|
+| studyProgramId | long | ✅ | ID chương trình đào tạo
+| courseClassId | long | ✅ | ID lớp học phần
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Đăng ký thành công",
+  "data": null
+}
+```
+---
+### 29.15. POST /api/v1/student/enrollment/drop
+
+Hủy đăng ký lớp học phần.
+
+- **Auth**: Bắt buộc (Authorization: Bearer JWT)
+- **Content-Type**: application/json
+
+Request body:
+```json
+{
+  "courseClassId": 11
+}
+```
+
+**Fields:**
+
+| Field | Type | Required | Description
+|------|-----|-----|----|
+| courseClassId | long | ✅ | ID lớp học phần cần hủy
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Hủy đăng ký thành công",
   "data": null
 }
 ```

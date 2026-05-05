@@ -20,9 +20,11 @@ import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EnrollmentPeriodService {
 
     private final EnrollmentPeriodRepository enrollmentPeriodRepository;
@@ -34,10 +36,16 @@ public class EnrollmentPeriodService {
     public EnrollmentPeriod getPeriod(Long semesterId) {
         String cacheKey = CACHE_KEY_PREFIX + semesterId;
 
-        Object cached = redisTemplate.opsForValue().get(cacheKey);
-        if (cached != null) return objectMapper.convertValue(cached, EnrollmentPeriod.class);
+        try {
+            Object cached = redisTemplate.opsForValue().get(cacheKey);
+            if (cached != null) {
+                return objectMapper.convertValue(cached, EnrollmentPeriod.class);
+            }
+        } catch (Exception e) {
+            log.warn("Redis unavailable, fallback to DB", e);
+        }
 
-        EnrollmentPeriod period = enrollmentPeriodRepository.findBySemesterId(semesterId)
+        EnrollmentPeriod period = enrollmentPeriodRepository.findLatestBySemesterId(semesterId)
             .orElseThrow(() -> new NotFoundException("Enrollment period not found"));
 
         long secondsUntilEnd = ChronoUnit.SECONDS.between(

@@ -13,8 +13,10 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.tl_connect.dev.shared.datastructure.intervaltree.ScheduleInterval;
 
 import java.time.Duration;
+import java.util.List;
 
 @Configuration
 public class RedisConfig {
@@ -45,6 +47,7 @@ public class RedisConfig {
         template.afterPropertiesSet();
         return template;
     }
+
 
     @Bean
     public GenericJackson2JsonRedisSerializer redisSerializer() {

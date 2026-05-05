@@ -103,4 +103,36 @@ public interface ScheduleRepository extends JpaRepository<ClassSchedule, Long> {
             @Param("courseClassId") Long courseClassId,
             @Param("semesterId") Long semesterId
     );
+
+        @Query(value = """
+            SELECT
+                cs.day_of_week AS dayOfWeek,
+                cs.start_period AS startPeriod,
+                cs.end_period AS endPeriod,
+                cs.start_time AS startTime,
+                cs.end_time AS endTime,
+                cs.room AS room,
+                cc.class_code AS classCode,
+                s.subject_code AS subjectCode,
+                s.credits AS credits,
+                s.subject_name AS subjectName,
+                l.full_name AS lecturerName,
+                l.email AS lecturerEmail,
+                l.phone_number AS lecturerPhone,
+                l.lecturer_code AS lecturerCode
+            FROM student_course_classes scc
+            JOIN course_classes cc ON scc.course_class_id = cc.id
+            JOIN class_schedules cs ON cc.id = cs.course_class_id
+            JOIN subjects s ON cc.subject_id = s.id
+            JOIN semesters sem ON cc.semester_id = sem.id
+            LEFT JOIN lecturers l ON cc.lecturer_id = l.id
+            WHERE scc.student_id = :studentId
+              AND sem.id = :semesterId
+              AND scc.status = 'PENDING'
+            """,
+            nativeQuery = true)
+    List<ScheduleRow> findTempSchedule(
+            @Param("studentId") Long studentId,
+            @Param("semesterId") Long semesterId
+    );
 }

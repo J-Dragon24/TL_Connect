@@ -5,40 +5,44 @@ import java.util.List;
 import java.util.Map;
 
 
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tl_connect.dev.modules.enroll.dto.dag.PrerequisiteGroup;
 import com.tl_connect.dev.modules.subject.projection.PrerequisiteRow;
 import com.tl_connect.dev.modules.enroll.dto.dag.SubjectNode;
 import com.tl_connect.dev.modules.subject.repository.SubjectRepository;
+import com.tl_connect.dev.shared.common.ultility.JsonHelper;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PrerequisiteDAGService {
 
     private final SubjectRepository subjectRepository;
-    private final RedisTemplate<String, Object> redisTemplate;
-    private final ObjectMapper objectMapper;
+    private final StringRedisTemplate redisTemplate;
+    private final JsonHelper jsonHelper;
 
     private static final String DAG_CACHE_KEY = "prereq:dag";
 
     public Map<Long, SubjectNode> getDAG() {
-        // Thử lấy từ Redis trước
-        Object cached = redisTemplate.opsForValue().get(DAG_CACHE_KEY);
+        String cached = (String) redisTemplate.opsForValue().get(DAG_CACHE_KEY);
         if (cached != null) {
-            return objectMapper.convertValue(cached, new TypeReference<Map<Long, SubjectNode>>() {});
+            return jsonHelper.fromJson(cached, new TypeReference<Map<Long, SubjectNode>>() {});
         }
 
         List<PrerequisiteRow> rows = subjectRepository.findAllPrerequisiteRows();
         Map<Long, SubjectNode> dag = buildDAG(rows);
 
-        // Lưu vào Redis, không TTL vì chỉ invalidate khi admin update
-        redisTemplate.opsForValue().set(DAG_CACHE_KEY, dag);
+        try{
+            redisTemplate.opsForValue().set(DAG_CACHE_KEY, jsonHelper.toJson(dag));
+        }catch (Exception e) {
+            log.warn("Error when caching DAG", e);
+        }
         return dag;
     }
 

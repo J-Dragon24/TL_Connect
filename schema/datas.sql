@@ -823,34 +823,34 @@ INSERT INTO notification_templates (code, name, content) VALUES
 
 -- notifications
 INSERT INTO notifications
-(title, content, created_by, target_type, deadline)
+(title, content, created_by, target_type, deadline, is_important, reference_type)
 VALUES
 
 -- GLOBAL
-('Thong bao he thong','He thong se bao tri vao 23:00 toi nay','SYSTEM','GLOBAL',NULL),
-('Cap nhat cong thong tin','Da cap nhat giao dien moi','SYSTEM','GLOBAL',NULL),
-('Thong bao nghi le','Sinh vien nghi le quoc khanh','SYSTEM','GLOBAL',NULL),
-('Lich thi HK1','Lich thi da duoc cap nhat tren portal','SYSTEM','GLOBAL','2024-01-05'),
-('Ket qua hoc bong','Danh sach hoc bong HK1 da duoc cong bo','SYSTEM','GLOBAL',NULL),
+('Thong bao he thong','He thong se bao tri vao 23:00 toi nay','SYSTEM','GLOBAL',NULL, false, null),
+('Cap nhat cong thong tin','Da cap nhat giao dien moi','SYSTEM','GLOBAL',NULL, false, null),
+('Thong bao nghi le','Sinh vien nghi le quoc khanh','SYSTEM','GLOBAL',NULL, false, null),
+('Lich thi HK1','Lich thi da duoc cap nhat tren portal','SYSTEM','GLOBAL','2024-01-05', true, 'EXAM_SCHEDULE'),
+('Ket qua hoc bong','Danh sach hoc bong HK1 da duoc cong bo','SYSTEM','GLOBAL',NULL, false, null),
 
 -- STUDENT_CLASS
-('Canh bao hoc vu','Ket qua hoc tap duoi muc yeu cau','SYSTEM','STUDENT_CLASS','2024-03-01'),
-('Canh bao hoc vu lan 2','Sinh vien can gap co van hoc tap','SYSTEM','STUDENT_CLASS','2024-03-10'),
-('Thong bao rieng','Sinh vien duoc chon tham gia workshop','SYSTEM','STUDENT_CLASS','2024-03-10'),
-('Thong bao rieng','Sinh vien duoc cap tai khoan lab','SYSTEM','STUDENT_CLASS','2024-03-10'),
-('Thong bao rieng','Sinh vien cap nhat thong tin ca nhan','SYSTEM','STUDENT_CLASS','2024-03-10'),
+('Canh bao hoc vu','Ket qua hoc tap duoi muc yeu cau','SYSTEM','STUDENT_CLASS','2024-03-01', true, null),
+('Canh bao hoc vu lan 2','Sinh vien can gap co van hoc tap','SYSTEM','STUDENT_CLASS','2024-03-10', true, null),
+('Thong bao rieng','Sinh vien duoc chon tham gia workshop','SYSTEM','STUDENT_CLASS','2024-03-10', false, null),
+('Thong bao rieng','Sinh vien duoc cap tai khoan lab','SYSTEM','STUDENT_CLASS','2024-03-10', false, null),
+('Thong bao rieng','Sinh vien cap nhat thong tin ca nhan','SYSTEM','STUDENT_CLASS','2024-03-10', false, null),
 
 -- COURSE_CLASS
-('Thong bao mon hoc','Lop lap trinh web thay doi phong hoc','LECTURER','COURSE_CLASS','2024-03-10'),
-('Thong bao mon hoc','Buoi hoc toi se hoc online','LECTURER','COURSE_CLASS','2024-03-10'),
-('Thong bao mon hoc','Deadline project duoc gia han','LECTURER','COURSE_CLASS','2024-04-10'),
+('Thong bao mon hoc','Lop lap trinh web thay doi phong hoc','LECTURER','COURSE_CLASS','2024-03-10', false, null),
+('Thong bao mon hoc','Buoi hoc toi se hoc online','LECTURER','COURSE_CLASS','2024-03-10', false, null),
+('Thong bao mon hoc','Deadline project duoc gia han','LECTURER','COURSE_CLASS','2024-04-10', false, null),
 
 -- FACULTY
-('Thong bao khoa CNTT','Sinh vien tham gia hoi thao AI','FACULTY','FACULTY',NULL),
-('Thong bao khoa CNTT','Cuoc thi lap trinh sap dien ra','FACULTY','FACULTY',NULL),
-('Thong bao khoa CNTT','Mo dang ky CLB AI','FACULTY','FACULTY',NULL),
-('Thong bao khoa CNTT','Workshop Cloud Computing','FACULTY','FACULTY',NULL),
-('Thong bao khoa CNTT','Sinh vien dang ky thuc tap he','FACULTY','FACULTY',NULL);
+('Thong bao khoa CNTT','Sinh vien tham gia hoi thao AI','FACULTY','FACULTY',NULL, false, null),
+('Thong bao khoa CNTT','Cuoc thi lap trinh sap dien ra','FACULTY','FACULTY',NULL, false, null),
+('Thong bao khoa CNTT','Mo dang ky CLB AI','FACULTY','FACULTY',NULL, false, null),
+('Thong bao khoa CNTT','Workshop Cloud Computing','FACULTY','FACULTY',NULL, false, null),
+('Thong bao khoa CNTT','Sinh vien dang ky thuc tap he','FACULTY','FACULTY',NULL, false, null);
 
 -- notification_targets
 INSERT INTO notification_targets (notification_id, target_id) VALUES

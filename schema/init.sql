@@ -602,6 +602,7 @@ CREATE TABLE notifications (
   content TEXT NOT NULL,
   created_by VARCHAR(255) DEFAULT 'SYSTEM' CHECK (created_by IN ('SYSTEM', 'FACULTY', 'LECTURER')),
   target_type VARCHAR(20) NOT NULL DEFAULT 'GLOBAL' CHECK (target_type IN ('GLOBAL','FACULTY','STUDENT_CLASS','COURSE_CLASS', 'STUDENT')),
+  reference_type VARCHAR(20) CHECK (reference_type IN ('TUITION','EXAM_SCHEDULE')),
   is_important BOOLEAN DEFAULT FALSE,
   deadline DATE,
   created_at TIMESTAMP DEFAULT now(),

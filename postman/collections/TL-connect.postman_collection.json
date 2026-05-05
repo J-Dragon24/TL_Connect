@@ -476,7 +476,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\r\n  \"classCode\": \"NA151-01\",\r\n  \"className\": \"Khoa học môi trường - 01\",\r\n  \"capacity\": 30,\r\n  \"subjectId\": 17,\r\n  \"semesterId\": 6,\r\n  \"lecturerId\": 1\r\n}",
+                      "raw": "{\r\n  \"classCode\": \"GBC-01\",\r\n  \"className\": \"gbc\",\r\n  \"capacity\": 30,\r\n  \"subjectId\": 19,\r\n  \"semesterId\": 6,\r\n  \"lecturerId\": 1\r\n}",
                       "options": {
                         "raw": {
                           "language": "json"
@@ -1418,7 +1418,7 @@
                       }
                     ],
                     "url": {
-                      "raw": "{{domain}}/api/v1/admin/schedules/1",
+                      "raw": "{{domain}}/api/v1/admin/schedules/19",
                       "host": [
                         "{{domain}}"
                       ],
@@ -1427,7 +1427,7 @@
                         "v1",
                         "admin",
                         "schedules",
-                        "1"
+                        "19"
                       ]
                     }
                   },
@@ -1446,7 +1446,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "[\r\n    {\r\n    \"dayOfWeek\": 1,\r\n    \"startPeriod\": 1,\r\n    \"endPeriod\": 3,\r\n    \"startTime\": \"07:00:00\",\r\n    \"endTime\": \"09:30:00\",\r\n    \"room\": \"A101\"\r\n    },\r\n    {\r\n    \"dayOfWeek\": 3,\r\n    \"startPeriod\": 6,\r\n    \"endPeriod\": 7,\r\n    \"startTime\": \"13:30:00\",\r\n    \"endTime\": \"14:20:00\",\r\n    \"room\": \"A101\"\r\n    }\r\n]",
+                      "raw": "[\r\n    {\r\n    \"dayOfWeek\": 2,\r\n    \"startPeriod\": 1,\r\n    \"endPeriod\": 3,\r\n    \"startTime\": \"07:00:00\",\r\n    \"endTime\": \"09:30:00\",\r\n    \"room\": \"A103\"\r\n    },\r\n    {\r\n    \"dayOfWeek\": 3,\r\n    \"startPeriod\": 6,\r\n    \"endPeriod\": 7,\r\n    \"startTime\": \"13:30:00\",\r\n    \"endTime\": \"14:20:00\",\r\n    \"room\": \"A103\"\r\n    }\r\n]",
                       "options": {
                         "raw": {
                           "language": "json"
@@ -1454,7 +1454,7 @@
                       }
                     },
                     "url": {
-                      "raw": "{{domain}}/api/v1/admin/schedules/create/37",
+                      "raw": "{{domain}}/api/v1/admin/schedules/create/39",
                       "host": [
                         "{{domain}}"
                       ],
@@ -1464,7 +1464,7 @@
                         "admin",
                         "schedules",
                         "create",
-                        "37"
+                        "39"
                       ]
                     }
                   },
@@ -1483,7 +1483,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\r\n    \"dayOfWeek\": 5,\r\n    \"startPeriod\": 1,\r\n    \"endPeriod\": 4,\r\n    \"startTime\": \"07:00:00\",\r\n    \"endTime\": \"10:30:00\",\r\n    \"room\": \"A101\"\r\n}",
+                      "raw": "{\r\n    \"dayOfWeek\": 4,\r\n    \"startPeriod\": 6,\r\n    \"endPeriod\": 7,\r\n    \"startTime\": \"13:30:00\",\r\n    \"endTime\": \"14:20:00\",\r\n    \"room\": \"A103\"\r\n}",
                       "options": {
                         "raw": {
                           "language": "json"
@@ -1491,7 +1491,7 @@
                       }
                     },
                     "url": {
-                      "raw": "{{domain}}/api/v1/admin/schedules/update/9",
+                      "raw": "{{domain}}/api/v1/admin/schedules/update/26",
                       "host": [
                         "{{domain}}"
                       ],
@@ -1501,7 +1501,7 @@
                         "admin",
                         "schedules",
                         "update",
-                        "9"
+                        "26"
                       ]
                     }
                   },
@@ -3179,7 +3179,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\r\n  \"semesterId\": 5,\r\n  \"startTime\": \"2026-02-01T08:00:00\",\r\n  \"endTime\": \"2026-02-04T23:59:59\",\r\n  \"maxCredits\": 18\r\n}",
+                      "raw": "{\r\n  \"semesterId\": 6,\r\n  \"startTime\": \"2026-05-05T08:00:00\",\r\n  \"endTime\": \"2026-05-06T23:59:59\",\r\n  \"maxCredits\": 18\r\n}",
                       "options": {
                         "raw": {
                           "language": "json"
@@ -3265,6 +3265,182 @@
                         "periods",
                         "delete",
                         "2"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "get all enrollment",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/enrollment/all?studentId=1",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "enrollment",
+                        "all"
+                      ],
+                      "query": [
+                        {
+                          "key": "majorId",
+                          "value": "1",
+                          "type": "text",
+                          "disabled": true
+                        },
+                        {
+                          "key": "semesterId",
+                          "value": "6",
+                          "disabled": true
+                        },
+                        {
+                          "key": "page",
+                          "value": "4",
+                          "disabled": true
+                        },
+                        {
+                          "key": "studentId",
+                          "value": "1",
+                          "type": "text"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "confirm",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"semesterId\": 6\r\n} ",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/enrollment/confirm",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "enrollment",
+                        "confirm"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "cancel",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/enrollment/cancel/",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "enrollment",
+                        "cancel",
+                        ""
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "clear period cache",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/enrollment/periods/clear-cache/6",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "enrollment",
+                        "periods",
+                        "clear-cache",
+                        "6"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "clear schedule cache",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"subjectId\": 19,\r\n    \"semesterId\": 6\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/enrollment/schedule/clear-cache/6",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "enrollment",
+                        "schedule",
+                        "clear-cache",
+                        "6"
                       ]
                     }
                   },
@@ -3407,7 +3583,7 @@
                       }
                     ],
                     "url": {
-                      "raw": "{{domain}}/api/v1/student/schedules/weekly",
+                      "raw": "{{domain}}/api/v1/student/schedules/weekly?start_date=2026-05-04&end_date=2026-05-11",
                       "host": [
                         "{{domain}}"
                       ],
@@ -3417,6 +3593,16 @@
                         "student",
                         "schedules",
                         "weekly"
+                      ],
+                      "query": [
+                        {
+                          "key": "start_date",
+                          "value": "2026-05-04"
+                        },
+                        {
+                          "key": "end_date",
+                          "value": "2026-05-11"
+                        }
                       ]
                     }
                   },
@@ -4009,7 +4195,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\r\n    \"subjectId\": 17,\r\n    \"semesterId\": 6\r\n}",
+                      "raw": "{\r\n    \"subjectId\": 19,\r\n    \"semesterId\": 6\r\n}",
                       "options": {
                         "raw": {
                           "language": "json"

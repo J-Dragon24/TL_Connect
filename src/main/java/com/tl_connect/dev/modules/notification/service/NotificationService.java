@@ -84,6 +84,8 @@ public class NotificationService {
                         .content(notificationRow.getContent())
                         .createdBy(notificationRow.getCreatedBy())
                         .targetType(notificationRow.getTargetType())
+                        .isImportant(notificationRow.getIsImportant())
+                        .referenceType(notificationRow.getReferenceType())
                         .deadLine(notificationRow.getDeadLine())
                         .createdAt(notificationRow.getCreatedAt())
                         .isRead(notificationRow.getIsRead())
@@ -133,6 +135,7 @@ public class NotificationService {
                         .targetIds(notification.getTargetIds())
                         .deadLine(notification.getDeadLine())
                         .isImportant(notification.getIsImportant())
+                        .referenceType(notification.getReferenceType())
                         .build())
                 .collect(Collectors.toList());
         return new PagedResponse<>(

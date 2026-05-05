@@ -1,6 +1,7 @@
 package com.tl_connect.dev.modules.enroll.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -12,6 +13,8 @@ import com.tl_connect.dev.modules.enroll.dto.DropRequestDTO;
 import com.tl_connect.dev.modules.enroll.dto.EnrollRequestDTO;
 import com.tl_connect.dev.modules.enroll.dto.EnrollViewDTO;
 import com.tl_connect.dev.modules.enroll.service.EnrollService;
+import com.tl_connect.dev.modules.schedule.dto.ScheduleCourseClassDTO;
+import com.tl_connect.dev.shared.common.exception.InvalidInputException;
 import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
 import com.tl_connect.dev.shared.common.types.JwtUserInfo;
 import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
@@ -38,10 +41,25 @@ public class EnrollController {
 
     @PostMapping("/course-classes")
     public ResponseEntity<?> getAvailableCourseClasses(Authentication authentication, @RequestBody @Valid CourseClassRequest request) {
-        if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo userInfo)) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo)) {
             throw new UnauthorizeException("Authentication required");
         }
         List<CourseClassForEnrollDTO> courseClasses = enrollService.getAvailableCourseClasses(request.getSubjectId(), request.getSemesterId());
+        return ResponseHelper.success("Available course classes retrieved successfully", courseClasses);
+    }
+
+
+    @PostMapping("/schedule")
+    public ResponseEntity<?> getTempSchedule(Authentication authentication, @RequestBody Map<String, Long> request) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo userInfo)) {
+            throw new UnauthorizeException("Authentication required");
+        }
+        Long studentId = userInfo.userId();
+        Long semesterId = request.get("semesterId");
+        if (semesterId == null) {
+            throw new InvalidInputException("Semester ID is required");
+        }
+        List<ScheduleCourseClassDTO> courseClasses = enrollService.getTempSchedule(studentId, semesterId);
         return ResponseHelper.success("Available course classes retrieved successfully", courseClasses);
     }
 

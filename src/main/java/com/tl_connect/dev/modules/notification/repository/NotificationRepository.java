@@ -32,11 +32,12 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
                 n.target_type AS targetType,
                 n.deadline AS deadline,
                 n.created_by AS createdBy,
-                n.is_important AS isImportant
+                n.is_important AS isImportant,
+                n.reference_type AS referenceType
             FROM notifications n
             LEFT JOIN notification_targets nt 
                 ON n.id = nt.notification_id
-            GROUP BY n.id, n.title, n.content, n.target_type, n.deadline, n.created_by, n.is_important
+            GROUP BY n.id, n.title, n.content, n.target_type, n.deadline, n.created_by, n.is_important, n.reference_type
             ORDER BY n.created_at DESC
             """,
             countQuery = """
@@ -63,6 +64,8 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
                 n.title AS title,
                 n.content AS content,
                 n.created_by AS createdBy,
+                n.is_important AS isImportant,
+                n.reference_type AS referenceType,
                 n.target_type AS targetType,
                 n.created_at AS createdAt,
                 n.deadline AS deadLine,

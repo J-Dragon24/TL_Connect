@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.tl_connect.dev.shared.common.enums.NotificationType;
+import com.tl_connect.dev.shared.common.enums.ReferenceTypeNotification;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +23,8 @@ public class SummaryNotifyDTO {
     private String content;
     private String createdBy;
     private NotificationType targetType;
+    private Boolean isImportant;
+    private ReferenceTypeNotification referenceType;
     private LocalDate deadLine;
     private LocalDateTime createdAt;
     private Boolean isRead;

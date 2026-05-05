@@ -1,9 +1,6 @@
 package com.tl_connect.dev.modules.enroll.dto;
 
-import java.time.LocalTime;
 import java.util.List;
-
-import com.tl_connect.dev.modules.enroll.projection.CourseClassForEnrollRow;
 
 import lombok.Builder;
 import lombok.Data;

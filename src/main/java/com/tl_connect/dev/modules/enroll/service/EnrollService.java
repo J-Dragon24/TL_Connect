@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tl_connect.dev.modules.enroll.dto.CourseClassForEnrollDTO;
-import com.tl_connect.dev.modules.enroll.dto.DetailsForCheckEnrollDTO;
 import com.tl_connect.dev.modules.enroll.dto.EnrollViewDTO;
 import com.tl_connect.dev.modules.enroll.dto.ScheduleForCheckDTO;
 import com.tl_connect.dev.modules.enroll.dto.ScheduleForEnrollDTO;
@@ -24,9 +23,14 @@ import com.tl_connect.dev.modules.enroll.entity.EnrollmentPeriod;
 import com.tl_connect.dev.modules.enroll.entity.StudentCourseClass;
 import com.tl_connect.dev.modules.enroll.entity.StudentCourseClassLog;
 import com.tl_connect.dev.modules.enroll.projection.CourseClassForEnrollRow;
+import com.tl_connect.dev.modules.enroll.projection.DetailsForCheckEnrollRow;
 import com.tl_connect.dev.modules.enroll.projection.SubjectForEnrollRow;
 import com.tl_connect.dev.modules.enroll.repository.CourseClassLogRepository;
 import com.tl_connect.dev.modules.enroll.repository.StudentCourseClassRepository;
+import com.tl_connect.dev.modules.lecturer.dto.LecturerDTO;
+import com.tl_connect.dev.modules.schedule.ScheduleRepository;
+import com.tl_connect.dev.modules.schedule.dto.ScheduleCourseClassDTO;
+import com.tl_connect.dev.modules.schedule.projection.ScheduleRow;
 import com.tl_connect.dev.modules.study_program.projection.StudyProgramHeaderView;
 import com.tl_connect.dev.modules.study_program.repository.StudyProgramRepository;
 import com.tl_connect.dev.shared.common.enums.EnrollAction;
@@ -54,6 +58,7 @@ public class EnrollService {
     private final StudentScheduleService studentScheduleService;
     private final ScheduleConflictService scheduleConflictService;
     private final EnrollmentPeriodService enrollmentPeriodService;
+    private final ScheduleRepository scheduleRepository;
     
     public EnrollViewDTO getAvailableSubjects(Long studentId, String studyProgramCode) {
 
@@ -119,7 +124,7 @@ public class EnrollService {
 
         checkEnrollmentPeriod(period);
 
-        List<DetailsForCheckEnrollDTO> details = courseClassRepository.findDetailForEnrollmentById(courseClassId);
+        List<DetailsForCheckEnrollRow> details = courseClassRepository.findDetailForEnrollmentById(courseClassId);
 
         if (details.isEmpty()) {
             throw new NotFoundException("Course class not found");
@@ -167,6 +172,7 @@ public class EnrollService {
         boolean isRetake = profile.getFailedSubjectIds().contains(courseClass.getSubjectId());
 
 
+        System.out.println("details: " + details);
         List<ScheduleForCheckDTO> newSchedules = details.stream()
                 .map(ScheduleForCheckDTO::from)
                 .toList();
@@ -240,6 +246,36 @@ public class EnrollService {
         courseClassLogRepository.save(log);
 
         studentScheduleService.removeFromCache(studentId, scc.getSemesterId(), courseClassId);
+    }
+
+    public List<ScheduleCourseClassDTO> getTempSchedule(Long studentId, Long semesterId) {
+        List<ScheduleRow> scheduleRows = scheduleRepository.findTempSchedule(studentId,
+                        semesterId);
+
+        List<ScheduleCourseClassDTO> courseClasses = scheduleRows.stream()
+                        .map(row -> {
+                                LecturerDTO lecturer = LecturerDTO.builder()
+                                                .fullName(row.getLecturerName())
+                                                .email(row.getLecturerEmail())
+                                                .phoneNumber(row.getLecturerPhone())
+                                                .lecturerCode(row.getLecturerCode())
+                                                .build();
+                                return ScheduleCourseClassDTO.builder()
+                                                .classCode(row.getClassCode())
+                                                .dayOfWeek(row.getDayOfWeek())
+                                                .subjectName(row.getSubjectName())
+                                                .subjectCode(row.getSubjectCode())
+                                                .startPeriod(row.getStartPeriod())
+                                                .endPeriod(row.getEndPeriod())
+                                                .credits(row.getCredits())
+                                                .startTime(row.getStartTime())
+                                                .endTime(row.getEndTime())
+                                                .room(row.getRoom())
+                                                .lecturer(lecturer)
+                                                .build();
+                        }).collect(Collectors.toList());
+
+        return courseClasses;
     }
     
 

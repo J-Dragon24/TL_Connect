@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.tl_connect.dev.shared.common.enums.NotificationCreatedBy;
 import com.tl_connect.dev.shared.common.enums.NotificationType;
+import com.tl_connect.dev.shared.common.enums.ReferenceTypeNotification;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,4 +27,5 @@ public class NotificationAdmDTO {
     private List<Long> targetIds;
     private LocalDate deadLine;
     private Boolean isImportant;
+    private ReferenceTypeNotification referenceType;
 }

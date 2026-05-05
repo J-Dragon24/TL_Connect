@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import com.tl_connect.dev.shared.common.enums.NotificationCreatedBy;
 import com.tl_connect.dev.shared.common.enums.NotificationType;
+import com.tl_connect.dev.shared.common.enums.ReferenceTypeNotification;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -42,6 +43,10 @@ public class Notification {
     @Enumerated(EnumType.STRING)
     private NotificationType targetType;
 
+    @Column(name = "reference_type")
+    @Enumerated(EnumType.STRING)
+    private ReferenceTypeNotification referenceType;
+
     @Column(name = "deadline")
     private LocalDate deadLine;
 
@@ -52,12 +57,13 @@ public class Notification {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    public void update(String title, String content, NotificationCreatedBy createdBy, NotificationType targetType,LocalDate deadLine, Boolean isImportant) {
+    public void update(String title, String content, NotificationCreatedBy createdBy, NotificationType targetType,LocalDate deadLine, Boolean isImportant, ReferenceTypeNotification referenceType) {
         if(title != null) this.title = title;
         if(content != null) this.content = content;
         if(createdBy != null) this.createdBy = createdBy;
         if(targetType != null) this.targetType = targetType;
         if(deadLine != null) this.deadLine = deadLine;
         if(isImportant != null) this.isImportant = isImportant;
+        if(referenceType != null) this.referenceType = referenceType;
     }
 }

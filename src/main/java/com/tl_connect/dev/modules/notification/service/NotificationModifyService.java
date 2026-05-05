@@ -81,7 +81,7 @@ public class NotificationModifyService {
             }
         }
 
-        notification.update(req.getTitle(), req.getContent(), req.getCreatedBy(), req.getTargetType(), req.getDeadLine(), req.getIsImportant());
+        notification.update(req.getTitle(), req.getContent(), req.getCreatedBy(), req.getTargetType(), req.getDeadLine(), req.getIsImportant(), req.getReferenceType());
 
         try{
             notificationRepository.save(notification);
@@ -106,6 +106,7 @@ public class NotificationModifyService {
         n.setCreatedBy(req.getCreatedBy());
         n.setTargetType(req.getTargetType());
         n.setIsImportant(req.getIsImportant());
+        n.setReferenceType(req.getReferenceType());
 
         Optional.ofNullable(req.getDeadLine()).ifPresent(n::setDeadLine);
 

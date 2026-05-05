@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.tl_connect.dev.shared.common.enums.NotificationCreatedBy;
 import com.tl_connect.dev.shared.common.enums.NotificationType;
+import com.tl_connect.dev.shared.common.enums.ReferenceTypeNotification;
 
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotNull;
@@ -30,6 +31,7 @@ public class CreateNotificationReqDTO {
     private LocalDate deadLine;
     @NotNull(message = "Is important is required")
     private Boolean isImportant;
+    private ReferenceTypeNotification referenceType;
 
     @AssertTrue(message = "Target ids is required")
     public boolean isTargetIdsValid() {

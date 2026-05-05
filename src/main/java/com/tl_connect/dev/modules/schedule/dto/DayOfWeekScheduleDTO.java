@@ -14,5 +14,5 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DayOfWeekScheduleDTO {
-    List<CourseClassDTO> courseClasses;
+    List<ScheduleCourseClassDTO> courseClasses;
 }

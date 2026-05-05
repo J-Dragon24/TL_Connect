@@ -15,7 +15,7 @@ import com.tl_connect.dev.modules.course_class.CourseClassRepository;
 import com.tl_connect.dev.modules.lecturer.dto.LecturerDTO;
 import com.tl_connect.dev.modules.schedule.dto.ClassScheduleAdminDTO;
 import com.tl_connect.dev.modules.schedule.dto.ClassScheduleDTO;
-import com.tl_connect.dev.modules.schedule.dto.CourseClassDTO;
+import com.tl_connect.dev.modules.schedule.dto.ScheduleCourseClassDTO;
 import com.tl_connect.dev.modules.schedule.dto.DayOfWeekScheduleDTO;
 import com.tl_connect.dev.modules.schedule.dto.SemesterScheduleDTO;
 import com.tl_connect.dev.modules.schedule.dto.UpdateScheduleDTO;
@@ -55,7 +55,7 @@ public class ScheduleService {
                                         int dayOfWeek = entry.getKey();
                                         List<ScheduleRow> rows = entry.getValue();
 
-                                        List<CourseClassDTO> courseClasses = rows.stream()
+                                        List<ScheduleCourseClassDTO> courseClasses = rows.stream()
                                                         .map(row -> {
                                                                 LecturerDTO lecturer = LecturerDTO.builder()
                                                                                 .fullName(row.getLecturerName())
@@ -63,7 +63,7 @@ public class ScheduleService {
                                                                                 .phoneNumber(row.getLecturerPhone())
                                                                                 .lecturerCode(row.getLecturerCode())
                                                                                 .build();
-                                                                return CourseClassDTO.builder()
+                                                                return ScheduleCourseClassDTO.builder()
                                                                                 .classCode(row.getClassCode())
                                                                                 .dayOfWeek(dayOfWeek)
                                                                                 .subjectName(row.getSubjectName())
@@ -99,7 +99,7 @@ public class ScheduleService {
                 List<ScheduleRow> scheduleRows = scheduleRepository.findScheduleByStudentId(studentId,
                                 semester.getId());
 
-                List<CourseClassDTO> courseClasses = scheduleRows.stream()
+                List<ScheduleCourseClassDTO> courseClasses = scheduleRows.stream()
                                 .map(row -> {
                                         LecturerDTO lecturer = LecturerDTO.builder()
                                                         .fullName(row.getLecturerName())
@@ -107,7 +107,7 @@ public class ScheduleService {
                                                         .phoneNumber(row.getLecturerPhone())
                                                         .lecturerCode(row.getLecturerCode())
                                                         .build();
-                                        return CourseClassDTO.builder()
+                                        return ScheduleCourseClassDTO.builder()
                                                         .classCode(row.getClassCode())
                                                         .dayOfWeek(row.getDayOfWeek())
                                                         .subjectName(row.getSubjectName())
@@ -146,7 +146,7 @@ public class ScheduleService {
                 List<ScheduleRow> scheduleRows = scheduleRepository.findDayOfWeekSchedule(studentId, semester.getId(),
                                 dayOfWeek);
 
-                List<CourseClassDTO> courseClasses = scheduleRows.stream()
+                List<ScheduleCourseClassDTO> courseClasses = scheduleRows.stream()
                                 .map(row -> {
                                         LecturerDTO lecturer = LecturerDTO.builder()
                                                         .fullName(row.getLecturerName())
@@ -154,7 +154,7 @@ public class ScheduleService {
                                                         .phoneNumber(row.getLecturerPhone())
                                                         .lecturerCode(row.getLecturerCode())
                                                         .build();
-                                        return CourseClassDTO.builder()
+                                        return ScheduleCourseClassDTO.builder()
                                                         .classCode(row.getClassCode())
                                                         .dayOfWeek(row.getDayOfWeek())
                                                         .subjectName(row.getSubjectName())
