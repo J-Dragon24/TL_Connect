@@ -128,8 +128,10 @@ public interface StudentCourseClassRepository extends JpaRepository<StudentCours
                 JOIN subjects su ON su.id = cc.subject_id
                 JOIN semesters sm ON sm.id = cc.semester_id
                 JOIN student_majors smj ON smj.student_id = s.id
+                JOIN majors m ON m.id = smj.major_id
+                JOIN faculties f ON f.id = m.faculty_id
             WHERE 1=1
-                AND (:majorId IS NULL OR smj.major_id = :majorId)
+                AND (:facultyId IS NULL OR f.id = :facultyId)
                 AND (:semesterId IS NULL OR sm.id = :semesterId)
                 AND (:studentId IS NULL OR s.id = :studentId)
             ORDER BY s.student_code, s.full_name, scc.created_at ASC
@@ -143,8 +145,10 @@ public interface StudentCourseClassRepository extends JpaRepository<StudentCours
             JOIN subjects su ON su.id = cc.subject_id
             JOIN semesters sm ON sm.id = cc.semester_id
             JOIN student_majors smj ON smj.student_id = s.id
+            JOIN majors m ON m.id = smj.major_id
+            JOIN faculties f ON f.id = m.faculty_id
         WHERE 1=1
-            AND (:majorId IS NULL OR smj.major_id = :majorId)
+            AND (:facultyId IS NULL OR f.id = :facultyId)
             AND (:semesterId IS NULL OR sm.id = :semesterId)
             AND (:studentId IS NULL OR s.id = :studentId)
         """,
@@ -152,7 +156,7 @@ public interface StudentCourseClassRepository extends JpaRepository<StudentCours
     Page<StudentCourseClassRow> getAllStudentEnrollment(
         @Param("semesterId") Long semesterId,
         @Param("studentId") Long studentId,
-        @Param("majorId") Long majorId,
+        @Param("facultyId") Long facultyId,
         Pageable pageable
     );
 }

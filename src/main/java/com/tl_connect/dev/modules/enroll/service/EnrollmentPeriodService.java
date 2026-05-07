@@ -5,6 +5,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -17,6 +18,8 @@ import com.tl_connect.dev.modules.enroll.dto.UpdateEnrollPeriodDTO;
 import com.tl_connect.dev.modules.enroll.entity.EnrollmentPeriod;
 import com.tl_connect.dev.modules.enroll.repository.EnrollmentPeriodRepository;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
+import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.exception.ConflictException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -77,9 +80,12 @@ public class EnrollmentPeriodService {
     public EnrollmentPeriod createPeriod(CreateEnrollPeriodDTO dto) {
         EnrollmentPeriod period = EnrollmentPeriod.create(dto.getSemesterId(), dto.getStartTime(), dto.getEndTime(), dto.getMaxCredits());
 
-        EnrollmentPeriod saved = enrollmentPeriodRepository.save(period);
-
-        return saved;
+        try {
+            EnrollmentPeriod saved = enrollmentPeriodRepository.save(period);
+            return saved;
+        } catch (DataIntegrityViolationException e) {
+            throw new ConflictException("Failed to create enrollment period: " + e.getMessage());
+        }
     }
 
     @Transactional
@@ -89,9 +95,12 @@ public class EnrollmentPeriodService {
 
         period.update(dto.getSemesterId(), dto.getStartTime(), dto.getEndTime(), dto.getMaxCredits());
 
-        EnrollmentPeriod saved = enrollmentPeriodRepository.save(period);
-
-        return saved;
+        try {
+            EnrollmentPeriod saved = enrollmentPeriodRepository.save(period);
+            return saved;
+        } catch (DataIntegrityViolationException e) {
+            throw new ConflictException("Failed to update enrollment period: " + e.getMessage());
+        }
     }
 
     @Transactional
@@ -99,7 +108,11 @@ public class EnrollmentPeriodService {
         EnrollmentPeriod period = enrollmentPeriodRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("Enrollment period not found"));
 
-        enrollmentPeriodRepository.delete(period);
+        try {
+            enrollmentPeriodRepository.delete(period);
+        } catch (DataIntegrityViolationException e) {
+            throw new BadRequestException("The enrollment period has been used and cannot be deleted");
+        }
     }
 
     public void invalidate(Long semesterId) {

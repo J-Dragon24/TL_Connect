@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StudentCourseClassFilter {
-    private Long majorId;
+    private Long facultyId;
     private Long semesterId;
     private Long studentId;
 }

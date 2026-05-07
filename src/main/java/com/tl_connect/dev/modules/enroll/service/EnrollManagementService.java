@@ -30,7 +30,7 @@ public class EnrollManagementService {
     }
 
     public PagedResponse<StudentCourseClassDTO> getAllStudentEnrollment(StudentCourseClassFilter filter, Pageable pageable) {
-        Page<StudentCourseClassRow> rows = studentCourseClassRepository.getAllStudentEnrollment(filter.getSemesterId(),filter.getStudentId(), filter.getMajorId(), pageable);
+        Page<StudentCourseClassRow> rows = studentCourseClassRepository.getAllStudentEnrollment(filter.getSemesterId(),filter.getStudentId(), filter.getFacultyId(), pageable);
         return new PagedResponse<>(
             rows.getContent().stream().map(StudentCourseClassDTO::from).toList(),
             rows.getNumber(),

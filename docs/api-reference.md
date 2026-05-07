@@ -5115,8 +5115,15 @@ Lấy danh sách đăng ký học của sinh viên.
 - **Auth**: Bắt buộc (Admin JWT)
 - **Content-Type**: Không áp dụng
 
-Query params:
-(Toàn bộ field của StudentCourseClassFilter được bind qua query string)
+**Query params (optional):**
+
+| Field | Type | Required | Description |
+|------|-----|-----|-----|
+| facultyId | long | ❌ | ID khoa |
+| semesterId | long | ❌ | ID học kỳ |
+| studentId | long | ❌ | ID sinh viên |
+| page | int | ❌ | Số trang |
+| size | int | ❌ | Kích thước trang |
 
 **Response thành công (code 0):**
 ```json
