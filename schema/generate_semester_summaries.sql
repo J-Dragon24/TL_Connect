@@ -1,3 +1,6 @@
+CREATE OR REPLACE FUNCTION recalc_student_semester_summary(p_semester_id BIGINT)
+RETURNS VOID AS $$
+BEGIN
 WITH gpa_calc AS (
     SELECT
         ssr.student_id,
@@ -17,7 +20,7 @@ WITH gpa_calc AS (
     JOIN student_majors sm 
         ON sm.student_id = ssr.student_id AND sm.is_primary = TRUE
 
-    WHERE ssr.semester_id = :semesterId
+    WHERE ssr.semester_id = p_semester_id
 
     GROUP BY ssr.student_id, ssr.semester_id, sm.study_program_id
 )
@@ -61,7 +64,7 @@ SELECT
     0,
     NULL
 
-FROM inserted_invoice
+FROM gpa_calc
 
 ON CONFLICT (student_id, semester_id)
 DO UPDATE SET
@@ -70,3 +73,5 @@ DO UPDATE SET
     semester_gpa = EXCLUDED.semester_gpa,
     letter_gpa = EXCLUDED.letter_gpa,
     updated_at = now();
+END;
+$$ LANGUAGE plpgsql;

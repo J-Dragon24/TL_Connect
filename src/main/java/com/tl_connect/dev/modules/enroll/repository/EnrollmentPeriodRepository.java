@@ -34,7 +34,8 @@ public interface EnrollmentPeriodRepository extends JpaRepository<EnrollmentPeri
 
         @Query(value = """
                 SELECT ep.* FROM enrollment_periods ep
-                WHERE ep.start_time <= NOW() AND ep.end_time >= NOW() LIMIT 1
+                WHERE ep.start_time <= NOW() AND ep.end_time >= NOW()
+                LIMIT 1
                 """, nativeQuery = true)
         Optional<EnrollmentPeriod> findCurrent();
 }

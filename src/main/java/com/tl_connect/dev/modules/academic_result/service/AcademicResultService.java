@@ -150,8 +150,6 @@ public class AcademicResultService {
                 List<SemesterSummaryView> semesterSummaries = semesterSummaryRepository.findSemesterSummaryByStudentIdAndStudyProgramCode(studentId,
                                 studyProgramCode);
 
-                System.out.println("Semester Summaries: " + semesterSummaries);
-
                 Map<String, List<SubjectResultRow>> groupedBySemester = subjectResultsRows.stream()
                                 .collect(Collectors.groupingBy(SubjectResultRow::getSemester));
 

@@ -2914,6 +2914,8 @@ Lấy thông tin tất cả lớp học phần.
 | ----- | ------ | -------- | --------------------------------- |
 | page  | number | ❌        | trang (default = 0)               |
 | size  | number | ❌        | số lượng mỗi trang (default = 10) |
+| khoa  | string | ❌        | mã khoa |
+| HocKy | string | ❌        | mã học kỳ |
 
 **Response thành công (code 0):**:
 ```json

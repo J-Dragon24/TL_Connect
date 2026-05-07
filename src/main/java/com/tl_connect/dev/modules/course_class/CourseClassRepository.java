@@ -82,6 +82,8 @@ public interface CourseClassRepository extends JpaRepository<CourseClass, Long> 
         JOIN semesters sem ON cc.semester_id = sem.id
         JOIN faculties f ON s.faculty_id = f.id
         WHERE (:facultyCode IS NULL OR :facultyCode = '' OR f.faculty_code = :facultyCode)
+        AND (:semesterCode IS NULL OR :semesterCode = '' OR sem.semester_code = :semesterCode)
+        ORDER BY cc.class_code ASC, cc.class_name ASC
         """,
         countQuery = """
                 SELECT COUNT(cc.id) FROM course_classes cc
@@ -90,9 +92,10 @@ public interface CourseClassRepository extends JpaRepository<CourseClass, Long> 
                 JOIN semesters sem ON cc.semester_id = sem.id
                 JOIN faculties f ON s.faculty_id = f.id
                 WHERE (:facultyCode IS NULL OR f.faculty_code = :facultyCode)
+                AND (:semesterCode IS NULL OR :semesterCode = '' OR sem.semester_code = :semesterCode)
                 """,
     nativeQuery = true)
-    Page<CourseClassBasicInfoRow> findAllCourseClass(Pageable pageable, @Param("facultyCode") String facultyCode);
+    Page<CourseClassBasicInfoRow> findAllCourseClass(Pageable pageable, @Param("facultyCode") String facultyCode, @Param("semesterCode") String semesterCode);
 
     @Query(value = """
             SELECT 

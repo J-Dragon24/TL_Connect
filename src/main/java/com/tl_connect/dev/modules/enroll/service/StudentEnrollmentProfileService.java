@@ -41,6 +41,8 @@ public class StudentEnrollmentProfileService {
         EnrollmentPeriod period = enrollmentPeriodRepository.findCurrent()
                 .orElseThrow(() -> new NotFoundException("Enrollment period not found"));
 
+       
+
         List<StudentSubjectResult> results = subjectResultRepository.findAllByStudentId(studentId);
 
         Set<Long> passedSubjectIds = new HashSet<>();
@@ -61,9 +63,8 @@ public class StudentEnrollmentProfileService {
                 .failedSubjectIds(failedSubjectIds)
                 .cumulativeGpa(summaryRepository.calculateCumulativeGpa(studentId, studyProgramId))
                 .totalCredits(summaryRepository.sumTotalCredits(studentId, studyProgramId))
-                .semesterId(period.getId())
+                .semesterId(period.getSemesterId())
                 .build();
-
 
         redisTemplate.opsForValue().set(cacheKey, profile, 7, TimeUnit.DAYS);
         return profile;

@@ -660,6 +660,10 @@ CREATE TABLE enrollment_periods (
     created_at TIMESTAMP DEFAULT now(),
     updated_at TIMESTAMP DEFAULT now(),
     CONSTRAINT valid_time_range CHECK (end_time > start_time),
+    CONSTRAINT no_overlap_period
+        EXCLUDE USING gist (
+            tsrange(start_time, end_time, '[)') WITH &&
+        ),
     FOREIGN KEY (semester_id) REFERENCES semesters(id) ON DELETE RESTRICT
 );
 

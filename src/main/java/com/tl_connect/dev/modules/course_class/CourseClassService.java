@@ -34,11 +34,14 @@ public class CourseClassService {
     private final SemesterRepository semesterRepository;
     private final LecturerRepository lecturerRepository;
 
-    public PagedResponse<CourseClassBasicInfoDTO> getAll(Pageable pageable, String facultyCode) {
+    public PagedResponse<CourseClassBasicInfoDTO> getAll(Pageable pageable, String facultyCode, String semesterCode) {
         if (facultyCode == null || facultyCode.isBlank()) {
             facultyCode = null;
         }
-        Page<CourseClassBasicInfoRow> page = courseClassRepository.findAllCourseClass(pageable, facultyCode);
+        if (semesterCode == null || semesterCode.isBlank()) {
+            semesterCode = null;
+        }
+        Page<CourseClassBasicInfoRow> page = courseClassRepository.findAllCourseClass(pageable, facultyCode, semesterCode);
         return new PagedResponse<>(
                 page.getContent().stream().map(this::toDTO).toList(),
                 page.getNumber(),
