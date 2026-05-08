@@ -5240,6 +5240,8 @@ Lấy danh sách môn học có thể đăng ký theo chương trình đào tạ
   }
 }
 ```
+
+
 ---
 ### 29.12. POST /api/v1/student/enrollment/course-classes
 
@@ -5358,6 +5360,113 @@ Lấy thời khóa biểu tạm thời của sinh viên trong quá trình đăng
   "code": 0,
   "message": "Đăng ký thành công",
   "data": null
+}
+```
+
+**Lỗi vi phạm ràng buộc database**
+
+```json
+{
+  "code": -27,
+  "message": "Database violation",
+  "data": null
+}
+```
+
+**Không có quyền đăng ký môn học**
+
+```json
+{
+  "code": -108,
+  "message": "You don't have permission to enroll in this subject",
+  "data": null
+}
+```
+
+**Đã đăng ký lớp học phần này trước đó**
+
+```json
+{
+  "code": -105,
+  "message": "You have already enrolled in this course class",
+  "data": null
+}
+```
+
+**Lớp học phần đã đầy**
+
+```json
+{
+  "code": -107,
+  "message": "Course class is full",
+  "data": null
+}
+```
+
+**Đã dăng ký môn học này**
+
+```json
+{
+  "code": -104,
+  "message": "You already enrolled this subject",
+  "data": null
+}
+```
+
+**Chưa học đủ môn tiên quyết**
+
+```json
+{
+  "code": -102,
+  "message": "You have not met the prerequisite condition",
+  "data": [
+    {
+      "groupId": 1,
+      "needMore": 1,
+      "missingSubjectCodes": ["INT2204"]
+    }
+  ]
+}
+```
+
+**Chưa đủ điều kiện gpa, tín chỉ**
+
+```json
+{
+  "code": -100,
+  "message": "You haven't met the prerequisite conditions for this course.",
+  "data": [
+    "GPA tối thiểu phải từ 2.5",
+    "Cần hoàn thành ít nhất 60 tín chỉ"
+  ]
+}
+```
+
+**Vượt quá số tín chỉ đăng ký**
+
+```json
+{
+  "code": -103,
+  "message": "You have exceeded the maximum number of credits",
+  "data": null
+}
+```
+
+**Trùng lịch học**
+
+Ví dụ: Tiết 1-3 thứ 3 bị trùng với lớp INT2204-01
+Lưu ý: dayOfWeek + 1 = thứ trong tuần
+
+```json
+{
+  "code": -101,
+  "message": "Conflict schedule",
+  "data": {
+    "dayOfWeek": 2,
+    "startPeriod": 1,
+    "endPeriod": 3,
+    "classOverlapCode": "INT2204-01"
+  }
 }
 ```
 ---

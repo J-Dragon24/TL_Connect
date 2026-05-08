@@ -9,7 +9,8 @@ import org.springframework.stereotype.Service;
 import com.tl_connect.dev.modules.enroll.dto.StudentEnrollmentProfile;
 import com.tl_connect.dev.modules.subject.entity.SubjectEnrollmentCondition;
 import com.tl_connect.dev.modules.subject.repository.SubjectEnrollmentConditionRepository;
-import com.tl_connect.dev.shared.common.exception.EnrollmentConditionNotMetException;
+import com.tl_connect.dev.shared.common.enums.ResponseStatus;
+import com.tl_connect.dev.shared.common.exception.ErrorException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -45,7 +46,7 @@ public class EnrollmentConditionService {
         }
 
         if (!violations.isEmpty()) {
-            throw new EnrollmentConditionNotMetException("You haven't met the prerequisite conditions for this course.", violations);
+            throw new ErrorException(ResponseStatus.ENROLLMENT_CONDITION_NOT_MET,"You haven't met the prerequisite conditions for this course.", violations);
         }
     }
 

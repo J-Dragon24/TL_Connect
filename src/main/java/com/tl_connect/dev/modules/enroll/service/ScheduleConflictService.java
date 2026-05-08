@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 
 import com.tl_connect.dev.modules.enroll.cache.StudentScheduleCache;
 import com.tl_connect.dev.modules.enroll.dto.ScheduleForCheckDTO;
-import com.tl_connect.dev.shared.common.exception.ConflictException;
+import com.tl_connect.dev.shared.common.dto.ScheduleConflict;
+import com.tl_connect.dev.shared.common.enums.ResponseStatus;
+import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.datastructure.intervaltree.ScheduleInterval;
 
 import lombok.RequiredArgsConstructor;
@@ -28,11 +30,17 @@ public class ScheduleConflictService {
             );
 
             if (overlap != null) {
-                throw new ConflictException(String.format(
-                    "Tiết %d-%d thứ %d trùng với lớp %s",
-                    s.startPeriod(), s.endPeriod(),
-                    s.dayOfWeek() + 1, overlap.getClassCode()
-                ));
+                ScheduleConflict conflict = ScheduleConflict.builder()
+                    .dayOfWeek(s.dayOfWeek())
+                    .startPeriod(s.startPeriod())
+                    .endPeriod(s.endPeriod())
+                    .classOverlapCode(overlap.getClassCode())
+                    .build();
+
+                throw new ErrorException(
+                        ResponseStatus.SCHEDULE_CONFLICT,
+                        "Conflict schedule",
+                        conflict);
             }
         }
     }

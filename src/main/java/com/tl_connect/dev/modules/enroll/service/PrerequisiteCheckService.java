@@ -9,7 +9,10 @@ import org.springframework.stereotype.Service;
 
 import com.tl_connect.dev.modules.enroll.dto.dag.PrerequisiteGroup;
 import com.tl_connect.dev.modules.enroll.dto.dag.SubjectNode;
+import com.tl_connect.dev.shared.common.dto.MissingGroupSubject;
+import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.exception.EnrollmentConditionNotMetException;
+import com.tl_connect.dev.shared.common.exception.ErrorException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,7 +37,7 @@ public class PrerequisiteCheckService {
             return;
         }
 
-        List<EnrollmentConditionNotMetException.MissingGroup> missingGroups = new ArrayList<>();
+        List<MissingGroupSubject> missingGroups = new ArrayList<>();
 
         for (PrerequisiteGroup group : node.getGroups()) {
             int passedCount = 0;
@@ -54,7 +57,7 @@ public class PrerequisiteCheckService {
                     String code = dag.get(missingId).getCode();
                     missingSubjectCodes.add(code);
                 }
-                missingGroups.add(EnrollmentConditionNotMetException.MissingGroup.builder()
+                missingGroups.add(MissingGroupSubject.builder()
                     .groupId(group.getGroupId())
                     .needMore(group.getMinRequired() - passedCount)
                     .missingSubjectCodes(missingSubjectCodes)
@@ -63,7 +66,7 @@ public class PrerequisiteCheckService {
         }
 
         if (!missingGroups.isEmpty()) {
-            throw new EnrollmentConditionNotMetException("You have not met the prerequisite condition", missingGroups);
+            throw new ErrorException(ResponseStatus.PRE_REQUISITE_NOT_MET,"You have not met the prerequisite condition", missingGroups);
         }
     }
 }

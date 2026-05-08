@@ -34,8 +34,10 @@ import com.tl_connect.dev.modules.schedule.projection.ScheduleRow;
 import com.tl_connect.dev.modules.study_program.projection.StudyProgramHeaderView;
 import com.tl_connect.dev.modules.study_program.repository.StudyProgramRepository;
 import com.tl_connect.dev.shared.common.enums.EnrollAction;
+import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.enums.StudentCourseClassStatus;
-import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.exception.DuplicateRegistrationException;
+import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.ForbiddenException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
 import com.tl_connect.dev.shared.datastructure.intervaltree.ScheduleInterval;
@@ -132,7 +134,7 @@ public class EnrollService {
 
         // check if student is allowed to enroll in the course class
         if (!studentCourseClassRepository.isSubjectAllowed(studentId, courseClass.getId())) {
-            throw new ForbiddenException("You don't have permission to enroll in this course class");
+            throw new ErrorException(ResponseStatus.SUBJECT_NOT_IN_PROGRAM, "You don't have permission to enroll in this subject");
         }
 
         // check if student has already enrolled in the course class
@@ -147,7 +149,7 @@ public class EnrollService {
             oldStatus = scc.getStatus();
 
             if (Set.of(StudentCourseClassStatus.PENDING, StudentCourseClassStatus.ENROLLED).contains(scc.getStatus())) {
-                throw new ForbiddenException("You have already enrolled in this course class");
+                throw new DuplicateRegistrationException(ResponseStatus.DUPLICATE_COURSE_CLASS, "You have already enrolled in this course class");
             }
         }
 
@@ -159,14 +161,14 @@ public class EnrollService {
                         Set.of(StudentCourseClassStatus.PENDING, StudentCourseClassStatus.ENROLLED));
 
         if (alreadyEnrollSameSubject) {
-            throw new ForbiddenException("You already enrolled this subject");
+            throw new DuplicateRegistrationException(ResponseStatus.DUPLICATE_SUBJECT, "You already enrolled this subject");
         }
         StudentEnrollmentProfile profile = profileService.getProfile(studentId, studyProgramId);
 
         boolean hasPassed = profile.getPassedSubjectIds().contains(courseClass.getSubjectId());
 
         if (hasPassed) {
-            throw new ForbiddenException("You have already passed this subject");
+            throw new DuplicateRegistrationException(ResponseStatus.SUBJECT_ALREADY_PASSED, "You have already passed this subject");
         }
 
         boolean isRetake = profile.getFailedSubjectIds().contains(courseClass.getSubjectId());
@@ -185,7 +187,7 @@ public class EnrollService {
         checkMaxCredits(studentId, courseClass.getSemesterId(), details.get(0).getCredits(), period.getMaxCredits());
 
         if (courseClass.getEnrolledCount() >= courseClass.getCapacity()) {
-            throw new BadRequestException("Course class is full");
+            throw new ErrorException(ResponseStatus.CLASS_FULL, "Course class is full");
         }
 
         courseClass.setEnrolledCount(courseClass.getEnrolledCount() + 1);
@@ -203,7 +205,7 @@ public class EnrollService {
         try {
             studentCourseClassRepository.save(scc);
         } catch (DataIntegrityViolationException e) {
-            throw new ForbiddenException("Already enrolled");
+            throw new ErrorException(ResponseStatus.DATABASE_VIOLATION, "Already enrolled");
         }
 
         StudentCourseClassLog log = StudentCourseClassLog.create(studentId, courseClassId, EnrollAction.ENROLL,
@@ -291,7 +293,7 @@ public class EnrollService {
     private void checkMaxCredits(Long studentId, Long semesterId, int newCredits, int maxCredits) {
         Integer creditsRegistered = studentCourseClassRepository.findCreditsRegistered(studentId, semesterId);
         if (creditsRegistered + newCredits > maxCredits) {
-            throw new ForbiddenException("You have exceeded the maximum number of credits");
+            throw new ErrorException(ResponseStatus.MAX_CREDIT_EXCEEDED, "You have exceeded the maximum number of credits");
         }
     }
 
@@ -299,10 +301,10 @@ public class EnrollService {
 
         LocalDateTime now = LocalDateTime.now();
         if (now.isBefore(period.getStartTime())) {
-            throw new ForbiddenException("Chưa đến thời gian đăng ký");
+            throw new DuplicateRegistrationException(ResponseStatus.OUTSIDE_REGISTRATION_PERIOD, "The registration period has not started yet");
         }
         if (now.isAfter(period.getEndTime())) {
-            throw new ForbiddenException("Đã hết thời gian đăng ký");
+            throw new DuplicateRegistrationException(ResponseStatus.OUTSIDE_REGISTRATION_PERIOD, "The registration period has ended");
         }
     }
 }
