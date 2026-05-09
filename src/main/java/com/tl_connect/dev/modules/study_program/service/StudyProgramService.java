@@ -84,6 +84,7 @@ public class StudyProgramService {
                                                 .studentCode(studyProgram.getStudentCode())
                                                 .studyProgramCode(studyProgram.getStudyProgramCode())
                                                 .studyProgramName(studyProgram.getStudyProgramName())
+                                                .totalCredits(studyProgram.getTotalCredits())
                                                 .isPrimary(studyProgram.getIsPrimary())
                                                 .startYear(studyProgram.getStartYear())
                                                 .build())
