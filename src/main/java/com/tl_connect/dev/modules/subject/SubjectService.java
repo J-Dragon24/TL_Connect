@@ -28,7 +28,9 @@ import com.tl_connect.dev.modules.subject.repository.SubjectPreGroupRepository;
 import com.tl_connect.dev.modules.subject.repository.SubjectPreGroupItemRepository;
 import com.tl_connect.dev.modules.subject.repository.SubjectRepository;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
-import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.enums.ResponseStatus;
+import com.tl_connect.dev.shared.common.exception.ConflictException;
+import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.InvalidInputException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.subject.projection.SubjectPrerequisiteGroupItemRow;
@@ -140,7 +142,7 @@ public class SubjectService {
         try {
             subjectRepository.save(subject);
         } catch (DataIntegrityViolationException e) {
-            throw new BadRequestException("Failed to create subject: " + e.getMessage());
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to create subject");
         }
         return subject.getId();
     }
@@ -167,7 +169,7 @@ public class SubjectService {
         try {
             subjectRepository.save(subject);
         } catch (DataIntegrityViolationException e) {
-            throw new BadRequestException("Failed to update subject");
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to update subject");
         }
 
         if(dto.getPrerequisiteGroups() != null){
@@ -205,7 +207,7 @@ public class SubjectService {
                     try {
                         subjectPreGroupItemRepository.saveAll(prerequisiteGroupItems);
                     } catch (DataIntegrityViolationException e) {
-                        throw new BadRequestException("Failed to update subject: " + e.getMessage());
+                        throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to update subject");
                     }
                 }
             }
@@ -224,7 +226,7 @@ public class SubjectService {
                 try {
                     subjectEnrollmentConditionRepository.save(subjectEnrollmentCondition);
                 } catch (DataIntegrityViolationException e) {
-                    throw new BadRequestException("Failed to update subject: " + e.getMessage());
+                    throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to update subject");
                 }
             }
         }
@@ -237,13 +239,13 @@ public class SubjectService {
         Subject subject = subjectRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Subject not found"));
         if(!subject.getIsActive()){
-            throw new BadRequestException("Subject already deleted");
+            throw new ConflictException("Subject already deleted");
         }
         subject.deactivate();
         try {
             subjectRepository.save(subject);
         } catch (DataIntegrityViolationException e) {
-            throw new BadRequestException("Failed to delete subject: " + e.getMessage());
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to delete subject");
         }
     }
     

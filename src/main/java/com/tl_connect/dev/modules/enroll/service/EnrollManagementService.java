@@ -12,7 +12,7 @@ import com.tl_connect.dev.modules.enroll.projection.StudentCourseClassRow;
 import com.tl_connect.dev.modules.enroll.repository.StudentCourseClassRepository;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.enums.StudentCourseClassStatus;
-import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.exception.ConflictException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
 
 import jakarta.transaction.Transactional;
@@ -46,7 +46,7 @@ public class EnrollManagementService {
         StudentCourseClass studentCourseClass = studentCourseClassRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("StudentCourseClass not found"));
         if(studentCourseClass.getStatus() != StudentCourseClassStatus.PENDING) {
-            throw new BadRequestException("StudentCourseClass is not in PENDING state");
+            throw new ConflictException("StudentCourseClass is not in PENDING state");
         }
         studentCourseClass.setStatus(StudentCourseClassStatus.REJECTED);
         studentCourseClassRepository.save(studentCourseClass);

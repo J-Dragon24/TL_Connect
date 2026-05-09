@@ -11,7 +11,8 @@ public enum ResponseStatus {
     EXTERNAL_ERROR(502, "External service error", -13),
     CONFLICT(409, "Resource already exists", -25),
     BAD_REQUEST(400, "Bad request", -26),
-    DATABASE_VIOLATION(400, "Database violation", -27),
+    DATABASE_ERROR(400, "Database error", -27),
+
 
     //enrollment
     ENROLLMENT_CONDITION_NOT_MET(400, "Enrollment condition not met", -100),

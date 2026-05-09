@@ -17,7 +17,8 @@ import com.tl_connect.dev.modules.notification.entity.NotificationTarget;
 import com.tl_connect.dev.modules.notification.repository.NotificationRepository;
 import com.tl_connect.dev.modules.notification.repository.NotificationTargetRepository;
 import com.tl_connect.dev.shared.common.enums.NotificationType;
-import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.enums.ResponseStatus;
+import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -54,7 +55,7 @@ public class NotificationModifyService {
             notificationTargetRepository.saveAll(notificationTargets);
         }
         catch(DataIntegrityViolationException e){
-            throw new BadRequestException("Failed to create notification" + e.getMessage());
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to create notification" + e.getMessage());
         }
 
         notificationPushService.pushNotifications(notification, req.getTargetIds());
@@ -88,7 +89,7 @@ public class NotificationModifyService {
             notificationTargetRepository.saveAll(notificationTargets);
         }
         catch(DataIntegrityViolationException e){
-            throw new BadRequestException("Failed to update notification");
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to update notification");
         }
     }
 

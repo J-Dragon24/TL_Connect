@@ -12,8 +12,9 @@ import com.tl_connect.dev.modules.department.projection.DepartmentRow;
 import com.tl_connect.dev.modules.faculty.Faculty;
 import com.tl_connect.dev.modules.faculty.FacultyRepository;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
-import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.exception.ConflictException;
+import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
 
 import jakarta.transaction.Transactional;
@@ -54,7 +55,7 @@ public class DepartmentService {
             departmentRepository.save(department);
             return department.getId();
         } catch (DataIntegrityViolationException ex) {
-            throw new BadRequestException("Failed to create department");
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to create department");
         }
     }
 
@@ -81,7 +82,7 @@ public class DepartmentService {
         try {
             departmentRepository.save(department);
         } catch (DataIntegrityViolationException ex) {
-            throw new BadRequestException("Failed to update department");
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to update department");
         }
     }
 
@@ -95,7 +96,7 @@ public class DepartmentService {
         try {
             departmentRepository.save(department);
         } catch (DataIntegrityViolationException ex) {
-            throw new BadRequestException("Failed to delete department");
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to delete department");
         }
     }
 

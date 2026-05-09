@@ -29,10 +29,11 @@ import com.tl_connect.dev.modules.student_class.entity.StudentClass;
 import com.tl_connect.dev.modules.study_program.entity.StudyProgram;
 import com.tl_connect.dev.modules.study_program.repository.StudyProgramRepository;
 import com.tl_connect.dev.shared.common.dto.ImportResultDTO;
+import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.enums.StudentMajorStatus;
 import com.tl_connect.dev.shared.common.enums.StudentStatus;
-import com.tl_connect.dev.shared.common.exception.BadRequestException;
 import com.tl_connect.dev.shared.common.exception.ConflictException;
+import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.InvalidInputException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
 import com.tl_connect.dev.shared.common.ultility.importer.FileParseHelper;
@@ -90,7 +91,7 @@ public class StudentWriteService {
                 try {
                         return saveStudentEntities(dto, major.getId(), clazz.getId(), studyProgramId);
                 } catch (DataIntegrityViolationException e) {
-                        throw new BadRequestException("Failed to create student: " + e.getMessage());
+                        throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to create student: " + e.getMessage());
                 }
         }
 

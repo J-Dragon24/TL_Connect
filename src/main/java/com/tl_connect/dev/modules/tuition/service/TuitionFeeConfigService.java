@@ -11,7 +11,8 @@ import com.tl_connect.dev.modules.tuition.dto.UpdateTuitionFeeConfig;
 import com.tl_connect.dev.modules.tuition.entity.TuitionFeeConfig;
 import com.tl_connect.dev.modules.tuition.repository.TuitionFeeConfigRepository;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
-import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.enums.ResponseStatus;
+import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -41,7 +42,7 @@ public class TuitionFeeConfigService {
         try {
             return tuitionFeeConfigRepository.save(tuitionFeeConfig).getId();
         } catch (DataIntegrityViolationException e) {
-            throw new BadRequestException("Failed to create tuition fee config");
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to create tuition fee config");
         }
     }
 
@@ -53,7 +54,7 @@ public class TuitionFeeConfigService {
         try {
             tuitionFeeConfigRepository.save(tuitionFeeConfig);
         } catch (DataIntegrityViolationException e) {
-            throw new BadRequestException("Failed to update tuition fee config");
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to update tuition fee config");
         }
     }
 
@@ -64,7 +65,7 @@ public class TuitionFeeConfigService {
         try {
             tuitionFeeConfigRepository.delete(tuitionFeeConfig);
         } catch (Exception e) {
-            throw new BadRequestException("Failed to delete tuition fee config");
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to delete tuition fee config");
         }
     }
 

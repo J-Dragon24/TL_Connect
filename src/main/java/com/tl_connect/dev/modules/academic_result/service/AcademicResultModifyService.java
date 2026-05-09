@@ -26,7 +26,8 @@ import com.tl_connect.dev.modules.student.repository.StudentRepository;
 import com.tl_connect.dev.modules.subject.entity.Subject;
 import com.tl_connect.dev.modules.subject.repository.SubjectRepository;
 import com.tl_connect.dev.shared.common.dto.ImportResultDTO;
-import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.enums.ResponseStatus;
+import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.InvalidInputException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
 import com.tl_connect.dev.shared.common.ultility.importer.FileParseHelper;
@@ -62,24 +63,22 @@ public class AcademicResultModifyService {
                 dto.getScore10(),
                 dto.getScore4(),
                 dto.getLetterGrade(),
-                dto.getIsPass()
-        );
+                dto.getIsPass());
 
-        try{
+        try {
             return subjectResultRepository.save(entity).getId();
-        }catch(DataIntegrityViolationException e){
-            throw new BadRequestException("Error when create student subject result: " + e.getMessage());
+        } catch (DataIntegrityViolationException e) {
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR, "Error when create student subject result");
         }
     }
-    
+
     @Transactional
     public ImportResultDTO importFile(MultipartFile file) throws IOException {
         List<ImportAcademicResultDTO> rows = fileParseHelper.parse(file, ImportAcademicResultDTO.class);
         List<StudentSubjectResult> toSave = new ArrayList<>();
 
-
         if (rows.isEmpty()) {
-            throw new BadRequestException("File is empty");
+            throw new InvalidInputException("File is empty");
         }
 
         Set<String> studentCodes = rows.stream()
@@ -88,8 +87,8 @@ public class AcademicResultModifyService {
                 .collect(Collectors.toSet());
 
         Map<String, Student> studentMap = studentRepository.findByStudentCodeIn(studentCodes)
-                        .stream()
-                        .collect(Collectors.toMap(Student::getStudentCode, s -> s));
+                .stream()
+                .collect(Collectors.toMap(Student::getStudentCode, s -> s));
 
         Set<String> subjectCodes = rows.stream()
                 .map(ImportAcademicResultDTO::getSubjectCode)
@@ -97,8 +96,8 @@ public class AcademicResultModifyService {
                 .collect(Collectors.toSet());
 
         Map<String, Subject> subjectMap = subjectRepository.findBySubjectCodeIn(subjectCodes)
-                        .stream()
-                        .collect(Collectors.toMap(Subject::getSubjectCode, s -> s));
+                .stream()
+                .collect(Collectors.toMap(Subject::getSubjectCode, s -> s));
 
         Set<String> semesterCodes = rows.stream()
                 .map(ImportAcademicResultDTO::getSemesterCode)
@@ -106,12 +105,12 @@ public class AcademicResultModifyService {
                 .collect(Collectors.toSet());
 
         Map<String, Long> semesterMap = semesterRepository.findBySemesterCodeIn(semesterCodes)
-                        .stream()
-                        .collect(Collectors.toMap(Semester::getSemesterCode, Semester::getId));
+                .stream()
+                .collect(Collectors.toMap(Semester::getSemesterCode, Semester::getId));
         if (studentMap.size() != studentCodes.size()) {
             Set<String> notFoundCodes = new HashSet<>(studentCodes);
             notFoundCodes.removeAll(studentMap.keySet());
-            throw new BadRequestException("Không tìm thấy sinh viên với mã: " + String.join(", ", notFoundCodes));
+            throw new NotFoundException("Student code not found: " + String.join(", ", notFoundCodes));
         }
 
         int successCount = 0;
@@ -136,8 +135,7 @@ public class AcademicResultModifyService {
                         row.getScore10(),
                         row.getScore4(),
                         row.getLetterGrade(),
-                        row.getIsPass()
-                );
+                        row.getIsPass());
 
                 toSave.add(entity);
 
@@ -173,9 +171,10 @@ public class AcademicResultModifyService {
     public void updateStudentSubjectResult(Long id, UpdateStudentSubjectResultDTO dto) {
         StudentSubjectResult entity = subjectResultRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Student subject result not found"));
-        
-        entity.update(dto.getSemesterId(), dto.getAttendanceScore(), dto.getMidtermScore(), dto.getFinalScore(), dto.getScore10(), dto.getScore4(), dto.getLetterGrade(), dto.getIsPass());
-        
+
+        entity.update(dto.getSemesterId(), dto.getAttendanceScore(), dto.getMidtermScore(), dto.getFinalScore(),
+                dto.getScore10(), dto.getScore4(), dto.getLetterGrade(), dto.getIsPass());
+
         subjectResultRepository.save(entity);
     }
 
@@ -190,9 +189,9 @@ public class AcademicResultModifyService {
         Set<ConstraintViolation<ImportAcademicResultDTO>> violations = validator.validate(row);
         if (!violations.isEmpty()) {
             String message = violations.stream()
-                .map(ConstraintViolation::getMessage)
-                .findFirst()
-                .orElse("Invalid input");
+                    .map(ConstraintViolation::getMessage)
+                    .findFirst()
+                    .orElse("Invalid input");
             throw new InvalidInputException(message);
         }
     }

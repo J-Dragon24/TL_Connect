@@ -9,7 +9,8 @@ import com.tl_connect.dev.modules.study_program.dto.CreateStudyProgramDTO;
 import com.tl_connect.dev.modules.study_program.dto.UpdateStudyProgramDTO;
 import com.tl_connect.dev.modules.study_program.entity.StudyProgram;
 import com.tl_connect.dev.modules.study_program.repository.StudyProgramRepository;
-import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.enums.ResponseStatus;
+import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
 
 import jakarta.transaction.Transactional;
@@ -34,7 +35,7 @@ public class StudyProgramModifyService {
         try{
             studyProgramRepository.save(studyProgram);
         }catch(DataIntegrityViolationException e){
-            throw new BadRequestException("Invalid study program data: " + e.getMessage());
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Invalid study program data");
         }
         return studyProgram.getId();
     }
@@ -53,7 +54,7 @@ public class StudyProgramModifyService {
         try {
             studyProgramRepository.save(studyProgram);
         } catch (DataIntegrityViolationException e) {
-            throw new BadRequestException("Invalid study program data: " + e.getMessage());
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Invalid study program data");
         }
     }
 
@@ -62,13 +63,13 @@ public class StudyProgramModifyService {
         StudyProgram studyProgram = studyProgramRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Study program not found"));
         if(!studyProgram.getIsActive()){
-            throw new BadRequestException("Study program is already inactive");
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Study program is already inactive");
         }
         studyProgram.deactivate();
         try {
             studyProgramRepository.save(studyProgram);
         } catch (DataIntegrityViolationException e) {
-            throw new BadRequestException("Invalid study program data: " + e.getMessage());
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Invalid study program data: " + e.getMessage());
         }
     }
 }

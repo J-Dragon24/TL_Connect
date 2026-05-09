@@ -15,7 +15,8 @@ import com.tl_connect.dev.modules.notification.dto.UpdateNotificationTemplateDTO
 import com.tl_connect.dev.modules.notification.entity.NotificationTemplate;
 import com.tl_connect.dev.modules.notification.repository.NotificationTemplateRepository;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
-import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.enums.ResponseStatus;
+import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -50,7 +51,7 @@ public class NotificationTemplateService {
         try{
             return notificationTemplateRepository.save(notificationTemplate).getId();
         }catch(DataIntegrityViolationException e){
-            throw new BadRequestException("Create notification template failed: " + e.getMessage());
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Create notification template failed: " + e.getMessage());
         }
     }
 
@@ -65,7 +66,7 @@ public class NotificationTemplateService {
         try{
             notificationTemplateRepository.save(notificationTemplate);
         }catch(DataIntegrityViolationException e){
-            throw new BadRequestException("Update notification template failed: " + e.getMessage());
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Update notification template failed: " + e.getMessage());
         }
     }
 

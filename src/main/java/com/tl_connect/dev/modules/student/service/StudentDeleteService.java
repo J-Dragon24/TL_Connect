@@ -7,9 +7,10 @@ import com.tl_connect.dev.modules.oauth.entity.OAuthUser;
 import com.tl_connect.dev.modules.oauth.repository.OAuthUserRepository;
 import com.tl_connect.dev.modules.student.entity.Student;
 import com.tl_connect.dev.modules.student.repository.StudentRepository;
+import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.enums.StudentStatus;
 import com.tl_connect.dev.shared.common.enums.UserStatus;
-import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class StudentDeleteService {
                 .orElseThrow(() -> new NotFoundException("Student not found"));
 
         if (StudentStatus.DELETED.equals(student.getStatus())) {
-            throw new BadRequestException("Student already deleted");
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Student already deleted");
         }
 
         student.setStatus(StudentStatus.DELETED);

@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class FieldException {
+public class DetailException {
     private String field;
+    private String resource;
 }

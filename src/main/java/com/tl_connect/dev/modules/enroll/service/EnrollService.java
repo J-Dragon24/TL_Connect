@@ -61,7 +61,7 @@ public class EnrollService {
     private final ScheduleConflictService scheduleConflictService;
     private final EnrollmentPeriodService enrollmentPeriodService;
     private final ScheduleRepository scheduleRepository;
-    
+
     public EnrollViewDTO getAvailableSubjects(Long studentId, String studyProgramCode) {
 
         StudyProgramHeaderView header = studyProgramRepository
@@ -73,8 +73,8 @@ public class EnrollService {
         List<SubjectForEnrollRow> subjects = studyProgramRepository.findSubjectsByStudyProgramId(header.getId());
 
         List<SubjectForEnrollDTO> subjectForEnrollDTOS = subjects.stream()
-        .filter(subject -> !profile.getPassedSubjectIds().contains(subject.getSubjectId()))
-        .map(SubjectForEnrollDTO::from).toList();
+                .filter(subject -> !profile.getPassedSubjectIds().contains(subject.getSubjectId()))
+                .map(SubjectForEnrollDTO::from).toList();
 
         return EnrollViewDTO.builder()
                 .studyProgramId(subjects.get(0).getStudyProgramId())
@@ -86,21 +86,19 @@ public class EnrollService {
     }
 
     public List<CourseClassForEnrollDTO> getAvailableCourseClasses(Long subjectId, Long semesterId) {
-        List<CourseClassForEnrollRow> rows  = courseClassRepository.findCourseClassForEnrollment(subjectId, semesterId);
+        List<CourseClassForEnrollRow> rows = courseClassRepository.findCourseClassForEnrollment(subjectId, semesterId);
         Map<Long, CourseClassForEnrollDTO> map = new LinkedHashMap<>();
         for (CourseClassForEnrollRow row : rows) {
-            map.computeIfAbsent(row.getId(), id ->
-                    CourseClassForEnrollDTO.builder()
-                            .id(row.getId())
-                            .lecturerCode(row.getLecturerCode())
-                            .lecturerName(row.getLecturerName())
-                            .classCode(row.getClassCode())
-                            .className(row.getClassName())
-                            .capacity(row.getCapacity())
-                            .enrolledCount(row.getEnrolledCount())
-                            .schedules(new ArrayList<>())
-                            .build()
-            );
+            map.computeIfAbsent(row.getId(), id -> CourseClassForEnrollDTO.builder()
+                    .id(row.getId())
+                    .lecturerCode(row.getLecturerCode())
+                    .lecturerName(row.getLecturerName())
+                    .classCode(row.getClassCode())
+                    .className(row.getClassName())
+                    .capacity(row.getCapacity())
+                    .enrolledCount(row.getEnrolledCount())
+                    .schedules(new ArrayList<>())
+                    .build());
 
             map.get(row.getId()).getSchedules().add(
                     ScheduleForEnrollDTO.builder()
@@ -110,8 +108,7 @@ public class EnrollService {
                             .startTime(row.getStartTime())
                             .endTime(row.getEndTime())
                             .room(row.getRoom())
-                            .build()
-            );
+                            .build());
         }
         return new ArrayList<>(map.values());
     }
@@ -134,7 +131,8 @@ public class EnrollService {
 
         // check if student is allowed to enroll in the course class
         if (!studentCourseClassRepository.isSubjectAllowed(studentId, courseClass.getId())) {
-            throw new ErrorException(ResponseStatus.SUBJECT_NOT_IN_PROGRAM, "You don't have permission to enroll in this subject");
+            throw new ErrorException(ResponseStatus.SUBJECT_NOT_IN_PROGRAM,
+                    "You don't have permission to enroll in this subject");
         }
 
         // check if student has already enrolled in the course class
@@ -149,7 +147,8 @@ public class EnrollService {
             oldStatus = scc.getStatus();
 
             if (Set.of(StudentCourseClassStatus.PENDING, StudentCourseClassStatus.ENROLLED).contains(scc.getStatus())) {
-                throw new DuplicateRegistrationException(ResponseStatus.DUPLICATE_COURSE_CLASS, "You have already enrolled in this course class");
+                throw new DuplicateRegistrationException(ResponseStatus.DUPLICATE_COURSE_CLASS,
+                        "You have already enrolled in this course class");
             }
         }
 
@@ -161,18 +160,19 @@ public class EnrollService {
                         Set.of(StudentCourseClassStatus.PENDING, StudentCourseClassStatus.ENROLLED));
 
         if (alreadyEnrollSameSubject) {
-            throw new DuplicateRegistrationException(ResponseStatus.DUPLICATE_SUBJECT, "You already enrolled this subject");
+            throw new DuplicateRegistrationException(ResponseStatus.DUPLICATE_SUBJECT,
+                    "You already enrolled this subject");
         }
         StudentEnrollmentProfile profile = profileService.getProfile(studentId, studyProgramId);
 
         boolean hasPassed = profile.getPassedSubjectIds().contains(courseClass.getSubjectId());
 
         if (hasPassed) {
-            throw new DuplicateRegistrationException(ResponseStatus.SUBJECT_ALREADY_PASSED, "You have already passed this subject");
+            throw new DuplicateRegistrationException(ResponseStatus.SUBJECT_ALREADY_PASSED,
+                    "You have already passed this subject");
         }
 
         boolean isRetake = profile.getFailedSubjectIds().contains(courseClass.getSubjectId());
-
 
         System.out.println("details: " + details);
         List<ScheduleForCheckDTO> newSchedules = details.stream()
@@ -205,7 +205,7 @@ public class EnrollService {
         try {
             studentCourseClassRepository.save(scc);
         } catch (DataIntegrityViolationException e) {
-            throw new ErrorException(ResponseStatus.DATABASE_VIOLATION, "Already enrolled");
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR, "Already enrolled");
         }
 
         StudentCourseClassLog log = StudentCourseClassLog.create(studentId, courseClassId, EnrollAction.ENROLL,
@@ -230,8 +230,8 @@ public class EnrollService {
     public void drop(Long studentId, Long courseClassId) {
 
         StudentCourseClass scc = studentCourseClassRepository
-            .findByStudentIdAndCourseClassId(studentId, courseClassId)
-            .orElseThrow(() -> new NotFoundException("Enrollment not found"));
+                .findByStudentIdAndCourseClassId(studentId, courseClassId)
+                .orElseThrow(() -> new NotFoundException("Enrollment not found"));
 
         if (!Set.of(StudentCourseClassStatus.PENDING, StudentCourseClassStatus.ENROLLED)
                 .contains(scc.getStatus())) {
@@ -243,8 +243,7 @@ public class EnrollService {
         studentCourseClassRepository.save(scc);
 
         StudentCourseClassLog log = StudentCourseClassLog.create(
-            studentId, courseClassId, EnrollAction.DROP, oldStatus, StudentCourseClassStatus.DROPPED
-        );
+                studentId, courseClassId, EnrollAction.DROP, oldStatus, StudentCourseClassStatus.DROPPED);
         courseClassLogRepository.save(log);
 
         studentScheduleService.removeFromCache(studentId, scc.getSemesterId(), courseClassId);
@@ -252,34 +251,33 @@ public class EnrollService {
 
     public List<ScheduleCourseClassDTO> getTempSchedule(Long studentId, Long semesterId) {
         List<ScheduleRow> scheduleRows = scheduleRepository.findTempSchedule(studentId,
-                        semesterId);
+                semesterId);
 
         List<ScheduleCourseClassDTO> courseClasses = scheduleRows.stream()
-                        .map(row -> {
-                                LecturerDTO lecturer = LecturerDTO.builder()
-                                                .fullName(row.getLecturerName())
-                                                .email(row.getLecturerEmail())
-                                                .phoneNumber(row.getLecturerPhone())
-                                                .lecturerCode(row.getLecturerCode())
-                                                .build();
-                                return ScheduleCourseClassDTO.builder()
-                                                .classCode(row.getClassCode())
-                                                .dayOfWeek(row.getDayOfWeek())
-                                                .subjectName(row.getSubjectName())
-                                                .subjectCode(row.getSubjectCode())
-                                                .startPeriod(row.getStartPeriod())
-                                                .endPeriod(row.getEndPeriod())
-                                                .credits(row.getCredits())
-                                                .startTime(row.getStartTime())
-                                                .endTime(row.getEndTime())
-                                                .room(row.getRoom())
-                                                .lecturer(lecturer)
-                                                .build();
-                        }).collect(Collectors.toList());
+                .map(row -> {
+                    LecturerDTO lecturer = LecturerDTO.builder()
+                            .fullName(row.getLecturerName())
+                            .email(row.getLecturerEmail())
+                            .phoneNumber(row.getLecturerPhone())
+                            .lecturerCode(row.getLecturerCode())
+                            .build();
+                    return ScheduleCourseClassDTO.builder()
+                            .classCode(row.getClassCode())
+                            .dayOfWeek(row.getDayOfWeek())
+                            .subjectName(row.getSubjectName())
+                            .subjectCode(row.getSubjectCode())
+                            .startPeriod(row.getStartPeriod())
+                            .endPeriod(row.getEndPeriod())
+                            .credits(row.getCredits())
+                            .startTime(row.getStartTime())
+                            .endTime(row.getEndTime())
+                            .room(row.getRoom())
+                            .lecturer(lecturer)
+                            .build();
+                }).collect(Collectors.toList());
 
         return courseClasses;
     }
-    
 
     private void checkSubjectCondition(StudentEnrollmentProfile profile, Long subjectId) {
         prerequisiteCheckService.check(subjectId, profile.getPassedSubjectIds());
@@ -293,7 +291,8 @@ public class EnrollService {
     private void checkMaxCredits(Long studentId, Long semesterId, int newCredits, int maxCredits) {
         Integer creditsRegistered = studentCourseClassRepository.findCreditsRegistered(studentId, semesterId);
         if (creditsRegistered + newCredits > maxCredits) {
-            throw new ErrorException(ResponseStatus.MAX_CREDIT_EXCEEDED, "You have exceeded the maximum number of credits");
+            throw new ErrorException(ResponseStatus.MAX_CREDIT_EXCEEDED,
+                    "You have exceeded the maximum number of credits");
         }
     }
 
@@ -301,10 +300,12 @@ public class EnrollService {
 
         LocalDateTime now = LocalDateTime.now();
         if (now.isBefore(period.getStartTime())) {
-            throw new DuplicateRegistrationException(ResponseStatus.OUTSIDE_REGISTRATION_PERIOD, "The registration period has not started yet");
+            throw new DuplicateRegistrationException(ResponseStatus.OUTSIDE_REGISTRATION_PERIOD,
+                    "The registration period has not started yet");
         }
         if (now.isAfter(period.getEndTime())) {
-            throw new DuplicateRegistrationException(ResponseStatus.OUTSIDE_REGISTRATION_PERIOD, "The registration period has ended");
+            throw new DuplicateRegistrationException(ResponseStatus.OUTSIDE_REGISTRATION_PERIOD,
+                    "The registration period has ended");
         }
     }
 }

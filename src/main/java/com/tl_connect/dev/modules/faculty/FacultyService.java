@@ -10,8 +10,9 @@ import com.tl_connect.dev.modules.faculty.dto.CreateFacultyDTO;
 import com.tl_connect.dev.modules.faculty.dto.FacultyDTO;
 import com.tl_connect.dev.modules.faculty.dto.UpdateFacultyDTO;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
-import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.exception.ConflictException;
+import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
 
 import jakarta.transaction.Transactional;
@@ -46,7 +47,7 @@ public class FacultyService {
             facultyRepository.save(faculty);
             return faculty.getId();
         } catch (DataIntegrityViolationException ex) {
-            throw new BadRequestException("Failed to create faculty");
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to create faculty");
         }
     }
 
@@ -65,7 +66,7 @@ public class FacultyService {
         try {
             facultyRepository.save(faculty);
         } catch (DataIntegrityViolationException ex) {
-            throw new BadRequestException("Failed to update faculty");
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to update faculty");
         }
     }
 
@@ -77,7 +78,7 @@ public class FacultyService {
         try {
             facultyRepository.save(faculty);
         } catch (DataIntegrityViolationException ex) {
-            throw new BadRequestException("Failed to delete faculty");
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to delete faculty");
         }
     }
 

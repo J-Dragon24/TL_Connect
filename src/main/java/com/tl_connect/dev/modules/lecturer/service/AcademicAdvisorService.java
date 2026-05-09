@@ -21,8 +21,9 @@ import com.tl_connect.dev.modules.lecturer.projection.LecturerRow;
 import com.tl_connect.dev.modules.lecturer.repository.AcademicAdvisorRepository;
 import com.tl_connect.dev.modules.lecturer.repository.LecturerRepository;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
-import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.exception.ConflictException;
+import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
 
 import jakarta.transaction.Transactional;
@@ -98,7 +99,7 @@ public class AcademicAdvisorService {
         try {
             academicAdvisorRepository.save(academicAdvisor);
         } catch (DataIntegrityViolationException e) {
-            throw new BadRequestException("Failed to create academic advisor" + e.getMessage());
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to create academic advisor" + e.getMessage());
         }
         return academicAdvisor.getId();
     }
@@ -113,7 +114,7 @@ public class AcademicAdvisorService {
         try {
             academicAdvisorRepository.deleteByStudentClassId(studentClassId);
         } catch (DataIntegrityViolationException e) {
-            throw new BadRequestException("Failed to delete academic advisor");
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to delete academic advisor");
         }
     }
     

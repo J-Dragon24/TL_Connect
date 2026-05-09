@@ -12,7 +12,9 @@ import com.tl_connect.dev.modules.study_program.entity.StudyProgramSubject;
 import com.tl_connect.dev.modules.study_program.repository.StudyProgramRepository;
 import com.tl_connect.dev.modules.study_program.repository.StudyProgramSubjectRepository;
 import com.tl_connect.dev.modules.subject.repository.SubjectRepository;
-import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.enums.ResponseStatus;
+import com.tl_connect.dev.shared.common.exception.ErrorException;
+import com.tl_connect.dev.shared.common.exception.InvalidInputException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
 
 import java.util.Optional;
@@ -41,7 +43,7 @@ public class StudyProgramSubjectService {
 
 
         if (semester.getStartDate().getYear() < program.getStartYear()) {
-            throw new BadRequestException("Semester does not belong to the study program");
+            throw new InvalidInputException("Semester does not belong to the study program");
         }
 
         StudyProgramSubject studyProgramSubject = StudyProgramSubject.builder()
@@ -58,7 +60,7 @@ public class StudyProgramSubjectService {
         try {
             studyProgramSubjectRepository.save(studyProgramSubject);
         } catch (DataIntegrityViolationException e) {
-            throw new BadRequestException("Invalid study program subject data: " + e.getMessage());
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Invalid study program subject data");
         }
         return studyProgramSubject.getId();
     }
@@ -74,7 +76,7 @@ public class StudyProgramSubjectService {
                 .orElseThrow(() -> new NotFoundException("Semester not found"));
 
         if (semester.getStartDate().getYear() < program.getStartYear()) {
-            throw new BadRequestException("Semester does not belong to the study program");
+            throw new InvalidInputException("Semester does not belong to the study program");
         }
 
         Optional.ofNullable(updateStudyProgramSubjectDTO.getSemesterId()).ifPresent(studyProgramSubject::setSemesterId);
@@ -84,7 +86,7 @@ public class StudyProgramSubjectService {
         try {
             studyProgramSubjectRepository.save(studyProgramSubject);
         } catch (DataIntegrityViolationException e) {
-            throw new BadRequestException("Invalid study program subject data: " + e.getMessage());
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Invalid study program subject data: " + e.getMessage());
         }
     }
 

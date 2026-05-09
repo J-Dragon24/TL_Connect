@@ -20,7 +20,8 @@ import com.tl_connect.dev.modules.student_class.projection.ClassHeaderView;
 import com.tl_connect.dev.modules.student_class.projection.StudentClassRow;
 import com.tl_connect.dev.modules.student_class.projection.StudentInClassRow;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
-import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.enums.ResponseStatus;
+import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.InvalidInputException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.student.repository.StudentRepository;
@@ -97,7 +98,7 @@ public class StudentClassService {
         try {
             studentClassRepository.save(sc);
         } catch (DataIntegrityViolationException e) {
-            throw new BadRequestException("Failed to create student class: " + e.getMessage());
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to create student class: " + e.getMessage());
         }
         return sc.getId();
     }
@@ -124,7 +125,7 @@ public class StudentClassService {
         try {
             studentClassRepository.save(sc);
         } catch (DataIntegrityViolationException e) {
-            throw new BadRequestException("Failed to update student class: " + e.getMessage());
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to update student class: " + e.getMessage());
         }
     }
 
@@ -135,17 +136,17 @@ public class StudentClassService {
 
         boolean hasStudents = studentRepository.existsByStudentClassId(id);
         if (hasStudents) {
-            throw new BadRequestException("Cannot delete class with students");
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Cannot delete class with students");
         }
 
         boolean hasAdvisor = academicAdvisorRepository.existsByStudentClassId(id);
         if (hasAdvisor) {
-            throw new BadRequestException("Cannot delete class with advisor");
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Cannot delete class with advisor");
         }
         try {
             studentClassRepository.delete(sc);
         } catch (DataIntegrityViolationException e) {
-            throw new BadRequestException("Failed to delete student class: " + e.getMessage());
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to delete student class: ");
         }
     }
 }

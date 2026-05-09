@@ -19,7 +19,8 @@ import com.tl_connect.dev.modules.application.projection.DetailApplicationView;
 import com.tl_connect.dev.modules.application.repository.ApplicationAttachmentRepository;
 import com.tl_connect.dev.modules.application.repository.ApplicationRepository;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
-import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.enums.ResponseStatus;
+import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
 import com.tl_connect.dev.shared.common.ultility.FileHelper;
 
@@ -71,7 +72,7 @@ public class ApplicationService {
         try {
             applicationRepository.delete(application);
         } catch (Exception e) {
-            throw new BadRequestException("Delete application failed" + e.getMessage());
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR, "Delete application failed");
         }
 
     }
@@ -84,12 +85,13 @@ public class ApplicationService {
         try {
             applicationRepository.save(application);
         } catch (Exception e) {
-            throw new BadRequestException("Update status application failed" + e.getMessage());
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR, "Update status application failed");
         }
     }
 
     @Transactional
-    public ApplicationSubmitDTO submitApplication(List<MultipartFile> files, Long applicationTypeId, String content, Long studentId)
+    public ApplicationSubmitDTO submitApplication(List<MultipartFile> files, Long applicationTypeId, String content,
+            Long studentId)
             throws IOException {
 
         List<String> fileKeys = new ArrayList<>();
@@ -105,26 +107,26 @@ public class ApplicationService {
         }
 
         StudentApplication application = applicationRepository.save(
-            StudentApplication.create(studentId, applicationTypeId, content)
-        );
+                StudentApplication.create(studentId, applicationTypeId, content));
 
         List<ApplicationAttachment> attachments = new ArrayList<>();
         for (int i = 0; i < files.size(); i++) {
-            attachments.add(ApplicationAttachment.create(application.getId(), fileKeys.get(i), files.get(i).getOriginalFilename(), files.get(i).getSize()));
+            attachments.add(ApplicationAttachment.create(application.getId(), fileKeys.get(i),
+                    files.get(i).getOriginalFilename(), files.get(i).getSize()));
         }
-        
-        try{
+
+        try {
             applicationRepository.save(application);
             applicationAttachmentRepository.saveAll(attachments);
-        }catch(DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             fileKeys.forEach(fileHelper::deleteFile);
-            throw new BadRequestException("Save application attachments failed" + e.getMessage());
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR, "Save application attachments failed");
         }
 
         return ApplicationSubmitDTO.builder()
-        .success(true)
-        .fileNames(files.stream().map(file -> file.getOriginalFilename()).toList())
-        .build();
+                .success(true)
+                .fileNames(files.stream().map(file -> file.getOriginalFilename()).toList())
+                .build();
     }
 
     private ApplicationDTO toDTO(ApplicationRow row) {
@@ -147,14 +149,15 @@ public class ApplicationService {
     }
 
     // public List<ApplicationTypeDTO> getHistoryApplication(Long studentId) {
-    //     List<StudentApplication> applications = applicationRepository.findAllByStudentId(studentId);
-    //     return applications.stream()
-    //             .map(application -> ApplicationTypeDTO.builder()
-    //                     .id(application.getId())
-    //                     .code(application.getCode())
-    //                     .name(applicationType.getName())
-    //                     .build())
-    //             .toList();
+    // List<StudentApplication> applications =
+    // applicationRepository.findAllByStudentId(studentId);
+    // return applications.stream()
+    // .map(application -> ApplicationTypeDTO.builder()
+    // .id(application.getId())
+    // .code(application.getCode())
+    // .name(applicationType.getName())
+    // .build())
+    // .toList();
     // }
 
 }

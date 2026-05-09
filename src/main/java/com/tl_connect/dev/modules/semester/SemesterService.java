@@ -16,7 +16,8 @@ import com.tl_connect.dev.modules.semester.dto.UpdateSemesterDTO;
 import com.tl_connect.dev.modules.student.dto.YearStudyDTO;
 import com.tl_connect.dev.modules.student.service.StudentService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
-import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.enums.ResponseStatus;
+import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.InvalidInputException;
 
 import jakarta.transaction.Transactional;
@@ -70,7 +71,7 @@ public class SemesterService {
         try {
             semesterRepository.save(semester);
         } catch (DataIntegrityViolationException e) {
-            throw new BadRequestException("Failed to create semester" + e.getMessage());
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to create semester");
         }
         return semester.getId();
     }
@@ -93,7 +94,7 @@ public class SemesterService {
         try {
             semesterRepository.save(semester);
         } catch (DataIntegrityViolationException e) {
-            throw new BadRequestException("Failed to update semester");
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to update semester");
         }
     }
 
@@ -108,7 +109,7 @@ public class SemesterService {
         try {
             semesterRepository.save(semester);
         } catch (DataIntegrityViolationException e) {
-            throw new BadRequestException("Failed to delete semester");
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to delete semester");
         }
     }
 

@@ -19,8 +19,9 @@ import com.tl_connect.dev.modules.faculty.FacultyRepository;
 import com.tl_connect.dev.modules.semester.Semester;
 import com.tl_connect.dev.modules.semester.SemesterRepository;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
-import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.exception.ConflictException;
+import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
 
 import jakarta.transaction.Transactional;
@@ -115,7 +116,7 @@ public class ExamService {
         try{
             examRepository.save(examSchedule);
         }catch(DataIntegrityViolationException e){
-            throw new BadRequestException("Invalid exam schedule data: " + e.getMessage());
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Invalid exam schedule data: " + e.getMessage());
         }
         return examSchedule.getId();
     }
@@ -146,7 +147,7 @@ public class ExamService {
         try{
             examRepository.save(examSchedule);
         }catch(DataIntegrityViolationException e){
-            throw new BadRequestException("Invalid exam schedule data: " + e.getMessage());
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Invalid exam schedule data: " + e.getMessage());
         }
     }
 
@@ -157,7 +158,7 @@ public class ExamService {
         try{
             examRepository.delete(examSchedule);
         }catch(DataIntegrityViolationException e){
-            throw new BadRequestException("Invalid exam schedule data: " + e.getMessage());
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Invalid exam schedule data: " + e.getMessage());
         }
     }
     

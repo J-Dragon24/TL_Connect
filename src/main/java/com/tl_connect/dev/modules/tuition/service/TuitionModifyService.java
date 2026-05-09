@@ -6,8 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tl_connect.dev.modules.tuition.dto.GenerateInvoiceReqDTO;
 import com.tl_connect.dev.modules.tuition.entity.TuitionInvoice;
 import com.tl_connect.dev.modules.tuition.repository.TuitionInvoiceRepository;
+import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.enums.TuitionStatus;
 import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.InvalidInputException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
 
@@ -25,7 +27,7 @@ public class TuitionModifyService {
         try{
             return tuitionInvoiceRepository.generateInvoices(request.getSemesterId());
         }catch(Exception e){
-            throw new BadRequestException("Failed to generate invoice: " + e.getMessage());
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to generate invoice: " + e.getMessage());
         }
     }
 
@@ -45,7 +47,7 @@ public class TuitionModifyService {
             }
             return newId;
         }catch(Exception e){
-            throw new BadRequestException("Failed to generate invoice: " + e.getMessage());
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to generate invoice: " + e.getMessage());
         }
     }
     
@@ -54,7 +56,7 @@ public class TuitionModifyService {
         try{
             tuitionInvoiceRepository.cancelInvoiceById(invoiceId);
         }catch(Exception e){
-            throw new BadRequestException("Failed to delete invoice: " + e.getMessage());
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to delete invoice: " + e.getMessage());
         }
     }
 }

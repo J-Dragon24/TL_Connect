@@ -24,8 +24,10 @@ import com.tl_connect.dev.modules.schedule.entity.ClassSchedule;
 import com.tl_connect.dev.modules.schedule.projection.ScheduleRow;
 import com.tl_connect.dev.modules.semester.Semester;
 import com.tl_connect.dev.modules.semester.SemesterRepository;
-import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.exception.ConflictException;
+import com.tl_connect.dev.shared.common.exception.ErrorException;
+import com.tl_connect.dev.shared.common.exception.InvalidInputException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
 
 import jakarta.transaction.Transactional;
@@ -263,7 +265,7 @@ public class ScheduleService {
                 );
 
                 if (!classSchedule.getStartTime().isBefore(classSchedule.getEndTime()) || !(classSchedule.getStartPeriod() <= classSchedule.getEndPeriod())) {
-                    throw new BadRequestException("Start time must be before end time");
+                    throw new InvalidInputException("Start time must be before end time");
                 }
                 
                 for (ClassSchedule db : dbList) {
@@ -285,7 +287,7 @@ public class ScheduleService {
                 try {
                         scheduleRepository.save(classSchedule);
                 } catch (DataIntegrityViolationException e) {
-                        throw new BadRequestException("Update schedule failed" + e.getMessage());
+                        throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Update schedule failed");
                 }
         }
 

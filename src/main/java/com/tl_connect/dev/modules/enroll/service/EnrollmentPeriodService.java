@@ -2,7 +2,6 @@ package com.tl_connect.dev.modules.enroll.service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.dao.DataIntegrityViolationException;
@@ -18,8 +17,9 @@ import com.tl_connect.dev.modules.enroll.dto.UpdateEnrollPeriodDTO;
 import com.tl_connect.dev.modules.enroll.entity.EnrollmentPeriod;
 import com.tl_connect.dev.modules.enroll.repository.EnrollmentPeriodRepository;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
-import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.exception.ConflictException;
+import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -111,7 +111,7 @@ public class EnrollmentPeriodService {
         try {
             enrollmentPeriodRepository.delete(period);
         } catch (DataIntegrityViolationException e) {
-            throw new BadRequestException("The enrollment period has been used and cannot be deleted");
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"The enrollment period has been used and cannot be deleted");
         }
     }
 

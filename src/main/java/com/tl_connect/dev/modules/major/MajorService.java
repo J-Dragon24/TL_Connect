@@ -16,8 +16,9 @@ import com.tl_connect.dev.modules.major.entity.Major;
 import com.tl_connect.dev.modules.major.projection.MajorRow;
 import com.tl_connect.dev.modules.major.repository.MajorRepository;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
-import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.exception.ConflictException;
+import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -58,7 +59,7 @@ public class MajorService {
         try {
             majorRepository.save(major);
         } catch (DataIntegrityViolationException ex) {
-            throw new BadRequestException("Failed to create major");
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to create major");
         }
         return major.getId();
     }
@@ -84,7 +85,7 @@ public class MajorService {
         try {
             majorRepository.save(major);
         } catch (DataIntegrityViolationException ex) {
-            throw new BadRequestException("Failed to update major");
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to update major");
         }
     }
 
@@ -94,13 +95,13 @@ public class MajorService {
                 .orElseThrow(() -> new NotFoundException("Major not found"));
 
         if (!major.getIsActive()) {
-            throw new BadRequestException("Major already deleted");
+            throw new ConflictException("Major already deleted");
         }
         major.delete();
         try {
             majorRepository.save(major);
         } catch (DataIntegrityViolationException ex) {
-            throw new BadRequestException("Failed to delete major");
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to delete major");
         }
     }
 

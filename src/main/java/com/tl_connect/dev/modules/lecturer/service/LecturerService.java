@@ -14,8 +14,9 @@ import com.tl_connect.dev.modules.lecturer.projection.LecturerRow;
 import com.tl_connect.dev.modules.lecturer.repository.LecturerRepository;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.enums.LecturerStatus;
-import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.exception.ConflictException;
+import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.department.DepartmentRepository;
 
@@ -69,7 +70,7 @@ public class LecturerService {
         try {
             lecturerRepository.save(lecturer);
         } catch (DataIntegrityViolationException e) {
-            throw new BadRequestException("Failed to create lecturer: " + e.getMessage());
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to create lecturer: " + e.getMessage());
         }
 
         return lecturer.getId();
@@ -96,7 +97,7 @@ public class LecturerService {
         try {
             lecturerRepository.save(lecturer);
         } catch (DataIntegrityViolationException e) {
-            throw new BadRequestException("Failed to update lecturer: " + e.getMessage());
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to update lecturer");
         }
     }
 
@@ -106,7 +107,7 @@ public class LecturerService {
                 .orElseThrow(() -> new NotFoundException("Lecturer not found with id: " + id));
 
         if (lecturer.getStatus() == LecturerStatus.INACTIVE) {
-            throw new BadRequestException("Lecturer is already inactive");
+            throw new ConflictException("Lecturer is already inactive");
         }
 
         lecturer.deactivate();
@@ -114,7 +115,7 @@ public class LecturerService {
         try {
             lecturerRepository.save(lecturer);
         } catch (DataIntegrityViolationException e) {
-            throw new BadRequestException("Failed to delete lecturer: " + e.getMessage());
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to delete lecturer");
         }
     }
 

@@ -33,9 +33,12 @@ import com.tl_connect.dev.modules.tuition.repository.TuitionInvoiceItemRepositor
 import com.tl_connect.dev.modules.tuition.repository.TuitionInvoiceRepository;
 import com.tl_connect.dev.modules.tuition.repository.TuitionTransactionRepository;
 import com.tl_connect.dev.shared.common.enums.PaymentStatus;
+import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.enums.TuitionStatus;
 import com.tl_connect.dev.shared.common.enums.TypeTransaction;
 import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.exception.ConflictException;
+import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -61,18 +64,18 @@ public class PaymentService {
             .orElseThrow(() -> new NotFoundException("Invoice not found"));
 
         if (invoice.getStatus() == TuitionStatus.PAID) {
-            throw new BadRequestException("Invoice already paid");
+            throw new ConflictException("Invoice already paid");
         }
 
         if (invoice.getStatus() == TuitionStatus.CANCELLED) {
-            throw new BadRequestException("Invoice is cancelled");
+            throw new ConflictException("Invoice is cancelled");
         }
 
         List<TuitionInvoiceItem> items = itemRepository.findAllByInvoiceId(req.getInvoiceId());
 
 
         if (items.isEmpty()) {
-            throw new BadRequestException("Invoice has no items");
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Invoice has no items");
         }
 
         List<Map<String, Object>> zaloItems = items.stream().map(item -> {

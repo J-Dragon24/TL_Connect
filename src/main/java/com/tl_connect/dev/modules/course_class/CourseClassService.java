@@ -19,8 +19,9 @@ import com.tl_connect.dev.modules.semester.dto.SemesterDTO;
 import com.tl_connect.dev.modules.subject.entity.Subject;
 import com.tl_connect.dev.modules.subject.repository.SubjectRepository;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
-import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.exception.ConflictException;
+import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
 
 import jakarta.transaction.Transactional;
@@ -41,7 +42,8 @@ public class CourseClassService {
         if (semesterCode == null || semesterCode.isBlank()) {
             semesterCode = null;
         }
-        Page<CourseClassBasicInfoRow> page = courseClassRepository.findAllCourseClass(pageable, facultyCode, semesterCode);
+        Page<CourseClassBasicInfoRow> page = courseClassRepository.findAllCourseClass(pageable, facultyCode,
+                semesterCode);
         return new PagedResponse<>(
                 page.getContent().stream().map(this::toDTO).toList(),
                 page.getNumber(),
@@ -96,13 +98,14 @@ public class CourseClassService {
                     .orElseThrow(() -> new NotFoundException("Lecturer not found"));
         }
 
-        CourseClass entity = CourseClass.create(lecturer != null ? lecturer.getId() : null, subject.getId(), semester.getId(), dto.getClassCode(), dto.getClassName(), dto.getCapacity());
+        CourseClass entity = CourseClass.create(lecturer != null ? lecturer.getId() : null, subject.getId(),
+                semester.getId(), dto.getClassCode(), dto.getClassName(), dto.getCapacity());
 
         try {
             courseClassRepository.save(entity);
             return entity.getId();
         } catch (DataIntegrityViolationException ex) {
-            throw new BadRequestException("Failed to create course class");
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR, "Failed to create course class");
         }
     }
 
@@ -134,12 +137,13 @@ public class CourseClassService {
                     .orElseThrow(() -> new NotFoundException("Lecturer not found"));
         }
 
-        entity.update(dto.getLecturerId(), dto.getSubjectId(), dto.getSemesterId(), dto.getClassCode(), dto.getClassName(), dto.getCapacity());
+        entity.update(dto.getLecturerId(), dto.getSubjectId(), dto.getSemesterId(), dto.getClassCode(),
+                dto.getClassName(), dto.getCapacity());
 
         try {
             courseClassRepository.save(entity);
         } catch (DataIntegrityViolationException ex) {
-            throw new BadRequestException("Failed to update course class");
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR, "Failed to update course class");
         }
     }
 
@@ -148,17 +152,16 @@ public class CourseClassService {
         CourseClass entity = courseClassRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Course class not found"));
 
-        if(!entity.getIsActive()) {
-            throw new BadRequestException("Course class is already inactive");
+        if (!entity.getIsActive()) {
+            throw new ConflictException("Course class is already inactive");
         }
         entity.deactivate();
         try {
             courseClassRepository.save(entity);
         } catch (DataIntegrityViolationException ex) {
-            throw new BadRequestException("Failed to delete course class");
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR, "Failed to delete course class");
         }
     }
- 
 
     private CourseClassBasicInfoDTO toDTO(CourseClassBasicInfoRow courseClass) {
         return CourseClassBasicInfoDTO.builder()

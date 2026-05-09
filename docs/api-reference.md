@@ -721,14 +721,16 @@ Lấy thông tin chương trình đào tạo của các ngành sinh viên đang 
             "study_program_code": "CTDT-KHMT-2024",
             "study_program_name": "Chương trình đào tạo KHMT 2024",
             "is_primary": true,
-            "start_year": 2022
+            "start_year": 2022,
+            "total_credits": 130
         },
         {
             "student_code": "SV2021001",
             "study_program_code": "CTDT-HTTT-2024",
             "study_program_name": "Chương trình đào tạo HTTT 2024",
             "is_primary": false,
-            "start_year": 2022
+            "start_year": 2022,
+            "total_credits": 130
         }
     ]
 }

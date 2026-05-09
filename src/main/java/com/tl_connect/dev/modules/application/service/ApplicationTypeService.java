@@ -10,7 +10,8 @@ import com.tl_connect.dev.modules.application.dto.CreateApplicationTypeDTO;
 import com.tl_connect.dev.modules.application.dto.UpdateApplicationTypeDTO;
 import com.tl_connect.dev.modules.application.entity.ApplicationType;
 import com.tl_connect.dev.modules.application.repository.ApplicationTypeRepository;
-import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.enums.ResponseStatus;
+import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,7 @@ public class ApplicationTypeService {
         try {
             return applicationTypeRepository.save(applicationType).getId();
         } catch (Exception e) {
-            throw new BadRequestException("Application type code already exists" + e.getMessage());
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR, "Application type code already exists");
         }
     }
 
@@ -51,7 +52,7 @@ public class ApplicationTypeService {
         try {
             applicationTypeRepository.save(applicationType);
         } catch (Exception e) {
-            throw new BadRequestException("Application type code already exists" + e.getMessage());
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Application type code already exists");
         }
     }
 
@@ -63,7 +64,7 @@ public class ApplicationTypeService {
         try {
             applicationTypeRepository.save(applicationType);
         } catch (Exception e) {
-            throw new BadRequestException("Application type code already exists" + e.getMessage());
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Application type code already exists");
         }
     }
     
