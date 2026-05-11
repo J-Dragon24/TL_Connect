@@ -1,5 +1,6 @@
 package com.tl_connect.dev.modules.tuition.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -112,4 +113,13 @@ public interface TuitionInvoiceRepository extends JpaRepository<TuitionInvoice, 
         SELECT generate_single_tuition_invoice(:studentId, :semesterId)
     """, nativeQuery = true)
     Long generateSingleInvoice(@Param("studentId") Long studentId, @Param("semesterId") Long semesterId);
+
+    @Modifying
+    @Query(value = """
+        UPDATE tuition_invoices t
+        SET status = 'OVERDUE',
+            updated_at = :now
+        WHERE t.status = 'UNPAID' AND t.due_date < :now
+    """, nativeQuery = true)
+    int updateOverdueInvoice(@Param("now") LocalDate now);
 }
