@@ -84,7 +84,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"prompt\": \"quy định về học bổng của trường\"\r\n}",
+          "raw": "{\r\n    \"prompt\": \"tôi cần biết theo chương trình đào tạo kì trước tôi cần học những gì\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -134,6 +134,40 @@
             "api",
             "v1",
             "delete-document"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "agent speak",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"prompt\": \"tôi cần biết học phí kì này\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{domain}}/api/v1/agent-chat-speak",
+          "host": [
+            "{{domain}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "agent-chat-speak"
           ]
         }
       },

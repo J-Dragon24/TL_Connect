@@ -415,7 +415,7 @@
                       }
                     ],
                     "url": {
-                      "raw": "{{domain}}/api/v1/admin/course-classes/all?page=3",
+                      "raw": "{{domain}}/api/v1/admin/course-classes/all?HocKy=HK1-2024-2025",
                       "host": [
                         "{{domain}}"
                       ],
@@ -429,7 +429,13 @@
                       "query": [
                         {
                           "key": "page",
-                          "value": "3"
+                          "value": "3",
+                          "disabled": true
+                        },
+                        {
+                          "key": "HocKy",
+                          "value": "HK1-2024-2025",
+                          "type": "text"
                         }
                       ]
                     }
@@ -3179,7 +3185,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\r\n  \"semesterId\": 6,\r\n  \"startTime\": \"2026-05-05T08:00:00\",\r\n  \"endTime\": \"2026-05-06T23:59:59\",\r\n  \"maxCredits\": 18\r\n}",
+                      "raw": "{\r\n  \"semesterId\": 6,\r\n  \"startTime\": \"2026-05-07T08:00:00\",\r\n  \"endTime\": \"2026-05-08T23:59:59\",\r\n  \"maxCredits\": 18\r\n}",
                       "options": {
                         "raw": {
                           "language": "json"
@@ -4048,6 +4054,15 @@
                         "type": "text"
                       }
                     ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
                     "url": {
                       "raw": "{{domain}}/api/v1/payments/refund",
                       "host": [
@@ -4058,6 +4073,41 @@
                         "v1",
                         "payments",
                         "refund"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "get status",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"transactionCode\": 79822956\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/payments/get-status",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "payments",
+                        "get-status"
                       ]
                     }
                   },

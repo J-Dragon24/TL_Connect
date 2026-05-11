@@ -388,7 +388,7 @@ CREATE TABLE tuition_invoices (
   due_date DATE NOT NULL,
   total_amount DECIMAL(10,2) NOT NULL,
   final_amount DECIMAL(10,2) NOT NULL,
-  status VARCHAR(20) NOT NULL DEFAULT 'UNPAID' CHECK (status IN ('UNPAID','PAID','OVERDUE','CANCELLED')),
+  status VARCHAR(20) NOT NULL DEFAULT 'UNPAID' CHECK (status IN ('UNPAID','PENDING','PAID','OVERDUE','CANCELLED')),
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
   FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE RESTRICT,

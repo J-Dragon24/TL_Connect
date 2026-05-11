@@ -11,7 +11,6 @@ import com.tl_connect.dev.modules.enroll.dto.dag.PrerequisiteGroup;
 import com.tl_connect.dev.modules.enroll.dto.dag.SubjectNode;
 import com.tl_connect.dev.shared.common.dto.MissingGroupSubject;
 import com.tl_connect.dev.shared.common.enums.ResponseStatus;
-import com.tl_connect.dev.shared.common.exception.EnrollmentConditionNotMetException;
 import com.tl_connect.dev.shared.common.exception.ErrorException;
 
 import lombok.RequiredArgsConstructor;

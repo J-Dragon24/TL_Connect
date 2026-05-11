@@ -4586,6 +4586,52 @@ GET /api/v1/payments/callback/vnpay?vnp_Amount=1000000&vnp_TxnRef=123456
 }
 ```
 ---
+### 24.5. POST /api/v1/payments/get-status
+
+Tra cứu trạng thái giao dịch thanh toán qua VNPAY.
+
+**Auth**: Không bắt buộc (theo controller hiện tại)
+**Content-Type**: application/json
+
+Request body:
+```json
+{
+  "transactionCode": "79822956"
+}
+```
+|Field|Type|Required|Description
+:---:|:---:|:---:|:---:
+transactionCode|string|✅|Mã giao dịch cần tra cứu (Lấy từ create order)
+
+**Response thành công (code 0):**
+
+```json
+{
+  "code": 0,
+  "message": "Query payment status success",
+  "data": {
+      "responseCode": 0,
+      "message": "QueryDR success",
+      "transactionId": "79822956",
+      "providerTransactionId": "15533287",
+      "amount": 4500000
+  }
+}
+```
+**Response thất bại (code -10):**
+```json
+{
+  "code": -10,
+  "message": "Query payment status failed",
+  "data": null
+}
+```
+
+**Lưu ý:**
+- Nếu responseCode = 0 là thành công
+- Nếu responseCode = 1 là đang xử lý
+- Nếu responseCode = -1 là thất bại
+---
 ## 25. Application Type - Loại đơn
 ### 25.1. GET /api/v1/admin/application-types/all
 
@@ -4767,7 +4813,50 @@ data: session_id: 123456789
 ---
 ### 26.3. WEBSOCKET /agents/ChatAgent
 agent chatbot
-`{"type":"cf_agent_use_chat_request","id":"2","init":{"method":"POST","body":"{\"messages\":[{\"role\":\"user\",\"content\":\"chức năng của PHÒNG TÀI CHÍNH – KẾ TOÁN\"}]}"}}`
+`{"type":"cf_agent_use_chat_request","id":"2","init":{"method":"POST","body":"{\"messages\":[{\"role\":\"user\",\"content\":\"chức năng của PHÒNG TÀI CHÍNH – KẾ TOÁN\"}]}"}}`  
+
+---
+## 26.4. POST /api/v1/agent-chat-speak
+Ai nói chuyện
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: application/json
+**Request body:**
+```json
+{
+  "messages": [{
+    "role": "user",
+    "content": "Bạn tên gì?"
+  },
+  {
+    "role": "assistant",
+    "content": "Tôi tên là AI"
+  }],
+  "prompt": "Bạn tên gì?",
+  "gender": "female"
+}
+```
+
+| Field | Type | Required | Description
+|---|---|---|---
+| messages | array | ❌ | Lịch sử trò chuyện (tùy chọn)
+  - role: string | ✅ | Vai trò (user, assistant, tool, system)
+  - content: string | ✅ | Nội dung
+| prompt | string | ✅ | Nội dung người dùng gửi tới chatbot  
+| gender | string | ❌ | Giới tính (male, female)
+
+**Response:**
+```json
+{
+  "code": 0,
+  "success": true,
+  "data": {
+    "audio": "SUQzBAAAAA...",
+    "emotion": "happy",
+    "text": "Học phí kỳ này của bạn là 4.500.000 VNĐ và đã được thanh toán",
+  }
+}
+```
+---
 ## 27. Tuition Fee Config - Quản lý học phí
 ### 27.1. GET /api/v1/admin/tuition-fee-configs
 Lấy danh sách học phí (có phân trang).

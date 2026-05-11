@@ -48,6 +48,7 @@ public interface TuitionInvoiceRepository extends JpaRepository<TuitionInvoice, 
             WHERE t.id = :invoiceId AND t.student_id = :studentId
         """, nativeQuery = true)
     Optional<TuitionInvoiceView> findByIdAndStudentId(@Param("invoiceId") Long invoiceId, @Param("studentId") Long studentId);
+    
 
     @Query(value = """
             SELECT 

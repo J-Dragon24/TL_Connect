@@ -19,12 +19,16 @@ import com.tl_connect.dev.modules.payment.dto.CreateTuitionPaymentReqDTO;
 import com.tl_connect.dev.modules.payment.dto.CreateTuitionPaymentResDTO;
 import com.tl_connect.dev.modules.payment.dto.PaymentRequestDTO;
 import com.tl_connect.dev.modules.payment.dto.PaymentResponseDTO;
+import com.tl_connect.dev.modules.payment.dto.QueryPaymentRequestDTO;
+import com.tl_connect.dev.modules.payment.dto.QueryPaymentResponseDTO;
+import com.tl_connect.dev.modules.payment.dto.QueryPaymentResponseRawDTO;
 import com.tl_connect.dev.modules.payment.dto.RefundInfoDTO;
 import com.tl_connect.dev.modules.payment.dto.RefundRequestDTO;
 import com.tl_connect.dev.modules.payment.dto.RefundResponseDTO;
 import com.tl_connect.dev.modules.payment.entity.Payment;
 import com.tl_connect.dev.modules.payment.provider.PaymentFactory;
 import com.tl_connect.dev.modules.payment.provider.ProviderPayment;
+import com.tl_connect.dev.modules.payment.provider.VnPayProvider;
 import com.tl_connect.dev.modules.tuition.entity.TuitionInvoice;
 import com.tl_connect.dev.modules.tuition.entity.TuitionInvoiceItem;
 import com.tl_connect.dev.modules.tuition.entity.TuitionTransaction;
@@ -228,5 +232,27 @@ public class PaymentService {
             return callbackBody.get("vnp_TxnRef");
         }
         return null;
+    }
+
+    public QueryPaymentResponseDTO queryPaymentStatus(QueryPaymentRequestDTO req, String ipAddress) throws Exception {
+        Payment payment = paymentRepository.findByTransactionCode(req.getTransactionCode())
+            .orElseThrow(() -> new NotFoundException("Payment not found: " + req.getTransactionCode()));
+
+        String transactionDate = payment.getCreatedAt()
+            .atZone(ZoneId.of("Asia/Ho_Chi_Minh"))
+            .format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+
+        ProviderPayment providerPayment = paymentFactory.getProvider(payment.getProvider());
+        QueryPaymentResponseRawDTO response = providerPayment.queryPaymentResult(req, ipAddress, transactionDate);
+
+        log.info("Raw response from provider: {}", response.getRawData());
+
+        return QueryPaymentResponseDTO.builder()
+            .responseCode(response.getResponseCode())
+            .message(response.getMessage())
+            .transactionId(response.getTransactionId())
+            .providerTransactionId(response.getProviderTransactionId())
+            .amount(response.getAmount())
+            .build();
     }
 }
