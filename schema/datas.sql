@@ -55,7 +55,7 @@ INSERT INTO oauth_users (user_uuid, display_name, email)
 VALUES
 ('1deb00a9-835c-4ab7-a50f-57c12a56c7bd', 'Nguyễn Văn An', 'nhokthanh3211@gmail.com'),
 ('a65d03d4-6a2a-426f-963d-8dca24399b83', 'Trần Thị Bích', 'bich.tran@university.edu.vn'),
-('uuid-lecturer-003', 'Phùng Thanh Độ', 'a45044@thanglong.edu.vn'),
+('4a43cbd4-f3c6-4f5e-8db3-5b3aa1ef7369', 'Phùng Thanh Độ', 'a45044@thanglong.edu.vn'),
 ('uuid-4','Phạm Quang Huy','a45123@thanglong.edu.vn'),
 ('uuid-5','Hoàng Thu Hà','a45124@thanglong.edu.vn'),
 ('uuid-6','Đỗ Minh Tuấn','a45125@thanglong.edu.vn'),
@@ -213,8 +213,8 @@ INSERT INTO academic_advisors (lecturer_id, student_class_id) VALUES
 -- students
 INSERT INTO students (oauth_user_id, student_class_id, full_name, student_code, gender, date_of_birth, status) VALUES
 (1,1,'Lê Việt Hoàng','A45033','NAM','2003-05-10','ACTIVE'),
-(2,10,'Nguyễn Ngọc Anh','A45044','NU','2004-08-20','ACTIVE'),
-(3,10,'Phùng Thanh Độ','A45035','NAM','2003-02-11','ACTIVE'),
+(2,10,'Nguyễn Ngọc Anh','A45035','NU','2004-08-20','ACTIVE'),
+(3,10,'Phùng Thanh Độ','A45044','NAM','2003-02-11','ACTIVE'),
 (11,1,'Nguyễn Hoàng Long','A45039','NAM','2004-02-15','ACTIVE'),
 (12,1,'Trần Minh Tuấn','A45040','NAM','2004-06-21','ACTIVE'),
 (13,10,'Lê Thị Thu Trang','A45041','NU','2004-09-12','ACTIVE'),
