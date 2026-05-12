@@ -1,5 +1,11 @@
 package com.tl_connect.dev.modules.academic_result.controller;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +35,25 @@ public class AcademicResultController {
             throw new UnauthorizeException("Authentication required");
         }
         Long studentId = userInfo.userId();
+        System.out.println(studentId + " " + studyProgramCode);
         AcademicResultDTO academicResult = resultService.getSubjectResult(studentId, studyProgramCode);
         return ResponseHelper.success("Academic result fetched successfully", academicResult);
+    }
+
+    @GetMapping("/export")
+    public ResponseEntity<byte[]> exportToExcel(Authentication authentication,
+            @RequestParam(name = "ctdt") String studyProgramCode) throws IOException {
+
+        if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo userInfo)) {
+            throw new UnauthorizeException("Authentication required");
+        }
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        resultService.exportExcel(userInfo.userId(), studyProgramCode, baos);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("application", "vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+        headers.setContentDispositionFormData("attachment", "ket-qua-" + studyProgramCode + ".xlsx");
+        return new ResponseEntity<>(baos.toByteArray(), headers, HttpStatus.OK);
     }
 }

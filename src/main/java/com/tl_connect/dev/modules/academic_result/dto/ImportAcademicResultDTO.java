@@ -2,7 +2,7 @@ package com.tl_connect.dev.modules.academic_result.dto;
 
 import java.math.BigDecimal;
 
-import com.tl_connect.dev.shared.common.ultility.importer.annotation.ImportColumn;
+import com.tl_connect.dev.shared.common.ultility.importer.annotation.ExcelColumn;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -18,36 +18,36 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ImportAcademicResultDTO {
     
-    @ImportColumn("Mã sinh viên")
+    @ExcelColumn(header = "Mã sinh viên")
     @NotNull(message = "Mã sinh viên không được để trống")
     private String studentCode;
     
-    @ImportColumn("Mã môn học")
+    @ExcelColumn(header = "Mã môn học")
     @NotNull(message = "Mã môn học không được để trống")
     private String subjectCode;
 
-    @ImportColumn("Học kỳ")
+    @ExcelColumn(header = "Học kỳ")
     @NotNull(message = "Học kỳ không được để trống")
     private String semesterCode;
     
-    @ImportColumn("Điểm chuyên cần")
+    @ExcelColumn(header = "Điểm chuyên cần")
     private BigDecimal attendanceScore;
 
-    @ImportColumn("Điểm giữa kỳ")
+    @ExcelColumn(header = "Điểm giữa kỳ")
     private BigDecimal midtermScore;
 
-    @ImportColumn("Điểm cuối kỳ")
+    @ExcelColumn(header = "Điểm cuối kỳ")
     private BigDecimal finalScore;
 
-    @ImportColumn("Điểm hệ số 10")
+    @ExcelColumn(header = "Điểm hệ số 10")
     private BigDecimal score10;
 
-    @ImportColumn("Điểm hệ số 4")
+    @ExcelColumn(header = "Điểm hệ số 4")
     private BigDecimal score4;
 
-    @ImportColumn("Loại")
+    @ExcelColumn(header = "Loại")
     private String letterGrade;
 
-    @ImportColumn("Đạt")
+    @ExcelColumn(header = "Đạt")
     private Boolean isPass;
 }

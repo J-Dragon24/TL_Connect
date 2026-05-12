@@ -7,6 +7,12 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface ImportColumn {
-    String value();
+public @interface ExcelColumn {
+    String header();
+
+    int order() default 0;
+
+    boolean exportable() default true;
+
+    boolean importable() default true;
 }

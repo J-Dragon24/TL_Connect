@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import com.tl_connect.dev.shared.common.ultility.importer.annotation.ImportColumn;
+import com.tl_connect.dev.shared.common.ultility.importer.annotation.ExcelColumn;
 
 import jakarta.validation.constraints.Pattern;
 
@@ -16,13 +16,13 @@ import jakarta.validation.constraints.Pattern;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmergencyContactDTO {
-    @ImportColumn("Tên người liên hệ")
+    @ExcelColumn(header = "Tên người liên hệ")
     private String name;
-    @ImportColumn("Số điện thoại 2")
+    @ExcelColumn(header = "Số điện thoại 2")
     @Pattern(regexp = "^(0|\\+84)[0-9]{9}$", message = "Invalid emergency phone")
     private String phoneNumber;
-    @ImportColumn("Địa chỉ 2")
+    @ExcelColumn(header = "Địa chỉ 2")
     private String address;
-    @ImportColumn("Mối quan hệ")
+    @ExcelColumn(header = "Mối quan hệ")
     private String relationship;
 }

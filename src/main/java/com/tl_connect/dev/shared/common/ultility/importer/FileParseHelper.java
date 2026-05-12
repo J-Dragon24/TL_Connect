@@ -8,6 +8,8 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,9 +20,13 @@ import com.tl_connect.dev.shared.common.exception.InvalidInputException;
 import com.tl_connect.dev.shared.common.ultility.importer.accessor.CsvRowAccessor;
 import com.tl_connect.dev.shared.common.ultility.importer.accessor.ExcelRowAccessor;
 import com.tl_connect.dev.shared.common.ultility.importer.accessor.RowAccessor;
-import com.tl_connect.dev.shared.common.ultility.importer.annotation.ImportColumn;
+import com.tl_connect.dev.shared.common.ultility.importer.annotation.ExcelColumn;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -91,13 +97,13 @@ public class FileParseHelper {
 
             for (Field field : clazz.getDeclaredFields()) {
                 field.setAccessible(true);
-                ImportColumn col = field.getAnnotation(ImportColumn.class);
+                ExcelColumn col = field.getAnnotation(ExcelColumn.class);
 
                 if (col != null) {
                     if (field.getType() == LocalDate.class) {
-                        field.set(obj, row.getDate(col.value()));
+                        field.set(obj, row.getDate(col.header()));
                     } else {
-                        field.set(obj, convertValue(row.getString(col.value()), field.getType()));
+                        field.set(obj, convertValue(row.getString(col.header()), field.getType()));
                     }
                 } else if (!isPrimitive(field.getType())) {
                     field.set(obj, mapToObject(row, field.getType()));
@@ -106,6 +112,56 @@ public class FileParseHelper {
             return obj;
         } catch (Exception e) {
             throw new RuntimeException("Lỗi mapping row: " + e.getMessage());
+        }
+    }
+
+    public <T> void exportToSheet(Sheet sheet, List<T> data, Class<T> clazz, Workbook workbook) {
+        CellStyle headerStyle = createHeaderStyle(workbook);
+        CellStyle dataStyle = createDataStyle(workbook);
+        // Lấy các field có @ExcelColumn, sort theo order
+        List<Field> fields = Arrays.stream(clazz.getDeclaredFields())
+                .filter(f -> f.isAnnotationPresent(ExcelColumn.class)
+                        && f.getAnnotation(ExcelColumn.class).exportable())
+                .sorted(Comparator.comparingInt(f -> f.getAnnotation(ExcelColumn.class).order()))
+                .toList();
+
+        Row headerRow = sheet.createRow(sheet.getLastRowNum() == 0
+                && sheet.getRow(0) == null ? 0 : sheet.getLastRowNum() + 1);
+
+        for (int i = 0; i < fields.size(); i++) {
+            ExcelColumn col = fields.get(i).getAnnotation(ExcelColumn.class);
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(col.header());
+            if (headerStyle != null) cell.setCellStyle(headerStyle);
+            sheet.setColumnWidth(i, Math.max(col.header().length() + 6, 12) * 256);
+        }
+
+        // Data rows
+        for (T item : data) {
+            Row row = sheet.createRow(sheet.getLastRowNum() + 1);
+            for (int i = 0; i < fields.size(); i++) {
+                fields.get(i).setAccessible(true);
+                Cell cell = row.createCell(i);
+                try {
+                    Object value = fields.get(i).get(item);
+                    setCellValue(cell, value);
+                } catch (IllegalAccessException ignored) {}
+                if (dataStyle != null) cell.setCellStyle(dataStyle);
+            }
+        }
+    }
+
+    private void setCellValue(Cell cell, Object value) {
+        if (value == null) {
+            cell.setCellValue("");
+        } else if (value instanceof Number) {
+            cell.setCellValue(((Number) value).doubleValue());
+        } else if (value instanceof Boolean b) {
+            cell.setCellValue(b ? "Đạt" : "Không đạt");
+        } else if (value instanceof LocalDate d) {
+            cell.setCellValue(d.toString());
+        } else {
+            cell.setCellValue(value.toString());
         }
     }
 
@@ -150,5 +206,24 @@ public class FileParseHelper {
                 || type == LocalDate.class
                 || type == LocalDateTime.class
                 || type.isEnum();
+    }
+
+    private CellStyle createHeaderStyle(Workbook wb) {
+        CellStyle s = wb.createCellStyle();
+        Font font = wb.createFont();
+        font.setBold(true);
+        font.setFontName("Arial");
+        s.setFont(font);
+        s.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        s.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        return s;
+    }
+
+    private CellStyle createDataStyle(Workbook wb) {
+        CellStyle s = wb.createCellStyle();
+        Font font = wb.createFont();
+        font.setFontName("Arial");
+        s.setFont(font);
+        return s;
     }
 }

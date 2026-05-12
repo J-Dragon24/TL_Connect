@@ -20,6 +20,8 @@ import com.tl_connect.dev.modules.academic_result.repository.StudentSemesterSumm
 import com.tl_connect.dev.modules.academic_result.repository.StudentSubjectResultRepository;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +34,7 @@ import lombok.RequiredArgsConstructor;
 public class AcademicResultService {
         private final StudentSubjectResultRepository resultRepository;
         private final StudentSemesterSummaryRepository semesterSummaryRepository;
+        private final AcademicResultExporter excelExporter;
 
         public PagedResponse<AcademicResultAdmDTO> getAllAcademicResult(Pageable pageable, String facultyCode) {
                 if(facultyCode == null || facultyCode.isBlank()){
@@ -194,5 +197,11 @@ public class AcademicResultService {
                                 .studyProgram(studyProgramCode)
                                 .semesterResults(semesterResults)
                                 .build();
+        }
+
+
+        public void exportExcel(Long studentId, String studyProgramCode, OutputStream outputStream) throws IOException {
+                AcademicResultDTO result = getSubjectResult(studentId, studyProgramCode);
+                excelExporter.exportToExcel(result, outputStream);
         }
 }

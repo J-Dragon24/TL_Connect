@@ -3,7 +3,7 @@ package com.tl_connect.dev.modules.student.dto;
 import java.time.LocalDate;
 
 import com.tl_connect.dev.shared.common.enums.IdCardType;
-import com.tl_connect.dev.shared.common.ultility.importer.annotation.ImportColumn;
+import com.tl_connect.dev.shared.common.ultility.importer.annotation.ExcelColumn;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -20,16 +20,16 @@ import jakarta.validation.constraints.Past;
 @NoArgsConstructor
 @AllArgsConstructor
 public class IdentityCardDTO {
-    @ImportColumn("Số CCCD/CMND")
+    @ExcelColumn(header = "Số CCCD/CMND")
     @NotBlank(message = "Số CCCD/CMND không được để trống")
     private String cardNumber;
 
     @NotNull(message = "Loại thẻ không được để trống")
-    @ImportColumn("Loại thẻ")
+    @ExcelColumn(header = "Loại thẻ")
     private IdCardType cardType;
-    @ImportColumn("Ngày cấp")
+    @ExcelColumn(header = "Ngày cấp")
     @Past(message = "Ngày cấp phải là ngày trong quá khứ")
     private LocalDate issuedDate;
-    @ImportColumn("Nơi cấp")
+    @ExcelColumn(header = "Nơi cấp")
     private String issuedPlace;
 }
