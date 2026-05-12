@@ -100,7 +100,7 @@ public class AuthHelper {
             .add("client_id", clientId)
             .add("client_secret", clientSecret)
             .add("assertion", accessToken)
-            .add("scope", "https://graph.microsoft.com/User.Read")
+            .add("scope", "https://graph.microsoft.com/.default")
             .add("requested_token_use", "on_behalf_of")
             .build();
 
@@ -110,8 +110,13 @@ public class AuthHelper {
             .build();
 
         try (Response response = httpClient.newCall(request).execute()) {
-            String json = response.body().string();
-            log.info("OBO response: {}", json);
+            String json = response.body() != null
+                ? response.body().string()
+                : "";
+            if (!response.isSuccessful()) {
+                log.error("Graph token failed: HTTP {} - {}", response.code(), json);
+                return "";
+            }
             return new ObjectMapper().readTree(json).get("access_token").asText();
         }
         catch (Exception e) {

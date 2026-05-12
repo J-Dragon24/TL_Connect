@@ -18,7 +18,6 @@ import com.tl_connect.dev.modules.oauth.projection.JwtUserInfoView;
 import com.tl_connect.dev.modules.oauth.repository.OAuthUserRepository;
 import com.tl_connect.dev.modules.student.entity.Student;
 import com.tl_connect.dev.modules.student.repository.StudentRepository;
-import com.tl_connect.dev.shared.common.enums.UserStatus;
 import com.tl_connect.dev.shared.common.exception.ForbiddenException;
 import com.tl_connect.dev.shared.common.exception.InvalidInputException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
@@ -40,7 +39,7 @@ public class OAuthService {
 
     private final UserDeviceService userDeviceService;
     
-    // private final RefreshTokenService refreshTokenService;
+    private final RefreshTokenService refreshTokenService;
     
     @Transactional
     public OAuthUserInfoDTO loginWithMicrosoft(LoginRequestDTO request) {
@@ -59,10 +58,10 @@ public class OAuthService {
         // String avatar = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
         if (microsoftId == null || microsoftId.isEmpty()) {
-            throw new InvalidInputException("oid not found in ID token");
+            throw new InvalidInputException("Oid not found in ID token");
         }
         if (email == null || email.isEmpty()) {
-            throw new InvalidInputException("email not found in ID token");
+            throw new InvalidInputException("Email not found in ID token");
         }
 
         System.out.println("microsoftId: " + microsoftId);
@@ -76,17 +75,24 @@ public class OAuthService {
         } else if(roles.contains("ADMIN")) {
             jwtUserInfo = processAdminLogin(microsoftId, email, name, roles);
         } else {
-            throw new ForbiddenException("Không có quyền truy cập hệ thống");
+            throw new ForbiddenException("Access denied");
         }
 
         String accessToken = jwtService.generateToken(jwtUserInfo);
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("userId", jwtUserInfo.userId());
+        data.put("roles", roles);
+
+        String refreshToken = TokenHelper.generateRefreshToken();
+        refreshTokenService.save(refreshToken, data);
 
         return OAuthUserInfoDTO.builder()
                 .microsoftId(microsoftId)
                 .email(email)
                 .name(name)
                 .accessToken(accessToken)
-                // .refreshToken(refreshToken)
+                .refreshToken(refreshToken)
                 .avatar(avatar)
                 .build();
     }
@@ -107,11 +113,11 @@ public class OAuthService {
                     .roles(roles)
                     .build();
         } else {
-            String studentCode = email.split("@")[0];
+            String studentCode = email.split("@")[0].toUpperCase();
             Student student = studentRepository.findByStudentCode(studentCode)
-                    .orElseThrow(() -> new NotFoundException("Sinh viên không tồn tại trong hệ thống: " + studentCode));
+                    .orElseThrow(() -> new NotFoundException("Student not found: " + studentCode));
             if (student.getOauthUserId() != null) {
-                throw new InvalidInputException("Sinh viên đã được liên kết với tài khoản khác");
+                throw new InvalidInputException("Student is already linked to another account");
             }
             OAuthUser oauthUser = oauthUserRepository.save(OAuthUser.create(microsoftId, name, email));
             student.setOauthUserId(oauthUser.getId());
@@ -123,13 +129,6 @@ public class OAuthService {
                     .build();
         }
 
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("userId", jwtUserInfo.userId());
-        data.put("roles", roles);
-
-        // String refreshToken = TokenHelper.generateRefreshToken();
-        // refreshTokenService.save(refreshToken, data);
 
         String devicePlatform = platform != null ? platform.toLowerCase() : "unknown";
 
@@ -149,16 +148,9 @@ public class OAuthService {
                     .roles(roles)
                     .build();
         } else {
-            throw new NotFoundException("Tài khoản không tồn tại trong hệ thống: " + microsoftId);
+            throw new NotFoundException("Account not found: " + microsoftId);
         }
 
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("userId", jwtUserInfo.userId());
-        data.put("roles", roles);
-
-        // String refreshToken = TokenHelper.generateRefreshToken();
-        // refreshTokenService.save(refreshToken, data);
 
         return jwtUserInfo;
     }
