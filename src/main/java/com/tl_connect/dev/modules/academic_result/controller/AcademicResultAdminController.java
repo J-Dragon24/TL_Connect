@@ -53,7 +53,6 @@ public class AcademicResultAdminController {
         if (file == null || file.isEmpty()) {
             throw new InvalidInputException("File is missing");
         }
-        
         if (!fileHelper.isXLSX(file) && !fileHelper.isCSV(file)) {
             throw new InvalidInputException("File must be CSV or Excel (.csv, .xlsx, .xls)");
         }

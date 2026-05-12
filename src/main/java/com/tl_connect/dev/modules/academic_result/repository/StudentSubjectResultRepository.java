@@ -13,7 +13,6 @@ import com.tl_connect.dev.modules.academic_result.projection.SubjectResultAdmRow
 import com.tl_connect.dev.modules.academic_result.projection.SubjectResultRow;
 
 import java.util.List;
-import java.util.Set;
 
 @Repository
 public interface StudentSubjectResultRepository extends JpaRepository<StudentSubjectResult, Long> {

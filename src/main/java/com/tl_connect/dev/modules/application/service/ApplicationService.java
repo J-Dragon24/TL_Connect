@@ -11,10 +11,14 @@ import com.tl_connect.dev.modules.application.dto.ApplicationAttachmentDTO;
 import com.tl_connect.dev.modules.application.dto.ApplicationDTO;
 import com.tl_connect.dev.modules.application.dto.ApplicationSubmitDTO;
 import com.tl_connect.dev.modules.application.dto.DetailApplicationDTO;
+import com.tl_connect.dev.modules.application.dto.HistoryApplicationDTO;
+import com.tl_connect.dev.modules.application.dto.HistoryDetailApplication;
 import com.tl_connect.dev.modules.application.dto.UpdateApplicationDTO;
 import com.tl_connect.dev.modules.application.entity.ApplicationAttachment;
 import com.tl_connect.dev.modules.application.entity.StudentApplication;
+import com.tl_connect.dev.modules.application.projection.ApplicationAdminRow;
 import com.tl_connect.dev.modules.application.projection.ApplicationRow;
+import com.tl_connect.dev.modules.application.projection.DetailApplicationAdminView;
 import com.tl_connect.dev.modules.application.projection.DetailApplicationView;
 import com.tl_connect.dev.modules.application.repository.ApplicationAttachmentRepository;
 import com.tl_connect.dev.modules.application.repository.ApplicationRepository;
@@ -39,7 +43,7 @@ public class ApplicationService {
     private final FileHelper fileHelper;
 
     public PagedResponse<ApplicationDTO> getAllApplication(Pageable pageable) {
-        Page<ApplicationRow> applications = applicationRepository.findAllApplication(pageable);
+        Page<ApplicationAdminRow> applications = applicationRepository.findAllApplication(pageable);
         return new PagedResponse<>(
                 applications.getContent().stream().map(this::toDTO).toList(),
                 applications.getNumber(),
@@ -51,7 +55,7 @@ public class ApplicationService {
     }
 
     public DetailApplicationDTO getDetailApplication(Long id) {
-        DetailApplicationView application = applicationRepository.findDetailById(id)
+        DetailApplicationAdminView application = applicationRepository.findDetailById(id)
                 .orElseThrow(() -> new NotFoundException("Application not found"));
         List<ApplicationAttachment> attachments = applicationAttachmentRepository.findByApplicationId(id);
         return DetailApplicationDTO.builder()
@@ -129,7 +133,7 @@ public class ApplicationService {
                 .build();
     }
 
-    private ApplicationDTO toDTO(ApplicationRow row) {
+    private ApplicationDTO toDTO(ApplicationAdminRow row) {
         return ApplicationDTO.builder()
                 .id(row.getId())
                 .studentCode(row.getStudentCode())
@@ -148,16 +152,29 @@ public class ApplicationService {
                 .build();
     }
 
-    // public List<ApplicationTypeDTO> getHistoryApplication(Long studentId) {
-    // List<StudentApplication> applications =
-    // applicationRepository.findAllByStudentId(studentId);
-    // return applications.stream()
-    // .map(application -> ApplicationTypeDTO.builder()
-    // .id(application.getId())
-    // .code(application.getCode())
-    // .name(applicationType.getName())
-    // .build())
-    // .toList();
-    // }
+    public List<HistoryApplicationDTO> getHistoryApplication(Long studentId) {
+        List<ApplicationRow> applications = applicationRepository.findHistoryApplicationByStudentId(studentId);
+        return applications.stream()
+                .map(row -> HistoryApplicationDTO.builder()
+                        .id(row.getId())
+                        .typeName(row.getApplicationTypeName())
+                        .status(row.getStatus())
+                        .createdAt(row.getCreatedAt())
+                        .build())
+                .toList();
+    }
 
+
+    public HistoryDetailApplication getDetailApplicationHistory(Long id) {
+        DetailApplicationView application = applicationRepository.findHistoryDetailById(id)
+                .orElseThrow(() -> new NotFoundException("Application not found"));
+        List<ApplicationAttachment> attachments = applicationAttachmentRepository.findByApplicationId(id);
+        return HistoryDetailApplication.builder()
+                .typeName(application.getApplicationTypeName())
+                .status(application.getStatus())
+                .content(application.getContent())
+                .attachments(attachments.stream().map(this::toAttachmentDTO).toList())
+                .createdAt(application.getCreatedAt())
+                .build();
+    }
 }

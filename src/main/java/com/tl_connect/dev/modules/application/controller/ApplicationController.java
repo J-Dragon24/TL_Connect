@@ -3,6 +3,7 @@ package com.tl_connect.dev.modules.application.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -11,6 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import com.tl_connect.dev.modules.application.dto.ApplicationSubmitDTO;
 import com.tl_connect.dev.modules.application.dto.ApplicationTypeDTO;
+import com.tl_connect.dev.modules.application.dto.HistoryApplicationDTO;
+import com.tl_connect.dev.modules.application.dto.HistoryDetailApplication;
 import com.tl_connect.dev.modules.application.service.ApplicationService;
 import com.tl_connect.dev.modules.application.service.ApplicationTypeService;
 import com.tl_connect.dev.shared.common.exception.InvalidInputException;
@@ -71,6 +74,25 @@ public class ApplicationController {
         }else{
             return ResponseHelper.internalError("Application failed to create");
         }
+    }
+
+    @GetMapping("/history/{id}")
+    public ResponseEntity<?> getDetailApplicationHistory(Authentication authentication, @PathVariable("id") Long id) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo userInfo)) {
+            throw new UnauthorizeException("Authentication required");
+        }
+        HistoryDetailApplication application = applicationService.getDetailApplicationHistory(id);
+        return ResponseHelper.success("Application detail", application);
+    }
+
+    @GetMapping("/history")
+    public ResponseEntity<?> getHistoryApplication(Authentication authentication) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo userInfo)) {
+            throw new UnauthorizeException("Authentication required");
+        }
+        Long studentId = userInfo.userId();
+        List<HistoryApplicationDTO> applications = applicationService.getHistoryApplication(studentId);
+        return ResponseHelper.success("List of applications", applications);
     }
 
 }

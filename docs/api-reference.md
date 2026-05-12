@@ -2416,7 +2416,103 @@ Nộp đơn.
 - ❌ file rỗng / sai định dạng / quá lớn → code -1, HTTP 400
 - ❌ loại đơn rỗng → code -1, HTTP 400
 ---
-### 11.3. GET /api/v1/admin/application/all
+### 11.3. GET /api/v1/applications/history
+Lấy lịch sử đơn từ của sinh viên đang đăng nhập.
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: Không áp dụng
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "List of applications",
+  "data": [
+    {
+      "id": 1,
+      "typeName": "Đơn xin nghỉ học",
+      "status": "PENDING",
+      "createdAt": "2026-05-12T10:30:00"
+    },
+    {
+      "id": 2,
+      "typeName": "Đơn xác nhận sinh viên",
+      "status": "APPROVED",
+      "createdAt": "2026-05-10T08:15:00"
+    }
+  ]
+}
+```
+
+**Response – User chưa đăng nhập (code -3):**
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```
+**Test cases:**
+- ✅ token hợp lệ → code 0 + danh sách lịch sử đơn
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+---
+### 11.4. GET /api/v1/applications/history/`{id}`
+
+Lấy chi tiết đơn từ.
+
+**Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+**Content-Type**: Không áp dụng
+
+**Path param:**
+|Field|Type|Required|Description|
+|------|-----|-----|-----|
+id|number|✅|ID đơn|
+
+**Lưu ý**: tạo url xem file từ fileKey: `https://res.cloudinary.com/dm5ev1isi/raw/upload/${fileKey}`
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Application detail",
+  "data": {
+    "typeName": "Đơn xin nghỉ học",
+    "status": "PENDING",
+    "content": "Em xin nghỉ học vì lý do sức khỏe",
+    "attachments": [
+      {
+        "id": 1,
+        "fileKey": "271326-don_nghi_hoc.pdf",
+        "originalFilename": "don_nghi_hoc.pdf",
+        "fileSize": 123456
+      }
+    ],
+    "createdAt": "2026-05-12T10:30:00"
+  }
+}
+```
+**Response – User chưa đăng nhập (code -3):**
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```
+**Response – Không tìm thấy đơn (code -2):**
+```json
+{
+  "code": -2,
+  "data": null,
+  "message": "Application not found"
+}
+```
+**Test cases:**
+- ✅ token hợp lệ + id tồn tại → code 0 + chi tiết đơn
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+- ❌ id không tồn tại → code -2, HTTP 404
+---
+### 11.5. GET /api/v1/admin/application/all
 
 Lấy danh sách tất cả đơn (admin).
 
@@ -2455,7 +2551,7 @@ Lấy danh sách tất cả đơn (admin).
 }
 ```
 ---
-### 11.4. GET /api/v1/admin/application/`{id}`
+### 11.6. GET /api/v1/admin/application/`{id}`
 
 Lấy chi tiết đơn.
 
@@ -2491,7 +2587,7 @@ Lấy chi tiết đơn.
 }
 ```
 ---
-### 11.5. POST /api/v1/admin/application/delete/`{id}`
+### 11.7. POST /api/v1/admin/application/delete/`{id}`
 
 Xoá đơn.
 
@@ -2506,7 +2602,7 @@ Xoá đơn.
 }
 ```
 ---
-### 11.6. POST /api/v1/admin/application/update-status/`{id}`
+### 11.8. POST /api/v1/admin/application/update-status/`{id}`
 
 Cập nhật trạng thái đơn.
 
