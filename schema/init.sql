@@ -685,7 +685,7 @@ CREATE TABLE feedback (
   title TEXT NOT NULL,
   category_id BIGINT,
   content TEXT NOT NULL,
-  app_version VARCHAR(20) NOT NULL,
+  app_version VARCHAR(20),
   device_info TEXT,
   status VARCHAR(20) NOT NULL DEFAULT 'PENDING' CHECK (status IN ('PENDING','IN_PROGRESS','RESOLVED','REJECTED')),
   created_at TIMESTAMP DEFAULT now(),
