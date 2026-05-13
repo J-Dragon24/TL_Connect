@@ -27,10 +27,10 @@ public class BackBlazeProvider extends FileHelper {
     @Value("${b2.end_point}")
     private String endPoint;
 
-    public UploadResult uploadFile(MultipartFile file) throws IOException {
+    public UploadResult uploadFile(String type,MultipartFile file) throws IOException {
         System.out.println("Uploading file: " + file.getOriginalFilename());
         try{
-            String key ="uploads/" + System.currentTimeMillis() + "_" + file.getOriginalFilename();
+            String key = type +"/" + System.currentTimeMillis() + "_" + file.getOriginalFilename();
             PutObjectRequest request = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(key)

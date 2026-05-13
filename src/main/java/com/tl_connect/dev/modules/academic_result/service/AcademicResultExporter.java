@@ -1,53 +1,41 @@
 package com.tl_connect.dev.modules.academic_result.service;
 
 import java.io.IOException;
-import java.io.OutputStream;
-
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.stereotype.Component;
 
 import com.tl_connect.dev.modules.academic_result.dto.AcademicResultDTO;
 import com.tl_connect.dev.modules.academic_result.dto.SemesterResultDTO;
 import com.tl_connect.dev.modules.academic_result.dto.SubjectResultDTO;
-import com.tl_connect.dev.shared.common.ultility.importer.FileParseHelper;
+import com.tl_connect.dev.shared.common.ultility.FileProcess.FileParseHelper;
+
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Component
-public class AcademicResultExporter {
-    @Autowired
-    private FileParseHelper fileParseHelper;
+public class AcademicResultExporter extends FileParseHelper {
+    public void exportToExcel(AcademicResultDTO result, HttpServletResponse response) throws IOException {
+        newExcel();
 
-    public void exportToExcel(AcademicResultDTO result, OutputStream outputStream) throws IOException {
-        try (XSSFWorkbook workbook = new XSSFWorkbook()) {
-            Sheet sheet = workbook.createSheet("Kết quả học tập");
+        response = initResponseForExportExcel(response, "Ket_Qua_Hoc_Tap");
+        ServletOutputStream outputStream = response.getOutputStream();
 
-            Row titleRow = sheet.createRow(0);
-            Cell titleCell = titleRow.createCell(0);
-            titleCell.setCellValue("KẾT QUẢ HỌC TẬP - " + result.getStudyProgram());
-            sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 9));
-
-            sheet.createRow(1);
-
-            for (SemesterResultDTO semester : result.getSemesterResults()) {
-
-                Row semRow = sheet.createRow(sheet.getLastRowNum() + 1);
-                semRow.createCell(0).setCellValue("HỌC KỲ: " + semester.getSemester());
-
-                fileParseHelper.exportToSheet(
-                    sheet,
-                    semester.getSubjectResults(),
-                    SubjectResultDTO.class,
-                    workbook
-                );
-
-                sheet.createRow(sheet.getLastRowNum() + 1);
-            }
-
-            workbook.write(outputStream);
+        List<SubjectResultDTO> listSubject = new ArrayList<>();
+        for (SemesterResultDTO semester : result.getSemesterResults()) {
+            listSubject.addAll(semester.getSubjectResults());
         }
+        
+
+        exportToSheet(
+            "Kết quả học tập",
+            "KẾT QUẢ HỌC TẬP - " + result.getStudyProgram(),
+            listSubject,
+            SubjectResultDTO.class
+        );
+
+        workbook.write(outputStream);
+        workbook.close();
+        outputStream.close();
     }
 }

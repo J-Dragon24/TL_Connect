@@ -3453,6 +3453,208 @@
                   "response": []
                 }
               ]
+            },
+            {
+              "name": "feedback",
+              "item": [
+                {
+                  "name": "get all feedback",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/feedback/all",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "feedback",
+                        "all"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "update status",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"status\": \"IN_PROGRESS\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/feedback/update-status/1",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "feedback",
+                        "update-status",
+                        "1"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "feedback category",
+              "item": [
+                {
+                  "name": "get all",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/feedback-category/all",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "feedback-category",
+                        "all"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "create",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"name\": \"acb\",\r\n    \"description\": \"abc\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/feedback-category/create",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "feedback-category",
+                        "create"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "update",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"name\": \"abc\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/feedback-category/update/4",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "feedback-category",
+                        "update",
+                        "4"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "delete",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/feedback-category/delete/4",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "feedback-category",
+                        "delete",
+                        "4"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
             }
           ]
         },
@@ -3504,7 +3706,7 @@
                           "// Kiểm tra code trả về\r",
                           "if (res.code === 0) {\r",
                           "    // Lưu token vào environment\r",
-                          "    let token = res.data.token;\r",
+                          "    let token = res.data.accessToken;\r",
                           "    pm.environment.set(\"auth_token\", token);\r",
                           "    console.log(\"✅ Token saved successfully:\", token);\r",
                           "} else {\r",
@@ -3523,7 +3725,7 @@
                     "header": [],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\r\n    \"accessToken\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlUxc1g4WUZIUzdaNlZsN1ZITEl6VGVqYnZqMCJ9.eyJhdWQiOiI3N2RmOTkzZC1lNzI4LTRiOGUtOTc3MC02YjQwOWFhOTk1NTIiLCJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vYWVjMDAzZWItYzUzNy00ZThhLWIwZjMtMTE0NGE5M2E2MGJjL3YyLjAiLCJpYXQiOjE3NzY4NDUxNDQsIm5iZiI6MTc3Njg0NTE0NCwiZXhwIjoxNzc2ODUwNTA4LCJhaW8iOiJBY1FBTy84YkFBQUFiT09Pby9aT0U0WTY2Wk9oOFdhSkhSRFdpUk8wOGVpSWZuM0VSb3UrNGEybHlPU05TWmhCQ1VuTGlKSFk5Q3phRU5YaVlOdlpOQm5TckZoWW9aeUpWeHQvcnVwdThwc3Fjb0hsVUN3VW9rQUFDV1VDZmVVUXFJbFhWSTdpNlU2NzRNTzZkMk1PVk5nR3pNcW1JWWI4V3VNOGdKdTlzZUQxcGdvN0dqNjdWL3RnVlg4cGVRQkJjbkVGbW1XNTBTUmc4VUlIZTNHSG4rQnpkMFI5eDg2d0I2dzZ6aTBTZzZJQmJjOW1ncDVZYXZTMkNlZkhNbWtENlZoeVF1VmJCT0dlIiwiYXpwIjoiNzdkZjk5M2QtZTcyOC00YjhlLTk3NzAtNmI0MDlhYTk5NTUyIiwiYXpwYWNyIjoiMCIsImlkcCI6ImxpdmUuY29tIiwibmFtZSI6InR1YW5uZ3V5ZW5jb2RlIiwib2lkIjoiYTY1ZDAzZDQtNmEyYS00MjZmLTk2M2QtOGRjYTI0Mzk5YjgzIiwicHJlZmVycmVkX3VzZXJuYW1lIjoidHVhbm5ndXllbmNvZGVAZ21haWwuY29tIiwicmgiOiIxLkFjWUE2d1BBcmpmRmlrNnc4eEZFcVRwZ3ZEMlozM2NvNTQ1TGwzQnJRSnFwbFZJQUFNekdBQS4iLCJyb2xlcyI6WyJzdHVkZW50Il0sInNjcCI6ImFjY2Vzc19hc191c2VyIiwic2lkIjoiMDA0MDFlMmEtODc5ZC02MDE3LTBjMGYtZmRlM2U2YjIwOWQ2Iiwic3ViIjoiWTVaaHlUUDg2ZHN0WVBBX2UtN2ZlRjNWLXEwMTN2T0pobmYwVzBlQ2JXMCIsInRpZCI6ImFlYzAwM2ViLWM1MzctNGU4YS1iMGYzLTExNDRhOTNhNjBiYyIsInV0aSI6IjVFX2RGUThGV0VtdThQRVNMZkJUQUEiLCJ2ZXIiOiIyLjAiLCJ4bXNfZnRkIjoiTm03X0tjUDBmSU9MLXQxczhaLXdOM09ReXE1Umh1M2hGQkNaazA4MGxMUUJhMjl5WldGemIzVjBhQzFrYzIxeiJ9.KYlPdohr6LD-evAaJ-VTWPy9IFKJNsJKAqDhOcYiERbPBV8vEXGXASE1tanl_QeFUEwbKjS7TGcgmeaJruCzbKRRIIZw57XB0lAwigL8fmFyXnWNaSt1g1pTb0ayBPBMLbjgfgozJAsyN2KA7XJ290gzHWeX_jL110aljVNsMQjeRzXrGOaPGyine_VC-yx5ODMjAf7MOvKaen-aVcPkjA1Fh6iDKtzhsMk-6i5nlt-BEmq5yNcbiG7SonE-iSo7heEf574_HtiIZlNn3UWiprPtEuBIuMl_mU9jpAokOcoRf65FoF_GDEQrlQvaH-bZhW3Qc55cYdrJrx9RA3HeTw\",\r\n    \"deviceId\":\"abc\",\r\n    \"fcmToken\": \"abc\"\r\n}",
+                      "raw": "{\r\n    \"accessToken\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ilh0LW83aERicHVwQXotWlBtNkh4Q0ZXUzNjSSJ9.eyJhdWQiOiI3N2RmOTkzZC1lNzI4LTRiOGUtOTc3MC02YjQwOWFhOTk1NTIiLCJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vYWVjMDAzZWItYzUzNy00ZThhLWIwZjMtMTE0NGE5M2E2MGJjL3YyLjAiLCJpYXQiOjE3Nzg1NzI1NDUsIm5iZiI6MTc3ODU3MjU0NSwiZXhwIjoxNzc4NTc2ODc3LCJhaW8iOiJBV1FBbS84Y0FBQUFvVmUyWjFNNmRkTWhOZEJ0eERONVdlR094dlcrYWR3bUs0K09EaXh5SXNJRU1vdHZ1eGpsTW1zZisveGJ4ZVlZbDdHWm1lSjZTakg4ZldqdkN6bTdZNWp3c2VYTUl6Z0VkeFlUZFluVlo2MDJaNitKVlNDWng4cEc4dy9Fd2VxeSIsImF6cCI6Ijc3ZGY5OTNkLWU3MjgtNGI4ZS05NzcwLTZiNDA5YWE5OTU1MiIsImF6cGFjciI6IjAiLCJpZHAiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC9mYzBiZGFhZi0yOTJlLTQ1Y2MtYjUxZi04NzI4NjdmOWM5ODEvIiwibmFtZSI6ImE0NTA0NCBOZ3V54buFbiBOZ-G7jWMgVHXhuqVuIEFuaCIsIm9pZCI6IjRhNDNjYmQ0LWYzYzYtNGY1ZS04ZGIzLTViM2FhMWVmNzM2OSIsInByZWZlcnJlZF91c2VybmFtZSI6ImE0NTA0NEB0aGFuZ2xvbmcuZWR1LnZuIiwicmgiOiIxLkFjWUE2d1BBcmpmRmlrNnc4eEZFcVRwZ3ZEMlozM2NvNTQ1TGwzQnJRSnFwbFZJQUFGREdBQS4iLCJyb2xlcyI6WyJzdHVkZW50Il0sInNjcCI6ImFjY2Vzc19hc191c2VyIiwic2lkIjoiMDA0ZTI3ZWEtN2VhZS0xZWZiLWJkN2YtMDljZGVkYzVkZTA3Iiwic3ViIjoiTU5NYlRPUGVpSDhwdkRSeHVreUVkU203UWdIYVAwY08xMG5vNlVLWHdSOCIsInRpZCI6ImFlYzAwM2ViLWM1MzctNGU4YS1iMGYzLTExNDRhOTNhNjBiYyIsInV0aSI6Ikhzem05Ymowd1VtUDN4N3V3STlSQUEiLCJ2ZXIiOiIyLjAiLCJ4bXNfZnRkIjoicFN4LUJFZ2hfWThoOVhNZ0tKUDVJejRuZmdhQWxZOUE5a0M0MGRHSXM3NEJhMjl5WldGemIzVjBhQzFrYzIxeiJ9.Tov1aNBZoqMXNLoolJUjIaqHu77obHaIgZx9KhRPIOY3aS8TacAwgTK2ARBvEAynbFEBtnDc5wxUijEFmcC1RsvnXAxocKafc9eLmMOaWro3gF5V_NJ6z3swY4Q5J1-7msm0PCfAc-DNcb8d832oSOUvzU0XwGF2zeZJzRhtUjgScoM6kyfGPQJllt1uVCFJSZ-Z03fqbWC2I2rbi1EHHw-HfR7SvjH1gOxDpBWNNNJV9hJLtfuisGFoPOx8Tk9SHUfbmJcCS58CPpLNKXwE51eu2rfhO6_KX7lAc-1NvRHdm_d3iafsxMhJoIfxyUfOLLSvDo5d2L-E2mn_P4WBAA\",\r\n    \"deviceId\":\"abc\",\r\n    \"fcmToken\": \"abc\"\r\n}",
                       "options": {
                         "raw": {
                           "language": "json"
@@ -4192,6 +4394,59 @@
                     }
                   },
                   "response": []
+                },
+                {
+                  "name": "history",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/applications/history",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "applications",
+                        "history"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "detail history",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/applications/history/1",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "applications",
+                        "history",
+                        "1"
+                      ]
+                    }
+                  },
+                  "response": []
                 }
               ]
             },
@@ -4341,40 +4596,176 @@
                   "response": []
                 }
               ]
-            }
-          ]
-        },
-        {
-          "name": "mark",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{auth_token}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{domain}}/api/v1/student/marks?ctdt=DHCQK35TI",
-              "host": [
-                "{{domain}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "student",
-                "marks"
-              ],
-              "query": [
+            },
+            {
+              "name": "academic result",
+              "item": [
                 {
-                  "key": "ctdt",
-                  "value": "DHCQK35TI"
+                  "name": "export",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/student/marks/export?ctdt=DHCQK35TI",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "student",
+                        "marks",
+                        "export"
+                      ],
+                      "query": [
+                        {
+                          "key": "ctdt",
+                          "value": "DHCQK35TI"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "mark",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/student/marks?ctdt=DHCQK35TI",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "student",
+                        "marks"
+                      ],
+                      "query": [
+                        {
+                          "key": "ctdt",
+                          "value": "DHCQK35TI"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "feedback",
+              "item": [
+                {
+                  "name": "get category",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/feedback/category",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "feedback",
+                        "category"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "send feedback",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [
+                        {
+                          "key": "files",
+                          "type": "file",
+                          "uuid": "c5ff8e43-9318-43d4-b4e6-893644d2db55",
+                          "src": "/C:/Users/LongBao/Pictures/chrome-extension10.webp"
+                        },
+                        {
+                          "key": "title",
+                          "value": "abc",
+                          "type": "text",
+                          "uuid": "be669053-057c-489c-b5a4-ee5fcd620737"
+                        },
+                        {
+                          "key": "categoryId",
+                          "value": "1",
+                          "type": "text",
+                          "uuid": "7add3345-a8d7-4d0c-b9f3-fbe5eeb73655"
+                        },
+                        {
+                          "key": "content",
+                          "value": "abc",
+                          "type": "text",
+                          "uuid": "ba44056a-9192-4a3b-803c-fa49e9fda88e"
+                        },
+                        {
+                          "key": "appVersion",
+                          "value": "2.4.5",
+                          "type": "text",
+                          "uuid": "183a0d53-ddda-47e3-b7e3-ec1c1db45595"
+                        },
+                        {
+                          "key": "deviceInfo",
+                          "value": "android 8.1",
+                          "type": "text",
+                          "uuid": "7e656a48-f57e-4eff-81df-441aa34dbbb6"
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/feedback/send",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "feedback",
+                        "send"
+                      ]
+                    }
+                  },
+                  "response": []
                 }
               ]
             }
-          },
-          "response": []
+          ]
         },
         {
           "name": "exam",

@@ -112,3 +112,10 @@ ON notification_targets(target_id, notification_id);
 /* Notification Read indexes*/
 CREATE INDEX IF NOT EXISTS idx_notification_read_user_notification
 ON notification_read(oauth_user_id, notification_id);
+
+/* feedback */
+CREATE INDEX IF NOT EXISTS idx_feedback_category_id ON feedback(category_id);
+
+/* feedback attachments */
+CREATE INDEX IF NOT EXISTS idx_feedback_attachments_feedback_id ON feedback_attachments(feedback_id);
+

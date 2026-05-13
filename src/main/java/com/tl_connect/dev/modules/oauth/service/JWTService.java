@@ -34,6 +34,7 @@ public class JWTService {
 
         JwtPayload payload = JwtPayload.builder()
                 .userId(userInfo.userId())
+                .oauthUserId(userInfo.oauthUserId())
                 .roles(userInfo.roles())
                 .iat(now)
                 .exp(now + EXPIRATION)

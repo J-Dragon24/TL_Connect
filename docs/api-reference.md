@@ -1724,9 +1724,39 @@ GET /api/v1/student/marks?ctdt=CTDT-KHMT-2021
 - ✅ token hợp lệ + chương trình đào tạo hợp lệ → code 0 + thông tin kết quả học tập
 - ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
 - ❌ không tồn tại chương trình đào tạo thích hợp trong db → code -2, HTTP 404
----  
+--- 
+### 9.2. GET /api/v1/student/marks/export
 
-### 9.2. POST /api/v1/admin/academic-results/create
+Xuất kết quả học tập của sinh viên ra file Excel (.xlsx).
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: Không áp dụng
+- **Response Content-Type**: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+- **Response Type**: File download (.xlsx)
+**Query param:**
+| Field | Type | Required | Description |
+| ----- | ---- | -------- | ----------- |
+| ctdt | string | ✅ | Mã chương trình đào tạo |
+
+Server trả về file Excel với tên dạng: Ket_Qua_Hoc_Tap_20260513.xlsx
+
+**Response – User chưa đăng nhập (code -3):**
+
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```
+
+**Test cases:**
+- ✅ token hợp lệ + chương trình đào tạo hợp lệ → tải file Excel thành công
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+- ❌ không tồn tại chương trình đào tạo thích hợp trong db → code -2, HTTP 404
+
+---
+### 9.3. POST /api/v1/admin/academic-results/create
 Tạo kết quả học tập cho sinh viên.
 
 - **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
@@ -1785,7 +1815,7 @@ Response thành công (code 0):
 }
 ```
 ---  
-### 9.3. POST /api/v1/admin/academic-results/import
+### 9.4. POST /api/v1/admin/academic-results/import
 Import kết quả học tập từ file.
 
 - **Auth**: Bắt buộc
@@ -1826,7 +1856,7 @@ Import kết quả học tập từ file.
 ```
 ---  
 
-### 9.4. POST /api/v1/admin/academic-results/update/`{id}`
+### 9.5. POST /api/v1/admin/academic-results/update/`{id}`
 Cập nhật kết quả học tập.
 
 - **Auth**: Bắt buộc
@@ -1861,7 +1891,7 @@ Cập nhật kết quả học tập.
 ```
 ---
 
-### 9.5. POST /api/v1/admin/academic-results/delete/`{id}`
+### 9.6. POST /api/v1/admin/academic-results/delete/`{id}`
 Xóa kết quả học tập.
 
 - **Auth**: Bắt buộc
@@ -1880,7 +1910,7 @@ Xóa kết quả học tập.
 }
 ```
 ---
-### 9.6. GET /api/v1/admin/academic-results/all
+### 9.7. GET /api/v1/admin/academic-results/all
 Lấy danh sách kết quả học tập của sinh viên (dành cho admin).
 
 - **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
@@ -5686,3 +5716,287 @@ Request body:
 }
 ```
 ---
+## 30. Feedback - Góp ý / Báo lỗi
+### 30.1. GET /api/v1/feedback/category
+
+Lấy danh sách danh mục phản hồi/góp ý.
+
+**Auth**: Bắt buộc (Authorization: Bearer JWT)
+**Content-Type**: Không áp dụng
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "get All feedback category success",
+  "data": [
+    {
+      "id": 1,
+      "name": "Bug",
+      "description": "Lỗi hệ thống"
+    },
+    {
+      "id": 2,
+      "name": "Feature",
+      "description": "Đề xuất tính năng"
+    }
+  ]
+}
+```
+
+**Test cases:**
+✅ gọi API thành công → code 0 + danh sách danh mục feedback
+
+---
+### 30.2. POST /api/v1/feedback/send
+
+Gửi feedback / báo lỗi từ người dùng.
+
+**Auth**: Bắt buộc (Authorization: Bearer JWT)
+**Content-Type**: multipart/form-data
+
+**Form data fields:**
+
+| Field | Type | Required | Description
+|------|-----|-----|----|
+| files | File[] | ❌ | Danh sách file đính kèm
+title | string | ✅ | Tiêu đề feedback
+categoryId | long | ✅ | ID danh mục feedback
+content | string | ✅ | Nội dung feedback
+appVersion | string | ❌ | Phiên bản ứng dụng
+deviceInfo | string | ❌ | Thông tin thiết bị
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "send feedback success",
+  "data": null
+}
+```
+**Response – User chưa đăng nhập (code -3):**
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```
+
+**Test cases:**
+
+- ✅ token hợp lệ + dữ liệu hợp lệ → gửi feedback thành công
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+- ❌ categoryId không tồn tại → code -2, HTTP 404
+- ❌ thiếu title hoặc content → code -1, HTTP 400
+---
+### 30.3. GET /api/v1/admin/feedback/all
+
+Lấy danh sách tất cả feedback của người dùng.
+
+**Auth**: Bắt buộc (Authorization: Bearer JWT)
+**Content-Type**: Không áp dụng
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "get all feedback success",
+  "data": [
+    {
+      "id": 1,
+      "email": "student@thanglong.edu.vn",
+      "title": "Lỗi đăng nhập",
+      "content": "Không thể đăng nhập bằng Microsoft",
+      "categoryName": "Bug",
+      "appVersion": "1.0.0",
+      "deviceInfo": "Android 14 - Samsung S23",
+      "feedbackImages": [
+        "image1"
+      ],
+      "status": "PENDING",
+      "createdAt": "2026-05-13T10:30:00"
+    }
+  ]
+}
+```
+
+**Lưu ý:**
+
+- Hiển thị ảnh bằng: `https://res.cloudinary.com/dm5ev1isi/raw/feedback/${fileKey}`
+- Status: 
+  - PENDING
+  - RESOLVED
+  - REJECT
+  - IN_PROGRESS
+
+**Test cases:**
+
+- ✅ token hợp lệ → code 0 + danh sách feedback
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+---
+### 30.4. POST /api/v1/admin/feedback/update-status/`{id}`
+
+Cập nhật trạng thái feedback.
+
+**Auth**: Bắt buộc (Authorization: Bearer JWT)
+**Content-Type**: application/json
+Path param:
+
+| Field | Type | Required | Description
+|------|-----|-----|----|
+id | long | ✅ | ID feedback
+
+Request body:
+```json
+{
+  "status": "RESOLVED"
+}
+
+| Field | Type | Required | Description
+|------|-----|-----|----|
+status | string | ✅ | Trạng thái feedback
+```
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "update status success",
+  "data": null
+}
+```
+
+**Response – Thiếu status (code -1):**
+```json
+{
+  "code": -1,
+  "data": null,
+  "message": "Status is required"
+}
+```
+
+**Test cases:**
+
+- ✅ id hợp lệ + status hợp lệ → cập nhật thành công
+- ❌ thiếu status → code -1, HTTP 400
+- ❌ feedback không tồn tại → code -2, HTTP 404
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+---
+
+## 31. Feedback Category - Danh mục phản hồi / góp ý
+### 31.1. GET /api/v1/admin/feedback-category/all
+
+Lấy tất cả danh mục feedback dành cho admin.
+
+**Auth**: Bắt buộc (Authorization: Bearer JWT)
+**Content-Type**: Không áp dụng
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "get all feedback category success",
+  "data": [
+    {
+      "id": 1,
+      "name": "Bug",
+      "description": "Lỗi hệ thống"
+    }
+  ]
+}
+```
+
+**Test cases:**
+
+- ✅ token hợp lệ → code 0 + danh sách category
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+---
+### 31.2. POST /api/v1/admin/feedback-category/create
+
+Tạo danh mục feedback mới.
+
+**Auth**: Bắt buộc (Authorization: Bearer JWT)
+**Content-Type**: application/json
+Request body:
+```json
+{
+  "name": "Bug",
+  "description": "Lỗi hệ thống"
+}
+```
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "create feedback category success",
+  "data": null
+}
+```
+
+**Test cases:**
+
+- ✅ dữ liệu hợp lệ → tạo category thành công
+- ❌ tên category bị trống → code -1, HTTP 400
+- ❌ category đã tồn tại → code -25, HTTP 409
+- ❌ token không hợp lệ → code -3, HTTP 401
+---
+### 31.3. POST /api/v1/admin/feedback-category/update/`{id}`
+
+Cập nhật danh mục feedback.
+
+**Auth**: Bắt buộc (Authorization: Bearer JWT)
+**Content-Type**: application/json
+
+**Path param**:
+```json
+{
+  "id": 1
+}
+```
+
+**Request body**:
+```json
+{
+  "name": "Feature",
+  "description": "Đề xuất tính năng"
+}
+```
+
+**Response thành công:**
+```json
+{
+  "code": 0,
+  "message": "update feedback category success",
+  "data": null
+}
+```
+
+### 31.4. POST /api/v1/admin/feedback-category/delete/`{id}`
+
+Xóa danh mục feedback.
+
+**Auth**: Bắt buộc (Authorization: Bearer JWT)
+**Content-Type**: application/json
+
+**Path param**:
+```json
+{
+  "id": 1
+}
+```
+
+**Response thành công:**
+```json
+{
+  "code": 0,
+  "message": "delete feedback category success",
+  "data": null
+}
+```
+
+**Test cases:**
+
+- ✅ id hợp lệ → update/delete thành công
+- ❌ category không tồn tại → code -2, HTTP 404
+- ❌ dữ liệu không hợp lệ → code -1, HTTP 400
+- ❌ token không hợp lệ → code -3, HTTP 401

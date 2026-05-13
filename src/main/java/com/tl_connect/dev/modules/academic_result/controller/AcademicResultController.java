@@ -1,11 +1,7 @@
 package com.tl_connect.dev.modules.academic_result.controller;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +15,7 @@ import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
 import com.tl_connect.dev.shared.common.types.JwtUserInfo;
 import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -41,19 +38,14 @@ public class AcademicResultController {
     }
 
     @GetMapping("/export")
-    public ResponseEntity<byte[]> exportToExcel(Authentication authentication,
-            @RequestParam(name = "ctdt") String studyProgramCode) throws IOException {
+    public void exportToExcel(Authentication authentication,
+            @RequestParam(name = "ctdt") String studyProgramCode,
+            HttpServletResponse response) throws IOException {
 
         if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo userInfo)) {
             throw new UnauthorizeException("Authentication required");
         }
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        resultService.exportExcel(userInfo.userId(), studyProgramCode, baos);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(new MediaType("application", "vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
-        headers.setContentDispositionFormData("attachment", "ket-qua-" + studyProgramCode + ".xlsx");
-        return new ResponseEntity<>(baos.toByteArray(), headers, HttpStatus.OK);
+        resultService.exportExcel(userInfo.userId(), studyProgramCode, response);
     }
 }

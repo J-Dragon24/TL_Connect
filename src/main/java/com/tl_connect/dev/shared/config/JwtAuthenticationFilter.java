@@ -43,6 +43,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             try {
                 JwtUserInfo userInfo = JwtUserInfo.builder()
                         .userId(1L)
+                        .oauthUserId(1L)
                         .roles(new ArrayList<>(List.of("admin")))
                         .build();
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userInfo, null,
@@ -52,6 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 // JwtUserInfo userInfo = JwtUserInfo.builder()
                 //         .userId(payload.getUserId())
+                //         .oauthUserId(payload.getOauthUserId())
                 //         .roles(payload.getRoles())
                 //         .build();
 

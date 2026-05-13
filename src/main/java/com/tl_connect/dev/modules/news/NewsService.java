@@ -60,7 +60,7 @@ public class NewsService {
         News news = News.create(newsDTO.getTitle(), newsDTO.getExcerpt(), newsDTO.getSource(), newsDTO.getPublishDate(), newsDTO.getNewsUrl());
 
         if (file != null && !file.isEmpty()) {
-            UploadResult uploadResult = fileHelper.uploadFile(file);
+            UploadResult uploadResult = fileHelper.uploadFile("news", file);
             news.setImageUrl(uploadResult.getUrl());
             news.setImageKey(uploadResult.getKey());
         }
@@ -79,7 +79,7 @@ public class NewsService {
         News news = newsRepository.findById(id).orElseThrow(() -> new RuntimeException("News not found"));
         news.update(newsDTO.getTitle(), newsDTO.getExcerpt(), newsDTO.getSource(), newsDTO.getPublishDate(), newsDTO.getNewsUrl());
         if (file != null && !file.isEmpty()) {
-            UploadResult uploadResult = fileHelper.uploadFile(file);
+            UploadResult uploadResult = fileHelper.uploadFile("news", file);
             news.setImageUrl(uploadResult.getUrl());
             news.setImageKey(uploadResult.getKey());
         }

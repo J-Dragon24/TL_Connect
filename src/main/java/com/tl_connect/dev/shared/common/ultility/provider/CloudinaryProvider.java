@@ -24,7 +24,7 @@ public class CloudinaryProvider extends FileHelper {
     private final Cloudinary cloudinary;
 
     @Override
-    public UploadResult uploadFile(MultipartFile file) throws IOException {
+    public UploadResult uploadFile(String type, MultipartFile file) throws IOException {
         try {
             String original = file.getOriginalFilename();
             String fileName = StringUtils.stripFilenameExtension(original);
@@ -39,7 +39,7 @@ public class CloudinaryProvider extends FileHelper {
             Map<?, ?> result = cloudinary.uploader().upload(
                 file.getBytes(),
                 ObjectUtils.asMap(
-                    "folder", "uploads",
+                    "folder", type,
                     "resource_type", resourceType,
                     "public_id", key,
                     "type", "upload",

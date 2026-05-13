@@ -30,7 +30,7 @@ import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.InvalidInputException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
-import com.tl_connect.dev.shared.common.ultility.importer.FileParseHelper;
+import com.tl_connect.dev.shared.common.ultility.FileProcess.FileParseHelper;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;

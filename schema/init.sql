@@ -45,6 +45,9 @@ DROP TABLE IF EXISTS student_course_class_logs CASCADE;
 DROP TABLE IF EXISTS user_devices CASCADE;
 DROP TABLE IF EXISTS notification_targets CASCADE;
 DROP TABLE IF EXISTS enrollment_periods CASCADE;
+DROP TABLE IF EXISTS feedback_attachments CASCADE;
+DROP TABLE IF EXISTS feedback_category CASCADE;
+DROP TABLE IF EXISTS feedback CASCADE;
 
 
 CREATE TABLE oauth_users (
@@ -652,18 +655,52 @@ CREATE TABLE news (
 );
 
 CREATE TABLE enrollment_periods (
-    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    semester_id BIGINT NOT NULL,
-    start_time TIMESTAMP NOT NULL,
-    end_time TIMESTAMP NOT NULL,
-    max_credits INT NOT NULL DEFAULT 18,
-    created_at TIMESTAMP DEFAULT now(),
-    updated_at TIMESTAMP DEFAULT now(),
-    CONSTRAINT valid_time_range CHECK (end_time > start_time),
-    CONSTRAINT no_overlap_period
-        EXCLUDE USING gist (
-            tsrange(start_time, end_time, '[)') WITH &&
-        ),
-    FOREIGN KEY (semester_id) REFERENCES semesters(id) ON DELETE RESTRICT
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  semester_id BIGINT NOT NULL,
+  start_time TIMESTAMP NOT NULL,
+  end_time TIMESTAMP NOT NULL,
+  max_credits INT NOT NULL DEFAULT 18,
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now(),
+  CONSTRAINT valid_time_range CHECK (end_time > start_time),
+  CONSTRAINT no_overlap_period
+      EXCLUDE USING gist (
+          tsrange(start_time, end_time, '[)') WITH &&
+      ),
+  FOREIGN KEY (semester_id) REFERENCES semesters(id) ON DELETE RESTRICT
+);
+
+CREATE TABLE feedback_category (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  name VARCHAR(255) NOT NULL UNIQUE,
+  description TEXT,
+  is_active BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE feedback (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  oauth_user_id BIGINT,
+  title TEXT NOT NULL,
+  category_id BIGINT,
+  content TEXT NOT NULL,
+  app_version VARCHAR(20) NOT NULL,
+  device_info TEXT,
+  status VARCHAR(20) NOT NULL DEFAULT 'PENDING' CHECK (status IN ('PENDING','IN_PROGRESS','RESOLVED','REJECTED')),
+  created_at TIMESTAMP DEFAULT now(),
+  FOREIGN KEY (oauth_user_id) REFERENCES oauth_users(id) ON DELETE SET NULL,
+  FOREIGN KEY (category_id) REFERENCES feedback_category(id) ON DELETE SET NULL
+);
+
+
+CREATE TABLE feedback_attachments (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  feedback_id BIGINT NOT NULL,
+  file_key VARCHAR(255) NOT NULL,
+  original_filename VARCHAR(255),
+  file_size BIGINT,
+  created_at TIMESTAMP DEFAULT now(),
+  FOREIGN KEY (feedback_id) REFERENCES feedback(id) ON DELETE CASCADE
 );
 

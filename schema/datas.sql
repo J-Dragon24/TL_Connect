@@ -46,7 +46,8 @@ TRUNCATE TABLE
   subject_prerequisite_groups, 
   subject_enrollment_conditions, 
   student_course_class_logs,
-  notification_targets
+  notification_targets,
+  feedback_category
   
 RESTART IDENTITY CASCADE;
 
@@ -1102,5 +1103,36 @@ VALUES
 -- ===== STUDENT 7: enroll rồi drop =====
 (7, 5, 'ENROLL', 'PENDING', 'ENROLLED', '2025-12-03'),
 (7, 5, 'DROP', 'ENROLLED', 'DROPPED', '2025-12-12');
+
+INSERT INTO feedback_category
+(name, description, is_active, created_at, updated_at)
+VALUES
+
+-- ===== BUG REPORT =====
+(
+    'BUG',
+    'Phản hồi liên quan đến lỗi hệ thống hoặc chức năng ứng dụng',
+    TRUE,
+    '2026-01-01 08:00:00',
+    '2026-01-01 08:00:00'
+),
+
+-- ===== UI/UX =====
+(
+    'UI_UX',
+    'Phản hồi liên quan đến giao diện và trải nghiệm người dùng',
+    TRUE,
+    '2026-01-01 08:10:00',
+    '2026-01-01 08:10:00'
+),
+
+-- ===== ACCOUNT SUPPORT =====
+(
+    'ACCOUNT',
+    'Các vấn đề liên quan đến tài khoản người dùng',
+    TRUE,
+    '2026-01-01 08:15:00',
+    '2026-01-01 08:15:00'
+);
 
  COMMIT;

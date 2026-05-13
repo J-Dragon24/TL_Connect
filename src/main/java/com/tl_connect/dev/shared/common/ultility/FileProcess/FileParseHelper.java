@@ -1,15 +1,18 @@
-package com.tl_connect.dev.shared.common.ultility.importer;
+package com.tl_connect.dev.shared.common.ultility.FileProcess;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,25 +20,32 @@ import java.util.Map;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import com.tl_connect.dev.shared.common.exception.InvalidInputException;
-import com.tl_connect.dev.shared.common.ultility.importer.accessor.CsvRowAccessor;
-import com.tl_connect.dev.shared.common.ultility.importer.accessor.ExcelRowAccessor;
-import com.tl_connect.dev.shared.common.ultility.importer.accessor.RowAccessor;
-import com.tl_connect.dev.shared.common.ultility.importer.annotation.ExcelColumn;
+import com.tl_connect.dev.shared.common.ultility.FileProcess.accessor.CsvRowAccessor;
+import com.tl_connect.dev.shared.common.ultility.FileProcess.accessor.ExcelRowAccessor;
+import com.tl_connect.dev.shared.common.ultility.FileProcess.accessor.RowAccessor;
+import com.tl_connect.dev.shared.common.ultility.FileProcess.annotation.ExcelColumn;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 @Component
-public class FileParseHelper {
+public abstract class FileParseHelper {
     public <T> List<T> parse(MultipartFile file, Class<T> clazz) throws IOException {
         String fileName = file.getOriginalFilename();
         if (fileName == null) {
@@ -115,56 +125,7 @@ public class FileParseHelper {
         }
     }
 
-    public <T> void exportToSheet(Sheet sheet, List<T> data, Class<T> clazz, Workbook workbook) {
-        CellStyle headerStyle = createHeaderStyle(workbook);
-        CellStyle dataStyle = createDataStyle(workbook);
-        // Lấy các field có @ExcelColumn, sort theo order
-        List<Field> fields = Arrays.stream(clazz.getDeclaredFields())
-                .filter(f -> f.isAnnotationPresent(ExcelColumn.class)
-                        && f.getAnnotation(ExcelColumn.class).exportable())
-                .sorted(Comparator.comparingInt(f -> f.getAnnotation(ExcelColumn.class).order()))
-                .toList();
-
-        Row headerRow = sheet.createRow(sheet.getLastRowNum() == 0
-                && sheet.getRow(0) == null ? 0 : sheet.getLastRowNum() + 1);
-
-        for (int i = 0; i < fields.size(); i++) {
-            ExcelColumn col = fields.get(i).getAnnotation(ExcelColumn.class);
-            Cell cell = headerRow.createCell(i);
-            cell.setCellValue(col.header());
-            if (headerStyle != null) cell.setCellStyle(headerStyle);
-            sheet.setColumnWidth(i, Math.max(col.header().length() + 6, 12) * 256);
-        }
-
-        // Data rows
-        for (T item : data) {
-            Row row = sheet.createRow(sheet.getLastRowNum() + 1);
-            for (int i = 0; i < fields.size(); i++) {
-                fields.get(i).setAccessible(true);
-                Cell cell = row.createCell(i);
-                try {
-                    Object value = fields.get(i).get(item);
-                    setCellValue(cell, value);
-                } catch (IllegalAccessException ignored) {}
-                if (dataStyle != null) cell.setCellStyle(dataStyle);
-            }
-        }
-    }
-
-    private void setCellValue(Cell cell, Object value) {
-        if (value == null) {
-            cell.setCellValue("");
-        } else if (value instanceof Number) {
-            cell.setCellValue(((Number) value).doubleValue());
-        } else if (value instanceof Boolean b) {
-            cell.setCellValue(b ? "Đạt" : "Không đạt");
-        } else if (value instanceof LocalDate d) {
-            cell.setCellValue(d.toString());
-        } else {
-            cell.setCellValue(value.toString());
-        }
-    }
-
+    
     private Object convertValue(String val, Class<?> type) {
         if (val == null || val.isBlank())
             return null;
@@ -188,6 +149,97 @@ public class FileParseHelper {
             return parseEnum(type, val);
         return val;
     }
+
+    //EXPORT EXCEL
+
+    public XSSFWorkbook workbook;
+    public XSSFSheet sheet;
+
+    public void newExcel() {
+        workbook = new XSSFWorkbook();
+    }
+
+    
+    public HttpServletResponse initResponseForExportExcel(HttpServletResponse response, String fileName) {
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyyMMdd");
+        String currentDateTime = dateFormatter.format(new Date());
+
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=" + fileName + "_" + currentDateTime + ".xlsx";
+        response.setHeader(headerKey, headerValue);
+        return response;
+    }
+
+
+    public <T> void exportToSheet(String sheetName, String titleName, List<T> data, Class<T> clazz) {
+        sheet = workbook.createSheet(sheetName);
+        CellStyle headerStyle = createHeaderStyle(workbook);
+        CellStyle dataStyle = createDataStyle(workbook);
+        // Lấy các field có @ExcelColumn, sort theo order
+        List<Field> fields = Arrays.stream(clazz.getDeclaredFields())
+                .filter(f -> f.isAnnotationPresent(ExcelColumn.class)
+                        && f.getAnnotation(ExcelColumn.class).exportable())
+                .sorted(Comparator.comparingInt(f -> f.getAnnotation(ExcelColumn.class).order()))
+                .toList();
+
+        Row titleRow = sheet.createRow(0);
+
+        XSSFFont font = workbook.createFont();
+        font.setBold(true);
+        font.setFontHeight(20);
+        headerStyle.setFont(font);
+        headerStyle.setAlignment(HorizontalAlignment.CENTER);
+        createCell(titleRow, 0, titleName, headerStyle);
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, fields.size() - 1));
+        font.setFontHeightInPoints((short) 10);
+
+        Row headerRow = sheet.createRow(1);
+
+        XSSFFont headerFont = workbook.createFont();
+        headerFont.setBold(true);
+        headerFont.setFontHeight(16);
+        headerStyle.setFont(headerFont);
+
+        for (int i = 0; i < fields.size(); i++) {
+            ExcelColumn col = fields.get(i).getAnnotation(ExcelColumn.class);
+            createCell(headerRow, i, col.header(), headerStyle);
+        }
+
+        XSSFFont dataFont = workbook.createFont();
+        dataFont.setFontHeight(14);
+        dataStyle.setFont(dataFont);
+
+        // Data rows
+        for (T item : data) {
+            Row row = sheet.createRow(sheet.getLastRowNum() + 1);
+            for (int i = 0; i < fields.size(); i++) {
+                fields.get(i).setAccessible(true);
+                try {
+                    Object value = fields.get(i).get(item);
+                    createCell(row, i, value, dataStyle);
+                } catch (IllegalAccessException ignored) {}
+            }
+        }
+    }
+
+    private void createCell(Row row, int columnCount, Object value, CellStyle style) {
+        sheet.autoSizeColumn(columnCount);
+        Cell cell = row.createCell(columnCount);
+        if (value == null) {
+            cell.setCellValue("");
+        } else if (value instanceof Number) {
+            cell.setCellValue(((Number) value).doubleValue());
+        } else if (value instanceof Boolean) {
+            cell.setCellValue((Boolean) value);
+        } else if (value instanceof LocalDate d) {
+            cell.setCellValue(d.toString());
+        } else {
+            cell.setCellValue(value.toString());
+        }
+        if (style != null) cell.setCellStyle(style);
+    }
+
 
     @SuppressWarnings("unchecked")
     private <T extends Enum<T>> T parseEnum(Class<?> type, String val) {

@@ -20,6 +20,8 @@ import com.tl_connect.dev.modules.academic_result.repository.StudentSemesterSumm
 import com.tl_connect.dev.modules.academic_result.repository.StudentSubjectResultRepository;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -200,8 +202,8 @@ public class AcademicResultService {
         }
 
 
-        public void exportExcel(Long studentId, String studyProgramCode, OutputStream outputStream) throws IOException {
+        public void exportExcel(Long studentId, String studyProgramCode, HttpServletResponse response) throws IOException {
                 AcademicResultDTO result = getSubjectResult(studentId, studyProgramCode);
-                excelExporter.exportToExcel(result, outputStream);
+                excelExporter.exportToExcel(result, response);
         }
 }

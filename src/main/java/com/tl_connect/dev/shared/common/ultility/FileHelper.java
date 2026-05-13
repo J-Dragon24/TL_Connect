@@ -48,7 +48,7 @@ public abstract class FileHelper {
         return true;
     }
 
-    public abstract UploadResult uploadFile(MultipartFile file) throws IOException;
+    public abstract UploadResult uploadFile(String type, MultipartFile file) throws IOException;
 
     public abstract void deleteFile(String key);
     

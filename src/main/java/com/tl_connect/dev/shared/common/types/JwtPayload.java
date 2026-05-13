@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class JwtPayload {
     private Long userId;
+    private Long oauthUserId;
     private List<String> roles;
     private String sign;
     private Long iat;

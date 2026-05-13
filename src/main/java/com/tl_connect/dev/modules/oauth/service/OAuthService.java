@@ -125,6 +125,7 @@ public class OAuthService {
 
             jwtUserInfo = JwtUserInfo.builder()
                     .userId(student.getId())
+                    .oauthUserId(oauthUser.getId())
                     .roles(roles)
                     .build();
         }
@@ -145,6 +146,7 @@ public class OAuthService {
         if (oauthUser.isPresent()) {
             jwtUserInfo = JwtUserInfo.builder()
                     .userId(oauthUser.get().getId())
+                    .oauthUserId(oauthUser.get().getId())
                     .roles(roles)
                     .build();
         } else {

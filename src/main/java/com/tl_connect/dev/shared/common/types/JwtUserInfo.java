@@ -5,5 +5,5 @@ import java.util.List;
 import lombok.Builder;
 
 @Builder
-public record JwtUserInfo(Long userId, List<String> roles) {
+public record JwtUserInfo(Long userId, Long oauthUserId, List<String> roles) {
 }

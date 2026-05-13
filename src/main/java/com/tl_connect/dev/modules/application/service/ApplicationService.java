@@ -103,7 +103,7 @@ public class ApplicationService {
         try {
             System.out.println("Uploading files...");
             for (MultipartFile file : files) {
-                fileKeys.add(fileHelper.uploadFile(file).getKey());
+                fileKeys.add(fileHelper.uploadFile("application", file).getKey());
             }
         } catch (Exception e) {
             fileKeys.forEach(fileHelper::deleteFile);
