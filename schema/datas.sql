@@ -341,7 +341,7 @@ INSERT INTO health_insurances (student_id, insurance_number, provider, valid_fro
 -- semesters
 INSERT INTO semesters (semester_name, semester_code, academic_years, semester_number, start_date, end_date)
 VALUES
-('Học kỳ 1 2024-2025','HK1-2024-2025','2024-2025',1,'2024-09-03','2024-12-15'),
+('Học kỳ 1 2024-2025','HK1-2024-2025','2024-2025',1,'2024-09-02','2024-12-15'),
 ('Học kỳ 2 2024-2025','HK2-2024-2025','2024-2025',2,'2025-01-02','2025-04-27'),
 ('Học kỳ tăng cường 2024-2025','HKTC-2024-2025','2024-2025',3,'2025-05-05','2025-08-24'),
 ('Học kỳ 1 2025-2026','HK1-2025-2026','2025-2026',1,'2025-09-08','2025-12-28'),

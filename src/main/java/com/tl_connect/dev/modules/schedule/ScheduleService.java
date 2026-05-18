@@ -132,7 +132,7 @@ public class ScheduleService {
 
         private int getWeekOfSemester(LocalDate semesterStartDate, LocalDate date) {
                 if (date.isBefore(semesterStartDate)) {
-                        throw new IllegalArgumentException("Date is before semester start date");
+                        throw new InvalidInputException("Date is before semester start date");
                 }
 
                 long daysBetween = ChronoUnit.DAYS.between(semesterStartDate, date);

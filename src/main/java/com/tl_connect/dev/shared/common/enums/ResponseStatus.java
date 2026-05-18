@@ -12,7 +12,7 @@ public enum ResponseStatus {
     CONFLICT(409, "Resource already exists", -25),
     BAD_REQUEST(400, "Bad request", -26),
     DATABASE_ERROR(400, "Database error", -27),
-
+    TOKEN_EXPIRED_OR_INVALID(401, "Invalid or expired QR token", -28),
 
     //enrollment
     ENROLLMENT_CONDITION_NOT_MET(400, "Enrollment condition not met", -100),

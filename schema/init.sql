@@ -48,6 +48,7 @@ DROP TABLE IF EXISTS enrollment_periods CASCADE;
 DROP TABLE IF EXISTS feedback_attachments CASCADE;
 DROP TABLE IF EXISTS feedback_category CASCADE;
 DROP TABLE IF EXISTS feedback CASCADE;
+DROP TABLE IF EXISTS attendance CASCADE;
 
 
 CREATE TABLE oauth_users (
@@ -704,3 +705,14 @@ CREATE TABLE feedback_attachments (
   FOREIGN KEY (feedback_id) REFERENCES feedback(id) ON DELETE CASCADE
 );
 
+
+CREATE TABLE attendances (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  course_class_id BIGINT NOT NULL,
+  session_id VARCHAR(255) NOT NULL,
+  student_id BIGINT NOT NULL,
+  check_in_time TIMESTAMP NOT NULL,
+  created_at TIMESTAMP DEFAULT now(),
+  FOREIGN KEY (course_class_id) REFERENCES course_classes(id) ON DELETE CASCADE,
+  FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE
+);

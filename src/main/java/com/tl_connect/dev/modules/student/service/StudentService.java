@@ -195,4 +195,8 @@ public class StudentService {
                                 .build();
         }
 
+        public boolean existsStudent(Long studentId) {
+                return studentRepository.existsById(studentId);
+        }
+
 }

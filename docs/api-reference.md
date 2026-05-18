@@ -35,6 +35,7 @@
 27. [Tuition Fee Config - Quản lý học phí](#27-tuition-fee-config---quản-lý-học-phí)
 28. [Document - Quản lý tài liệu phục vụ RAG](#28-document---quản-lý-tài-liệu-phục-vụ-rag)
 29. [Enrollment - Đăng ký học](#29-enrollment---đăng-ký-học)
+30. [Attendance - Điểm danh](#30-attendance---điểm-danh)
 
 
 ## 1. Response Format chung
@@ -6000,3 +6001,193 @@ Xóa danh mục feedback.
 - ❌ category không tồn tại → code -2, HTTP 404
 - ❌ dữ liệu không hợp lệ → code -1, HTTP 400
 - ❌ token không hợp lệ → code -3, HTTP 401
+---
+## 32. Attendance - Điểm danh
+### 32.1. GET /api/v1/admin/attendance/session/`{classId}`
+
+Mở phiên điểm danh cho lớp học.
+
+**Auth**: Bắt buộc (Authorization: Bearer JWT)
+**Content-Type**: Không áp dụng
+
+**Path param**:
+| Field | Type | Required | Description |
+|-----|-----|-----|-----|
+| classId | number | ✅ | ID lớp học phần |
+
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Session opened successfully",
+  "data": "classId=1&sessionId=c85e9b83-df68-4d51-99c6-1475bae1a40e&exp=1779081158668.24e7d0c0114f0b29e24f5b44332c80dbb73822aaa116915a5dfb1204b4e88616"
+}
+```
+**Response – User chưa đăng nhập (code -3):**
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```
+
+**Response – Không tìm thấy lớp học (code -2):**
+```json
+{
+  "code": -2,
+  "data": null,
+  "message": "Class not found"
+}
+```
+
+**Test cases:**
+
+- ✅ token hợp lệ + classId hợp lệ → code 0 + token phiên điểm danh
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+- ❌ classId không tồn tại → code -2, HTTP 404
+---  
+### 32.2. GET /api/v1/admin/attendance/statistics/`{classId}`
+
+Lấy thống kê điểm danh của lớp học phần.
+
+**Auth**: Bắt buộc (Authorization: Bearer JWT)
+**Content-Type**: Không áp dụng
+
+**Path param:**
+
+| Field | Type | Required | Description |
+|-----|-----|-----|-----|
+| classId | number | ✅ | ID lớp học phần |
+
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Get statistics successfully",
+  "data": {
+    "classCode": "INT1001-01",
+    "className": "Nhập môn lập trình - Nhóm 01",
+    "totalSessions": 15,
+    "students": [
+      {
+        "studentCode": "SV2021001",
+        "studentName": "Nguyen Van A",
+        "presentCount": 14,
+        "absentCount": 1,
+        "attendanceRate": 93.33
+      },
+      {
+        "studentCode": "SV2021002",
+        "studentName": "Tran Thi B",
+        "presentCount": 12,
+        "absentCount": 3,
+        "attendanceRate": 80.0
+      }
+    ]
+  }
+}
+```
+**Cấu trúc dữ liệu ClassAttendanceSummaryResponse**
+| Field | Type | Description |
+|-----|-----|-----|
+|presentCount | number | Số buổi có mặt|
+|absentCount | number | Số buổi vắng mặt|
+|attendanceRate | number | Tỷ lệ chuyên cần (%)
+
+**Response – User chưa đăng nhập (code -3):**
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```
+**Response – Không tìm thấy dữ liệu điểm danh lớp học (code -2):**
+```json
+{
+  "code": -2,
+  "data": null,
+  "message": "Attendance not found"
+}
+```
+
+**Test cases:**
+
+- ✅ token hợp lệ + classId hợp lệ → code 0 + thống kê điểm danh
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+- ❌ classId không tồn tại → code -2, HTTP 404
+---
+### 32.3. POST /api/v1/attendance/checkin
+
+Sinh viên thực hiện điểm danh bằng QR code.
+
+**Auth**: Bắt buộc (Authorization: Bearer JWT)
+**Content-Type**: application/json
+
+**Request body**:
+
+```json
+{
+  "qrToken": "f4a8c2f9-7e6c-4f0f-b3c2-9d1a6e7f1234",
+  "latitude": 21.028511,
+  "longitude": 105.804817
+}
+```
+**Cấu trúc dữ liệu AttendanceRequest**
+| Field | Type | Required | Description |
+|-----|-----|-----|-----|
+| qrToken | string | ✅ | Token QR của phiên điểm danh |
+| latitude | number | ✅ | Vĩ độ vị trí sinh viên |
+| longitude | number | ✅ | Kinh độ vị trí sinh viên |
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Checked in successfully",
+  "data": null
+}
+```
+**Response – User chưa đăng nhập (code -3):**
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```
+
+**Response – QR token không hợp lệ hoặc đã hết hạn (code -28):**
+```json
+{
+  "code": -28,
+  "data": null,
+  "message": "Invalid or expired QR token"
+}
+```
+**Response – Sinh viên ngoài phạm vi cho phép (code -26):**
+```json
+{
+  "code": -26,
+  "data": null,
+  "message": "You are outside the allowed attendance area"
+}
+```
+**Response – Sinh viên đã điểm danh trước đó (code -25):**
+```json
+{
+  "code": -25,
+  "data": null,
+  "message": "Attendance already checked in"
+}
+```
+**Test cases:**
+
+- ✅ token hợp lệ + qrToken hợp lệ + vị trí hợp lệ → code 0
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+- ❌ qrToken không hợp lệ / hết hạn → code -1, HTTP 400
+- ❌ vị trí ngoài phạm vi cho phép → code -4, HTTP 403
+- ❌ đã điểm danh trước đó → code -25, HTTP 409

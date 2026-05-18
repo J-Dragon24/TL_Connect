@@ -119,3 +119,9 @@ CREATE INDEX IF NOT EXISTS idx_feedback_category_id ON feedback(category_id);
 /* feedback attachments */
 CREATE INDEX IF NOT EXISTS idx_feedback_attachments_feedback_id ON feedback_attachments(feedback_id);
 
+/* attendance */
+CREATE INDEX IF NOT EXISTS idx_attendance_student_id ON attendance(student_id);
+CREATE INDEX IF NOT EXISTS idx_attendance_course_class_id ON attendance(course_class_id);
+CREATE INDEX IF NOT EXISTS idx_attendance_session_id ON attendance(session_id);
+
+
