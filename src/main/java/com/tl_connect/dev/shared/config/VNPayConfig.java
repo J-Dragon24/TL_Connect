@@ -25,7 +25,7 @@ import lombok.Getter;
 public class VNPayConfig {
     public String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
     public String vnp_RefundUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
-    public String vnp_ReturnUrl = "http://localhost:8080/vnpay_jsp/vnpay_return.jsp";
+    public String vnp_ReturnUrl = "myapp://payment/result";
     @Value("${vnpay.tmnCode}")
     public String vnp_TmnCode;
     @Value("${vnpay.secretKey}")

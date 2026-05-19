@@ -8,7 +8,6 @@ import com.tl_connect.dev.modules.tuition.entity.TuitionInvoice;
 import com.tl_connect.dev.modules.tuition.repository.TuitionInvoiceRepository;
 import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.enums.TuitionStatus;
-import com.tl_connect.dev.shared.common.exception.BadRequestException;
 import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.InvalidInputException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
@@ -57,6 +56,23 @@ public class TuitionModifyService {
             tuitionInvoiceRepository.cancelInvoiceById(invoiceId);
         }catch(Exception e){
             throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to delete invoice: " + e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void updateTuitionStatusByIdAndStudentId(Long invoiceId, Long studentId, TuitionStatus status) {
+        TuitionInvoice tuitionInvoice = tuitionInvoiceRepository.findTuitionByIdAndStudentId(invoiceId, studentId)
+            .orElseThrow(() -> new NotFoundException("Invoice not found"));
+        
+        if(tuitionInvoice.getStatus() == TuitionStatus.PAID || tuitionInvoice.getStatus() == TuitionStatus.CANCELLED) {
+            throw new InvalidInputException("Invoice is paid or cancelled");
+        }
+
+        try{
+            tuitionInvoice.updateStatus(status);
+            tuitionInvoiceRepository.save(tuitionInvoice);
+        }catch(Exception e){
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to update tuition status: " + e.getMessage());
         }
     }
 }

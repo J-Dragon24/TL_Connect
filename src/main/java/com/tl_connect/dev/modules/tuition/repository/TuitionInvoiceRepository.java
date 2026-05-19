@@ -122,4 +122,11 @@ public interface TuitionInvoiceRepository extends JpaRepository<TuitionInvoice, 
         WHERE t.status = 'UNPAID' AND t.due_date < :now
     """, nativeQuery = true)
     int updateOverdueInvoice(@Param("now") LocalDate now);
+
+    @Query(value = """
+        SELECT *
+        FROM tuition_invoices
+        WHERE id = :invoiceId AND student_id = :studentId
+    """, nativeQuery = true)
+    Optional<TuitionInvoice> findTuitionByIdAndStudentId(@Param("invoiceId") Long invoiceId, @Param("studentId") Long studentId);
 }

@@ -51,9 +51,8 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     private void validateGps(Double lat, Double lng) {
-
-        double schoolLat = 21.0285;
-        double schoolLng = 105.8542;
+        double schoolLat = 20.976006112646875;
+        double schoolLng = 105.81562568381663;
 
         double distance = GeoUtil.calculateDistance(lat, lng, schoolLat, schoolLng);
 

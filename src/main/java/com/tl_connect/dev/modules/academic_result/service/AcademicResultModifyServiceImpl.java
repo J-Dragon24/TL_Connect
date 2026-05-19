@@ -19,6 +19,7 @@ import com.tl_connect.dev.modules.academic_result.dto.ImportAcademicResultDTO;
 import com.tl_connect.dev.modules.academic_result.dto.UpdateStudentSubjectResultDTO;
 import com.tl_connect.dev.modules.academic_result.entity.StudentSubjectResult;
 import com.tl_connect.dev.modules.academic_result.repository.StudentSubjectResultRepository;
+import com.tl_connect.dev.modules.academic_result.service.interfaces.AcademicResultModifyService;
 import com.tl_connect.dev.modules.semester.Semester;
 import com.tl_connect.dev.modules.semester.SemesterRepository;
 import com.tl_connect.dev.modules.student.entity.Student;
@@ -40,7 +41,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class AcademicResultModifyService {
+public class AcademicResultModifyServiceImpl implements AcademicResultModifyService{
 
     private final StudentSubjectResultRepository subjectResultRepository;
     private final SubjectRepository subjectRepository;

@@ -110,7 +110,6 @@ public class TuitionService {
                 .build();
 
         return tuitionInvoiceDetail;
-        
     }
 
     private TuitionInvoiceDTO toTuitionInvoiceDTO(TuitionInvoiceView view) {

@@ -9,11 +9,15 @@ import org.springframework.web.bind.annotation.*;
 
 import com.tl_connect.dev.modules.payment.dto.CreateTuitionPaymentReqDTO;
 import com.tl_connect.dev.modules.payment.dto.CreateTuitionPaymentResDTO;
+import com.tl_connect.dev.modules.payment.dto.PaymentReturnRequest;
 import com.tl_connect.dev.modules.payment.dto.QueryPaymentRequestDTO;
 import com.tl_connect.dev.modules.payment.dto.QueryPaymentResponseDTO;
 import com.tl_connect.dev.modules.payment.dto.RefundRequestDTO;
 import com.tl_connect.dev.modules.payment.dto.RefundResponseDTO;
 import com.tl_connect.dev.modules.payment.service.PaymentService;
+import com.tl_connect.dev.modules.tuition.service.TuitionModifyService;
+import com.tl_connect.dev.shared.common.enums.PaymentStatus;
+import com.tl_connect.dev.shared.common.enums.TuitionStatus;
 import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
 import com.tl_connect.dev.shared.common.types.JwtUserInfo;
 import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
@@ -30,6 +34,7 @@ public class PaymentController {
 
     private final PaymentService paymentService;
     private final VNPayConfig vnpayConfig;
+    private final TuitionModifyService tuitionModifyService;
 
     @PostMapping("/create-order")
     public ResponseEntity<?> createTuitionPayment(Authentication authentication, @Valid @RequestBody CreateTuitionPaymentReqDTO req) throws Exception {
@@ -86,5 +91,15 @@ public class PaymentController {
         } catch (Exception e) {
             return ResponseHelper.internalError("Query payment status failed: " + e.getMessage());
         }
+    }
+
+    @PostMapping("/payment-return")
+    public ResponseEntity<?> handlePaymentReturn(Authentication authentication, @RequestBody @Valid PaymentReturnRequest req) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo userInfo)) {
+            throw new UnauthorizeException("Authentication required");
+        }
+        Long studentId = userInfo.userId();
+        tuitionModifyService.updateTuitionStatusByIdAndStudentId(req.getTuitionId(), studentId, TuitionStatus.PENDING);
+        return ResponseHelper.success("Payment return success", null);
     }
 }

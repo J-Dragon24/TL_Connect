@@ -17,8 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.tl_connect.dev.modules.academic_result.dto.AcademicResultAdmDTO;
 import com.tl_connect.dev.modules.academic_result.dto.CreateStudentSubjectResultDTO;
 import com.tl_connect.dev.modules.academic_result.dto.UpdateStudentSubjectResultDTO;
-import com.tl_connect.dev.modules.academic_result.service.AcademicResultModifyService;
-import com.tl_connect.dev.modules.academic_result.service.AcademicResultService;
+import com.tl_connect.dev.modules.academic_result.service.AcademicResultModifyServiceImpl;
+import com.tl_connect.dev.modules.academic_result.service.AcademicResultServiceImpl;
 import com.tl_connect.dev.shared.common.dto.ImportResultDTO;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.exception.InvalidInputException;
@@ -32,8 +32,8 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/admin/academic-results")
 @RequiredArgsConstructor
 public class AcademicResultAdminController {
-    private final AcademicResultModifyService academicResultMofidyService;
-    private final AcademicResultService academicResultService;
+    private final AcademicResultModifyServiceImpl academicResultMofidyService;
+    private final AcademicResultServiceImpl academicResultService;
     private final FileHelper fileHelper;
 
     @GetMapping("/all")

@@ -4759,6 +4759,53 @@ transactionCode|string|✅|Mã giao dịch cần tra cứu (Lấy từ create or
 - Nếu responseCode = 1 là đang xử lý
 - Nếu responseCode = -1 là thất bại
 ---
+### 24.6. POST /api/v1/payments/payment-return
+
+Xử lý redirect sau khi người dùng hoàn tất thanh toán và cập nhật trạng thái pending cho học phí.
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: application/json
+
+**Request body:**
+
+```json
+{
+  "tuitionId": 1
+}
+```
+
+| Field | Type | Required | Description
+|---|---|---|---|
+| tuitionId | long | ✅ | ID học phí cần cập nhật trạng thái
+
+**Response thành công (code 0):**
+
+```json
+{
+  "code": 0,
+  "message": "Payment return success",
+  "data": null
+}
+```
+
+**Response – User chưa đăng nhập (code -3):**
+
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```
+
+**Test cases:**
+
+- ✅ Token hợp lệ + tuitionId tồn tại thuộc sinh viên → code 0
+- ❌ Token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+- ❌ tuitionId không tồn tại → code -2, HTTP 404 (nếu service xử lý)
+- ❌ tuitionId không thuộc sinh viên hiện tại → code -4, HTTP 403 (nếu service xử lý)
+---
+
 ## 25. Application Type - Loại đơn
 ### 25.1. GET /api/v1/admin/application-types/all
 

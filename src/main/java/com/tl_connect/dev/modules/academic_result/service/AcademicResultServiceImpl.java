@@ -18,12 +18,12 @@ import com.tl_connect.dev.modules.academic_result.projection.SubjectResultAdmRow
 import com.tl_connect.dev.modules.academic_result.projection.SubjectResultRow;
 import com.tl_connect.dev.modules.academic_result.repository.StudentSemesterSummaryRepository;
 import com.tl_connect.dev.modules.academic_result.repository.StudentSubjectResultRepository;
+import com.tl_connect.dev.modules.academic_result.service.interfaces.AcademicResultService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,11 +33,12 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class AcademicResultService {
+public class AcademicResultServiceImpl implements AcademicResultService {
         private final StudentSubjectResultRepository resultRepository;
         private final StudentSemesterSummaryRepository semesterSummaryRepository;
-        private final AcademicResultExporter excelExporter;
+        private final AcademicResultExporterImpl excelExporter;
 
+        @Override
         public PagedResponse<AcademicResultAdmDTO> getAllAcademicResult(Pageable pageable, String facultyCode) {
                 if(facultyCode == null || facultyCode.isBlank()){
                         facultyCode = null;
@@ -149,6 +150,7 @@ public class AcademicResultService {
                 subjectResultsRows.isLast());
         }
 
+        @Override
         public AcademicResultDTO getSubjectResult(Long studentId, String studyProgramCode) {
                 List<SubjectResultRow> subjectResultsRows = resultRepository.findSubjectResultByStudentIdAndStudyProgramCode(studentId,
                                 studyProgramCode);
@@ -201,7 +203,7 @@ public class AcademicResultService {
                                 .build();
         }
 
-
+        @Override
         public void exportExcel(Long studentId, String studyProgramCode, HttpServletResponse response) throws IOException {
                 AcademicResultDTO result = getSubjectResult(studentId, studyProgramCode);
                 excelExporter.exportToExcel(result, response);
