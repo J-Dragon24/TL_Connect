@@ -1,6 +1,7 @@
 package com.tl_connect.dev.modules.semester;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.dao.DataIntegrityViolationException;
@@ -124,5 +125,9 @@ public class SemesterService {
                 .endDate(semester.getEndDate())
                 .isActive(semester.getIsActive())
                 .build();
+    }
+
+    public List<Semester> findBySemesterCodeIn(Set<String> semesterCodes) {
+        return semesterRepository.findBySemesterCodeIn(semesterCodes);
     }
 }

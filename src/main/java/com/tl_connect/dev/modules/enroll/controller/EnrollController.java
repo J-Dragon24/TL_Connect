@@ -12,7 +12,7 @@ import com.tl_connect.dev.modules.enroll.dto.CourseClassRequest;
 import com.tl_connect.dev.modules.enroll.dto.DropRequestDTO;
 import com.tl_connect.dev.modules.enroll.dto.EnrollRequestDTO;
 import com.tl_connect.dev.modules.enroll.dto.EnrollViewDTO;
-import com.tl_connect.dev.modules.enroll.service.EnrollService;
+import com.tl_connect.dev.modules.enroll.service.EnrollServiceImpl;
 import com.tl_connect.dev.modules.schedule.dto.ScheduleCourseClassDTO;
 import com.tl_connect.dev.shared.common.exception.InvalidInputException;
 import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/student/enrollment")
 @RequiredArgsConstructor
 public class EnrollController {
-    private final EnrollService enrollService;
+    private final EnrollServiceImpl enrollService;
 
 
     @GetMapping("/all")

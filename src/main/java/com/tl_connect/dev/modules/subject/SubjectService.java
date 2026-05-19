@@ -248,5 +248,9 @@ public class SubjectService {
             throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to delete subject");
         }
     }
+
+    public List<Subject> findBySubjectCodeIn(Set<String> subjectCodes) {
+        return subjectRepository.findBySubjectCodeIn(subjectCodes);
+    }
     
 }

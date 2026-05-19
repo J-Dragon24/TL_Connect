@@ -16,6 +16,7 @@ import com.tl_connect.dev.modules.enroll.dto.CreateEnrollPeriodDTO;
 import com.tl_connect.dev.modules.enroll.dto.UpdateEnrollPeriodDTO;
 import com.tl_connect.dev.modules.enroll.entity.EnrollmentPeriod;
 import com.tl_connect.dev.modules.enroll.repository.EnrollmentPeriodRepository;
+import com.tl_connect.dev.modules.enroll.service.interfaces.EnrollmentPeriodService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.exception.ConflictException;
@@ -28,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class EnrollmentPeriodService {
+public class EnrollmentPeriodServiceImpl implements EnrollmentPeriodService {
 
     private final EnrollmentPeriodRepository enrollmentPeriodRepository;
     private final RedisTemplate<String, Object> redisTemplate;

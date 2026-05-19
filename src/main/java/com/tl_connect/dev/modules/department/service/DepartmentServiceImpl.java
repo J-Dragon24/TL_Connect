@@ -1,14 +1,17 @@
-package com.tl_connect.dev.modules.department;
+package com.tl_connect.dev.modules.department.service;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.tl_connect.dev.modules.department.Department;
+import com.tl_connect.dev.modules.department.DepartmentRepository;
 import com.tl_connect.dev.modules.department.dto.CreateDepartmentDTO;
 import com.tl_connect.dev.modules.department.dto.DepartmentDTO;
 import com.tl_connect.dev.modules.department.dto.UpdateDepartmentDTO;
 import com.tl_connect.dev.modules.department.projection.DepartmentRow;
+import com.tl_connect.dev.modules.department.service.interfaces.DepartmentService;
 import com.tl_connect.dev.modules.faculty.Faculty;
 import com.tl_connect.dev.modules.faculty.FacultyRepository;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
@@ -22,11 +25,12 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class DepartmentService {
+public class DepartmentServiceImpl implements DepartmentService {
     
     private final DepartmentRepository departmentRepository;
     private final FacultyRepository facultyRepository;
 
+    @Override
     public PagedResponse<DepartmentDTO> getAllDepartments(Pageable pageable) {
         Page<DepartmentRow> departments = departmentRepository.findAllDepartment(pageable);
         return new PagedResponse<>(
@@ -40,6 +44,7 @@ public class DepartmentService {
     }
 
     @Transactional
+    @Override
     public Long createDepartment(CreateDepartmentDTO dto) {
 
         if (departmentRepository.existsByDepartmentCode(dto.getDepartmentCode())) {
@@ -60,6 +65,7 @@ public class DepartmentService {
     }
 
     @Transactional
+    @Override
     public void updateDepartment(Long id, UpdateDepartmentDTO dto) {
 
         Department department = departmentRepository.findById(id)
@@ -87,6 +93,7 @@ public class DepartmentService {
     }
 
     @Transactional
+    @Override
     public void deleteDepartment(Long id) {
         Department department = departmentRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Department not found"));

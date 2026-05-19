@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tl_connect.dev.modules.application.dto.ApplicationDTO;
 import com.tl_connect.dev.modules.application.dto.DetailApplicationDTO;
 import com.tl_connect.dev.modules.application.dto.UpdateApplicationDTO;
-import com.tl_connect.dev.modules.application.service.ApplicationService;
+import com.tl_connect.dev.modules.application.service.interfaces.ApplicationService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 

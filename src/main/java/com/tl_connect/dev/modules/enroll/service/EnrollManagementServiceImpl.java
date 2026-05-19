@@ -10,6 +10,7 @@ import com.tl_connect.dev.modules.enroll.dto.StudentCourseClassFilter;
 import com.tl_connect.dev.modules.enroll.entity.StudentCourseClass;
 import com.tl_connect.dev.modules.enroll.projection.StudentCourseClassRow;
 import com.tl_connect.dev.modules.enroll.repository.StudentCourseClassRepository;
+import com.tl_connect.dev.modules.enroll.service.interfaces.EnrollManagementService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.enums.StudentCourseClassStatus;
 import com.tl_connect.dev.shared.common.exception.ConflictException;
@@ -20,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class EnrollManagementService {
+public class EnrollManagementServiceImpl implements EnrollManagementService {
     private final StudentCourseClassRepository studentCourseClassRepository;
     private final StudentScheduleService studentScheduleService;
 

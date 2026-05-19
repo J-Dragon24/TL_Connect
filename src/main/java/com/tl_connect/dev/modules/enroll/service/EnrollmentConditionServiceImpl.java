@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.tl_connect.dev.modules.enroll.dto.StudentEnrollmentProfile;
+import com.tl_connect.dev.modules.enroll.service.interfaces.EnrollmentConditionService;
 import com.tl_connect.dev.modules.subject.entity.SubjectEnrollmentCondition;
 import com.tl_connect.dev.modules.subject.repository.SubjectEnrollmentConditionRepository;
 import com.tl_connect.dev.shared.common.enums.ResponseStatus;
@@ -16,10 +17,11 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class EnrollmentConditionService {
+public class EnrollmentConditionServiceImpl implements EnrollmentConditionService {
 
     private final SubjectEnrollmentConditionRepository conditionRepository;
 
+    @Override
     public void check(Long subjectId, StudentEnrollmentProfile profile) {
         List<SubjectEnrollmentCondition> conditions = conditionRepository.findBySubjectId(subjectId);
 

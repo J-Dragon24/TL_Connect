@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tl_connect.dev.modules.exam.ExamService;
 import com.tl_connect.dev.modules.exam.dto.ExamScheduleDTO;
+import com.tl_connect.dev.modules.exam.service.ExamServiceImpl;
 import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
 import com.tl_connect.dev.shared.common.types.JwtUserInfo;
 import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/student/exam")
 @RequiredArgsConstructor
 public class ExamController {
-    private final ExamService examService;
+    private final ExamServiceImpl examService;
 
     @GetMapping
     public ResponseEntity<?> getExamSchedule(Authentication authentication, @RequestParam(name = "HocKy", required = true) String semesterCode) {

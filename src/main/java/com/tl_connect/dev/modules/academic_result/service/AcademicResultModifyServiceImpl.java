@@ -21,11 +21,11 @@ import com.tl_connect.dev.modules.academic_result.entity.StudentSubjectResult;
 import com.tl_connect.dev.modules.academic_result.repository.StudentSubjectResultRepository;
 import com.tl_connect.dev.modules.academic_result.service.interfaces.AcademicResultModifyService;
 import com.tl_connect.dev.modules.semester.Semester;
-import com.tl_connect.dev.modules.semester.SemesterRepository;
+import com.tl_connect.dev.modules.semester.SemesterService;
 import com.tl_connect.dev.modules.student.entity.Student;
-import com.tl_connect.dev.modules.student.repository.StudentRepository;
+import com.tl_connect.dev.modules.student.service.StudentService;
+import com.tl_connect.dev.modules.subject.SubjectService;
 import com.tl_connect.dev.modules.subject.entity.Subject;
-import com.tl_connect.dev.modules.subject.repository.SubjectRepository;
 import com.tl_connect.dev.shared.common.dto.ImportResultDTO;
 import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.exception.ErrorException;
@@ -44,10 +44,10 @@ import lombok.extern.slf4j.Slf4j;
 public class AcademicResultModifyServiceImpl implements AcademicResultModifyService{
 
     private final StudentSubjectResultRepository subjectResultRepository;
-    private final SubjectRepository subjectRepository;
-    private final StudentRepository studentRepository;
+    private final SubjectService subjectService;
+    private final StudentService studentService;
     private final FileParseHelper fileParseHelper;
-    private final SemesterRepository semesterRepository;
+    private final SemesterService semesterService;
     private final Validator validator;
 
     @Transactional
@@ -87,7 +87,7 @@ public class AcademicResultModifyServiceImpl implements AcademicResultModifyServ
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
 
-        Map<String, Student> studentMap = studentRepository.findByStudentCodeIn(studentCodes)
+        Map<String, Student> studentMap = studentService.findByStudentCodeIn(studentCodes)
                 .stream()
                 .collect(Collectors.toMap(Student::getStudentCode, s -> s));
 
@@ -96,7 +96,7 @@ public class AcademicResultModifyServiceImpl implements AcademicResultModifyServ
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
 
-        Map<String, Subject> subjectMap = subjectRepository.findBySubjectCodeIn(subjectCodes)
+        Map<String, Subject> subjectMap = subjectService.findBySubjectCodeIn(subjectCodes)
                 .stream()
                 .collect(Collectors.toMap(Subject::getSubjectCode, s -> s));
 
@@ -105,7 +105,7 @@ public class AcademicResultModifyServiceImpl implements AcademicResultModifyServ
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
 
-        Map<String, Long> semesterMap = semesterRepository.findBySemesterCodeIn(semesterCodes)
+        Map<String, Long> semesterMap = semesterService.findBySemesterCodeIn(semesterCodes)
                 .stream()
                 .collect(Collectors.toMap(Semester::getSemesterCode, Semester::getId));
         if (studentMap.size() != studentCodes.size()) {

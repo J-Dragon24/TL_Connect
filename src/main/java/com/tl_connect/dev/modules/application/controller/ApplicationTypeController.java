@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tl_connect.dev.modules.application.dto.ApplicationTypeDTO;
 import com.tl_connect.dev.modules.application.dto.CreateApplicationTypeDTO;
 import com.tl_connect.dev.modules.application.dto.UpdateApplicationTypeDTO;
-import com.tl_connect.dev.modules.application.service.ApplicationTypeService;
+import com.tl_connect.dev.modules.application.service.interfaces.ApplicationTypeService;
 import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 
 import java.util.List;

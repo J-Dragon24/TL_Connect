@@ -10,6 +10,7 @@ import com.tl_connect.dev.modules.application.dto.CreateApplicationTypeDTO;
 import com.tl_connect.dev.modules.application.dto.UpdateApplicationTypeDTO;
 import com.tl_connect.dev.modules.application.entity.ApplicationType;
 import com.tl_connect.dev.modules.application.repository.ApplicationTypeRepository;
+import com.tl_connect.dev.modules.application.service.interfaces.ApplicationTypeService;
 import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
@@ -18,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class ApplicationTypeService {
+public class ApplicationTypeServiceImpl implements ApplicationTypeService {
 
     private final ApplicationTypeRepository applicationTypeRepository;
 

@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tl_connect.dev.modules.exam.ExamService;
 import com.tl_connect.dev.modules.exam.dto.CreateExamScheduleDTO;
 import com.tl_connect.dev.modules.exam.dto.ExamScheduleBasicInfoDTO;
 import com.tl_connect.dev.modules.exam.dto.UpdateExamScheduleDTO;
+import com.tl_connect.dev.modules.exam.service.ExamServiceImpl;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 
@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/admin/exam")
 @RequiredArgsConstructor
 public class ExamAdminController {
-    private final ExamService examService;
+    private final ExamServiceImpl examService;
 
     @GetMapping
     public ResponseEntity<?> getExamSchedule(@RequestParam(name = "semesterId", required = true) Long semesterId, @RequestParam(name = "facultyId", required = false) Long facultyId,

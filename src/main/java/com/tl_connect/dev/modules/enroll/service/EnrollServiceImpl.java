@@ -27,6 +27,7 @@ import com.tl_connect.dev.modules.enroll.projection.DetailsForCheckEnrollRow;
 import com.tl_connect.dev.modules.enroll.projection.SubjectForEnrollRow;
 import com.tl_connect.dev.modules.enroll.repository.CourseClassLogRepository;
 import com.tl_connect.dev.modules.enroll.repository.StudentCourseClassRepository;
+import com.tl_connect.dev.modules.enroll.service.interfaces.EnrollService;
 import com.tl_connect.dev.modules.lecturer.dto.LecturerDTO;
 import com.tl_connect.dev.modules.schedule.ScheduleRepository;
 import com.tl_connect.dev.modules.schedule.dto.ScheduleCourseClassDTO;
@@ -49,17 +50,17 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class EnrollService {
+public class EnrollServiceImpl implements EnrollService {
     private final StudentCourseClassRepository studentCourseClassRepository;
     private final CourseClassLogRepository courseClassLogRepository;
     private final CourseClassRepository courseClassRepository;
     private final StudyProgramRepository studyProgramRepository;
     private final PrerequisiteCheckService prerequisiteCheckService;
     private final StudentEnrollmentProfileService profileService;
-    private final EnrollmentConditionService conditionService;
+    private final EnrollmentConditionServiceImpl conditionService;
     private final StudentScheduleService studentScheduleService;
     private final ScheduleConflictService scheduleConflictService;
-    private final EnrollmentPeriodService enrollmentPeriodService;
+    private final EnrollmentPeriodServiceImpl enrollmentPeriodService;
     private final ScheduleRepository scheduleRepository;
 
     public EnrollViewDTO getAvailableSubjects(Long studentId, String studyProgramCode) {

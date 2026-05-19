@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.exam;
+package com.tl_connect.dev.modules.exam.service;
 
 import java.util.List;
 
@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.tl_connect.dev.modules.exam.ExamRepository;
 import com.tl_connect.dev.modules.exam.dto.CreateExamScheduleDTO;
 import com.tl_connect.dev.modules.exam.dto.ExamScheduleBasicInfoDTO;
 import com.tl_connect.dev.modules.exam.dto.ExamScheduleDTO;
@@ -15,6 +16,7 @@ import com.tl_connect.dev.modules.exam.dto.UpdateExamScheduleDTO;
 import com.tl_connect.dev.modules.exam.entity.ExamSchedule;
 import com.tl_connect.dev.modules.exam.projection.ExamScheduleAdminRow;
 import com.tl_connect.dev.modules.exam.projection.ExamScheduleView;
+import com.tl_connect.dev.modules.exam.service.interfaces.ExamService;
 import com.tl_connect.dev.modules.faculty.FacultyRepository;
 import com.tl_connect.dev.modules.semester.Semester;
 import com.tl_connect.dev.modules.semester.SemesterRepository;
@@ -29,7 +31,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class ExamService {
+public class ExamServiceImpl implements ExamService {
     private final ExamRepository examRepository;
     private final SemesterRepository semesterRepository;
     private final FacultyRepository facultyRepository;

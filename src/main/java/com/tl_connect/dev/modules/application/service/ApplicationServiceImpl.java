@@ -22,6 +22,7 @@ import com.tl_connect.dev.modules.application.projection.DetailApplicationAdminV
 import com.tl_connect.dev.modules.application.projection.DetailApplicationView;
 import com.tl_connect.dev.modules.application.repository.ApplicationAttachmentRepository;
 import com.tl_connect.dev.modules.application.repository.ApplicationRepository;
+import com.tl_connect.dev.modules.application.service.interfaces.ApplicationService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.exception.ErrorException;
@@ -36,7 +37,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class ApplicationService {
+public class ApplicationServiceImpl implements ApplicationService {
 
     private final ApplicationRepository applicationRepository;
     private final ApplicationAttachmentRepository applicationAttachmentRepository;

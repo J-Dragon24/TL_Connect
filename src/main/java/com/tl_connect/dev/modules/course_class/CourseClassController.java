@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.tl_connect.dev.modules.course_class.dto.CreateCourseClassDTO;
 import com.tl_connect.dev.modules.course_class.dto.UpdateCourseClassDTO;
+import com.tl_connect.dev.modules.course_class.service.CourseClassServiceImpl;
 import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 
 import jakarta.validation.Valid;
@@ -17,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CourseClassController {
 
-    private final CourseClassService courseClassService;
+    private final CourseClassServiceImpl courseClassService;
 
     @GetMapping("/all")
     public ResponseEntity<?> getAll( @PageableDefault(page = 0, size = 10) Pageable pageable, @RequestParam(required = false, name = "khoa") String facultyCode, @RequestParam(required = false, name = "HocKy") String semesterCode) {

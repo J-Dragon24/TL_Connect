@@ -3,6 +3,7 @@ package com.tl_connect.dev.modules.student.service;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 import com.tl_connect.dev.modules.lecturer.dto.LecturerDTO;
 import com.tl_connect.dev.modules.student.dto.AcademicInfoDTO;
@@ -15,6 +16,7 @@ import com.tl_connect.dev.modules.student.dto.MajorDTO;
 import com.tl_connect.dev.modules.student.dto.StudentFullInfo;
 import com.tl_connect.dev.modules.student.dto.StudentInfoDTO;
 import com.tl_connect.dev.modules.student.dto.YearStudyDTO;
+import com.tl_connect.dev.modules.student.entity.Student;
 import com.tl_connect.dev.modules.student.projection.HealthInsuranceView;
 import com.tl_connect.dev.modules.student.projection.StudentInfoView;
 import com.tl_connect.dev.modules.student.projection.StudentRow;
@@ -199,4 +201,7 @@ public class StudentService {
                 return studentRepository.existsById(studentId);
         }
 
+        public List<Student> findByStudentCodeIn(Set<String> studentCodes) {
+            return studentRepository.findByStudentCodeIn(studentCodes);
+        }
 }

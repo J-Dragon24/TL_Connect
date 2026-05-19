@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tl_connect.dev.modules.academic_result.dto.AcademicResultDTO;
-import com.tl_connect.dev.modules.academic_result.service.AcademicResultServiceImpl;
+import com.tl_connect.dev.modules.academic_result.service.interfaces.AcademicResultService;
 import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
 import com.tl_connect.dev.shared.common.types.JwtUserInfo;
 import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/student/marks")
 @RequiredArgsConstructor
 public class AcademicResultController {
-    private final AcademicResultServiceImpl resultService;
+    private final AcademicResultService resultService;
     
 
     @GetMapping

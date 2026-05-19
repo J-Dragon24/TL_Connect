@@ -1,16 +1,19 @@
-package com.tl_connect.dev.modules.course_class;
+package com.tl_connect.dev.modules.course_class.service;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.tl_connect.dev.modules.course_class.CourseClass;
+import com.tl_connect.dev.modules.course_class.CourseClassRepository;
 import com.tl_connect.dev.modules.course_class.dto.CourseClassBasicInfoDTO;
 import com.tl_connect.dev.modules.course_class.dto.CourseClassDTO;
 import com.tl_connect.dev.modules.course_class.dto.CreateCourseClassDTO;
 import com.tl_connect.dev.modules.course_class.dto.UpdateCourseClassDTO;
 import com.tl_connect.dev.modules.course_class.projection.CourseClassBasicInfoRow;
 import com.tl_connect.dev.modules.course_class.projection.CourseClassRow;
+import com.tl_connect.dev.modules.course_class.service.interfaces.CourseClassService;
 import com.tl_connect.dev.modules.lecturer.entity.Lecturer;
 import com.tl_connect.dev.modules.lecturer.repository.LecturerRepository;
 import com.tl_connect.dev.modules.semester.Semester;
@@ -29,7 +32,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class CourseClassService {
+public class CourseClassServiceImpl implements CourseClassService {
     private final CourseClassRepository courseClassRepository;
     private final SubjectRepository subjectRepository;
     private final SemesterRepository semesterRepository;
