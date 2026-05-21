@@ -17,9 +17,9 @@ import com.tl_connect.dev.modules.exam.entity.ExamSchedule;
 import com.tl_connect.dev.modules.exam.projection.ExamScheduleAdminRow;
 import com.tl_connect.dev.modules.exam.projection.ExamScheduleView;
 import com.tl_connect.dev.modules.exam.service.interfaces.ExamService;
-import com.tl_connect.dev.modules.faculty.FacultyRepository;
+import com.tl_connect.dev.modules.faculty.service.interfaces.FacultyService;
 import com.tl_connect.dev.modules.semester.Semester;
-import com.tl_connect.dev.modules.semester.SemesterRepository;
+import com.tl_connect.dev.modules.semester.service.interfaces.SemesterService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.exception.ConflictException;
@@ -33,12 +33,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ExamServiceImpl implements ExamService {
     private final ExamRepository examRepository;
-    private final SemesterRepository semesterRepository;
-    private final FacultyRepository facultyRepository;
+    private final SemesterService semesterService;
+    private final FacultyService facultyService;
 
     public ExamScheduleDTO getExamSchedule(Long studentId, String semesterCode) {
-            Semester semester = semesterRepository.findBySemesterCode(semesterCode)
-                            .orElseThrow(() -> new NotFoundException("Semester not found"));
+            Semester semester = semesterService.findBySemesterCode(semesterCode);
 
             List<ExamScheduleView> examSchedules = examRepository.findExamSchedule(studentId, semester.getId());
 
@@ -66,13 +65,13 @@ public class ExamServiceImpl implements ExamService {
 
     public PagedResponse<ExamScheduleBasicInfoDTO> getExamSchedule(Long semesterId, Pageable pageable, Long facultyId) {
             
-            if(!semesterRepository.existsById(semesterId)){
+            if(!semesterService.existsById(semesterId)){
                 throw new NotFoundException("Semester not found");
             }
 
             Page<ExamScheduleAdminRow> page;
             if(facultyId != null){
-                if(!facultyRepository.existsById(facultyId)){
+                if(!facultyService.existsById(facultyId)){
                     throw new NotFoundException("Faculty not found");
                 }
                 page = examRepository.findAllExamScheduleByFacultyId(semesterId, facultyId, pageable);

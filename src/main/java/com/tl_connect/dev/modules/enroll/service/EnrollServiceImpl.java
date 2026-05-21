@@ -28,12 +28,13 @@ import com.tl_connect.dev.modules.enroll.projection.SubjectForEnrollRow;
 import com.tl_connect.dev.modules.enroll.repository.CourseClassLogRepository;
 import com.tl_connect.dev.modules.enroll.repository.StudentCourseClassRepository;
 import com.tl_connect.dev.modules.enroll.service.interfaces.EnrollService;
+import com.tl_connect.dev.modules.enroll.service.interfaces.EnrollmentConditionService;
 import com.tl_connect.dev.modules.lecturer.dto.LecturerDTO;
 import com.tl_connect.dev.modules.schedule.ScheduleRepository;
 import com.tl_connect.dev.modules.schedule.dto.ScheduleCourseClassDTO;
 import com.tl_connect.dev.modules.schedule.projection.ScheduleRow;
 import com.tl_connect.dev.modules.study_program.projection.StudyProgramHeaderView;
-import com.tl_connect.dev.modules.study_program.repository.StudyProgramRepository;
+import com.tl_connect.dev.modules.study_program.service.interfaces.StudyProgramService;
 import com.tl_connect.dev.shared.common.enums.EnrollAction;
 import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.enums.StudentCourseClassStatus;
@@ -44,7 +45,7 @@ import com.tl_connect.dev.shared.common.exception.NotFoundException;
 import com.tl_connect.dev.shared.datastructure.intervaltree.ScheduleInterval;
 
 import com.tl_connect.dev.modules.course_class.CourseClass;
-import com.tl_connect.dev.modules.course_class.CourseClassRepository;
+import com.tl_connect.dev.modules.course_class.service.interfaces.CourseClassService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -53,11 +54,11 @@ import lombok.RequiredArgsConstructor;
 public class EnrollServiceImpl implements EnrollService {
     private final StudentCourseClassRepository studentCourseClassRepository;
     private final CourseClassLogRepository courseClassLogRepository;
-    private final CourseClassRepository courseClassRepository;
-    private final StudyProgramRepository studyProgramRepository;
+    private final CourseClassService courseClassService;
+    private final StudyProgramService studyProgramService;
     private final PrerequisiteCheckService prerequisiteCheckService;
     private final StudentEnrollmentProfileService profileService;
-    private final EnrollmentConditionServiceImpl conditionService;
+    private final EnrollmentConditionService conditionService;
     private final StudentScheduleService studentScheduleService;
     private final ScheduleConflictService scheduleConflictService;
     private final EnrollmentPeriodServiceImpl enrollmentPeriodService;
@@ -65,13 +66,12 @@ public class EnrollServiceImpl implements EnrollService {
 
     public EnrollViewDTO getAvailableSubjects(Long studentId, String studyProgramCode) {
 
-        StudyProgramHeaderView header = studyProgramRepository
-                .findByStudyProgramCodeAndStudentId(studyProgramCode, studentId)
-                .orElseThrow(() -> new NotFoundException("Study program not found"));
+        StudyProgramHeaderView header = studyProgramService
+                .findByStudyProgramCodeAndStudentId(studyProgramCode, studentId);
 
         StudentEnrollmentProfile profile = profileService.getProfile(studentId, header.getId());
 
-        List<SubjectForEnrollRow> subjects = studyProgramRepository.findSubjectsByStudyProgramId(header.getId());
+        List<SubjectForEnrollRow> subjects = studyProgramService.findSubjectsByStudyProgramId(header.getId());
 
         List<SubjectForEnrollDTO> subjectForEnrollDTOS = subjects.stream()
                 .filter(subject -> !profile.getPassedSubjectIds().contains(subject.getSubjectId()))
@@ -82,12 +82,14 @@ public class EnrollServiceImpl implements EnrollService {
                 .studyProgramCode(subjects.get(0).getStudyProgramCode())
                 .studyProgramName(subjects.get(0).getStudyProgramName())
                 .semesterId(profile.getSemesterId())
+                .startTime(profile.getStartTime())
+                .endTime(profile.getEndTime())
                 .subjects(subjectForEnrollDTOS)
                 .build();
     }
 
     public List<CourseClassForEnrollDTO> getAvailableCourseClasses(Long subjectId, Long semesterId) {
-        List<CourseClassForEnrollRow> rows = courseClassRepository.findCourseClassForEnrollment(subjectId, semesterId);
+        List<CourseClassForEnrollRow> rows = courseClassService.findCourseClassForEnrollment(subjectId, semesterId);
         Map<Long, CourseClassForEnrollDTO> map = new LinkedHashMap<>();
         for (CourseClassForEnrollRow row : rows) {
             map.computeIfAbsent(row.getId(), id -> CourseClassForEnrollDTO.builder()
@@ -117,14 +119,13 @@ public class EnrollServiceImpl implements EnrollService {
     @Transactional
     public void enroll(Long studentId, Long courseClassId, Long studyProgramId) {
 
-        CourseClass courseClass = courseClassRepository.findById(courseClassId)
-                .orElseThrow(() -> new NotFoundException("Course class not found"));
+        CourseClass courseClass = courseClassService.findById(courseClassId);
 
         EnrollmentPeriod period = enrollmentPeriodService.getPeriod(courseClass.getSemesterId());
 
         checkEnrollmentPeriod(period);
 
-        List<DetailsForCheckEnrollRow> details = courseClassRepository.findDetailForEnrollmentById(courseClassId);
+        List<DetailsForCheckEnrollRow> details = courseClassService.findDetailForEnrollmentById(courseClassId);
 
         if (details.isEmpty()) {
             throw new NotFoundException("Course class not found");
@@ -279,6 +280,8 @@ public class EnrollServiceImpl implements EnrollService {
 
         return courseClasses;
     }
+
+
 
     private void checkSubjectCondition(StudentEnrollmentProfile profile, Long subjectId) {
         prerequisiteCheckService.check(subjectId, profile.getPassedSubjectIds());

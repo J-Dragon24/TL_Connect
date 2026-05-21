@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import com.tl_connect.dev.modules.lecturer.dto.CreateLecturerDTO;
 import com.tl_connect.dev.modules.lecturer.dto.LecturerAdmInfoDTO;
 import com.tl_connect.dev.modules.lecturer.dto.UpdateLecturerDTO;
-import com.tl_connect.dev.modules.lecturer.service.LecturerService;
+import com.tl_connect.dev.modules.lecturer.service.interfaces.LecturerService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 

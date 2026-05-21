@@ -13,7 +13,7 @@ import com.tl_connect.dev.modules.department.dto.UpdateDepartmentDTO;
 import com.tl_connect.dev.modules.department.projection.DepartmentRow;
 import com.tl_connect.dev.modules.department.service.interfaces.DepartmentService;
 import com.tl_connect.dev.modules.faculty.Faculty;
-import com.tl_connect.dev.modules.faculty.FacultyRepository;
+import com.tl_connect.dev.modules.faculty.service.interfaces.FacultyService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.exception.ConflictException;
@@ -28,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class DepartmentServiceImpl implements DepartmentService {
     
     private final DepartmentRepository departmentRepository;
-    private final FacultyRepository facultyRepository;
+    private final FacultyService facultyService;
 
     @Override
     public PagedResponse<DepartmentDTO> getAllDepartments(Pageable pageable) {
@@ -51,8 +51,7 @@ public class DepartmentServiceImpl implements DepartmentService {
             throw new ConflictException("Department code already exists");
         }
 
-        Faculty faculty = facultyRepository.findById(dto.getFacultyId())
-                .orElseThrow(() -> new NotFoundException("Faculty not found"));
+        Faculty faculty = facultyService.findByIdAndIsActive(dto.getFacultyId());
 
         Department department = Department.create(faculty.getId(), dto.getDepartmentCode(), dto.getDepartmentName());
 
@@ -78,8 +77,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         }
 
         if (dto.getFacultyId() != null) {
-            Faculty faculty = facultyRepository.findById(dto.getFacultyId())
-                    .orElseThrow(() -> new NotFoundException("Faculty not found"));
+            Faculty faculty = facultyService.findByIdAndIsActive(dto.getFacultyId());
             department.setFacultyId(faculty.getId());
         }
 

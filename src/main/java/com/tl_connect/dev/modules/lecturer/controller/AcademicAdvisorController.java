@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.tl_connect.dev.modules.lecturer.dto.AcademicAdvisorDTO;
 import com.tl_connect.dev.modules.lecturer.dto.CreateAcademicAdvisorDTO;
-import com.tl_connect.dev.modules.lecturer.service.AcademicAdvisorService;
+import com.tl_connect.dev.modules.lecturer.service.interfaces.AcademicAdvisorService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 

@@ -101,4 +101,6 @@ public interface SemesterRepository extends JpaRepository<Semester, Long> {
     boolean violateDateRange(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
     boolean existsById(Long id);
+
+    Optional<Semester> findByIdAndIsActiveTrue(Long id);
 }

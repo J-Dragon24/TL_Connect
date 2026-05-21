@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import com.tl_connect.dev.modules.department.dto.DepartmentDTO;
 import com.tl_connect.dev.modules.department.dto.CreateDepartmentDTO;
 import com.tl_connect.dev.modules.department.dto.UpdateDepartmentDTO;
-import com.tl_connect.dev.modules.department.service.DepartmentServiceImpl;
+import com.tl_connect.dev.modules.department.service.interfaces.DepartmentService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 
@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DepartmentController {
 
-    private final DepartmentServiceImpl departmentService;
+    private final DepartmentService departmentService;
 
     @GetMapping("/all")
     public ResponseEntity<?> getAllDepartments(@PageableDefault(page = 0, size = 10) Pageable pageable) {

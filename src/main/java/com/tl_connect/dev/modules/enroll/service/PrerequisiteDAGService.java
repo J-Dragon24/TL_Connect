@@ -12,7 +12,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.tl_connect.dev.modules.enroll.dto.dag.PrerequisiteGroup;
 import com.tl_connect.dev.modules.subject.projection.PrerequisiteRow;
 import com.tl_connect.dev.modules.enroll.dto.dag.SubjectNode;
-import com.tl_connect.dev.modules.subject.repository.SubjectRepository;
+import com.tl_connect.dev.modules.subject.service.interfaces.SubjectService;
 import com.tl_connect.dev.shared.common.ultility.JsonHelper;
 
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PrerequisiteDAGService {
 
-    private final SubjectRepository subjectRepository;
+    private final SubjectService subjectService;
     private final StringRedisTemplate redisTemplate;
     private final JsonHelper jsonHelper;
 
@@ -35,7 +35,7 @@ public class PrerequisiteDAGService {
             return jsonHelper.fromJson(cached, new TypeReference<Map<Long, SubjectNode>>() {});
         }
 
-        List<PrerequisiteRow> rows = subjectRepository.findAllPrerequisiteRows();
+        List<PrerequisiteRow> rows = subjectService.findAllPrerequisiteRows();
         Map<Long, SubjectNode> dag = buildDAG(rows);
 
         try{

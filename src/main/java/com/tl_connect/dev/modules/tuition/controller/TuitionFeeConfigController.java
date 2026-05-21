@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import com.tl_connect.dev.modules.tuition.dto.CreateTuitionFeeConfig;
 import com.tl_connect.dev.modules.tuition.dto.UpdateTuitionFeeConfig;
 import com.tl_connect.dev.modules.tuition.entity.TuitionFeeConfig;
-import com.tl_connect.dev.modules.tuition.service.TuitionFeeConfigService;
+import com.tl_connect.dev.modules.tuition.service.interfaces.TuitionFeeConfigService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 

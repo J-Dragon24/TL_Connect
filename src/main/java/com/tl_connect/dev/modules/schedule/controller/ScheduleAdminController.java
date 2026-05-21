@@ -5,10 +5,10 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.tl_connect.dev.modules.schedule.ScheduleService;
 import com.tl_connect.dev.modules.schedule.dto.ClassScheduleAdminDTO;
 import com.tl_connect.dev.modules.schedule.dto.ClassScheduleDTO;
 import com.tl_connect.dev.modules.schedule.dto.UpdateScheduleDTO;
+import com.tl_connect.dev.modules.schedule.service.interfaces.ScheduleService;
 import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 
 import jakarta.validation.Valid;

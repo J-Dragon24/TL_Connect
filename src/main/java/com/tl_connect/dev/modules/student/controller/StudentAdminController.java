@@ -20,15 +20,15 @@ import com.tl_connect.dev.modules.student.dto.StudentFullInfo;
 import com.tl_connect.dev.modules.student.dto.StudentImportDTO;
 import com.tl_connect.dev.modules.student.dto.UpdateBasicInfoDTO;
 import com.tl_connect.dev.modules.student.dto.UpdateStudentAcademicDTO;
-import com.tl_connect.dev.modules.student.service.StudentService;
-import com.tl_connect.dev.modules.student.service.StudentWriteService;
+import com.tl_connect.dev.modules.student.service.interfaces.StudentDeleteService;
+import com.tl_connect.dev.modules.student.service.interfaces.StudentService;
+import com.tl_connect.dev.modules.student.service.interfaces.StudentUpdateService;
+import com.tl_connect.dev.modules.student.service.interfaces.StudentWriteService;
 import com.tl_connect.dev.shared.common.dto.ImportResultDTO;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.exception.InvalidInputException;
 import com.tl_connect.dev.shared.common.ultility.FileHelper;
 import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
-import com.tl_connect.dev.modules.student.service.StudentUpdateService;
-import com.tl_connect.dev.modules.student.service.StudentDeleteService;
 
 import lombok.RequiredArgsConstructor;
 

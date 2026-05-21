@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tl_connect.dev.modules.study_program.dto.StudyProgramDTO;
 import com.tl_connect.dev.modules.study_program.dto.StudyProgramListItemDTO;
-import com.tl_connect.dev.modules.study_program.service.StudyProgramService;
+import com.tl_connect.dev.modules.study_program.service.interfaces.StudyProgramService;
 import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
 import com.tl_connect.dev.shared.common.types.JwtUserInfo;
 import com.tl_connect.dev.shared.common.ultility.ResponseHelper;

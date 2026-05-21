@@ -119,4 +119,9 @@ public class EnrollmentPeriodServiceImpl implements EnrollmentPeriodService {
     public void invalidate(Long semesterId) {
         redisTemplate.delete(CACHE_KEY_PREFIX + semesterId);
     }
+
+    public EnrollmentPeriod findCurrentPeriod() {
+        return enrollmentPeriodRepository.findCurrent()
+                .orElseThrow(() -> new NotFoundException("Enrollment period not found"));
+    }
 }

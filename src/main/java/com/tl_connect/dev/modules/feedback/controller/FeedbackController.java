@@ -15,8 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.tl_connect.dev.modules.feedback.dto.FeedbackCategoryDTO;
 import com.tl_connect.dev.modules.feedback.dto.SendFeedbackRequestDTO;
-import com.tl_connect.dev.modules.feedback.service.FeedbackCategoryService;
-import com.tl_connect.dev.modules.feedback.service.FeedbackService;
+import com.tl_connect.dev.modules.feedback.service.interfaces.FeedbackCategoryService;
+import com.tl_connect.dev.modules.feedback.service.interfaces.FeedbackService;
 import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
 import com.tl_connect.dev.shared.common.types.JwtUserInfo;
 import com.tl_connect.dev.shared.common.ultility.ResponseHelper;

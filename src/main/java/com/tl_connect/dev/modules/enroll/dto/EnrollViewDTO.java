@@ -1,5 +1,6 @@
 package com.tl_connect.dev.modules.enroll.dto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -17,5 +18,7 @@ public class EnrollViewDTO {
     private String studyProgramCode;
     private String studyProgramName;
     private Long semesterId;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private List<SubjectForEnrollDTO> subjects;
 }

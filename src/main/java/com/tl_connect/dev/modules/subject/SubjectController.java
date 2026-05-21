@@ -9,6 +9,7 @@ import com.tl_connect.dev.modules.subject.dto.CreateSubjectDTO;
 import com.tl_connect.dev.modules.subject.dto.SubjectDTO;
 import com.tl_connect.dev.modules.subject.dto.UpdateSubjectDTO;
 import com.tl_connect.dev.modules.subject.entity.Subject;
+import com.tl_connect.dev.modules.subject.service.interfaces.SubjectService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 

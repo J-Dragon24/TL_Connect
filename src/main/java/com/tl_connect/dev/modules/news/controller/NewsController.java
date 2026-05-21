@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tl_connect.dev.modules.news.NewsService;
 import com.tl_connect.dev.modules.news.dto.NewsDTO;
+import com.tl_connect.dev.modules.news.service.interfaces.NewsService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 

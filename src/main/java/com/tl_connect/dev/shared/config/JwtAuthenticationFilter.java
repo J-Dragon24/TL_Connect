@@ -3,7 +3,7 @@ package com.tl_connect.dev.shared.config;
 import java.io.IOException;
 import java.util.List;
 
-import com.tl_connect.dev.modules.oauth.service.JWTService;
+import com.tl_connect.dev.modules.oauth.service.interfaces.JWTService;
 import com.tl_connect.dev.shared.common.types.JwtPayload;
 import com.tl_connect.dev.shared.common.types.JwtUserInfo;
 

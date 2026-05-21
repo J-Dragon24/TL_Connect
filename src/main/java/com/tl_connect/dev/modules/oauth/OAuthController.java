@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tl_connect.dev.modules.oauth.dto.LoginRequestDTO;
 import com.tl_connect.dev.modules.oauth.dto.OAuthUserInfoDTO;
 import com.tl_connect.dev.modules.oauth.dto.RefreshResponseDTO;
-import com.tl_connect.dev.modules.oauth.service.OAuthService;
-import com.tl_connect.dev.modules.oauth.service.RefreshTokenService;
+import com.tl_connect.dev.modules.oauth.service.interfaces.OAuthService;
+import com.tl_connect.dev.modules.oauth.service.interfaces.RefreshTokenService;
 import com.tl_connect.dev.shared.common.exception.InvalidInputException;
 import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 
@@ -28,22 +28,22 @@ public class OAuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO request) {
-        if(request.getAccessToken() == null || request.getAccessToken().isEmpty()){
+        if (request.getAccessToken() == null || request.getAccessToken().isEmpty()) {
             throw new InvalidInputException("token is required and must be non-empty string");
         }
 
         OAuthUserInfoDTO userInfo = oauthService.loginWithMicrosoft(request);
 
-        return ResponseHelper.success("Login successful", userInfo);    
+        return ResponseHelper.success("Login successful", userInfo);
     }
 
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshToken(@RequestBody String refreshToken) {
-        if(refreshToken == null || refreshToken.isEmpty()){
+        if (refreshToken == null || refreshToken.isEmpty()) {
             throw new InvalidInputException("refreshToken is required and must be non-empty string");
         }
 
         RefreshResponseDTO refreshResponseDTO = refreshTokenService.refresh(refreshToken);
-        return ResponseHelper.success("Refresh token successful", refreshResponseDTO);    
+        return ResponseHelper.success("Refresh token successful", refreshResponseDTO);
     }
 }

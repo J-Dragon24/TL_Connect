@@ -16,7 +16,7 @@ import com.tl_connect.dev.modules.notification.dto.NotificationReqDTO;
 import com.tl_connect.dev.modules.notification.dto.PrepareNotificationDTO;
 import com.tl_connect.dev.modules.notification.dto.SummaryNotifyDTO;
 import com.tl_connect.dev.modules.notification.dto.UnreadNotificationDTO;
-import com.tl_connect.dev.modules.notification.service.NotificationService;
+import com.tl_connect.dev.modules.notification.service.interfaces.NotificationService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
 import com.tl_connect.dev.shared.common.types.JwtUserInfo;

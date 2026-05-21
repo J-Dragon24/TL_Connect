@@ -1,11 +1,14 @@
 package com.tl_connect.dev.modules.academic_result.service.interfaces;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 
 import com.tl_connect.dev.modules.academic_result.dto.AcademicResultAdmDTO;
 import com.tl_connect.dev.modules.academic_result.dto.AcademicResultDTO;
+import com.tl_connect.dev.modules.academic_result.entity.StudentSubjectResult;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,4 +20,10 @@ public interface AcademicResultService {
     AcademicResultDTO getSubjectResult(Long studentId, String studyProgramCode);
 
     void exportExcel(Long studentId, String studyProgramCode, HttpServletResponse response) throws IOException;
+
+    List<StudentSubjectResult> findSubjectResultByStudentId (Long studentId);
+
+    BigDecimal calculateCumulativeGpa(Long studentId, Long studyProgramId);
+
+    Integer sumTotalCredits(Long studentId, Long studyProgramId);
 }

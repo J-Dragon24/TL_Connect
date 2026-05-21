@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import com.tl_connect.dev.modules.faculty.dto.CreateFacultyDTO;
 import com.tl_connect.dev.modules.faculty.dto.FacultyDTO;
 import com.tl_connect.dev.modules.faculty.dto.UpdateFacultyDTO;
+import com.tl_connect.dev.modules.faculty.service.interfaces.FacultyService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 

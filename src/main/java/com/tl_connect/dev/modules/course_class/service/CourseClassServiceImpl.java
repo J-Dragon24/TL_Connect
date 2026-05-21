@@ -1,5 +1,8 @@
 package com.tl_connect.dev.modules.course_class.service;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,13 +17,15 @@ import com.tl_connect.dev.modules.course_class.dto.UpdateCourseClassDTO;
 import com.tl_connect.dev.modules.course_class.projection.CourseClassBasicInfoRow;
 import com.tl_connect.dev.modules.course_class.projection.CourseClassRow;
 import com.tl_connect.dev.modules.course_class.service.interfaces.CourseClassService;
+import com.tl_connect.dev.modules.enroll.projection.CourseClassForEnrollRow;
+import com.tl_connect.dev.modules.enroll.projection.DetailsForCheckEnrollRow;
 import com.tl_connect.dev.modules.lecturer.entity.Lecturer;
-import com.tl_connect.dev.modules.lecturer.repository.LecturerRepository;
+import com.tl_connect.dev.modules.lecturer.service.interfaces.LecturerService;
 import com.tl_connect.dev.modules.semester.Semester;
-import com.tl_connect.dev.modules.semester.SemesterRepository;
 import com.tl_connect.dev.modules.semester.dto.SemesterDTO;
+import com.tl_connect.dev.modules.semester.service.interfaces.SemesterService;
 import com.tl_connect.dev.modules.subject.entity.Subject;
-import com.tl_connect.dev.modules.subject.repository.SubjectRepository;
+import com.tl_connect.dev.modules.subject.service.interfaces.SubjectService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.exception.ConflictException;
@@ -34,9 +39,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CourseClassServiceImpl implements CourseClassService {
     private final CourseClassRepository courseClassRepository;
-    private final SubjectRepository subjectRepository;
-    private final SemesterRepository semesterRepository;
-    private final LecturerRepository lecturerRepository;
+    private final SubjectService subjectService;
+    private final SemesterService semesterService;
+    private final LecturerService lecturerService;
 
     public PagedResponse<CourseClassBasicInfoDTO> getAll(Pageable pageable, String facultyCode, String semesterCode) {
         if (facultyCode == null || facultyCode.isBlank()) {
@@ -89,16 +94,13 @@ public class CourseClassServiceImpl implements CourseClassService {
             throw new ConflictException("Class code already exists");
         }
 
-        Subject subject = subjectRepository.findById(dto.getSubjectId())
-                .orElseThrow(() -> new NotFoundException("Subject not found"));
+        Subject subject = subjectService.findById(dto.getSubjectId());
 
-        Semester semester = semesterRepository.findById(dto.getSemesterId())
-                .orElseThrow(() -> new NotFoundException("Semester not found"));
+        Semester semester = semesterService.findByIdAndIsActive(dto.getSemesterId());
 
         Lecturer lecturer = null;
         if (dto.getLecturerId() != null) {
-            lecturer = lecturerRepository.findById(dto.getLecturerId())
-                    .orElseThrow(() -> new NotFoundException("Lecturer not found"));
+            lecturer = lecturerService.findById(dto.getLecturerId());
         }
 
         CourseClass entity = CourseClass.create(lecturer != null ? lecturer.getId() : null, subject.getId(),
@@ -126,18 +128,15 @@ public class CourseClassServiceImpl implements CourseClassService {
         }
 
         if (dto.getSubjectId() != null) {
-            subjectRepository.findById(dto.getSubjectId())
-                    .orElseThrow(() -> new NotFoundException("Subject not found"));
+            subjectService.findById(dto.getSubjectId());
         }
 
         if (dto.getSemesterId() != null) {
-            semesterRepository.findById(dto.getSemesterId())
-                    .orElseThrow(() -> new NotFoundException("Semester not found"));
+            semesterService.findByIdAndIsActive(dto.getSemesterId());
         }
 
         if (dto.getLecturerId() != null) {
-            lecturerRepository.findById(dto.getLecturerId())
-                    .orElseThrow(() -> new NotFoundException("Lecturer not found"));
+            lecturerService.findById(dto.getLecturerId());
         }
 
         entity.update(dto.getLecturerId(), dto.getSubjectId(), dto.getSemesterId(), dto.getClassCode(),
@@ -178,5 +177,26 @@ public class CourseClassServiceImpl implements CourseClassService {
                 .enrolledCount(courseClass.getEnrolledCount())
                 .isActive(courseClass.getIsActive())
                 .build();
+    }
+
+    @Override
+    public List<CourseClassForEnrollRow> findCourseClassForEnrollment(Long subjectId, Long semesterId) {
+        return courseClassRepository.findCourseClassForEnrollment(subjectId, semesterId);
+    }
+
+    @Override
+    public CourseClass findById(Long id) {
+        return courseClassRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Course class not found"));
+    }
+
+    @Override
+    public List<DetailsForCheckEnrollRow> findDetailForEnrollmentById(Long courseClassId) {
+        return courseClassRepository.findDetailForEnrollmentById(courseClassId);
+    }
+
+    @Override
+    public List<Long> findIdsByStudentIdAndSemesterId(Long studentId, LocalDate now) {
+        return courseClassRepository.findIdsByStudentIdAndSemesterId(studentId, now);
     }
 }

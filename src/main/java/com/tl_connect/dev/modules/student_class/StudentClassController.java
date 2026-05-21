@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tl_connect.dev.modules.student_class.dto.CreateStudentClassDTO;
 import com.tl_connect.dev.modules.student_class.dto.UpdateStudentClassDTO;
 import com.tl_connect.dev.modules.student_class.projection.StudentClassRow;
+import com.tl_connect.dev.modules.student_class.service.interfaces.StudentClassService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 

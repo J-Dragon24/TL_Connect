@@ -10,22 +10,19 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tl_connect.dev.modules.academic_result.entity.StudentSubjectResult;
-import com.tl_connect.dev.modules.academic_result.repository.StudentSemesterSummaryRepository;
-import com.tl_connect.dev.modules.academic_result.repository.StudentSubjectResultRepository;
+import com.tl_connect.dev.modules.academic_result.service.interfaces.AcademicResultService;
 import com.tl_connect.dev.modules.enroll.dto.StudentEnrollmentProfile;
 import com.tl_connect.dev.modules.enroll.entity.EnrollmentPeriod;
-import com.tl_connect.dev.modules.enroll.repository.EnrollmentPeriodRepository;
-import com.tl_connect.dev.shared.common.exception.NotFoundException;
+import com.tl_connect.dev.modules.enroll.service.interfaces.EnrollmentPeriodService;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class StudentEnrollmentProfileService {
-    private final StudentSubjectResultRepository subjectResultRepository;
-    private final StudentSemesterSummaryRepository summaryRepository;
+    private final AcademicResultService academicResultService;
     private final RedisTemplate<String, Object> redisTemplate;
-    private final EnrollmentPeriodRepository enrollmentPeriodRepository;
+    private final EnrollmentPeriodService enrollmentPeriodService;
     private final ObjectMapper objectMapper;
 
     private static final String CACHE_KEY_PREFIX = "enrollment_profile:student:";
@@ -38,12 +35,9 @@ public class StudentEnrollmentProfileService {
             return objectMapper.convertValue(cached, StudentEnrollmentProfile.class);
         }
 
-        EnrollmentPeriod period = enrollmentPeriodRepository.findCurrent()
-                .orElseThrow(() -> new NotFoundException("Enrollment period not found"));
+        EnrollmentPeriod period = enrollmentPeriodService.findCurrentPeriod();
 
-       
-
-        List<StudentSubjectResult> results = subjectResultRepository.findAllByStudentId(studentId);
+        List<StudentSubjectResult> results = academicResultService.findSubjectResultByStudentId(studentId);
 
         Set<Long> passedSubjectIds = new HashSet<>();
         Set<Long> failedSubjectIds = new HashSet<>();
@@ -61,9 +55,11 @@ public class StudentEnrollmentProfileService {
         StudentEnrollmentProfile profile = StudentEnrollmentProfile.builder()
                 .passedSubjectIds(passedSubjectIds)
                 .failedSubjectIds(failedSubjectIds)
-                .cumulativeGpa(summaryRepository.calculateCumulativeGpa(studentId, studyProgramId))
-                .totalCredits(summaryRepository.sumTotalCredits(studentId, studyProgramId))
+                .cumulativeGpa(academicResultService.calculateCumulativeGpa(studentId, studyProgramId))
+                .totalCredits(academicResultService.sumTotalCredits(studentId, studyProgramId))
                 .semesterId(period.getSemesterId())
+                .startTime(period.getStartTime())
+                .endTime(period.getEndTime())
                 .build();
 
         redisTemplate.opsForValue().set(cacheKey, profile, 7, TimeUnit.DAYS);

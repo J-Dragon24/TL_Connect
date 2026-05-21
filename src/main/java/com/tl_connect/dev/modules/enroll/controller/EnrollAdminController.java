@@ -12,10 +12,10 @@ import com.tl_connect.dev.modules.enroll.dto.StudentCourseClassDTO;
 import com.tl_connect.dev.modules.enroll.dto.StudentCourseClassFilter;
 import com.tl_connect.dev.modules.enroll.dto.UpdateEnrollPeriodDTO;
 import com.tl_connect.dev.modules.enroll.entity.EnrollmentPeriod;
-import com.tl_connect.dev.modules.enroll.service.EnrollManagementServiceImpl;
-import com.tl_connect.dev.modules.enroll.service.EnrollmentPeriodServiceImpl;
 import com.tl_connect.dev.modules.enroll.service.PrerequisiteDAGService;
 import com.tl_connect.dev.modules.enroll.service.StudentScheduleService;
+import com.tl_connect.dev.modules.enroll.service.interfaces.EnrollManagementService;
+import com.tl_connect.dev.modules.enroll.service.interfaces.EnrollmentPeriodService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.exception.InvalidInputException;
 import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
@@ -28,8 +28,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class EnrollAdminController {
 
-    private final EnrollmentPeriodServiceImpl enrollmentPeriodService;
-    private final EnrollManagementServiceImpl enrollManagementService;
+    private final EnrollmentPeriodService enrollmentPeriodService;
+    private final EnrollManagementService enrollManagementService;
     private final StudentScheduleService studentScheduleService;
     private final PrerequisiteDAGService prerequisiteDAGService;
 

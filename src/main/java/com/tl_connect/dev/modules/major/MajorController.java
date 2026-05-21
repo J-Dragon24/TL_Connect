@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import com.tl_connect.dev.modules.major.dto.CreateMajorDTO;
 import com.tl_connect.dev.modules.major.dto.MajorAdmDTO;
 import com.tl_connect.dev.modules.major.dto.UpdateMajorDTO;
+import com.tl_connect.dev.modules.major.service.interfaces.MajorService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 

@@ -78,7 +78,7 @@ public class ApplicationController {
 
     @GetMapping("/history/{id}")
     public ResponseEntity<?> getDetailApplicationHistory(Authentication authentication, @PathVariable("id") Long id) {
-        if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo userInfo)) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo)) {
             throw new UnauthorizeException("Authentication required");
         }
         HistoryDetailApplication application = applicationService.getDetailApplicationHistory(id);

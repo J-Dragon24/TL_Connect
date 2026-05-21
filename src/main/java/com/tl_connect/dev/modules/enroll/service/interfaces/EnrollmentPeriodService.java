@@ -19,4 +19,6 @@ public interface EnrollmentPeriodService {
     void deletePeriod(Long id);
 
     void invalidate(Long semesterId);
+
+    EnrollmentPeriod findCurrentPeriod();
 }

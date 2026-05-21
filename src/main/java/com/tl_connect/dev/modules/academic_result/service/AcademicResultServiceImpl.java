@@ -12,18 +12,21 @@ import com.tl_connect.dev.modules.academic_result.dto.AcademicResultDTO;
 import com.tl_connect.dev.modules.academic_result.dto.SemesterResultDTO;
 import com.tl_connect.dev.modules.academic_result.dto.SemesterSummaryDTO;
 import com.tl_connect.dev.modules.academic_result.dto.SubjectResultDTO;
+import com.tl_connect.dev.modules.academic_result.entity.StudentSubjectResult;
 import com.tl_connect.dev.modules.academic_result.projection.SemesterSummaryRow;
 import com.tl_connect.dev.modules.academic_result.projection.SemesterSummaryView;
 import com.tl_connect.dev.modules.academic_result.projection.SubjectResultAdmRow;
 import com.tl_connect.dev.modules.academic_result.projection.SubjectResultRow;
 import com.tl_connect.dev.modules.academic_result.repository.StudentSemesterSummaryRepository;
 import com.tl_connect.dev.modules.academic_result.repository.StudentSubjectResultRepository;
+import com.tl_connect.dev.modules.academic_result.service.interfaces.AcademicResultExporter;
 import com.tl_connect.dev.modules.academic_result.service.interfaces.AcademicResultService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +39,7 @@ import lombok.RequiredArgsConstructor;
 public class AcademicResultServiceImpl implements AcademicResultService {
         private final StudentSubjectResultRepository resultRepository;
         private final StudentSemesterSummaryRepository semesterSummaryRepository;
-        private final AcademicResultExporterImpl excelExporter;
+        private final AcademicResultExporter excelExporter;
 
         @Override
         public PagedResponse<AcademicResultAdmDTO> getAllAcademicResult(Pageable pageable, String facultyCode) {
@@ -207,5 +210,17 @@ public class AcademicResultServiceImpl implements AcademicResultService {
         public void exportExcel(Long studentId, String studyProgramCode, HttpServletResponse response) throws IOException {
                 AcademicResultDTO result = getSubjectResult(studentId, studyProgramCode);
                 excelExporter.exportToExcel(result, response);
+        }
+
+        public List<StudentSubjectResult> findSubjectResultByStudentId (Long studentId){
+            return resultRepository.findAllByStudentId(studentId);
+        }
+
+        public BigDecimal calculateCumulativeGpa(Long studentId, Long studyProgramId) {
+            return semesterSummaryRepository.calculateCumulativeGpa(studentId, studyProgramId);
+        }
+
+        public Integer sumTotalCredits(Long studentId, Long studyProgramId){
+            return semesterSummaryRepository.sumTotalCredits(studentId, studyProgramId);
         }
 }

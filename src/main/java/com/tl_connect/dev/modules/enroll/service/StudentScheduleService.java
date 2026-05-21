@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.tl_connect.dev.modules.enroll.cache.StudentScheduleCache;
-import com.tl_connect.dev.modules.enroll.repository.StudentCourseClassRepository;
+import com.tl_connect.dev.modules.enroll.service.interfaces.StudentCourseClassService;
 import com.tl_connect.dev.shared.common.ultility.JsonHelper;
 import com.tl_connect.dev.shared.datastructure.intervaltree.ScheduleInterval;
 
@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class StudentScheduleService {
 
-    private final StudentCourseClassRepository studentCourseClassRepository;
+    private final StudentCourseClassService studentCourseClassService;
     private final StringRedisTemplate redisTemplate;
     private final JsonHelper jsonHelper;
 
@@ -46,7 +46,7 @@ public class StudentScheduleService {
             return jsonHelper.fromJson(cached, new TypeReference<List<ScheduleInterval>>() {});
         }
 
-        List<ScheduleInterval> intervals = studentCourseClassRepository.findCurrentSchedule(studentId, semesterId);
+        List<ScheduleInterval> intervals = studentCourseClassService.findCurrentSchedule(studentId, semesterId);
 
         try {
             redisTemplate.opsForValue().set(cacheKey, jsonHelper.toJson(intervals), 7, TimeUnit.DAYS);

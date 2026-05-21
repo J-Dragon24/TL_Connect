@@ -3655,6 +3655,67 @@
                   "response": []
                 }
               ]
+            },
+            {
+              "name": "attendance",
+              "item": [
+                {
+                  "name": "open session",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/attendance/session/1",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "attendance",
+                        "session",
+                        "1"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "statistic",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{domain}}/api/v1/admin/attendance/statistics/1",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "attendance",
+                        "statistics",
+                        "1"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
             }
           ]
         },
@@ -3725,7 +3786,7 @@
                     "header": [],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\r\n    \"accessToken\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ilh0LW83aERicHVwQXotWlBtNkh4Q0ZXUzNjSSJ9.eyJhdWQiOiI3N2RmOTkzZC1lNzI4LTRiOGUtOTc3MC02YjQwOWFhOTk1NTIiLCJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vYWVjMDAzZWItYzUzNy00ZThhLWIwZjMtMTE0NGE5M2E2MGJjL3YyLjAiLCJpYXQiOjE3Nzg1NzI1NDUsIm5iZiI6MTc3ODU3MjU0NSwiZXhwIjoxNzc4NTc2ODc3LCJhaW8iOiJBV1FBbS84Y0FBQUFvVmUyWjFNNmRkTWhOZEJ0eERONVdlR094dlcrYWR3bUs0K09EaXh5SXNJRU1vdHZ1eGpsTW1zZisveGJ4ZVlZbDdHWm1lSjZTakg4ZldqdkN6bTdZNWp3c2VYTUl6Z0VkeFlUZFluVlo2MDJaNitKVlNDWng4cEc4dy9Fd2VxeSIsImF6cCI6Ijc3ZGY5OTNkLWU3MjgtNGI4ZS05NzcwLTZiNDA5YWE5OTU1MiIsImF6cGFjciI6IjAiLCJpZHAiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC9mYzBiZGFhZi0yOTJlLTQ1Y2MtYjUxZi04NzI4NjdmOWM5ODEvIiwibmFtZSI6ImE0NTA0NCBOZ3V54buFbiBOZ-G7jWMgVHXhuqVuIEFuaCIsIm9pZCI6IjRhNDNjYmQ0LWYzYzYtNGY1ZS04ZGIzLTViM2FhMWVmNzM2OSIsInByZWZlcnJlZF91c2VybmFtZSI6ImE0NTA0NEB0aGFuZ2xvbmcuZWR1LnZuIiwicmgiOiIxLkFjWUE2d1BBcmpmRmlrNnc4eEZFcVRwZ3ZEMlozM2NvNTQ1TGwzQnJRSnFwbFZJQUFGREdBQS4iLCJyb2xlcyI6WyJzdHVkZW50Il0sInNjcCI6ImFjY2Vzc19hc191c2VyIiwic2lkIjoiMDA0ZTI3ZWEtN2VhZS0xZWZiLWJkN2YtMDljZGVkYzVkZTA3Iiwic3ViIjoiTU5NYlRPUGVpSDhwdkRSeHVreUVkU203UWdIYVAwY08xMG5vNlVLWHdSOCIsInRpZCI6ImFlYzAwM2ViLWM1MzctNGU4YS1iMGYzLTExNDRhOTNhNjBiYyIsInV0aSI6Ikhzem05Ymowd1VtUDN4N3V3STlSQUEiLCJ2ZXIiOiIyLjAiLCJ4bXNfZnRkIjoicFN4LUJFZ2hfWThoOVhNZ0tKUDVJejRuZmdhQWxZOUE5a0M0MGRHSXM3NEJhMjl5WldGemIzVjBhQzFrYzIxeiJ9.Tov1aNBZoqMXNLoolJUjIaqHu77obHaIgZx9KhRPIOY3aS8TacAwgTK2ARBvEAynbFEBtnDc5wxUijEFmcC1RsvnXAxocKafc9eLmMOaWro3gF5V_NJ6z3swY4Q5J1-7msm0PCfAc-DNcb8d832oSOUvzU0XwGF2zeZJzRhtUjgScoM6kyfGPQJllt1uVCFJSZ-Z03fqbWC2I2rbi1EHHw-HfR7SvjH1gOxDpBWNNNJV9hJLtfuisGFoPOx8Tk9SHUfbmJcCS58CPpLNKXwE51eu2rfhO6_KX7lAc-1NvRHdm_d3iafsxMhJoIfxyUfOLLSvDo5d2L-E2mn_P4WBAA\",\r\n    \"deviceId\":\"abc\",\r\n    \"fcmToken\": \"abc\"\r\n}",
+                      "raw": "{\r\n    \"accessToken\":\"eyJ0eXAiOiJKV1QiLCJub25jZSI6ImVwa2w4U292ZXRjQkZZRnFzN3BBUTlpdk54NVNNNXFhTUp6X3JEaUQwREUiLCJhbGciOiJSUzI1NiIsIng1dCI6Ilh0LW83aERicHVwQXotWlBtNkh4Q0ZXUzNjSSIsImtpZCI6Ilh0LW83aERicHVwQXotWlBtNkh4Q0ZXUzNjSSJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDAiLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC9hZWMwMDNlYi1jNTM3LTRlOGEtYjBmMy0xMTQ0YTkzYTYwYmMvIiwiaWF0IjoxNzc5MTYwNzYxLCJuYmYiOjE3NzkxNjA3NjEsImV4cCI6MTc3OTE2NTUyNSwiYWNjdCI6MCwiYWNyIjoiMSIsImFjcnMiOlsicDEiXSwiYWlvIjoiQVpRQWEvOGNBQUFBKzFoLy84Ty8yaFRqWlE5emNKRlZORUpCcnBqUkI2WldnRkE0b1FkVFNrTGptUk4zd1E5WkxEYy8xdDJJNmZsSzlvU2REdjZmYlo4U29mNTFLMzFneGl2cCtJOFhJb1dkOWo2OHpVOXJ0RDVYWDhaTjdoYVhVZnlsZ1hEMEVDZVBoS1paMzZoVW1YOXdlK3RhVGJ1NHNZb2p5M2xXeWpJaFpoSGpOSVhSMmNZT1pRT0JJUGcrUFJhUVNycXJQb2puIiwiYWx0c2VjaWQiOiIxOmxpdmUuY29tOjAwMDM0MDAxMDQ4NzJGNUYiLCJhbXIiOlsicHdkIiwibWZhIl0sImFwcF9kaXNwbGF5bmFtZSI6IlRoYW5nTG9uZy1zZXJ2aWNlIiwiYXBwaWQiOiI3N2RmOTkzZC1lNzI4LTRiOGUtOTc3MC02YjQwOWFhOTk1NTIiLCJhcHBpZGFjciI6IjAiLCJlbWFpbCI6Im5ob2t0aGFuaDMyMTFAZ21haWwuY29tIiwiZmFtaWx5X25hbWUiOiJ0aGFuaCIsImdpdmVuX25hbWUiOiJuaG9rIiwiaWRwIjoibGl2ZS5jb20iLCJpZHR5cCI6InVzZXIiLCJpcGFkZHIiOiIxNC4yNDguNjQuOCIsIm5hbWUiOiJuaG9rIHRoYW5oIiwib2lkIjoiMWRlYjAwYTktODM1Yy00YWI3LWE1MGYtNTdjMTJhNTZjN2JkIiwicGxhdGYiOiIzIiwicHVpZCI6IjEwMDMyMDA1NkQ3NUJBN0YiLCJyaCI6IjEuQWNZQTZ3UEFyamZGaWs2dzh4RkVxVHBndkFNQUFBQUFBQUFBd0FBQUFBQUFBQUFBQUhUR0FBLiIsInNjcCI6ImVtYWlsIG9wZW5pZCBwcm9maWxlIFVzZXIuUmVhZCIsInNpZCI6IjAwNGYzOTVhLWFiNzUtNGNiOS1kM2IwLTNlZWZkMjYxMWVjOSIsInN1YiI6ImV2Yjc2SldzMUNsNU80aFllbk4zZ1ljVVp6bVg3RFVHMW5Bb3RrT0JOVjAiLCJ0ZW5hbnRfcmVnaW9uX3Njb3BlIjoiQVMiLCJ0aWQiOiJhZWMwMDNlYi1jNTM3LTRlOGEtYjBmMy0xMTQ0YTkzYTYwYmMiLCJ1bmlxdWVfbmFtZSI6ImxpdmUuY29tI25ob2t0aGFuaDMyMTFAZ21haWwuY29tIiwidXRpIjoiRW1ZT2poaFRMRUdzb081TXU4QXRBQSIsInZlciI6IjEuMCIsIndpZHMiOlsiNjJlOTAzOTQtNjlmNS00MjM3LTkxOTAtMDEyMTc3MTQ1ZTEwIiwiYjc5ZmJmNGQtM2VmOS00Njg5LTgxNDMtNzZiMTk0ZTg1NTA5Il0sInhtc19hY2QiOjE3NjcwNzAwMDksInhtc19hY3RfZmN0IjoiMyA5IiwieG1zX2Z0ZCI6ImRvSzFRbk1vM3RzVldCQ1padjlsVVVxZW1nYUFwOTYydXdkRG9VMUR6aklCYTI5eVpXRnpiM1YwYUMxa2MyMXoiLCJ4bXNfaWRyZWwiOiIzMCAxIiwieG1zX3BmdGV4cCI6MTc3OTI1MTkyNSwieG1zX3N0Ijp7InN1YiI6Il91SE55QWd3NW5oQThnaWpKc0RKNDNuRTBTclotRUpNV0cwSjRzTURFb28ifSwieG1zX3N1Yl9mY3QiOiIyIDMiLCJ4bXNfdGNkdCI6MTc2NzA2ODM2MiwieG1zX3RudF9mY3QiOiIzIDEyIn0.H959YVNWLkHirUSmRd8NTxbd96m1GTQK7Cw1XyWNKZJ3kOkLatqvQGXlFksKP_BO8psGCKlwh3-8ybLtit7YWu3rk0IXppg42yAY5E-WPkQc-bKQbp0yaHI4eDdvbXRuT209DAtRAZsQ96kqFtBdbpDlIHK6hBQEYdj3bt0avxcll-b94wMKCJr2tbxCvXuLlEsknYgtfL2bxtF-36WaxGZacMf4Utvuf-s71CBnJUADx2tRJPnwYZbwGrvTfsXWKNQ55YrBxeyP-kBZRpx36ExOxRt_yWURmxBlD_y2HXIhQgIs44IhElu1ORMBg9p4BDJtlTxwCsLQ9sqoJ6PxQw\",\r\n    \"deviceId\":\"abc\",\r\n    \"fcmToken\": \"abc\"\r\n}",
                       "options": {
                         "raw": {
                           "language": "json"
@@ -3791,7 +3852,7 @@
                       }
                     ],
                     "url": {
-                      "raw": "{{domain}}/api/v1/student/schedules/weekly?start_date=2026-05-04&end_date=2026-05-11",
+                      "raw": "{{domain}}/api/v1/student/schedules/weekly?start_date=2024-09-10&end_date=2024-09-16",
                       "host": [
                         "{{domain}}"
                       ],
@@ -3805,11 +3866,11 @@
                       "query": [
                         {
                           "key": "start_date",
-                          "value": "2026-05-04"
+                          "value": "2024-09-10"
                         },
                         {
                           "key": "end_date",
-                          "value": "2026-05-11"
+                          "value": "2024-09-16"
                         }
                       ]
                     }
@@ -4314,6 +4375,41 @@
                     }
                   },
                   "response": []
+                },
+                {
+                  "name": "payment return",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"tuitionId\": 1\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/payments/payment-return",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "payments",
+                        "payment-return"
+                      ]
+                    }
+                  },
+                  "response": []
                 }
               ]
             },
@@ -4714,7 +4810,8 @@
                           "key": "files",
                           "type": "file",
                           "uuid": "c5ff8e43-9318-43d4-b4e6-893644d2db55",
-                          "src": "/C:/Users/LongBao/Pictures/chrome-extension10.webp"
+                          "value": null,
+                          "disabled": true
                         },
                         {
                           "key": "title",
@@ -4738,7 +4835,8 @@
                           "key": "appVersion",
                           "value": "2.4.5",
                           "type": "text",
-                          "uuid": "183a0d53-ddda-47e3-b7e3-ec1c1db45595"
+                          "uuid": "183a0d53-ddda-47e3-b7e3-ec1c1db45595",
+                          "disabled": true
                         },
                         {
                           "key": "deviceInfo",
@@ -4764,6 +4862,46 @@
                   "response": []
                 }
               ]
+            },
+            {
+              "name": "attendance",
+              "item": [
+                {
+                  "name": "check-in",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"qrToken\": \"classId=1&sessionId=c85e9b83-df68-4d51-99c6-1475bae1a40e&exp=1779081158668.24e7d0c0114f0b29e24f5b44332c80dbb73822aaa116915a5dfb1204b4e88616\",\r\n    \"latitude\": \"21.0285\",\r\n    \"longitude\": \"105.8542\",\r\n    \"wifiBssid\": \"SCHOOL_WIFI\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{domain}}/api/v1/attendance/checkin",
+                      "host": [
+                        "{{domain}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "attendance",
+                        "checkin"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
             }
           ]
         },
@@ -4779,7 +4917,7 @@
               }
             ],
             "url": {
-              "raw": "{{domain}}/api/v1/student/exam?HocKy=HK1-2025",
+              "raw": "{{domain}}/api/v1/student/exam?HocKy=HKTC-2025-2026",
               "host": [
                 "{{domain}}"
               ],
@@ -4792,7 +4930,7 @@
               "query": [
                 {
                   "key": "HocKy",
-                  "value": "HK1-2025"
+                  "value": "HKTC-2025-2026"
                 }
               ]
             }

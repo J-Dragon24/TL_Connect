@@ -17,9 +17,9 @@ import com.tl_connect.dev.modules.study_program.dto.StudyProgramAdmDTO;
 import com.tl_connect.dev.modules.study_program.dto.StudyProgramDTO;
 import com.tl_connect.dev.modules.study_program.dto.UpdateStudyProgramDTO;
 import com.tl_connect.dev.modules.study_program.dto.UpdateStudyProgramSubDTO;
-import com.tl_connect.dev.modules.study_program.service.StudyProgramModifyService;
-import com.tl_connect.dev.modules.study_program.service.StudyProgramService;
-import com.tl_connect.dev.modules.study_program.service.StudyProgramSubjectService;
+import com.tl_connect.dev.modules.study_program.service.interfaces.StudyProgramModifyService;
+import com.tl_connect.dev.modules.study_program.service.interfaces.StudyProgramService;
+import com.tl_connect.dev.modules.study_program.service.interfaces.StudyProgramSubjectService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 

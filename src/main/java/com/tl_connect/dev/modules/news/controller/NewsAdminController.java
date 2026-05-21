@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.tl_connect.dev.modules.news.NewsService;
 import com.tl_connect.dev.modules.news.dto.CreateNewsDTO;
 import com.tl_connect.dev.modules.news.dto.NewsAdmDTO;
 import com.tl_connect.dev.modules.news.dto.UpdateNewsDTO;
+import com.tl_connect.dev.modules.news.service.interfaces.NewsService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 
