@@ -69,21 +69,29 @@ public class EnrollServiceImpl implements EnrollService {
         StudyProgramHeaderView header = studyProgramService
                 .findByStudyProgramCodeAndStudentId(studyProgramCode, studentId);
 
-        StudentEnrollmentProfile profile = profileService.getProfile(studentId, header.getId());
+        EnrollmentPeriod period = enrollmentPeriodService.getPeriod();
 
-        List<SubjectForEnrollRow> subjects = studyProgramService.findSubjectsByStudyProgramId(header.getId());
+        boolean isPeriodValid = checkEnrollmentPeriod(period);
 
-        List<SubjectForEnrollDTO> subjectForEnrollDTOS = subjects.stream()
-                .filter(subject -> !profile.getPassedSubjectIds().contains(subject.getSubjectId()))
-                .map(SubjectForEnrollDTO::from).toList();
+        List<SubjectForEnrollDTO> subjectForEnrollDTOS = new ArrayList<>();
+
+        if (isPeriodValid) {
+            StudentEnrollmentProfile profile = profileService.getProfile(studentId, header.getId());
+
+            List<SubjectForEnrollRow> subjects = studyProgramService.findSubjectsByStudyProgramId(header.getId());
+
+            subjectForEnrollDTOS = subjects.stream()
+                    .filter(subject -> !profile.getPassedSubjectIds().contains(subject.getSubjectId()))
+                    .map(SubjectForEnrollDTO::from).toList();
+        }
 
         return EnrollViewDTO.builder()
-                .studyProgramId(subjects.get(0).getStudyProgramId())
-                .studyProgramCode(subjects.get(0).getStudyProgramCode())
-                .studyProgramName(subjects.get(0).getStudyProgramName())
-                .semesterId(profile.getSemesterId())
-                .startTime(profile.getStartTime())
-                .endTime(profile.getEndTime())
+                .studyProgramId(header.getId())
+                .studyProgramCode(header.getStudyProgramCode())
+                .studyProgramName(header.getStudyProgramName())
+                .semesterId(period.getSemesterId())
+                .startTime(period.getStartTime())
+                .endTime(period.getEndTime())
                 .subjects(subjectForEnrollDTOS)
                 .build();
     }
@@ -121,9 +129,14 @@ public class EnrollServiceImpl implements EnrollService {
 
         CourseClass courseClass = courseClassService.findById(courseClassId);
 
-        EnrollmentPeriod period = enrollmentPeriodService.getPeriod(courseClass.getSemesterId());
+        EnrollmentPeriod period = enrollmentPeriodService.getPeriod();
 
-        checkEnrollmentPeriod(period);
+        boolean isPeriodValid = checkEnrollmentPeriod(period);
+
+        if (!isPeriodValid) {
+            throw new DuplicateRegistrationException(ResponseStatus.OUTSIDE_REGISTRATION_PERIOD,
+                    "The registration period has not started yet or has ended");
+        }
 
         List<DetailsForCheckEnrollRow> details = courseClassService.findDetailForEnrollmentById(courseClassId);
 
@@ -300,16 +313,11 @@ public class EnrollServiceImpl implements EnrollService {
         }
     }
 
-    private void checkEnrollmentPeriod(EnrollmentPeriod period) {
-
+    private boolean checkEnrollmentPeriod(EnrollmentPeriod period) {
         LocalDateTime now = LocalDateTime.now();
-        if (now.isBefore(period.getStartTime())) {
-            throw new DuplicateRegistrationException(ResponseStatus.OUTSIDE_REGISTRATION_PERIOD,
-                    "The registration period has not started yet");
+        if (now.isBefore(period.getStartTime()) || now.isAfter(period.getEndTime())) {
+            return false;
         }
-        if (now.isAfter(period.getEndTime())) {
-            throw new DuplicateRegistrationException(ResponseStatus.OUTSIDE_REGISTRATION_PERIOD,
-                    "The registration period has ended");
-        }
+        return true;
     }
 }

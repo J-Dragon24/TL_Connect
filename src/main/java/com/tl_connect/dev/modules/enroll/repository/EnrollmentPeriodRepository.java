@@ -13,14 +13,6 @@ import com.tl_connect.dev.modules.enroll.entity.EnrollmentPeriod;
 public interface EnrollmentPeriodRepository extends JpaRepository<EnrollmentPeriod, Long> {
         @Query(value = """
                 SELECT ep.* FROM enrollment_periods ep
-                WHERE ep.semester_id = :semesterId
-                ORDER BY ep.created_at DESC
-                LIMIT 1
-                """, nativeQuery = true)
-        Optional<EnrollmentPeriod> findLatestBySemesterId(@Param("semesterId") Long semesterId);
-
-        @Query(value = """
-                SELECT ep.* FROM enrollment_periods ep
                 LEFT JOIN semesters s ON ep.semester_id = s.id
                 WHERE (:semesterCode is null OR s.semester_code LIKE CONCAT('%', :semesterCode, '%'))
                 ORDER BY ep.start_time DESC
@@ -34,8 +26,14 @@ public interface EnrollmentPeriodRepository extends JpaRepository<EnrollmentPeri
 
         @Query(value = """
                 SELECT ep.* FROM enrollment_periods ep
-                WHERE ep.start_time <= NOW() AND ep.end_time >= NOW()
+                WHERE ep.end_time >= NOW()
+                ORDER BY 
+                CASE 
+                        WHEN NOW() BETWEEN ep.start_time AND ep.end_time THEN 0
+                        ELSE 1
+                END,
+                ep.start_time ASC
                 LIMIT 1
                 """, nativeQuery = true)
-        Optional<EnrollmentPeriod> findCurrent();
+        Optional<EnrollmentPeriod> findNearestOrCurrent(); 
 }

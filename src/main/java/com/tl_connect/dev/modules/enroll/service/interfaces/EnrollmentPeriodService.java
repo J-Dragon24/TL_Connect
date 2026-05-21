@@ -8,7 +8,7 @@ import com.tl_connect.dev.modules.enroll.entity.EnrollmentPeriod;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 
 public interface EnrollmentPeriodService {
-    EnrollmentPeriod getPeriod(Long semesterId);
+    EnrollmentPeriod getPeriod();
 
     PagedResponse<EnrollmentPeriod> getAllPeriods(Pageable pageable, String semesterCode);
 
@@ -20,5 +20,5 @@ public interface EnrollmentPeriodService {
 
     void invalidate(Long semesterId);
 
-    EnrollmentPeriod findCurrentPeriod();
+    EnrollmentPeriod findNearestOrCurrent();
 }

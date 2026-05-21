@@ -35,10 +35,10 @@ public class EnrollmentPeriodServiceImpl implements EnrollmentPeriodService {
     private final RedisTemplate<String, Object> redisTemplate;
     private final ObjectMapper objectMapper;
 
-    private static final String CACHE_KEY_PREFIX = "enrollment:period:";
+    private static final String CACHE_KEY_PREFIX = "enrollment:period";
 
-    public EnrollmentPeriod getPeriod(Long semesterId) {
-        String cacheKey = CACHE_KEY_PREFIX + semesterId;
+    public EnrollmentPeriod getPeriod() {
+        String cacheKey = CACHE_KEY_PREFIX;
 
         try {
             Object cached = redisTemplate.opsForValue().get(cacheKey);
@@ -49,8 +49,8 @@ public class EnrollmentPeriodServiceImpl implements EnrollmentPeriodService {
             log.warn("Redis unavailable, fallback to DB", e);
         }
 
-        EnrollmentPeriod period = enrollmentPeriodRepository.findLatestBySemesterId(semesterId)
-            .orElseThrow(() -> new NotFoundException("Enrollment period not found"));
+        EnrollmentPeriod period = enrollmentPeriodRepository.findNearestOrCurrent()
+                .orElseThrow(() -> new NotFoundException("Enrollment period not found"));
 
         long secondsUntilEnd = ChronoUnit.SECONDS.between(
             LocalDateTime.now(), period.getEndTime()
@@ -116,12 +116,13 @@ public class EnrollmentPeriodServiceImpl implements EnrollmentPeriodService {
         }
     }
 
+
     public void invalidate(Long semesterId) {
         redisTemplate.delete(CACHE_KEY_PREFIX + semesterId);
     }
 
-    public EnrollmentPeriod findCurrentPeriod() {
-        return enrollmentPeriodRepository.findCurrent()
+    public EnrollmentPeriod findNearestOrCurrent() {
+        return enrollmentPeriodRepository.findNearestOrCurrent()
                 .orElseThrow(() -> new NotFoundException("Enrollment period not found"));
     }
 }

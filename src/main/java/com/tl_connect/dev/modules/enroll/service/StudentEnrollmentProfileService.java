@@ -12,8 +12,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tl_connect.dev.modules.academic_result.entity.StudentSubjectResult;
 import com.tl_connect.dev.modules.academic_result.service.interfaces.AcademicResultService;
 import com.tl_connect.dev.modules.enroll.dto.StudentEnrollmentProfile;
-import com.tl_connect.dev.modules.enroll.entity.EnrollmentPeriod;
-import com.tl_connect.dev.modules.enroll.service.interfaces.EnrollmentPeriodService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 public class StudentEnrollmentProfileService {
     private final AcademicResultService academicResultService;
     private final RedisTemplate<String, Object> redisTemplate;
-    private final EnrollmentPeriodService enrollmentPeriodService;
     private final ObjectMapper objectMapper;
 
     private static final String CACHE_KEY_PREFIX = "enrollment_profile:student:";
@@ -34,8 +31,6 @@ public class StudentEnrollmentProfileService {
         if (cached != null) {
             return objectMapper.convertValue(cached, StudentEnrollmentProfile.class);
         }
-
-        EnrollmentPeriod period = enrollmentPeriodService.findCurrentPeriod();
 
         List<StudentSubjectResult> results = academicResultService.findSubjectResultByStudentId(studentId);
 
@@ -49,7 +44,7 @@ public class StudentEnrollmentProfileService {
                 failedSubjectIds.add(result.getSubjectId());
             }
         }
-
+        
         failedSubjectIds.removeAll(passedSubjectIds);
 
         StudentEnrollmentProfile profile = StudentEnrollmentProfile.builder()
@@ -57,9 +52,6 @@ public class StudentEnrollmentProfileService {
                 .failedSubjectIds(failedSubjectIds)
                 .cumulativeGpa(academicResultService.calculateCumulativeGpa(studentId, studyProgramId))
                 .totalCredits(academicResultService.sumTotalCredits(studentId, studyProgramId))
-                .semesterId(period.getSemesterId())
-                .startTime(period.getStartTime())
-                .endTime(period.getEndTime())
                 .build();
 
         redisTemplate.opsForValue().set(cacheKey, profile, 7, TimeUnit.DAYS);
