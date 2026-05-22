@@ -7,6 +7,8 @@ import java.util.Set;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.google.firebase.messaging.FirebaseMessagingException;
+import com.google.firebase.messaging.MessagingErrorCode;
 import com.tl_connect.dev.modules.notification.entity.Notification;
 import com.tl_connect.dev.modules.notification.service.interfaces.FCMService;
 import com.tl_connect.dev.modules.oauth.service.interfaces.UserDeviceService;
@@ -26,10 +28,21 @@ public class NotificationPushServiceImpl implements NotificationPushService {
     @Async
     public void pushNotifications(Notification notification, List<Long> targetIds) {
         Set<String> sentTopics = new HashSet<>();
-        if(notification.getTargetType() == NotificationType.STUDENT) {
+
+        if(notification.getTargetType() == NotificationType.GLOBAL) {
+            String topic = notificationHelper.buildTopic(notification.getTargetType(), null);
+            fcmService.sendToTopic(topic, notification.getTitle(), notification.getContent());
+        }
+        else if(notification.getTargetType() == NotificationType.STUDENT) {
             List<String> tokens = userDeviceService.findTokensByUserIds(targetIds);
             for (String token : tokens) {
-                fcmService.sendToToken(token, notification.getTitle(), notification.getContent());
+                try{
+                    fcmService.sendToToken(token, notification.getTitle(), notification.getContent());
+                }catch(FirebaseMessagingException e){
+                    if(e.getMessagingErrorCode() == MessagingErrorCode.UNREGISTERED){
+                        userDeviceService.removeToken(token);
+                    }
+                }
             }
         } else {
             for(Long id : targetIds) {

@@ -101,6 +101,9 @@ public class OAuthServiceImpl implements OAuthService {
     }
 
     private JwtUserInfo processStudentLogin(String microsoftId, String email, String name, List<String> roles, String deviceId, String fcmToken, String platform) {
+        System.out.println("deviceId: " + deviceId);
+        System.out.println("fcmToken: " + fcmToken);
+        System.out.println("platform: " + platform);
 
         if(deviceId == null || deviceId.isEmpty() || fcmToken == null || fcmToken.isEmpty()) {
             throw new InvalidInputException("Device ID and FCM token are required");

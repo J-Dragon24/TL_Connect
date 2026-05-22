@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.firebase.messaging.BatchResponse;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.MulticastMessage;
 import com.google.firebase.messaging.Notification;
@@ -73,7 +74,7 @@ public class FCMServiceImpl implements FCMService {
     }
 
     @Override
-    public void sendToToken(String token, String title, String body) {
+    public void sendToToken(String token, String title, String body) throws FirebaseMessagingException {
         Message message = Message.builder()
                 .setToken(token)
                 .setNotification(Notification.builder()
@@ -84,12 +85,8 @@ public class FCMServiceImpl implements FCMService {
                 .putData("body", body)
                 .build();
 
-        try {
-            String response = FirebaseMessaging.getInstance().send(message);
-            log.info("FCM sent to token {}: {}", token, response);
-        } catch (Exception e) {
-            log.error("FCM send failed for token {}", token, e);
-        }
+        String response = FirebaseMessaging.getInstance().send(message);
+        log.info("FCM sent to token {}: {}", token, response);
     }
     
 }

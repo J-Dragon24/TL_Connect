@@ -36,6 +36,7 @@ public class NotificationModifyServiceImpl implements NotificationModifyService 
     @Transactional
     public void sendNotification(CreateNotificationReqDTO req) {
         NotificationType type = req.getTargetType();
+        
 
         if(type == NotificationType.GLOBAL) {
             Notification notification = buildNotification(req);

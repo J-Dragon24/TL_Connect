@@ -54,4 +54,10 @@ public class UserDeviceServiceImpl implements UserDeviceService {
     public List<String> findTokensByUserIds(List<Long> targetIds) {
         return userDeviceRepository.findTokensByUserIds(targetIds);
     }
+
+    @Transactional
+    public void removeToken(String token) {
+        Optional<UserDevice> byToken = userDeviceRepository.findByFcmToken(token);
+        byToken.ifPresent(userDeviceRepository::delete);
+    }
 }

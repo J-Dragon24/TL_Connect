@@ -63,6 +63,7 @@ public interface StudyProgramRepository extends JpaRepository<StudyProgram, Long
             SELECT
                 sp.id AS id,
                 sp.study_program_name AS studyProgramName,
+                sp.study_program_code AS studyProgramCode,
                 sp.start_year AS startYear,
                 sp.total_credits AS totalCredits
             FROM study_programs sp

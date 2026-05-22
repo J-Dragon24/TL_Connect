@@ -9,4 +9,6 @@ public interface UserDeviceService {
     void removeDevice(String deviceId);
 
     List<String> findTokensByUserIds(List<Long> targetIds);
+
+    void removeToken(String token);
 }

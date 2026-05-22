@@ -79,6 +79,7 @@ public class AuthHelper {
 
     public UserInfo extractUserInfo(String accessToken) {
         Jwt jwt = verify(accessToken);
+        System.out.println(jwt.getClaims());
         List<String> roles = Optional.ofNullable(jwt.getClaimAsStringList("roles"))
             .orElse(List.of())
             .stream()
