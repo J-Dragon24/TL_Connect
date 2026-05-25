@@ -23,7 +23,12 @@ import com.tl_connect.dev.modules.application.projection.DetailApplicationView;
 import com.tl_connect.dev.modules.application.repository.ApplicationAttachmentRepository;
 import com.tl_connect.dev.modules.application.repository.ApplicationRepository;
 import com.tl_connect.dev.modules.application.service.interfaces.ApplicationService;
+import com.tl_connect.dev.modules.notification.dto.CreateNotificationReqDTO;
+import com.tl_connect.dev.modules.notification.service.interfaces.NotificationModifyService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
+import com.tl_connect.dev.shared.common.enums.ApplicationStatus;
+import com.tl_connect.dev.shared.common.enums.NotificationCreatedBy;
+import com.tl_connect.dev.shared.common.enums.NotificationType;
 import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
@@ -42,6 +47,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     private final ApplicationRepository applicationRepository;
     private final ApplicationAttachmentRepository applicationAttachmentRepository;
     private final FileHelper fileHelper;
+    private final NotificationModifyService notificationModifyService;
 
     public PagedResponse<ApplicationDTO> getAllApplication(Pageable pageable) {
         Page<ApplicationAdminRow> applications = applicationRepository.findAllApplication(pageable);
@@ -91,6 +97,18 @@ public class ApplicationServiceImpl implements ApplicationService {
             applicationRepository.save(application);
         } catch (Exception e) {
             throw new ErrorException(ResponseStatus.DATABASE_ERROR, "Update status application failed");
+        }
+
+        if(status.getStatus() == ApplicationStatus.APPROVED){
+            CreateNotificationReqDTO req = CreateNotificationReqDTO.builder()
+                .title("Đơn của bạn đã được duyệt")
+                .createdBy(NotificationCreatedBy.SYSTEM)
+                .targetType(NotificationType.STUDENT)
+                .targetIds(List.of(application.getStudentId()))
+                .isImportant(false)
+                .build();
+            
+            notificationModifyService.sendNotification(req);
         }
     }
 

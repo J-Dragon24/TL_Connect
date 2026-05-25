@@ -99,7 +99,6 @@ public class PaymentServiceImpl implements PaymentService {
             .userId(String.valueOf(studentId))
             .description(description)
             .language(req.getLanguage())
-            .bankCode(req.getBankCode())
             .ipAddress(req.getIpAddress())
             .itemJson(itemJson)
             .build();

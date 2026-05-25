@@ -59,10 +59,6 @@ public class VnPayProvider implements ProviderPayment {
         vnp_Params.put("vnp_TmnCode", config.getVnp_TmnCode());
         vnp_Params.put("vnp_Amount", String.valueOf(amount));
         vnp_Params.put("vnp_CurrCode", "VND");
-
-        if (request.getBankCode() != null && !request.getBankCode().isEmpty()) {
-            vnp_Params.put("vnp_BankCode", request.getBankCode());
-        }
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
         vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang:" + vnp_TxnRef);
         vnp_Params.put("vnp_OrderType", orderType);

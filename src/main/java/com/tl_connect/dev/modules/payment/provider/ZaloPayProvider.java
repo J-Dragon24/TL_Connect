@@ -120,6 +120,10 @@ public class ZaloPayProvider implements ProviderPayment{
                 .rawData(result)
                 .build();
         }
+        catch(Exception e){
+            log.error("ZaloPay createOrder failed: {}", e.getMessage());
+            throw new ExternalException("Payment create failed");
+        }
     }
 
     public static String getCurrentTimeString(String format) {
@@ -213,6 +217,10 @@ public class ZaloPayProvider implements ProviderPayment{
                 .message(result.get("returnmessage").toString())
                 .rawData(result)
                 .build();
+        }
+        catch(Exception e){
+            log.error("ZaloPay refund failed: {}", e.getMessage());
+            throw new ExternalException("Payment refund failed");
         }
     }
 

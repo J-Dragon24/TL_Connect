@@ -4557,7 +4557,6 @@ Tạo đơn thanh toán học phí
   "invoiceId": 1,
   "provider": "vnpay",
   "language": "vn",
-  "bankCode": "NCB",
   "ipAddress": "127.0.0.1"
 }
 ```
@@ -4566,7 +4565,6 @@ Tạo đơn thanh toán học phí
 | invoiceId | long | ✅ | ID hóa đơn học phí
 | provider | string | ✅ | Nhà cung cấp thanh toán (vnpay, zalopay)
 | language | string | ❌ | Ngôn ngữ (vn, en) (chỉ áp dụng với vnpay)
-| bankCode | string | ❌ | Mã ngân hàng (chỉ áp dụng với vnpay)
 | ipAddress | string | ❌ | Địa chỉ IP của người dùng (chỉ áp dụng với vnpay)
 
 **Response thành công (code 0):**

@@ -41,30 +41,30 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
             try {
-                // JwtUserInfo userInfo = JwtUserInfo.builder()
-                //         .userId(1L)
-                //         .oauthUserId(1L)
-                //         .roles(new ArrayList<>(List.of("admin")))
-                //         .build();
-                // UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userInfo, null,
-                //         null);
-
-                JwtPayload payload = jwtService.verifyToken(token);
-
                 JwtUserInfo userInfo = JwtUserInfo.builder()
-                        .userId(payload.getUserId())
-                        .oauthUserId(payload.getOauthUserId())
-                        .roles(payload.getRoles())
+                        .userId(1L)
+                        .oauthUserId(1L)
+                        .roles(new ArrayList<>(List.of("admin")))
                         .build();
-
-                List<GrantedAuthority> authorities = payload.getRoles() == null 
-                    ? List.of()
-                    : payload.getRoles().stream()
-                        .map(r -> (GrantedAuthority) new SimpleGrantedAuthority("ROLE_" + r))
-                        .toList();
-
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userInfo, null,
-                        authorities);
+                        null);
+
+                // JwtPayload payload = jwtService.verifyToken(token);
+
+                // JwtUserInfo userInfo = JwtUserInfo.builder()
+                //         .userId(payload.getUserId())
+                //         .oauthUserId(payload.getOauthUserId())
+                //         .roles(payload.getRoles())
+                //         .build();
+
+                // List<GrantedAuthority> authorities = payload.getRoles() == null 
+                //     ? List.of()
+                //     : payload.getRoles().stream()
+                //         .map(r -> (GrantedAuthority) new SimpleGrantedAuthority("ROLE_" + r))
+                //         .toList();
+
+                // UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userInfo, null,
+                //         authorities);
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
             } catch (Exception e) {

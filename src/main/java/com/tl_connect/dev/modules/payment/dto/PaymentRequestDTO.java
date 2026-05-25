@@ -13,7 +13,6 @@ public class PaymentRequestDTO {
     private String description;
 
     // optional
-    private String bankCode;
     private String language;
     private String ipAddress;
 
