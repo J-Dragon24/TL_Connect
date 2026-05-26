@@ -12,6 +12,8 @@ import com.tl_connect.dev.shared.common.enums.StudentStatus;
 import com.tl_connect.dev.shared.common.enums.UserStatus;
 import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
+import com.tl_connect.dev.shared.common.ultility.CacheHelper;
+import com.tl_connect.dev.modules.student.service.interfaces.StudentCacheService;
 import com.tl_connect.dev.modules.student.service.interfaces.StudentDeleteService;
 
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,8 @@ public class StudentDeleteServiceImpl implements StudentDeleteService {
 
     private final StudentRepository studentRepository;
     private final OAuthService oauthService;
+    private final StudentCacheService studentCacheService;
+    private final CacheHelper cacheHelper;
 
     @Transactional
     public void deleteStudent(Long studentId) {
@@ -38,5 +42,7 @@ public class StudentDeleteServiceImpl implements StudentDeleteService {
             OAuthUser oauthUser = oauthService.findById(student.getOauthUserId());
             oauthUser.setStatus(UserStatus.BLOCKED);
         }
+
+        cacheHelper.evictAfterCommit(() -> studentCacheService.evict(studentId));
     }
 }

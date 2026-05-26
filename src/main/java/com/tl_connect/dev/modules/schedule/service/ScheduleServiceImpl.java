@@ -1,7 +1,9 @@
 package com.tl_connect.dev.modules.schedule.service;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -10,6 +12,7 @@ import java.util.stream.Collectors;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.tl_connect.dev.modules.course_class.CourseClass;
 import com.tl_connect.dev.modules.course_class.service.interfaces.CourseClassService;
 import com.tl_connect.dev.modules.lecturer.dto.LecturerDTO;
@@ -31,6 +34,7 @@ import com.tl_connect.dev.shared.common.exception.ConflictException;
 import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.InvalidInputException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
+import com.tl_connect.dev.shared.common.ultility.CacheHelper;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -42,11 +46,31 @@ public class ScheduleServiceImpl implements ScheduleService{
         private final ScheduleRepository scheduleRepository;
         private final SemesterService semesterService;
         private final CourseClassService courseClassService;
+        private final CacheHelper cacheHelper;
 
         public WeeklyScheduleDTO getWeeklySchedule(Long studentId, LocalDate startDate, LocalDate endDate) {
 
                 Semester semester = semesterService.findByDate(startDate);
 
+                LocalDate today = LocalDate.now();
+                boolean isCurrentSemester = !today.isBefore(semester.getStartDate()) 
+                    && !today.isAfter(semester.getEndDate());
+
+                if (isCurrentSemester) {
+                    String key = "schedule:student:" + studentId + ":" + semester.getId();
+                    Duration ttl = Duration.between(today.atStartOfDay(), semester.getEndDate().atTime(23, 59, 59));
+
+                    WeeklyScheduleDTO result = cacheHelper.getOrSet(key, ttl, new TypeReference<WeeklyScheduleDTO>() {}, () -> {
+                        return getWeeklyScheduleFromDb(studentId, startDate, endDate, semester);
+                    });
+                    
+                    return result;
+                }
+
+                return getWeeklyScheduleFromDb(studentId, startDate, endDate, semester);
+        }
+
+        private WeeklyScheduleDTO getWeeklyScheduleFromDb(Long studentId, LocalDate startDate, LocalDate endDate, Semester semester) {
                 List<ScheduleRow> scheduleRows = scheduleRepository.findScheduleByStudentId(studentId,
                                 semester.getId());
 
@@ -81,6 +105,7 @@ public class ScheduleServiceImpl implements ScheduleService{
                                                         }).collect(Collectors.toList());
 
                                         return DayOfWeekScheduleDTO.builder()
+                                                        .dayOfWeek(dayOfWeek)
                                                         .courseClasses(courseClasses)
                                                         .build();
                                 })
@@ -142,36 +167,20 @@ public class ScheduleServiceImpl implements ScheduleService{
         public DayOfWeekScheduleDTO getDayOfWeekSchedule(Long studentId, int dayOfWeek) {
 
                 LocalDate today = LocalDate.now();
-                Semester semester = semesterService.findByDate(today);
 
-                List<ScheduleRow> scheduleRows = scheduleRepository.findDayOfWeekSchedule(studentId, semester.getId(),
-                                dayOfWeek);
+                WeeklyScheduleDTO weeklySchedule = getWeeklySchedule(studentId, today, today);
 
-                List<ScheduleCourseClassDTO> courseClasses = scheduleRows.stream()
-                                .map(row -> {
-                                        LecturerDTO lecturer = LecturerDTO.builder()
-                                                        .fullName(row.getLecturerName())
-                                                        .email(row.getLecturerEmail())
-                                                        .phoneNumber(row.getLecturerPhone())
-                                                        .lecturerCode(row.getLecturerCode())
-                                                        .build();
-                                        return ScheduleCourseClassDTO.builder()
-                                                        .classCode(row.getClassCode())
-                                                        .dayOfWeek(row.getDayOfWeek())
-                                                        .subjectName(row.getSubjectName())
-                                                        .subjectCode(row.getSubjectCode())
-                                                        .startPeriod(row.getStartPeriod())
-                                                        .endPeriod(row.getEndPeriod())
-                                                        .startTime(row.getStartTime())
-                                                        .endTime(row.getEndTime())
-                                                        .room(row.getRoom())
-                                                        .lecturer(lecturer)
-                                                        .build();
-                                }).collect(Collectors.toList());
+                List<DayOfWeekScheduleDTO> dailySchedules = weeklySchedule.getDailySchedules();
 
-                return DayOfWeekScheduleDTO.builder()
-                                .courseClasses(courseClasses)
-                                .build();
+                DayOfWeekScheduleDTO dayOfWeekSchedule = dailySchedules.stream()
+                                .filter(dailySchedule -> dailySchedule.getDayOfWeek() == dayOfWeek)
+                                .findFirst()
+                                .orElse(DayOfWeekScheduleDTO.builder()
+                                                .dayOfWeek(dayOfWeek)
+                                                .courseClasses(new ArrayList<>())
+                                                .build());
+
+                return dayOfWeekSchedule;
         }
 
         public List<ClassScheduleAdminDTO> getAllClassSchedules(Long courseClassId) {

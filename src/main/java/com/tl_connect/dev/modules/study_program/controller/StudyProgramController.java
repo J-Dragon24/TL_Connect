@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tl_connect.dev.modules.study_program.dto.StudyProgramDTO;
 import com.tl_connect.dev.modules.study_program.dto.StudyProgramListItemDTO;
+import com.tl_connect.dev.modules.study_program.projection.StudyProgramHeaderView;
 import com.tl_connect.dev.modules.study_program.service.interfaces.StudyProgramService;
 import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
 import com.tl_connect.dev.shared.common.types.JwtUserInfo;
@@ -44,7 +45,13 @@ public class StudyProgramController {
             throw new UnauthorizeException("Authentication required");
         }
         Long studentId = userInfo.userId();
-        StudyProgramDTO result = studyProgramService.getStudyProgram(studyProgramCode, studentId);
+
+        StudyProgramHeaderView headerView = studyProgramService.findByStudyProgramHeader(studyProgramCode, studentId);
+
+        Long studyProgramId = headerView.getId();
+
+        StudyProgramDTO result = studyProgramService.getDetailedStudyProgram(studyProgramId, headerView);
+
         return ResponseHelper.success("Study program retrieved successfully", result);
     }
 }

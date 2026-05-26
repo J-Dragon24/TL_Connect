@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -59,7 +60,7 @@ public class StudyProgramServiceImpl implements StudyProgramService {
                         page.isLast());
         }
 
-        public StudyProgramDTO getDetailedStudyProgram(Long studyProgramId) {
+        public StudyProgramDTO getDetailedAdminStudyProgram(Long studyProgramId) {
                 StudyProgramHeaderView header = studyProgramRepository.findStudyProgramHeaderById(studyProgramId)
                                 .orElseThrow(() -> new NotFoundException("Study program not found"));
 
@@ -95,12 +96,12 @@ public class StudyProgramServiceImpl implements StudyProgramService {
                                 .collect(Collectors.toList());
         }
 
-        public StudyProgramDTO getStudyProgram(String studyProgramCode, Long studentId) {
-                StudyProgramHeaderView header = studyProgramRepository.findStudyProgramHeaderByStudentId(studyProgramCode, studentId)
-                                .orElseThrow(() -> new NotFoundException("Study program not found"));
+
+        @Cacheable(value = "studyProgram", key = "#studyProgramId")
+        public StudyProgramDTO getDetailedStudyProgram(Long studyProgramId, StudyProgramHeaderView headerView) {
 
                 List<StudyProgramSubjectRow> studyProgramSubjects = studyProgramRepository
-                                .findSubjectsByProgramId(header.getId());
+                                .findSubjectsByProgramId(studyProgramId);
 
                 List<Long> subjectIds = studyProgramSubjects.stream()
                                 .map(StudyProgramSubjectRow::getSubjectId)
@@ -114,13 +115,17 @@ public class StudyProgramServiceImpl implements StudyProgramService {
 
                 List<SubjectPrerequisiteGroupItemRow> subjectPrerequisiteGroupItems = groupIds.isEmpty() ? List.of() : subjectPreGroupItemRepository.findByGroupIdIn(groupIds);
 
-                return mapStudyProgram(header, studyProgramSubjects, subjectPrerequisiteGroups, subjectPrerequisiteGroupItems);
+                return mapStudyProgram(headerView, studyProgramSubjects, subjectPrerequisiteGroups, subjectPrerequisiteGroupItems);
+        }
+
+        public StudyProgramHeaderView findByStudyProgramHeader(String studyProgramCode, Long studentId){
+                return studyProgramRepository.findStudyProgramHeaderByStudentId(studyProgramCode, studentId)
+                                .orElseThrow(() -> new NotFoundException("Study program not found"));
         }
 
 
         public StudyProgramHeaderView findByStudyProgramCodeAndStudentId(String studyProgramCode, Long studentId){
-                return studyProgramRepository
-                                .findByStudyProgramCodeAndStudentId(studyProgramCode, studentId)
+                return studyProgramRepository.findByStudyProgramCodeAndStudentId(studyProgramCode, studentId)
                                 .orElseThrow(() -> new NotFoundException("Study program not found"));
         }
 

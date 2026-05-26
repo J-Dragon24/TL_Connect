@@ -72,7 +72,10 @@ public class PaymentController {
     }
 
     @PostMapping("/refund")
-    public ResponseEntity<?> refund(@RequestBody @Valid RefundRequestDTO req) {
+    public ResponseEntity<?> refund(Authentication authentication, @RequestBody @Valid RefundRequestDTO req) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo)) {
+            throw new UnauthorizeException("Authentication required");
+        }
         try {
             RefundResponseDTO result = paymentService.refund(req);
             return ResponseHelper.success("Refund success", result);

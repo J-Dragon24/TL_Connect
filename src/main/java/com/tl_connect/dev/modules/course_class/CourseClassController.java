@@ -3,11 +3,14 @@ package com.tl_connect.dev.modules.course_class;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import com.tl_connect.dev.modules.course_class.dto.CreateCourseClassDTO;
 import com.tl_connect.dev.modules.course_class.dto.UpdateCourseClassDTO;
 import com.tl_connect.dev.modules.course_class.service.interfaces.CourseClassService;
+import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
+import com.tl_connect.dev.shared.common.types.JwtUserInfo;
 import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 
 import jakarta.validation.Valid;
@@ -21,28 +24,47 @@ public class CourseClassController {
     private final CourseClassService courseClassService;
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAll( @PageableDefault(page = 0, size = 10) Pageable pageable, @RequestParam(required = false, name = "khoa") String facultyCode, @RequestParam(required = false, name = "HocKy") String semesterCode) {
+    public ResponseEntity<?> getAll(Authentication authentication, 
+        @PageableDefault(page = 0, size = 10) Pageable pageable, 
+        @RequestParam(required = false, name = "khoa") String facultyCode, 
+        @RequestParam(required = false, name = "HocKy") String semesterCode
+    ) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo)) {
+            throw new UnauthorizeException("Authentication required");
+        }
         return ResponseHelper.success("Get all course classes successfully",courseClassService.getAll(pageable, facultyCode, semesterCode));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getDetail(@PathVariable Long id) {
+    public ResponseEntity<?> getDetail(Authentication authentication, @PathVariable Long id) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo)) {
+            throw new UnauthorizeException("Authentication required");
+        }
         return ResponseHelper.success("Get detail course class successfully",courseClassService.getDetailById(id));
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> create(@Valid @RequestBody CreateCourseClassDTO dto) {
+    public ResponseEntity<?> create(Authentication authentication, @Valid @RequestBody CreateCourseClassDTO dto) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo)) {
+            throw new UnauthorizeException("Authentication required");
+        }
         return ResponseHelper.success("Create course class successfully",courseClassService.create(dto));
     }
 
     @PostMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody UpdateCourseClassDTO dto) {
+    public ResponseEntity<?> update(Authentication authentication, @PathVariable Long id, @Valid @RequestBody UpdateCourseClassDTO dto) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo)) {
+            throw new UnauthorizeException("Authentication required");
+        }
         courseClassService.update(id, dto);
         return ResponseHelper.success("Update course class successfully",null);
     }
 
     @PostMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    public ResponseEntity<?> delete(Authentication authentication, @PathVariable Long id) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo)) {
+            throw new UnauthorizeException("Authentication required");
+        }
         courseClassService.delete(id);
         return ResponseHelper.success("Delete course class successfully",null);
     }

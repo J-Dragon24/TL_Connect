@@ -35,7 +35,10 @@ public class ApplicationController {
     private final BackBlazeProvider fileHelper;
 
     @GetMapping("/types")
-    public ResponseEntity<?> getAllApplicationType() {
+    public ResponseEntity<?> getAllApplicationType(Authentication authentication) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo)) {
+            throw new UnauthorizeException("Authentication required");
+        }
         List<ApplicationTypeDTO> applicationTypes = applicationTypeService.getAllApplicationType();
         return ResponseHelper.success("List of applications", applicationTypes);
     }

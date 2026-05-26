@@ -44,7 +44,7 @@ public class StudyProgramAdminController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getStudyProgram(@PathVariable Long id) {
-        StudyProgramDTO result = studyProgramService.getDetailedStudyProgram(id);
+        StudyProgramDTO result = studyProgramService.getDetailedAdminStudyProgram(id);
         return ResponseHelper.success("Study program retrieved successfully", result);
     }
 

@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.tl_connect.dev.modules.chatbot.projection.AIContextView;
 import com.tl_connect.dev.modules.student.entity.Student;
 import com.tl_connect.dev.modules.student.projection.HealthInsuranceView;
 import com.tl_connect.dev.modules.student.projection.StudentInfoView;
@@ -181,4 +182,25 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
  
     @Query("SELECT s.studentCode FROM Student s WHERE s.studentCode IN :codes")
     Set<String> findExistingStudentCodes(@Param("codes") Collection<String> codes);
+
+    @Query(value ="""
+        SELECT
+            s.full_name AS studentName,
+            s.student_code AS studentCode,
+            s.date_of_birth AS dateOfBirth,
+            s.gender AS gender,
+            sm.start_year AS startYear,
+            sm.end_year AS endYear,
+            m.major_code AS majorCode,
+            m.major_name AS majorName,
+            f.faculty_code AS facultyCode,
+            sp.study_program_code AS studyProgramCode
+        FROM students s
+        LEFT JOIN student_majors sm ON s.id = sm.student_id
+        LEFT JOIN study_programs sp ON sm.study_program_id = sp.id
+        LEFT JOIN majors m ON sm.major_id = m.id
+        LEFT JOIN faculties f ON m.faculty_id = f.id
+        WHERE s.id = :studentId
+        """, nativeQuery = true)
+    List<AIContextView> findAiContext(@Param("studentId") Long studentId);
 }

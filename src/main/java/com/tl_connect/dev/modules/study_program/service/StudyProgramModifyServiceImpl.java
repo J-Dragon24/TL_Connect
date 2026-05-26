@@ -12,6 +12,8 @@ import com.tl_connect.dev.modules.study_program.repository.StudyProgramRepositor
 import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
+import com.tl_connect.dev.shared.common.ultility.CacheHelper;
+import com.tl_connect.dev.modules.study_program.service.interfaces.StudyProgramCacheService;
 import com.tl_connect.dev.modules.study_program.service.interfaces.StudyProgramModifyService;
 
 import jakarta.transaction.Transactional;
@@ -23,10 +25,11 @@ public class StudyProgramModifyServiceImpl implements StudyProgramModifyService 
 
     private final StudyProgramRepository studyProgramRepository;
     private final MajorRepository majorRepository;
+    private final CacheHelper cacheHelper;
+    private final StudyProgramCacheService studyProgramCacheService;
 
     @Transactional
     public Long createStudyProgram(CreateStudyProgramDTO createStudyProgramDTO){
-
 
         majorRepository.findById(createStudyProgramDTO.getMajorId())
                 .orElseThrow(() -> new NotFoundException("Major not found"));
@@ -57,6 +60,7 @@ public class StudyProgramModifyServiceImpl implements StudyProgramModifyService 
         } catch (DataIntegrityViolationException e) {
             throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Invalid study program data");
         }
+        cacheHelper.evictAfterCommit(() -> studyProgramCacheService.evict(studyProgram.getId()));
     }
 
     @Transactional
@@ -72,5 +76,6 @@ public class StudyProgramModifyServiceImpl implements StudyProgramModifyService 
         } catch (DataIntegrityViolationException e) {
             throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Invalid study program data: " + e.getMessage());
         }
+        cacheHelper.evictAfterCommit(() -> studyProgramCacheService.evict(studyProgram.getId()));
     }
 }

@@ -1,6 +1,7 @@
 package com.tl_connect.dev.modules.student.service;
 
 
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ import com.tl_connect.dev.shared.common.enums.TrainingType;
 import com.tl_connect.dev.shared.common.exception.ConflictException;
 import com.tl_connect.dev.shared.common.exception.InvalidInputException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
+import com.tl_connect.dev.shared.common.ultility.CacheHelper;
 import com.tl_connect.dev.modules.student.repository.AcademicInfoRepository;
 import com.tl_connect.dev.modules.student.repository.StudentContactRepository;
 import com.tl_connect.dev.modules.student.repository.EmergencyContactRepository;
@@ -27,6 +29,7 @@ import com.tl_connect.dev.modules.student.repository.IdentityCardRepository;
 import com.tl_connect.dev.modules.major.service.interfaces.MajorService;
 import com.tl_connect.dev.modules.student.dto.UpdateBasicInfoDTO;
 import com.tl_connect.dev.modules.student.dto.UpdateStudentAcademicDTO;
+import com.tl_connect.dev.modules.student.service.interfaces.StudentCacheService;
 import com.tl_connect.dev.modules.student.service.interfaces.StudentUpdateService;
 
 import lombok.RequiredArgsConstructor;
@@ -44,6 +47,8 @@ public class StudentUpdateServiceImpl implements StudentUpdateService {
     private final EmergencyContactRepository emergencyContactRepository;
     private final IdentityCardRepository identityCardRepository;
     private final StudyProgramService studyProgramService;
+    private final StudentCacheService studentCacheService;
+    private final CacheHelper cacheHelper;
 
     @Transactional
     public void updateBasicInfo(Long studentId, UpdateBasicInfoDTO dto) {
@@ -57,6 +62,8 @@ public class StudentUpdateServiceImpl implements StudentUpdateService {
         updateEmergencyContact(studentId, dto);
 
         updateIdentityCard(studentId, dto);
+
+        cacheHelper.evictAfterCommit(() -> studentCacheService.evict(studentId));
     }
 
     private void updateStudent(Student student, UpdateBasicInfoDTO dto) {
@@ -153,6 +160,7 @@ public class StudentUpdateServiceImpl implements StudentUpdateService {
     }
 
     @Transactional
+    @CacheEvict(value = "studentInfo", key = "#studentId")
     public void updateAcademicInfo(Long studentId, UpdateStudentAcademicDTO dto) {
 
         Student student = studentRepository.findById(studentId)
@@ -222,5 +230,7 @@ public class StudentUpdateServiceImpl implements StudentUpdateService {
         if (dto.getPosition() != null) {
             academicInfo.setPosition(dto.getPosition());
         }
+
+        cacheHelper.evictAfterCommit(() -> studentCacheService.evict(studentId));
     }
 }

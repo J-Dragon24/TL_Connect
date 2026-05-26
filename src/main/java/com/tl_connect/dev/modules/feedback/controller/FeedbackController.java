@@ -32,7 +32,10 @@ public class FeedbackController {
     private final FeedbackService feedbackService;
 
     @GetMapping("/category")
-    public ResponseEntity<?> getAllFeedbackCategory() {
+    public ResponseEntity<?> getAllFeedbackCategory(Authentication authentication) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo)) {
+            throw new UnauthorizeException("Authentication required");
+        }
         List<FeedbackCategoryDTO> feedbackCategories = feedbackCategoryService.getAllFeedbackCategory();
         return ResponseHelper.success("get All feedback category success", feedbackCategories);
     }

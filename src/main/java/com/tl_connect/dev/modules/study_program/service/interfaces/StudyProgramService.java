@@ -17,11 +17,13 @@ public interface StudyProgramService {
 
     PagedResponse<StudyProgramAdmDTO> getAllStudyProgram(Pageable pageable, Integer startYear, String facultyCode);
 
-    StudyProgramDTO getDetailedStudyProgram(Long studyProgramId);
+    StudyProgramDTO getDetailedAdminStudyProgram(Long studyProgramId);
 
     List<StudyProgramListItemDTO> getBasicInfoStudyProgram(Long studentId);
 
-    StudyProgramDTO getStudyProgram(String studyProgramCode, Long studentId);
+    StudyProgramHeaderView findByStudyProgramHeader(String studyProgramCode, Long studentId);
+    
+    StudyProgramDTO getDetailedStudyProgram(Long studyProgramId, StudyProgramHeaderView headerView);
 
     StudyProgramHeaderView findByStudyProgramCodeAndStudentId(String studyProgramCode, Long studentId);
 

@@ -26,9 +26,9 @@ import com.tl_connect.dev.modules.enroll.projection.CourseClassForEnrollRow;
 import com.tl_connect.dev.modules.enroll.projection.DetailsForCheckEnrollRow;
 import com.tl_connect.dev.modules.enroll.projection.SubjectForEnrollRow;
 import com.tl_connect.dev.modules.enroll.repository.CourseClassLogRepository;
-import com.tl_connect.dev.modules.enroll.repository.StudentCourseClassRepository;
 import com.tl_connect.dev.modules.enroll.service.interfaces.EnrollService;
 import com.tl_connect.dev.modules.enroll.service.interfaces.EnrollmentConditionService;
+import com.tl_connect.dev.modules.enroll.service.interfaces.StudentCourseClassService;
 import com.tl_connect.dev.modules.lecturer.dto.LecturerDTO;
 import com.tl_connect.dev.modules.schedule.ScheduleRepository;
 import com.tl_connect.dev.modules.schedule.dto.ScheduleCourseClassDTO;
@@ -52,7 +52,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class EnrollServiceImpl implements EnrollService {
-    private final StudentCourseClassRepository studentCourseClassRepository;
+    private final StudentCourseClassService studentCourseClassService;
     private final CourseClassLogRepository courseClassLogRepository;
     private final CourseClassService courseClassService;
     private final StudyProgramService studyProgramService;
@@ -145,13 +145,13 @@ public class EnrollServiceImpl implements EnrollService {
         }
 
         // check if student is allowed to enroll in the course class
-        if (!studentCourseClassRepository.isSubjectAllowed(studentId, courseClass.getId())) {
+        if (!studentCourseClassService.isSubjectAllowedForEnrollment(studentId, courseClass.getId())) {
             throw new ErrorException(ResponseStatus.SUBJECT_NOT_IN_PROGRAM,
                     "You don't have permission to enroll in this subject");
         }
 
         // check if student has already enrolled in the course class
-        Optional<StudentCourseClass> existingOpt = studentCourseClassRepository
+        Optional<StudentCourseClass> existingOpt = studentCourseClassService
                 .findByStudentIdAndCourseClassId(studentId, courseClassId);
 
         StudentCourseClass scc = null;
@@ -167,7 +167,7 @@ public class EnrollServiceImpl implements EnrollService {
             }
         }
 
-        boolean alreadyEnrollSameSubject = studentCourseClassRepository
+        boolean alreadyEnrollSameSubject = studentCourseClassService
                 .existsByStudentIdAndSubjectIdAndSemesterIdAndStatusIn(
                         studentId,
                         courseClass.getSubjectId(),
@@ -218,7 +218,7 @@ public class EnrollServiceImpl implements EnrollService {
         scc.setIsRetake(isRetake);
 
         try {
-            studentCourseClassRepository.save(scc);
+            studentCourseClassService.save(scc);
         } catch (DataIntegrityViolationException e) {
             throw new ErrorException(ResponseStatus.DATABASE_ERROR, "Already enrolled");
         }
@@ -244,7 +244,7 @@ public class EnrollServiceImpl implements EnrollService {
     @Transactional
     public void drop(Long studentId, Long courseClassId) {
 
-        StudentCourseClass scc = studentCourseClassRepository
+        StudentCourseClass scc = studentCourseClassService
                 .findByStudentIdAndCourseClassId(studentId, courseClassId)
                 .orElseThrow(() -> new NotFoundException("Enrollment not found"));
 
@@ -255,7 +255,7 @@ public class EnrollServiceImpl implements EnrollService {
 
         StudentCourseClassStatus oldStatus = scc.getStatus();
         scc.setStatus(StudentCourseClassStatus.DROPPED);
-        studentCourseClassRepository.save(scc);
+        studentCourseClassService.save(scc);
 
         StudentCourseClassLog log = StudentCourseClassLog.create(
                 studentId, courseClassId, EnrollAction.DROP, oldStatus, StudentCourseClassStatus.DROPPED);
@@ -306,7 +306,7 @@ public class EnrollServiceImpl implements EnrollService {
     }
 
     private void checkMaxCredits(Long studentId, Long semesterId, int newCredits, int maxCredits) {
-        Integer creditsRegistered = studentCourseClassRepository.findCreditsRegistered(studentId, semesterId);
+        Integer creditsRegistered = studentCourseClassService.findCreditsRegistered(studentId, semesterId);
         if (creditsRegistered + newCredits > maxCredits) {
             throw new ErrorException(ResponseStatus.MAX_CREDIT_EXCEEDED,
                     "You have exceeded the maximum number of credits");

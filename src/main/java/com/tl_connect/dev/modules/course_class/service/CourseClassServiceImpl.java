@@ -17,8 +17,10 @@ import com.tl_connect.dev.modules.course_class.dto.UpdateCourseClassDTO;
 import com.tl_connect.dev.modules.course_class.projection.CourseClassBasicInfoRow;
 import com.tl_connect.dev.modules.course_class.projection.CourseClassRow;
 import com.tl_connect.dev.modules.course_class.service.interfaces.CourseClassService;
+import com.tl_connect.dev.modules.enroll.entity.StudentCourseClass;
 import com.tl_connect.dev.modules.enroll.projection.CourseClassForEnrollRow;
 import com.tl_connect.dev.modules.enroll.projection.DetailsForCheckEnrollRow;
+import com.tl_connect.dev.modules.enroll.service.interfaces.StudentCourseClassService;
 import com.tl_connect.dev.modules.lecturer.entity.Lecturer;
 import com.tl_connect.dev.modules.lecturer.service.interfaces.LecturerService;
 import com.tl_connect.dev.modules.semester.Semester;
@@ -31,6 +33,7 @@ import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.exception.ConflictException;
 import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
+import com.tl_connect.dev.shared.common.ultility.CacheHelper;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +45,8 @@ public class CourseClassServiceImpl implements CourseClassService {
     private final SubjectService subjectService;
     private final SemesterService semesterService;
     private final LecturerService lecturerService;
+    private final StudentCourseClassService studentCourseClassService;
+    private final CacheHelper cacheHelper;
 
     public PagedResponse<CourseClassBasicInfoDTO> getAll(Pageable pageable, String facultyCode, String semesterCode) {
         if (facultyCode == null || facultyCode.isBlank()) {
@@ -163,6 +168,12 @@ public class CourseClassServiceImpl implements CourseClassService {
         } catch (DataIntegrityViolationException ex) {
             throw new ErrorException(ResponseStatus.DATABASE_ERROR, "Failed to delete course class");
         }
+
+        List<StudentCourseClass> studentCourseClasses = studentCourseClassService.findByCourseClassId(id);
+
+        studentCourseClasses.forEach(scc -> {
+            cacheHelper.evictAfterCommit(() -> cacheHelper.evict("schedule:student:" + scc.getStudentId() + ":" + entity.getSemesterId()));
+        });
     }
 
     private CourseClassBasicInfoDTO toDTO(CourseClassBasicInfoRow courseClass) {

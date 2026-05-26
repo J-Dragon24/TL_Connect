@@ -159,4 +159,6 @@ public interface StudentCourseClassRepository extends JpaRepository<StudentCours
         @Param("facultyId") Long facultyId,
         Pageable pageable
     );
+
+    List<StudentCourseClass> findByCourseClassId(Long courseClassId);
 }

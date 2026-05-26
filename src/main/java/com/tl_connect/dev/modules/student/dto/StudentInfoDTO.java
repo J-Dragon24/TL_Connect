@@ -1,5 +1,6 @@
 package com.tl_connect.dev.modules.student.dto;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 import com.tl_connect.dev.shared.common.enums.Gender;
@@ -16,7 +17,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class StudentInfoDTO {
+public class StudentInfoDTO implements Serializable {
     private String studentCode;
     private String fullName;
     private LocalDate dateOfBirth;

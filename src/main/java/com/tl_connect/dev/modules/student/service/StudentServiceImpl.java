@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Set;
 
+import com.tl_connect.dev.modules.chatbot.projection.AIContextView;
 import com.tl_connect.dev.modules.lecturer.dto.LecturerDTO;
 import com.tl_connect.dev.modules.student.dto.AcademicInfoDTO;
 import com.tl_connect.dev.modules.student.dto.ContactDTO;
@@ -31,6 +32,7 @@ import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.student.service.interfaces.StudentService;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -59,6 +61,7 @@ public class StudentServiceImpl implements StudentService {
                                 students.isLast());
         }
 
+        @Cacheable(value = "studentInfo", key = "#id")
         public StudentInfoDTO getStudentInfo(Long id) {
                 StudentInfoView student = studentRepository.findStudentInfoById(id)
                         .orElseThrow(() -> new NotFoundException("Student not found with id: " + id));
@@ -221,5 +224,14 @@ public class StudentServiceImpl implements StudentService {
         @Override
         public Student save(Student student) {
             return studentRepository.save(student);
+        }
+
+        @Override
+        public List<AIContextView> findAIContextByStudentId(Long studentId) {
+            List<AIContextView> aiContext = studentRepository.findAiContext(studentId);
+            if (aiContext.isEmpty()) {
+                throw new NotFoundException("Student not found: " + studentId);
+            }
+            return aiContext;
         }
 }

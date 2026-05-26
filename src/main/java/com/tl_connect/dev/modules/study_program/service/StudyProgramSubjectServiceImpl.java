@@ -16,6 +16,8 @@ import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.InvalidInputException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
+import com.tl_connect.dev.shared.common.ultility.CacheHelper;
+import com.tl_connect.dev.modules.study_program.service.interfaces.StudyProgramCacheService;
 import com.tl_connect.dev.modules.study_program.service.interfaces.StudyProgramSubjectService;
 
 import java.util.Optional;
@@ -30,6 +32,8 @@ public class StudyProgramSubjectServiceImpl implements StudyProgramSubjectServic
     private final StudyProgramRepository studyProgramRepository;
     private final SemesterRepository semesterRepository;
     private final SubjectRepository subjectRepository;
+    private final StudyProgramCacheService studyProgramCacheService;
+    private final CacheHelper cacheHelper;
 
     @Transactional
     public Long createStudyProgramSubject(Long studyProgramId, CreateStudyProgramSubDTO createStudyProgramSubjectDTO){
@@ -63,6 +67,7 @@ public class StudyProgramSubjectServiceImpl implements StudyProgramSubjectServic
         } catch (DataIntegrityViolationException e) {
             throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Invalid study program subject data");
         }
+        cacheHelper.evictAfterCommit(() -> studyProgramCacheService.evict(studyProgramId));
         return studyProgramSubject.getId();
     }
 
@@ -89,6 +94,7 @@ public class StudyProgramSubjectServiceImpl implements StudyProgramSubjectServic
         } catch (DataIntegrityViolationException e) {
             throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Invalid study program subject data: " + e.getMessage());
         }
+        cacheHelper.evictAfterCommit(() -> studyProgramCacheService.evict(program.getId()));
     }
 
     @Transactional
@@ -96,5 +102,6 @@ public class StudyProgramSubjectServiceImpl implements StudyProgramSubjectServic
         StudyProgramSubject studyProgramSubject = studyProgramSubjectRepository.findById(studyProgramSubjectId)
                 .orElseThrow(() -> new NotFoundException("Study program subject not found"));
         studyProgramSubjectRepository.delete(studyProgramSubject);
+        cacheHelper.evictAfterCommit(() -> studyProgramCacheService.evict(studyProgramSubject.getStudyProgramId()));
     }
 }

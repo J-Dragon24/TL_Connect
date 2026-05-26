@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +23,8 @@ import com.tl_connect.dev.modules.academic_result.service.interfaces.AcademicRes
 import com.tl_connect.dev.shared.common.dto.ImportResultDTO;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.exception.InvalidInputException;
+import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
+import com.tl_connect.dev.shared.common.types.JwtUserInfo;
 import com.tl_connect.dev.shared.common.ultility.FileHelper;
 import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 
@@ -37,7 +40,10 @@ public class AcademicResultAdminController {
     private final FileHelper fileHelper;
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAllAcademicResult(@PageableDefault(page = 0, size = 10) Pageable pageable, @RequestParam(required = false, name = "khoa") String facultyCode) {
+    public ResponseEntity<?> getAllAcademicResult(Authentication authentication, @PageableDefault(page = 0, size = 10) Pageable pageable, @RequestParam(required = false, name = "khoa") String facultyCode) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo)) {
+            throw new UnauthorizeException("Authentication required");
+        }
         PagedResponse<AcademicResultAdmDTO> result = academicResultService.getAllAcademicResult(pageable, facultyCode);
         return ResponseHelper.success("Academic result retrieved successfully", result);
     }
@@ -49,7 +55,10 @@ public class AcademicResultAdminController {
     }
 
     @PostMapping("/import")
-    public ResponseEntity<?> importAcademicResult(@RequestParam("file") MultipartFile file) throws IOException {
+    public ResponseEntity<?> importAcademicResult(Authentication authentication, @RequestParam("file") MultipartFile file) throws IOException {
+        if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo)) {
+            throw new UnauthorizeException("Authentication required");
+        }
         if (file == null || file.isEmpty()) {
             throw new InvalidInputException("File is missing");
         }
@@ -61,13 +70,19 @@ public class AcademicResultAdminController {
     }
 
     @PostMapping("/update/{id}")
-    public ResponseEntity<?> updateStudentSubjectResult(@PathVariable Long id, @Valid @RequestBody UpdateStudentSubjectResultDTO dto) {
+    public ResponseEntity<?> updateStudentSubjectResult(Authentication authentication, @PathVariable Long id, @Valid @RequestBody UpdateStudentSubjectResultDTO dto) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo)) {
+            throw new UnauthorizeException("Authentication required");
+        }
         academicResultMofidyService.updateStudentSubjectResult(id, dto);
         return ResponseHelper.success("Student subject result updated successfully", null);
     }
 
     @PostMapping("/delete/{id}")
-    public ResponseEntity<?> deleteStudentSubjectResult(@PathVariable Long id) {
+    public ResponseEntity<?> deleteStudentSubjectResult(Authentication authentication, @PathVariable Long id) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo)) {
+            throw new UnauthorizeException("Authentication required");
+        }
         academicResultMofidyService.deleteStudentSubjectResult(id);
         return ResponseHelper.success("Student subject result deleted successfully", null);
     }
