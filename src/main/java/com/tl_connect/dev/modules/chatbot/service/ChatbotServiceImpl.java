@@ -9,6 +9,8 @@ import com.tl_connect.dev.modules.chatbot.dto.AIContextDTO;
 import com.tl_connect.dev.modules.chatbot.dto.AcademicAIContext;
 import com.tl_connect.dev.modules.chatbot.projection.AIContextView;
 import com.tl_connect.dev.modules.chatbot.service.interfaces.ChatbotService;
+import com.tl_connect.dev.modules.semester.dto.SemesterDTO;
+import com.tl_connect.dev.modules.semester.service.interfaces.SemesterService;
 import com.tl_connect.dev.modules.student.service.interfaces.StudentService;
 
 import lombok.RequiredArgsConstructor;
@@ -18,10 +20,13 @@ import lombok.RequiredArgsConstructor;
 public class ChatbotServiceImpl implements ChatbotService{
 
     private final StudentService studentService;
+    private final SemesterService semesterService;
 
     @Override
     public AIContextDTO getAIContext(Long studentId){
         List<AIContextView> aiContext = studentService.findAIContextByStudentId(studentId);
+
+        List<SemesterDTO> semesters = semesterService.getAllStudentSemesters(studentId);
         
         List<AcademicAIContext> academicContexts = aiContext.stream().map(aiContextView -> AcademicAIContext.builder()
                 .startYear(aiContextView.getStartYear())
@@ -36,6 +41,7 @@ public class ChatbotServiceImpl implements ChatbotService{
                 .studentCode(aiContext.get(0).getStudentCode())
                 .dateOfBirth(aiContext.get(0).getDateOfBirth())
                 .gender(aiContext.get(0).getGender())
+                .semesters(semesters)
                 .academicInfo(academicContexts)
                 .build();
     }
