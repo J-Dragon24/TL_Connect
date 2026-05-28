@@ -23,17 +23,22 @@ import lombok.Getter;
 @Configuration
 @Getter
 public class VNPayConfig {
-    public String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public String vnp_RefundUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
-    public String vnp_ReturnUrl = "myapp://payment/result";
-    public String vnp_TokenUrl = "myapp://payment/result";
+    @Value("${vnpay.PayUrl}")
+    public String vnp_PayUrl;
+    @Value("${vnpay.RefundUrl}")
+    public String vnp_RefundUrl;
+    @Value("${vnpay.ReturnUrl}")
+    public String vnp_ReturnUrl;
     @Value("${vnpay.tmnCode}")
     public String vnp_TmnCode;
     @Value("${vnpay.secretKey}")
     public String secretKey;
-    public String vnp_Version = "2.1.0";
-    public String vnp_Command = "pay";
-    public String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
+    @Value("${vnpay.Version}")
+    public String vnp_Version;
+    @Value("${vnpay.Command}")
+    public String vnp_Command;
+    @Value("${vnpay.ApiUrl}")
+    public String vnp_ApiUrl;
 
     // public static String md5(String message) {
     //     String digest = null;

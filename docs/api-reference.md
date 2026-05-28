@@ -35,8 +35,10 @@
 27. [Tuition Fee Config - Quản lý học phí](#27-tuition-fee-config---quản-lý-học-phí)
 28. [Document - Quản lý tài liệu phục vụ RAG](#28-document---quản-lý-tài-liệu-phục-vụ-rag)
 29. [Enrollment - Đăng ký học](#29-enrollment---đăng-ký-học)
-30. [Attendance - Điểm danh](#30-attendance---điểm-danh)
-
+30. [Feedback - Góp ý / Báo lỗi](#30-feedback---góp-ý-báo-lỗi)
+31. [Feedback Category - Danh mục phản hồi / góp ý](#31-feedback-category---danh-mục-phản-hồi-góp-ý)
+32. [Attendance - Điểm danh](#32-attendance---điểm-danh)
+33. [AI Context - Ngữ cảnh AI Chatbot](#33-ai-context---ngữ-cảnh-ai-chatbot)
 
 ## 1. Response Format chung
 Tất cả response đều theo cấu trúc JSON thống nhất:
@@ -4923,16 +4925,65 @@ Xoá loại đơn.
       "role": "assistant",
       "content": "Xin chào"
     }
-  ]
+  ],
+  "context": {
+      "studentName": "Lê Việt Hoàng",
+      "studentCode": "A45033",
+      "dateOfBirth": "2003-05-10",
+      "gender": "NAM",
+      "semesters": [
+          {
+              "id": 4,
+              "semesterName": "Học kỳ 1 2025-2026",
+              "semesterCode": "HK1-2025-2026",
+              "academicYears": "2025-2026",
+              "semesterNumber": 1,
+              "startDate": "2025-09-08",
+              "endDate": "2025-12-28",
+              "isActive": true
+          },
+          {
+              "id": 5,
+              "semesterName": "Học kỳ 2 2025-2026",
+              "semesterCode": "HK2-2025-2026",
+              "academicYears": "2025-2026",
+              "semesterNumber": 2,
+              "startDate": "2026-01-05",
+              "endDate": "2026-04-26",
+              "isActive": true
+          },
+          {
+              "id": 6,
+              "semesterName": "Học kỳ tăng cường 2025-2026",
+              "semesterCode": "HKTC-2025-2026",
+              "academicYears": "2025-2026",
+              "semesterNumber": 3,
+              "startDate": "2026-05-04",
+              "endDate": "2026-08-23",
+              "isActive": true
+          }
+      ],
+      "academicInfo": [
+          {
+              "startYear": 2022,
+              "endYear": 2026,
+              "majorCode": "TI",
+              "majorName": "Khoa học máy tính",
+              "facultyCode": "CNTT",
+              "studyProgramCode": "DHCQK35TI"
+          }
+      ]
+  }
 }
 ```
 
 | Field | Type | Required | Description
 |---|---|---|---
 prompt | string | ✅ | Nội dung người dùng gửi tới chatbot  
-messages | array | ✅ | Lịch sử trò chuyện
+messages | array | ❌ | Lịch sử trò chuyện
   - role: string | ✅ | Vai trò (user, assistant, system)
   - content: string | ✅ | Nội dung
+context | string | ✅ | 1 số thông tin về user
 
 **Response**
 Trả về dạng Server-Sent Events (SSE)
@@ -4947,36 +4998,6 @@ data: chào
 
 
 data: bạn
-
-**Notes**
-- Connection không timeout (SseEmitter(0L))
-- Client cần xử lý stream liên tục
-- Thường dùng với EventSource (web) hoặc OkHttp/Retrofit streaming (Android)
----
-### 26.2. POST /api/v1/chatbot/`{id}`
-**Streaming Chat (Có session id)**
-- **Content-Type**: application/json
-- **Response**: text/event-stream (SSE)
-**Request Body**
-```json
-{
-  "prompt": "Bạn tên gì?"
-}
-```
-| Field | Type | Required | Description
-|---|---|---|---
-prompt | string | ✅ | Nội dung người dùng gửi tới chatbot  
-
-**Response**
-Trả về dạng Server-Sent Events (SSE)
-Lưu ý: Nếu chưa có session, server sẽ tự tạo mới và trả về session id trong response
-
-Ví dụ:
-
-data: Tôi tên là AI
-data: Tôi có thể giúp gì cho bạn?
-
-data: session_id: 123456789
 
 **Notes**
 - Connection không timeout (SseEmitter(0L))
@@ -6236,3 +6257,60 @@ Sinh viên thực hiện điểm danh bằng QR code.
 - ❌ qrToken không hợp lệ / hết hạn → code -1, HTTP 400
 - ❌ vị trí ngoài phạm vi cho phép → code -4, HTTP 403
 - ❌ đã điểm danh trước đó → code -25, HTTP 409
+---  
+## 33. AI Context - Ngữ cảnh AI Chatbot
+### 33.1. GET /api/v1/student/ai-context
+
+Lấy toàn bộ ngữ cảnh học tập của sinh viên để cung cấp cho AI Chatbot.
+
+**Auth**: Bắt buộc (Authorization: Bearer JWT)
+**Content-Type**: Không áp dụng
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Get user AI context successfully",
+  "data": {
+    "studentName": "Nguyen Van A",
+    "studentCode": "A46049",
+    "dateOfBirth": "2004-01-20",
+    "gender": "NAM",
+    "semesters": [
+      {
+        "id": 1,
+        "semesterName": "HK1 2025-2026",
+        "academicYears": "2025-2026",
+        "semesterNumber": 1,
+        "startDate": "2025-09-01",
+        "endDate": "2026-01-15"
+      }
+    ],
+    "academicInfo": [
+      {
+        "startYear": 2022,
+        "endYear": 2026,
+        "majorCode": "KTPM",
+        "majorName": "Ky thuat phan mem",
+        "facultyCode": "CNTT",
+        "studyProgramCode": "CTDT-KTPM-2022"
+      }
+    ]
+  }
+}
+```
+
+Response – User chưa đăng nhập (code -3):
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```
+**Test cases:**
+
+- ✅ token hợp lệ → code 0 + AI context của sinh viên
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+- ❌ student id không tồn tại trong db → code -2, HTTP 404
+---
