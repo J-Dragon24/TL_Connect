@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tl_connect.dev.modules.notification.dto.CreateNotificationReqDTO;
+import com.tl_connect.dev.modules.notification.service.interfaces.NotificationModifyService;
 import com.tl_connect.dev.modules.payment.PaymentRepository;
 import com.tl_connect.dev.modules.payment.dto.CallbackPaymentDTO;
 import com.tl_connect.dev.modules.payment.dto.CreateTuitionPaymentReqDTO;
@@ -34,6 +36,8 @@ import com.tl_connect.dev.modules.tuition.entity.TuitionTransaction;
 import com.tl_connect.dev.modules.tuition.projection.TuitionInvoiceView;
 import com.tl_connect.dev.modules.tuition.service.interfaces.TuitionModifyService;
 import com.tl_connect.dev.modules.tuition.service.interfaces.TuitionService;
+import com.tl_connect.dev.shared.common.enums.NotificationCreatedBy;
+import com.tl_connect.dev.shared.common.enums.NotificationType;
 import com.tl_connect.dev.shared.common.enums.PaymentStatus;
 import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.enums.TuitionStatus;
@@ -58,7 +62,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final ObjectMapper objectMapper;
     private final StringRedisTemplate redisTemplate;
     private final PaymentFactory paymentFactory;
-
+    private final NotificationModifyService notificationModifyService;
 
     @Transactional
     public CreateTuitionPaymentResDTO createPayment(Long studentId, CreateTuitionPaymentReqDTO req) throws Exception {
@@ -151,6 +155,7 @@ public class PaymentServiceImpl implements PaymentService {
             payment.setStatus(PaymentStatus.FAILED);
             paymentRepository.save(payment);
             log.warn("Payment FAILED: transId={}, providerTransId={}", callback.getTransactionId(), callback.getProviderTransactionId());
+            
             return;
         }
         payment.setStatus(PaymentStatus.SUCCESS);
@@ -163,6 +168,16 @@ public class PaymentServiceImpl implements PaymentService {
 
         TuitionTransaction tx = TuitionTransaction.create(invoice.getStudentId(), invoice.getId(), payment.getAmount(), TypeTransaction.PAYMENT, payment.getId(), "PAYMENT", "Thanh toán thành công " + payment.getProvider() + " - " + callback.getTransactionId());
         tuitionModifyService.saveTuitionTransaction(tx);
+
+        CreateNotificationReqDTO req = CreateNotificationReqDTO.builder()
+                .title("Thanh toán học phí thành công")
+                .createdBy(NotificationCreatedBy.SYSTEM)
+                .targetType(NotificationType.STUDENT)
+                .targetIds(List.of(invoice.getStudentId()))
+                .isImportant(false)
+                .build();
+            
+        notificationModifyService.sendNotification(req);
 
         log.info("Payment SUCCESS: invoiceId={}, transId={}", invoice.getId(), callback.getTransactionId());
     }
