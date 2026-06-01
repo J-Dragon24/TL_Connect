@@ -44,10 +44,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 JwtUserInfo userInfo = JwtUserInfo.builder()
                         .userId(1L)
                         .oauthUserId(1L)
-                        .roles(new ArrayList<>(List.of("admin")))
+                        .roles(new ArrayList<>(List.of("ADMIN")))
                         .build();
+
+                List<GrantedAuthority> authorities = userInfo.roles() == null 
+                    ? List.of()
+                    : userInfo.roles().stream()
+                        .map(r -> (GrantedAuthority) new SimpleGrantedAuthority("ROLE_" + r))
+                        .toList();
+
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userInfo, null,
-                        null);
+                        authorities);
 
                 // JwtPayload payload = jwtService.verifyToken(token);
 

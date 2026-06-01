@@ -75,7 +75,7 @@ public class OAuthServiceImpl implements OAuthService {
         JwtUserInfo jwtUserInfo;
         if(roles.contains("STUDENT")) {
             jwtUserInfo = processStudentLogin(microsoftId, email, name, roles, request.getDeviceId(), request.getFcmToken(), request.getPlatform());
-        } else if(roles.contains("ADMIN")) {
+        } else if(roles.contains("ADMIN")||roles.contains("LECTURER")||roles.contains("STAFF")) {
             jwtUserInfo = processAdminLogin(microsoftId, email, name, roles);
         } else {
             throw new ForbiddenException("Access denied");

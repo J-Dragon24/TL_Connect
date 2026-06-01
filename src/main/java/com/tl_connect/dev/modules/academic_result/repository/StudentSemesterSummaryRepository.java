@@ -67,6 +67,9 @@ public interface StudentSemesterSummaryRepository extends JpaRepository<StudentS
             WHERE sss.student_id = :studentId
             AND sp.study_program_code = :studyProgramCode
             """, nativeQuery = true)
-        List<SemesterSummaryView> findSemesterSummaryByStudentIdAndStudyProgramCode(@Param("studentId") Long studentId,
-                        @Param("studyProgramCode") String studyProgramCode);
+    List<SemesterSummaryView> findSemesterSummaryByStudentIdAndStudyProgramCode(@Param("studentId") Long studentId,
+            @Param("studyProgramCode") String studyProgramCode);
+
+    @Query(value = "SELECT recalc_student_semester_summary(:semesterId)", nativeQuery = true)
+    void recalcStudentSemesterSummary(@Param("semesterId") Long semesterId);
 }

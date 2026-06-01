@@ -86,4 +86,13 @@ public class AcademicResultAdminController {
         academicResultMofidyService.deleteStudentSubjectResult(id);
         return ResponseHelper.success("Student subject result deleted successfully", null);
     }
+    
+    @PostMapping("/calc-summary")
+    public ResponseEntity<?> calcStudentSemesterSummary(Authentication authentication, @RequestParam("semesterId") Long semesterId) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo)) {
+            throw new UnauthorizeException("Authentication required");
+        }
+        academicResultMofidyService.calcStudentSemesterSummary(semesterId);
+        return ResponseHelper.success("Student semester summary calculated successfully", null);
+    }
 }

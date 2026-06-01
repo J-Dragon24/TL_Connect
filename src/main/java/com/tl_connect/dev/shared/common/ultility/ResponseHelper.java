@@ -28,5 +28,9 @@ public class ResponseHelper {
         return create(ResponseStatus.INTERNAL_ERROR, message, null);
     }
 
+    public static <T> ResponseEntity<ResponseWrapper<T>> invalidInput(String message) {
+        return create(ResponseStatus.INVALID_INPUT, message, null);
+    }
+
 }
 

@@ -11,10 +11,10 @@ WITH gpa_calc AS (
 
         SUM(CASE WHEN ssr.is_pass THEN ssr.credits ELSE 0 END) AS credits_passed,
 
-        ROUND(
+        COALESCE(ROUND(
             SUM(ssr.score_4 * ssr.credits) FILTER (WHERE ssr.is_pass)
             / NULLIF(SUM(ssr.credits) FILTER (WHERE ssr.is_pass), 0),
-        2) AS semester_gpa
+        2),0.0) AS semester_gpa
 
     FROM student_subject_results ssr
     JOIN student_majors sm 
@@ -66,7 +66,7 @@ SELECT
 
 FROM gpa_calc
 
-ON CONFLICT (student_id, semester_id)
+ON CONFLICT (student_id, study_program_id, semester_id)
 DO UPDATE SET
     credits_registered = EXCLUDED.credits_registered,
     credits_passed = EXCLUDED.credits_passed,

@@ -64,6 +64,8 @@ public class ScheduleServiceImpl implements ScheduleService{
                         return getWeeklyScheduleFromDb(studentId, startDate, endDate, semester);
                     });
                     
+                    result.setWeek(getWeekOfSemester(semester.getStartDate(), startDate));
+
                     return result;
                 }
 
@@ -159,7 +161,6 @@ public class ScheduleServiceImpl implements ScheduleService{
                 if (date.isBefore(semesterStartDate)) {
                         throw new InvalidInputException("Date is before semester start date");
                 }
-
                 long daysBetween = ChronoUnit.DAYS.between(semesterStartDate, date);
                 return (int) (daysBetween / 7) + 1;
         }

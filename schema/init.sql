@@ -48,7 +48,7 @@ DROP TABLE IF EXISTS enrollment_periods CASCADE;
 DROP TABLE IF EXISTS feedback_attachments CASCADE;
 DROP TABLE IF EXISTS feedback_category CASCADE;
 DROP TABLE IF EXISTS feedback CASCADE;
-DROP TABLE IF EXISTS attendance CASCADE;
+DROP TABLE IF EXISTS attendances CASCADE;
 
 
 CREATE TABLE oauth_users (
@@ -508,7 +508,8 @@ CREATE TABLE student_semester_summaries (
   updated_at TIMESTAMP DEFAULT now(),
   FOREIGN KEY (study_program_id) REFERENCES study_programs(id) ON DELETE RESTRICT,
   FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE RESTRICT,
-  FOREIGN KEY (semester_id) REFERENCES semesters(id) ON DELETE RESTRICT
+  FOREIGN KEY (semester_id) REFERENCES semesters(id) ON DELETE RESTRICT,
+  UNIQUE (student_id, study_program_id, semester_id)
 );
 
 CREATE TABLE exam_schedules (

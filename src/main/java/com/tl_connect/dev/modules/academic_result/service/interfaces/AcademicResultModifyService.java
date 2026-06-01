@@ -17,4 +17,6 @@ public interface AcademicResultModifyService {
     void updateStudentSubjectResult(Long id, UpdateStudentSubjectResultDTO dto);
 
     void deleteStudentSubjectResult(Long id);
+
+    void calcStudentSemesterSummary(Long semesterId);
 }

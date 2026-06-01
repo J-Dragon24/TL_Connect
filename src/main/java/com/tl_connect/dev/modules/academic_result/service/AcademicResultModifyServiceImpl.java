@@ -18,6 +18,7 @@ import com.tl_connect.dev.modules.academic_result.dto.CreateStudentSubjectResult
 import com.tl_connect.dev.modules.academic_result.dto.ImportAcademicResultDTO;
 import com.tl_connect.dev.modules.academic_result.dto.UpdateStudentSubjectResultDTO;
 import com.tl_connect.dev.modules.academic_result.entity.StudentSubjectResult;
+import com.tl_connect.dev.modules.academic_result.repository.StudentSemesterSummaryRepository;
 import com.tl_connect.dev.modules.academic_result.repository.StudentSubjectResultRepository;
 import com.tl_connect.dev.modules.academic_result.service.interfaces.AcademicResultModifyService;
 import com.tl_connect.dev.modules.semester.Semester;
@@ -48,6 +49,7 @@ public class AcademicResultModifyServiceImpl implements AcademicResultModifyServ
     private final StudentService studentService;
     private final FileParseHelper fileParseHelper;
     private final SemesterService semesterService;
+    private final StudentSemesterSummaryRepository semesterSummaryRepository;
     private final Validator validator;
 
     @Transactional
@@ -194,6 +196,16 @@ public class AcademicResultModifyServiceImpl implements AcademicResultModifyServ
                     .findFirst()
                     .orElse("Invalid input");
             throw new InvalidInputException(message);
+        }
+    }
+
+    @Transactional
+    public void calcStudentSemesterSummary(Long semesterId) {
+        try {
+            semesterSummaryRepository.recalcStudentSemesterSummary(semesterId);
+        } catch (Exception e) {
+            log.error("Error when recalc student semester summary", e);
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR, "Error when recalc student semester summary");
         }
     }
 
