@@ -2,6 +2,7 @@ package com.tl_connect.dev.modules.student.service;
 
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -14,6 +15,7 @@ import com.tl_connect.dev.modules.student.dto.HealthInsDTO;
 import com.tl_connect.dev.modules.student.dto.HealthInsDetailDTO;
 import com.tl_connect.dev.modules.student.dto.IdentityCardDTO;
 import com.tl_connect.dev.modules.student.dto.MajorDTO;
+import com.tl_connect.dev.modules.student.dto.SimpleProfileStudentDTO;
 import com.tl_connect.dev.modules.student.dto.StudentFullInfo;
 import com.tl_connect.dev.modules.student.dto.StudentInfoDTO;
 import com.tl_connect.dev.modules.student.dto.YearStudyDTO;
@@ -30,11 +32,15 @@ import com.tl_connect.dev.modules.student_class.projection.StudentInClassRow;
 import com.tl_connect.dev.modules.student_class.service.interfaces.StudentClassService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
+
+import jakarta.persistence.criteria.Predicate;
+
 import com.tl_connect.dev.modules.student.service.interfaces.StudentService;
 
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import lombok.RequiredArgsConstructor;
 
@@ -53,6 +59,31 @@ public class StudentServiceImpl implements StudentService {
 
                 return new PagedResponse<>(
                                 students.getContent().stream().map(this::toFullInfo).toList(),
+                                students.getNumber(),
+                                students.getSize(),
+                                students.getTotalElements(),
+                                students.getTotalPages(),
+                                students.isFirst(),
+                                students.isLast());
+        }
+
+        public PagedResponse<SimpleProfileStudentDTO> getAllSimpleProfileStudents(String name, String studentCode, Pageable pageable) {
+                Specification<Student> spec = (root, query, cb) -> {
+                    List<Predicate> predicates = new ArrayList<>();
+                    if(name != null && !name.isEmpty()) {
+                        predicates.add(cb.like(root.get("fullName"), "%" + name + "%"));
+                    }
+                    if(studentCode != null && !studentCode.isEmpty()) {
+                        predicates.add(cb.like(root.get("studentCode"), "%" + studentCode + "%"));
+                    }
+
+                    return cb.and(predicates.toArray(new Predicate[0]));
+                };
+
+                Page<Student> students = studentRepository.findAll(spec, pageable);
+
+                return new PagedResponse<>(
+                                students.getContent().stream().map(this::toSimpleDTO).toList(),
                                 students.getNumber(),
                                 students.getSize(),
                                 students.getTotalElements(),
@@ -233,5 +264,12 @@ public class StudentServiceImpl implements StudentService {
                 throw new NotFoundException("Student not found: " + studentId);
             }
             return aiContext;
+        }
+
+        private SimpleProfileStudentDTO toSimpleDTO(Student student) {
+            return SimpleProfileStudentDTO.builder()
+                    .studentCode(student.getStudentCode())
+                    .fullName(student.getFullName())
+                    .build();
         }
 }

@@ -10,6 +10,7 @@ import com.tl_connect.dev.modules.student.dto.StudentInfoDTO;
 import com.tl_connect.dev.modules.student.dto.YearStudyDTO;
 import com.tl_connect.dev.modules.chatbot.projection.AIContextView;
 import com.tl_connect.dev.modules.student.dto.HealthInsDTO;
+import com.tl_connect.dev.modules.student.dto.SimpleProfileStudentDTO;
 import com.tl_connect.dev.modules.student.entity.Student;
 import com.tl_connect.dev.modules.student_class.dto.StudentClassInfoDTO;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
@@ -37,4 +38,6 @@ public interface StudentService {
     Student save(Student student);
 
     List<AIContextView> findAIContextByStudentId(Long studentId);
+
+    PagedResponse<SimpleProfileStudentDTO> getAllSimpleProfileStudents(String name, String studentCode, Pageable pageable);
 }

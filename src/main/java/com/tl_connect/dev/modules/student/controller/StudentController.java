@@ -1,13 +1,18 @@
 package com.tl_connect.dev.modules.student.controller;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tl_connect.dev.modules.student.dto.SimpleProfileStudentDTO;
 import com.tl_connect.dev.modules.student.dto.StudentInfoDTO;
 import com.tl_connect.dev.modules.student.service.interfaces.StudentService;
 import com.tl_connect.dev.modules.student_class.dto.StudentClassInfoDTO;
+import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
 import com.tl_connect.dev.shared.common.types.JwtUserInfo;
 import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
@@ -42,4 +47,15 @@ public class StudentController {
         return ResponseHelper.success("Student class info retrieved successfully", studentClassInfo);
     }
 
+    @GetMapping("/list-students")
+    public ResponseEntity<?> getAllSimpleProfileStudents(Authentication authentication,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String studentCode,
+            @PageableDefault(size = 10, page = 0) Pageable pageable) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo)) {
+            throw new UnauthorizeException("Authentication required");
+        }
+        PagedResponse<SimpleProfileStudentDTO> listStudents = studentService.getAllSimpleProfileStudents(name, studentCode, pageable);
+        return ResponseHelper.success("List students retrieved successfully", listStudents);
+    }
 }
