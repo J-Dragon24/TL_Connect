@@ -13,6 +13,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.tl_connect.dev.modules.chat.projection.StudentChatInfoView;
 import com.tl_connect.dev.modules.chatbot.projection.AIContextView;
 import com.tl_connect.dev.modules.student.entity.Student;
 import com.tl_connect.dev.modules.student.projection.HealthInsuranceView;
@@ -204,4 +205,20 @@ public interface StudentRepository extends JpaRepository<Student, Long>, JpaSpec
         WHERE s.id = :studentId
         """, nativeQuery = true)
     List<AIContextView> findAiContext(@Param("studentId") Long studentId);
+
+    @Query(value = """
+            SELECT
+                s.student_code AS studentCode,
+                s.full_name AS fullName,
+                c.class_code AS classCode,
+                m.major_name AS majorName,
+                ai.position AS position
+            FROM students s
+            LEFT JOIN student_classes c ON s.student_class_id = c.id
+            LEFT JOIN student_majors sm ON s.id = sm.student_id AND sm.is_primary = true
+            LEFT JOIN majors m ON sm.major_id = m.id
+            LEFT JOIN academic_infos ai ON sm.id = ai.student_major_id
+            WHERE s.student_code = :studentCode
+            """, nativeQuery = true)
+    Optional<StudentChatInfoView> findStudentChatInfoByCode(@Param("studentCode") String studentCode);
 }

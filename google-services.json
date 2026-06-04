@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "115160598804",
-    "project_id": "tl-connect-f64e1",
-    "storage_bucket": "tl-connect-f64e1.firebasestorage.app"
+    "project_number": "965907147678",
+    "project_id": "tlu-student-chatting",
+    "storage_bucket": "tlu-student-chatting.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:115160598804:android:c50d804c25be278f601a01",
+        "mobilesdk_app_id": "1:965907147678:android:f71c8581a0e029dd09c48f",
         "android_client_info": {
           "package_name": "org.example.project"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDctfNgMDJ1FMnVMAZWOWjnZ0Cekp-t1Qs"
+          "current_key": "AIzaSyBqKzBoFPTUzTq9jZigqSb0SRTwdlxb8rM"
         }
       ],
       "services": {

@@ -94,9 +94,9 @@ public class PaymentServiceImpl implements PaymentService {
 
         String itemJson = objectMapper.writeValueAsString(zaloItems);
 
-        String description = "Thanh toan hoc phi - Invoice #" + req.getInvoiceId();
+        String description = "Thanh toan hoc phi" + req.getInvoiceId();
 
-        ProviderPayment providerPayment = paymentFactory.getProvider(req.getProvider());
+        ProviderPayment providerPayment = paymentFactory.getProvider(req.getProvider().toUpperCase());
 
         PaymentRequestDTO request = PaymentRequestDTO.builder()
             .amount(invoice.getFinalAmount().longValue())

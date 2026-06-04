@@ -71,6 +71,21 @@ public class PaymentController {
         }
     }
 
+    @PostMapping("/callback/momo")
+    public ResponseEntity<?> handleMoMoCallback(@RequestBody Map<String, Object> callbackBody) throws Exception {
+        try {
+            Map<String, String> params = callbackBody.entrySet().stream()
+                .collect(Collectors.toMap(
+                    Map.Entry::getKey,
+                    e -> String.valueOf(e.getValue())
+            ));
+            paymentService.handleCallback(params);
+            return ResponseHelper.success("Payment callback success", null);
+        } catch (Exception e) {
+            return ResponseHelper.internalError("Payment callback failed");
+        }
+    }
+
     @PostMapping("/refund")
     public ResponseEntity<?> refund(Authentication authentication, @RequestBody @Valid RefundRequestDTO req) {
         if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo)) {

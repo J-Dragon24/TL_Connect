@@ -1,4 +1,4 @@
-package com.tl_connect.dev.modules.student.dto;
+package com.tl_connect.dev.modules.chat.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

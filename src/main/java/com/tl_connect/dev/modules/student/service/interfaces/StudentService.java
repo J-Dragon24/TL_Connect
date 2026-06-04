@@ -3,14 +3,15 @@ package com.tl_connect.dev.modules.student.service.interfaces;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.tl_connect.dev.modules.student.dto.StudentFullInfo;
 import com.tl_connect.dev.modules.student.dto.StudentInfoDTO;
 import com.tl_connect.dev.modules.student.dto.YearStudyDTO;
+import com.tl_connect.dev.modules.chat.dto.StudentChatInfoDTO;
 import com.tl_connect.dev.modules.chatbot.projection.AIContextView;
 import com.tl_connect.dev.modules.student.dto.HealthInsDTO;
-import com.tl_connect.dev.modules.student.dto.SimpleProfileStudentDTO;
 import com.tl_connect.dev.modules.student.entity.Student;
 import com.tl_connect.dev.modules.student_class.dto.StudentClassInfoDTO;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
@@ -39,5 +40,7 @@ public interface StudentService {
 
     List<AIContextView> findAIContextByStudentId(Long studentId);
 
-    PagedResponse<SimpleProfileStudentDTO> getAllSimpleProfileStudents(String name, String studentCode, Pageable pageable);
+    Page<Student> getAllStudentsBySearch(String search, Pageable pageable);
+    
+    StudentChatInfoDTO getStudentChatInfo(String code);
 }

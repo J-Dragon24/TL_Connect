@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.tl_connect.dev.modules.chat.dto.StudentChatInfoDTO;
+import com.tl_connect.dev.modules.chat.projection.StudentChatInfoView;
 import com.tl_connect.dev.modules.chatbot.projection.AIContextView;
 import com.tl_connect.dev.modules.lecturer.dto.LecturerDTO;
 import com.tl_connect.dev.modules.student.dto.AcademicInfoDTO;
@@ -15,7 +17,6 @@ import com.tl_connect.dev.modules.student.dto.HealthInsDTO;
 import com.tl_connect.dev.modules.student.dto.HealthInsDetailDTO;
 import com.tl_connect.dev.modules.student.dto.IdentityCardDTO;
 import com.tl_connect.dev.modules.student.dto.MajorDTO;
-import com.tl_connect.dev.modules.student.dto.SimpleProfileStudentDTO;
 import com.tl_connect.dev.modules.student.dto.StudentFullInfo;
 import com.tl_connect.dev.modules.student.dto.StudentInfoDTO;
 import com.tl_connect.dev.modules.student.dto.YearStudyDTO;
@@ -67,29 +68,33 @@ public class StudentServiceImpl implements StudentService {
                                 students.isLast());
         }
 
-        public PagedResponse<SimpleProfileStudentDTO> getAllSimpleProfileStudents(String name, String studentCode, Pageable pageable) {
+        public Page<Student> getAllStudentsBySearch(String search, Pageable pageable) {
                 Specification<Student> spec = (root, query, cb) -> {
                     List<Predicate> predicates = new ArrayList<>();
-                    if(name != null && !name.isEmpty()) {
-                        predicates.add(cb.like(root.get("fullName"), "%" + name + "%"));
-                    }
-                    if(studentCode != null && !studentCode.isEmpty()) {
-                        predicates.add(cb.like(root.get("studentCode"), "%" + studentCode + "%"));
+                    if(search != null && !search.isEmpty()) {
+                        predicates.add(cb.or(
+                                cb.like(root.get("fullName"), "%" + search + "%"),
+                                cb.like(root.get("studentCode"), "%" + search + "%")
+                            ));
                     }
 
                     return cb.and(predicates.toArray(new Predicate[0]));
                 };
 
-                Page<Student> students = studentRepository.findAll(spec, pageable);
+                return studentRepository.findAll(spec, pageable);
+        }
 
-                return new PagedResponse<>(
-                                students.getContent().stream().map(this::toSimpleDTO).toList(),
-                                students.getNumber(),
-                                students.getSize(),
-                                students.getTotalElements(),
-                                students.getTotalPages(),
-                                students.isFirst(),
-                                students.isLast());
+
+        public StudentChatInfoDTO getStudentChatInfo(String code) {
+                StudentChatInfoView student = studentRepository.findStudentChatInfoByCode(code)
+                        .orElseThrow(() -> new NotFoundException("Student not found with code: " + code));
+                return StudentChatInfoDTO.builder()
+                        .studentCode(student.getStudentCode())
+                        .fullName(student.getFullName())
+                        .classCode(student.getClassCode())
+                        .majorName(student.getMajorName())
+                        .position(student.getPosition())
+                        .build();
         }
 
         @Cacheable(value = "studentInfo", key = "#id")
@@ -264,12 +269,5 @@ public class StudentServiceImpl implements StudentService {
                 throw new NotFoundException("Student not found: " + studentId);
             }
             return aiContext;
-        }
-
-        private SimpleProfileStudentDTO toSimpleDTO(Student student) {
-            return SimpleProfileStudentDTO.builder()
-                    .studentCode(student.getStudentCode())
-                    .fullName(student.getFullName())
-                    .build();
         }
 }

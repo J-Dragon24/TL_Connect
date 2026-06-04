@@ -39,6 +39,7 @@
 31. [Feedback Category - Danh mục phản hồi / góp ý](#31-feedback-category---danh-mục-phản-hồi-góp-ý)
 32. [Attendance - Điểm danh](#32-attendance---điểm-danh)
 33. [AI Context - Ngữ cảnh AI Chatbot](#33-ai-context---ngữ-cảnh-ai-chatbot)
+34. [Chat - Chat giữa người dùng](#34-chat---chat-giữa-người-dùng)
 
 ## 1. Response Format chung
 Tất cả response đều theo cấu trúc JSON thống nhất:
@@ -1993,11 +1994,46 @@ Lấy danh sách kết quả học tập của sinh viên (dành cho admin).
   "data": null
 }
 ```
-Test cases:
+**Test cases:**
 
-✅ token hợp lệ → trả về danh sách kết quả học tập
-❌ token không hợp lệ → code -3
-❌ không có dữ liệu → trả list rỗng []
+- ✅ token hợp lệ → trả về danh sách kết quả học tập
+- ❌ token không hợp lệ → code -3
+- ❌ không có dữ liệu → trả list rỗng []
+---
+### 9.8. POST /api/v1/admin/academic-results/calc-summary
+Tính toán tổng kết học kỳ của sinh viên theo học kỳ.
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: Không áp dụng
+
+**Query params:**
+
+| Field | Type | Required | Description |
+|------|-----|-----|-----|
+| semesterId | long | ✅ | ID học kỳ cần tính tổng kết |
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Student semester summary calculated successfully",
+  "data": null
+}
+```
+**Response – User chưa đăng nhập (code -3):**
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```
+**Test cases:**
+
+- ✅ token hợp lệ + semesterId tồn tại → tính tổng kết thành công
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+- ❌ semesterId không tồn tại → code -2, HTTP 404 (nếu service xử lý)
+- ❌ semesterId rỗng → code -1, HTTP 400
 ---
 ## 10. Notification - Thông báo
 ### 10.1. GET /api/v1/notification/prepare
@@ -6300,7 +6336,7 @@ Lấy toàn bộ ngữ cảnh học tập của sinh viên để cung cấp cho 
 }
 ```
 
-Response – User chưa đăng nhập (code -3):
+**Response – User chưa đăng nhập (code -3):**
 ```json
 {
   "code": -3,
@@ -6313,4 +6349,139 @@ Response – User chưa đăng nhập (code -3):
 - ✅ token hợp lệ → code 0 + AI context của sinh viên
 - ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
 - ❌ student id không tồn tại trong db → code -2, HTTP 404
+---
+## 34. Chat - Chat giữa người dùng
+### 34.1. GET /api/v1/chat/list-students
+Lấy danh sách sinh viên dạng thông tin rút gọn, hỗ trợ tìm kiếm và phân trang.
+
+**Auth**: Bắt buộc (Authorization: Bearer JWT)
+**Content-Type**: Không áp dụng
+
+**Query params (optional)**
+
+| Field | Type | Required | Description |
+|------|-----|-----|-----|
+| name | string | ❌ | Tìm kiếm theo tên sinh viên |
+| studentCode | string | ❌ | Tìm kiếm theo mã sinh viên |
+| page | int | ❌ | Số trang (mặc định: 0) |
+| size | int | ❌ | Kích thước trang (mặc định: 10) |
+| sort | string | ❌ | Sắp xếp dữ liệu |
+
+**Response thành công (code 0):**
+
+```json
+{
+  "code": 0,
+  "message": "List students retrieved successfully",
+  "data": {
+    "content": [
+      {
+        "studentCode": "SV2021001",
+        "fullName": "Nguyen Van A"
+      }
+    ],
+    "page": 0,
+    "size": 10,
+    "totalElements": 100,
+    "totalPages": 10,
+    "first": true,
+    "last": false
+  }
+}
+```
+
+**Response – User chưa đăng nhập (code -3):**
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```
+**Test cases:**
+
+- ✅ token hợp lệ → code 0 + danh sách sinh viên
+- ✅ tìm kiếm theo tên hoặc mã sinh viên → trả dữ liệu phù hợp
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+---
+### 34.2. GET /api/v1/chat/student
+Lấy thông tin sinh viên phục vụ tính năng chat.
+
+- **Auth**: Bắt buộc (`Authorization: Bearer <JWT>`)
+- **Content-Type**: Không áp dụng
+
+### Query param
+
+| Field | Type | Required | Description |
+|------|-----|-----|-----|
+| code | string | ✅ | Mã sinh viên |
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Student chat info retrieved successfully",
+  "data": {
+    "studentCode": "SV2021001",
+    "fullName": "Nguyen Van A",
+    "classCode": "KHMT2021",
+    "majorName": "Khoa học máy tính",
+    "position": "Lớp trưởng"
+  }
+}
+```
+
+**Response – User chưa đăng nhập (code -3):**
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```
+**Test cases:**
+
+- ✅ token hợp lệ + mã sinh viên tồn tại → code 0 + thông tin chat sinh viên
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+- ❌ mã sinh viên không tồn tại → code -2, HTTP 404
+---
+### 34.3. POST /api/v1/chat/upload
+Gửi tệp trong cuộc trò chuyện.
+
+- **Auth**: Bắt buộc (`Authorization: Bearer <JWT>`)
+- **Content-Type**: `multipart/form-data`
+
+---
+
+## Form data fields
+
+| Field | Type | Required | Description |
+|------|-----|-----|-----|
+| file | File | ✅ | File cần upload |
+
+**Response thành công (code 0)**
+```json
+{
+  "code": 0,
+  "message": "File uploaded successfully",
+  "data": {
+    "url": "https://cdn.example.com/chat/files/document.pdf"
+  }
+}
+```
+
+**Response – User chưa đăng nhập (code -3):**
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```
+**Test cases:**
+
+- ✅ token hợp lệ + file hợp lệ → code 0 + url file
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+- ❌ thiếu file → code -1, HTTP 400
+- ❌ upload thất bại → code -10, HTTP 500
 ---
