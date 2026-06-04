@@ -2,8 +2,8 @@ package com.tl_connect.dev.modules.student.dto;
 
 import java.time.LocalDate;
 
-import com.tl_connect.dev.core.common.enums.Gender;
-import com.tl_connect.dev.core.common.enums.IdCardType;
+import com.tl_connect.dev.shared.common.enums.Gender;
+import com.tl_connect.dev.shared.common.enums.IdCardType;
 
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;

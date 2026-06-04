@@ -1,15 +1,13 @@
 package com.tl_connect.dev.modules.lecturer.repository;
 
-import java.util.Optional;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.tl_connect.dev.modules.lecturer.entity.AcademicAdvisor;
 import com.tl_connect.dev.modules.lecturer.projection.AcademicAdvisorDetailView;
-import com.tl_connect.dev.modules.lecturer.projection.AcademicAdvisorRow;
+import com.tl_connect.dev.modules.lecturer.projection.AcademicAdvisorClassRow;
 
 public interface AcademicAdvisorRepository extends JpaRepository<AcademicAdvisor, Long> {
 
@@ -24,37 +22,26 @@ public interface AcademicAdvisorRepository extends JpaRepository<AcademicAdvisor
             AND a.student_class_id = :studentClassId
         )
         """, nativeQuery = true)
-    boolean existsByStudentClassId(Long studentClassId);
+    boolean existsByStudentClassId(@Param("studentClassId") Long studentClassId);
 
     
     void deleteByLecturerId(Long lecturerId);
 
     @Query(value="""
         SELECT 
-            a.id as id, 
-            l.lecturer_code as lecturerCode, 
-            l.full_name as lecturerName, 
-            l.email as lecturerEmail, 
-            l.phone_number as lecturerPhoneNumber, 
+            a.lecturer_id as lecturerId, 
             s.class_code as studentClassCode 
         FROM academic_advisors a
-        LEFT JOIN lecturers l ON a.lecturer_id = l.id
-        LEFT JOIN student_classes s ON a.student_class_id = s.id
-        WHERE l.status = 'ACTIVE'
-        ORDER BY l.full_name ASC
-        """, countQuery = """
-            SELECT COUNT(a.id)
-            FROM academic_advisors a
-            LEFT JOIN lecturers l ON a.lecturer_id = l.id
-            LEFT JOIN student_classes s ON a.student_class_id = s.id
-            WHERE l.status = 'ACTIVE'
+        JOIN student_classes s ON a.student_class_id = s.id
+        WHERE a.lecturer_id IN :lecturerIds
         """, nativeQuery = true)
-    Page<AcademicAdvisorRow> findAllAcademicAdvisors(Pageable pageable);
+    List<AcademicAdvisorClassRow> getClassByLecturerIds(@Param("lecturerIds") List<Long> lecturerIds);
 
 
     @Query(value="""
-        SELECT 
-            a.id as id, 
+        SELECT
+            a.id as id,
+            l.id as lecturerId,
             l.lecturer_code as lecturerCode, 
             l.full_name as lecturerName, 
             l.email as lecturerEmail, 
@@ -64,13 +51,13 @@ public interface AcademicAdvisorRepository extends JpaRepository<AcademicAdvisor
             s.class_code as studentClassCode,
             m.major_code as classMajorCode,
             s.start_year as studentClassYear 
-        FROM academic_advisors a
-        LEFT JOIN lecturers l ON a.lecturer_id = l.id
-        LEFT JOIN departments d ON l.department_id = d.id
-        LEFT JOIN student_classes s ON a.student_class_id = s.id
-        LEFT JOIN majors m ON s.major_id = m.id
+        FROM lecturers l
+        JOIN academic_advisors a ON a.lecturer_id = l.id
+        JOIN departments d ON l.department_id = d.id
+        JOIN student_classes s ON a.student_class_id = s.id
+        JOIN majors m ON s.major_id = m.id
         WHERE l.status = 'ACTIVE'
-        AND a.id = :id
+        AND l.id = :lecturerId
         """, nativeQuery = true)
-    Optional<AcademicAdvisorDetailView> findAcademicAdvisorById(Long id);
+    List<AcademicAdvisorDetailView> findAcademicAdvisorByLecturerId(@Param("lecturerId") Long lecturerId);
 }

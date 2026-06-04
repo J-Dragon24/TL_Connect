@@ -3,8 +3,8 @@ package com.tl_connect.dev.modules.notification.dto;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import com.tl_connect.dev.core.common.enums.NotificationCreatedBy;
-import com.tl_connect.dev.core.common.enums.NotificationType;
+import com.tl_connect.dev.shared.common.enums.NotificationCreatedBy;
+import com.tl_connect.dev.shared.common.enums.NotificationType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

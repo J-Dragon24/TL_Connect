@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tl_connect.dev.core.common.dto.PagedResponse;
-import com.tl_connect.dev.core.common.ultility.ResponseHelper;
 import com.tl_connect.dev.modules.notification.dto.CreateNotificationReqDTO;
 import com.tl_connect.dev.modules.notification.dto.NotificationAdmDTO;
 import com.tl_connect.dev.modules.notification.dto.UpdateNotificationDTO;
-import com.tl_connect.dev.modules.notification.service.NotificationModifyService;
-import com.tl_connect.dev.modules.notification.service.NotificationService;
+import com.tl_connect.dev.modules.notification.service.interfaces.NotificationModifyService;
+import com.tl_connect.dev.modules.notification.service.interfaces.NotificationService;
+import com.tl_connect.dev.shared.common.dto.PagedResponse;
+import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

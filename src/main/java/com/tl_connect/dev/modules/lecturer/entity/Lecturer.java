@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.tl_connect.dev.core.common.enums.LecturerStatus;
+import com.tl_connect.dev.shared.common.enums.LecturerStatus;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

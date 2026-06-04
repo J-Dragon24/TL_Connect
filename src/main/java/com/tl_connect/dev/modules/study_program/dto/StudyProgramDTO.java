@@ -1,5 +1,6 @@
 package com.tl_connect.dev.modules.study_program.dto;
 
+import java.io.Serializable;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -13,7 +14,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class StudyProgramDTO {
+public class StudyProgramDTO implements Serializable{
     private String studyProgramName;
     private String studyProgramCode;
     private Integer yearStart;

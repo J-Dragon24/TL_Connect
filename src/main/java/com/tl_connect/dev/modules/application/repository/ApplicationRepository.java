@@ -1,15 +1,19 @@
 package com.tl_connect.dev.modules.application.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.tl_connect.dev.modules.application.entity.StudentApplication;
+import com.tl_connect.dev.modules.application.projection.ApplicationAdminRow;
 import com.tl_connect.dev.modules.application.projection.ApplicationRow;
+import com.tl_connect.dev.modules.application.projection.DetailApplicationAdminView;
 import com.tl_connect.dev.modules.application.projection.DetailApplicationView;
 
 @Repository
@@ -33,7 +37,7 @@ public interface ApplicationRepository extends JpaRepository<StudentApplication,
         JOIN application_types at ON sa.application_type_id = at.id
     """,
     nativeQuery = true)
-    Page<ApplicationRow> findAllApplication(Pageable pageable);
+    Page<ApplicationAdminRow> findAllApplication(Pageable pageable);
 
     @Query(value= """
         SELECT 
@@ -49,5 +53,33 @@ public interface ApplicationRepository extends JpaRepository<StudentApplication,
         WHERE sa.id = :id
     """,
     nativeQuery = true)
-    Optional<DetailApplicationView> findDetailById(Long id);
+    Optional<DetailApplicationAdminView> findDetailById(@Param("id") Long id);
+
+    @Query(value= """
+        SELECT 
+            sa.id as id, 
+            at.name as applicationTypeName, 
+            sa.status as status, 
+            sa.created_at as createdAt
+        FROM student_applications sa 
+        JOIN application_types at ON sa.application_type_id = at.id 
+        WHERE sa.student_id = :studentId
+        ORDER BY sa.created_at DESC
+    """,
+    nativeQuery = true)
+    List<ApplicationRow> findHistoryApplicationByStudentId(@Param("studentId") Long studentId);
+
+    @Query(value= """
+        SELECT 
+            at.name as applicationTypeName, 
+            sa.status as status, 
+            sa.content as content,
+            sa.created_at as createdAt
+        FROM student_applications sa 
+        JOIN application_types at ON sa.application_type_id = at.id 
+        WHERE sa.id = :id
+    """,
+    nativeQuery = true)
+    Optional<DetailApplicationView> findHistoryDetailById(@Param("id") Long id);
+
 }

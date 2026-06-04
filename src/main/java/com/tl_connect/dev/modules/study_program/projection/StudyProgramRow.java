@@ -11,4 +11,6 @@ public interface StudyProgramRow {
     Boolean getIsPrimary();
 
     Integer getStartYear();
+
+    Integer getTotalCredits();
 }

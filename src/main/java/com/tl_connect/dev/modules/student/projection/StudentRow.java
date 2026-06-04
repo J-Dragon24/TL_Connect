@@ -2,10 +2,10 @@ package com.tl_connect.dev.modules.student.projection;
 
 import java.time.LocalDate;
 
-import com.tl_connect.dev.core.common.enums.Gender;
-import com.tl_connect.dev.core.common.enums.IdCardType;
-import com.tl_connect.dev.core.common.enums.StudentStatus;
-import com.tl_connect.dev.core.common.enums.TrainingType;
+import com.tl_connect.dev.shared.common.enums.Gender;
+import com.tl_connect.dev.shared.common.enums.IdCardType;
+import com.tl_connect.dev.shared.common.enums.StudentStatus;
+import com.tl_connect.dev.shared.common.enums.TrainingType;
 
 public interface StudentRow {
     Long getId();

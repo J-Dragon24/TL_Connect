@@ -5,11 +5,12 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.tl_connect.dev.core.common.dto.PagedResponse;
-import com.tl_connect.dev.core.common.ultility.ResponseHelper;
 import com.tl_connect.dev.modules.major.dto.CreateMajorDTO;
 import com.tl_connect.dev.modules.major.dto.MajorAdmDTO;
 import com.tl_connect.dev.modules.major.dto.UpdateMajorDTO;
+import com.tl_connect.dev.modules.major.service.interfaces.MajorService;
+import com.tl_connect.dev.shared.common.dto.PagedResponse;
+import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

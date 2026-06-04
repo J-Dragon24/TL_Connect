@@ -1,5 +1,7 @@
 package com.tl_connect.dev.modules.lecturer.projection;
 
+import com.tl_connect.dev.shared.common.enums.LecturerStatus;
+
 public interface LecturerRow {
     Long getId();
     String getLecturerCode();
@@ -7,5 +9,6 @@ public interface LecturerRow {
     String getEmail();
     String getPhoneNumber();
     String getDepartmentName();
-    String getStatus();
+    Boolean getIsAcademicAdvisor();
+    LecturerStatus getStatus();
 }

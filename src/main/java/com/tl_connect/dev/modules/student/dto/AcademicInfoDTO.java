@@ -1,6 +1,6 @@
 package com.tl_connect.dev.modules.student.dto;
 
-import com.tl_connect.dev.core.common.ultility.importer.annotation.ImportColumn;
+import com.tl_connect.dev.shared.common.ultility.FileProcess.annotation.ExcelColumn;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -16,9 +16,9 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AcademicInfoDTO {
     @NotBlank(message = "Niên khóa không được để trống")
-    @ImportColumn("Niên khóa")
+    @ExcelColumn(header = "Niên khóa")
     private String cohort;
 
-    @ImportColumn("Chức vụ")
+    @ExcelColumn(header = "Chức vụ")
     private String position;
 }

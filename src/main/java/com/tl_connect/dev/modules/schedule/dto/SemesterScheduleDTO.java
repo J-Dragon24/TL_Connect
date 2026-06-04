@@ -15,5 +15,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class SemesterScheduleDTO {
     String semester;
-    List<CourseClassDTO> courseClasses;
+    List<ScheduleCourseClassDTO> courseClasses;
 }

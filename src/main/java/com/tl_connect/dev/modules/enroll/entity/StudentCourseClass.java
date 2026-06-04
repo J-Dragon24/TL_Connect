@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.tl_connect.dev.core.common.enums.StudentCourseClassStatus;
+import com.tl_connect.dev.shared.common.enums.StudentCourseClassStatus;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -57,4 +57,15 @@ public class StudentCourseClass {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public static StudentCourseClass create(Long studentId, Long courseClassId, Long subjectId, Long semesterId, Boolean isRetake) {
+        StudentCourseClass scc = new StudentCourseClass();
+        scc.setStudentId(studentId);
+        scc.setCourseClassId(courseClassId);
+        scc.setSubjectId(subjectId);
+        scc.setSemesterId(semesterId);
+        scc.setIsRetake(isRetake);
+        scc.setStatus(StudentCourseClassStatus.PENDING);
+        return scc;
+    }
 }

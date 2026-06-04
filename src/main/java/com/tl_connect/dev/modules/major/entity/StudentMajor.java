@@ -1,6 +1,6 @@
 package com.tl_connect.dev.modules.major.entity;
 
-import com.tl_connect.dev.core.common.enums.StudentMajorStatus;
+import com.tl_connect.dev.shared.common.enums.StudentMajorStatus;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

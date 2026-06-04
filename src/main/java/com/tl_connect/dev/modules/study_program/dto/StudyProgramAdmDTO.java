@@ -1,6 +1,6 @@
 package com.tl_connect.dev.modules.study_program.dto;
 
-import com.tl_connect.dev.core.common.enums.TrainingType;
+import com.tl_connect.dev.shared.common.enums.TrainingType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

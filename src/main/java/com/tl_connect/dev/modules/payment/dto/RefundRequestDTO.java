@@ -1,6 +1,6 @@
 package com.tl_connect.dev.modules.payment.dto;
 
-import com.tl_connect.dev.core.common.enums.RefundType;
+import com.tl_connect.dev.shared.common.enums.RefundType;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;

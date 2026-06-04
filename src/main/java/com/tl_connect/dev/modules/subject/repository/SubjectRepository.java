@@ -5,17 +5,29 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.tl_connect.dev.modules.subject.entity.Subject;
-import com.tl_connect.dev.modules.subject.projection.SubjectPrerequisiteConditionRow;
+import com.tl_connect.dev.modules.subject.projection.PrerequisiteRow;
 
 @Repository
 public interface SubjectRepository extends JpaRepository<Subject, Long> {
+
+    @Query(value = """
+            SELECT * 
+            FROM subjects
+            ORDER BY subject_name ASC
+            """,
+            countQuery = """
+                SELECT COUNT(*) FROM subjects
+                """,
+            nativeQuery = true)
+    Page<Subject> findAllSubjects(Pageable pageable);
 
     List<Subject> findBySubjectCodeIn(Set<String> subjectCodes);
 
@@ -24,23 +36,19 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
     Optional<Subject> findBySubjectCode(String subjectCode);
     
     @Query(value ="""
-            SELECT g.id AS id,
-                g.min_subjects_required AS minSubjectsRequired,
-                g.description AS description,
-                COUNT(ssr.subject_id) AS passedCount,
-                COUNT(gi.prerequisite_subject_id) AS total
-            FROM subject_prerequisite_groups g
-            JOIN subject_prerequisite_group_items gi 
-                ON gi.group_id = g.id
-            LEFT JOIN student_subject_results ssr 
-                ON ssr.subject_id = gi.prerequisite_subject_id
-                AND ssr.student_id = :studentId
-                AND ssr.is_pass = TRUE
-            WHERE g.subject_id = :subjectId
-            GROUP BY g.id, g.min_subjects_required;
+            SELECT 
+                s.id as subjectId,
+                s.subject_code as subjectCode,
+                spg.id as groupId,
+                spg.min_subjects_required as minSubjectsRequired,
+                spgi.prerequisite_subject_id as prerequisiteSubjectId
+            FROM subjects s
+            LEFT JOIN subject_prerequisite_groups spg ON spg.subject_id = s.id
+            LEFT JOIN subject_prerequisite_group_items spgi ON spgi.group_id = spg.id
+            WHERE s.is_active = TRUE
+            ORDER BY s.id, spg.id
             """, nativeQuery = true)
-    @Cacheable("subject_prerequisite_condition")
-    List<SubjectPrerequisiteConditionRow> findSubjectPrerequisiteCondition(@Param("studentId") Long studentId, @Param("subjectId") Long subjectId);
+    List<PrerequisiteRow> findAllPrerequisiteRows();
 
     boolean existsBySubjectCode(String subjectCode);
 

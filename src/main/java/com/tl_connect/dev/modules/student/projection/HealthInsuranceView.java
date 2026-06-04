@@ -2,7 +2,7 @@ package com.tl_connect.dev.modules.student.projection;
 
 import java.time.LocalDate;
 
-import com.tl_connect.dev.core.common.enums.HealthInsuranceStatus;
+import com.tl_connect.dev.shared.common.enums.HealthInsuranceStatus;
 
 public interface HealthInsuranceView {
     String getStudentCode();

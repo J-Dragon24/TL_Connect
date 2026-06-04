@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.tl_connect.dev.core.common.enums.TuitionStatus;
+import com.tl_connect.dev.shared.common.enums.TuitionStatus;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

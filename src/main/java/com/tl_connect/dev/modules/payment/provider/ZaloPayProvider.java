@@ -18,14 +18,16 @@ import org.springframework.stereotype.Service;
 import com.crypto.HMACUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tl_connect.dev.core.common.exception.BadRequestException;
-import com.tl_connect.dev.core.common.exception.ExternalException;
-import com.tl_connect.dev.core.config.ZaloPayConfig;
 import com.tl_connect.dev.modules.payment.dto.CallbackPaymentDTO;
 import com.tl_connect.dev.modules.payment.dto.PaymentRequestDTO;
 import com.tl_connect.dev.modules.payment.dto.PaymentResponseDTO;
+import com.tl_connect.dev.modules.payment.dto.QueryPaymentRequestDTO;
+import com.tl_connect.dev.modules.payment.dto.QueryPaymentResponseRawDTO;
 import com.tl_connect.dev.modules.payment.dto.RefundInfoDTO;
 import com.tl_connect.dev.modules.payment.dto.RefundResponseDTO;
+import com.tl_connect.dev.shared.common.exception.BadRequestException;
+import com.tl_connect.dev.shared.common.exception.ExternalException;
+import com.tl_connect.dev.shared.config.ZaloPayConfig;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,8 +44,7 @@ import okhttp3.ResponseBody;
 public class ZaloPayProvider implements ProviderPayment{
     private final ZaloPayConfig zaloPayConfig;
     private final ObjectMapper objectMapper;
-    private final OkHttpClient okHttpClient;
-
+    private final OkHttpClient okHttpClient; 
     public PaymentResponseDTO createPaymentUrl(PaymentRequestDTO req) throws Exception {
 
         String transId      = getCurrentTimeString("yyMMdd") + "_" + new Date().getTime();
@@ -118,6 +119,10 @@ public class ZaloPayProvider implements ProviderPayment{
                 .paymentUrl((String) result.get("order_url"))
                 .rawData(result)
                 .build();
+        }
+        catch(Exception e){
+            log.error("ZaloPay createOrder failed: {}", e.getMessage());
+            throw new ExternalException("Payment create failed");
         }
     }
 
@@ -213,6 +218,10 @@ public class ZaloPayProvider implements ProviderPayment{
                 .rawData(result)
                 .build();
         }
+        catch(Exception e){
+            log.error("ZaloPay refund failed: {}", e.getMessage());
+            throw new ExternalException("Payment refund failed");
+        }
     }
 
     public Map<String, Object> queryRefundStatus(String mRefundId) throws Exception {
@@ -249,6 +258,73 @@ public class ZaloPayProvider implements ProviderPayment{
             }
             String result = new String(responseBody.bytes(), StandardCharsets.UTF_8);
             return objectMapper.readValue(result, Map.class);
+        }
+    }
+
+    @Override
+    public QueryPaymentResponseRawDTO queryPaymentResult(QueryPaymentRequestDTO request, String ipAddress, String transactionDate) throws Exception {
+        // ZaloPay query endpoint - append transaction ID to URL
+        int appId = zaloPayConfig.getAppId();
+
+        // appid|apptransid|timestamp
+        String data = appId + "|" + request.getTransactionCode() + "|" + zaloPayConfig.getKey1();
+        String mac = HMACUtil.HMacHexStringEncode(HMACUtil.HMACSHA256, zaloPayConfig.getKey1(), data);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("app_id", appId);
+        params.put("app_trans_id", request.getTransactionCode());
+        params.put("mac", mac);
+
+        String jsonBody = objectMapper.writeValueAsString(params);
+
+        MediaType mediaType = MediaType.parse("application/json");
+        RequestBody body = RequestBody.create(jsonBody, mediaType);
+
+        Request httpRequest = new Request.Builder()
+                .url(zaloPayConfig.getEndpointGetStatus())
+                .post(body)
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Accept", "application/json")
+                .build();
+
+        try (Response response = okHttpClient.newCall(httpRequest).execute()) {
+            ResponseBody responseBody = response.body();
+            if (responseBody == null) {
+                throw new ExternalException("Empty response from ZaloPay query API");
+            }
+
+            String responseBodyStr = new String(responseBody.bytes(), StandardCharsets.UTF_8);
+            Map<String, Object> result = objectMapper.readValue(responseBodyStr, Map.class);
+
+            Integer returnCode = (Integer) result.get("return_code");
+            String returnMessage = (String) result.get("return_message");
+            Integer responseCode;
+
+            switch (returnCode) {
+                case 1:
+                    responseCode = 0;
+                    break;
+                case 2:
+                    responseCode = -1;
+                    break;
+                case 3:
+                    responseCode = 1;
+                    break;
+                default:
+                    responseCode = -1;
+                    break;
+            }
+
+            return QueryPaymentResponseRawDTO.builder()
+                    .responseCode(responseCode)
+                    .message(returnMessage != null ? returnMessage : "Unknown error")
+                    .transactionId((String) result.get("app_trans_id"))
+                    .providerTransactionId(result.get("zp_trans_id") != null ? String.valueOf(result.get("zp_trans_id")) : null)
+                    .amount(result.get("amount") != null ? Long.parseLong(String.valueOf(result.get("amount"))) / 100 : 0)
+                    .rawData(result)
+                    .build();
+        } catch (Exception e) {
+            throw new ExternalException("Query payment failed: " + e.getMessage());
         }
     }
 }

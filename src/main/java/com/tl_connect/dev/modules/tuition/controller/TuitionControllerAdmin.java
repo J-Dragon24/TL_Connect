@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tl_connect.dev.core.common.dto.PagedResponse;
-import com.tl_connect.dev.core.common.ultility.ResponseHelper;
 import com.tl_connect.dev.modules.tuition.dto.GenerateInvoiceReqDTO;
 import com.tl_connect.dev.modules.tuition.dto.TuitionInvoiceAdmDTO;
 import com.tl_connect.dev.modules.tuition.dto.TuitionInvoiceDetailAdmDTO;
-import com.tl_connect.dev.modules.tuition.service.TuitionModifyService;
-import com.tl_connect.dev.modules.tuition.service.TuitionService;
+import com.tl_connect.dev.modules.tuition.service.interfaces.TuitionModifyService;
+import com.tl_connect.dev.modules.tuition.service.interfaces.TuitionService;
+import com.tl_connect.dev.shared.common.dto.PagedResponse;
+import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

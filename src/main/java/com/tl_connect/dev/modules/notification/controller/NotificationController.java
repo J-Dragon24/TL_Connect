@@ -10,17 +10,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tl_connect.dev.core.common.dto.PagedResponse;
-import com.tl_connect.dev.core.common.exception.UnauthorizeException;
-import com.tl_connect.dev.core.common.types.JwtUserInfo;
-import com.tl_connect.dev.core.common.ultility.ResponseHelper;
 import com.tl_connect.dev.modules.notification.dto.DetailNotifyDTO;
 import com.tl_connect.dev.modules.notification.dto.MarkNotificationsReadDTO;
 import com.tl_connect.dev.modules.notification.dto.NotificationReqDTO;
 import com.tl_connect.dev.modules.notification.dto.PrepareNotificationDTO;
 import com.tl_connect.dev.modules.notification.dto.SummaryNotifyDTO;
 import com.tl_connect.dev.modules.notification.dto.UnreadNotificationDTO;
-import com.tl_connect.dev.modules.notification.service.NotificationService;
+import com.tl_connect.dev.modules.notification.service.interfaces.NotificationService;
+import com.tl_connect.dev.shared.common.dto.PagedResponse;
+import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
+import com.tl_connect.dev.shared.common.types.JwtUserInfo;
+import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -52,15 +52,6 @@ public class NotificationController {
         return ResponseHelper.success("Get all notification successfully", notifications);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getDetailNotification(Authentication authentication, @PathVariable("id") Long id) {
-        if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo)) {
-            throw new UnauthorizeException("Authentication is required");
-        }
-        DetailNotifyDTO notification = notificationService.getDetailNotification(id);
-        return ResponseHelper.success("Get detail notification successfully", notification);
-    }
-
     @PostMapping("/unread-count")
     public ResponseEntity<?> countUnreadNotification(Authentication authentication, @RequestBody NotificationReqDTO notificationReqDTO) {
         if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo userInfo)) {
@@ -69,6 +60,15 @@ public class NotificationController {
         Long studentId = userInfo.userId();
         UnreadNotificationDTO count = notificationService.countUnreadNotification(studentId, notificationReqDTO);
         return ResponseHelper.success("Count unread notification successfully", count);
+    }
+
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<?> getDetailNotification(Authentication authentication, @PathVariable("id") Long id) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo)) {
+            throw new UnauthorizeException("Authentication is required");
+        }
+        DetailNotifyDTO notification = notificationService.getDetailNotification(id);
+        return ResponseHelper.success("Get detail notification successfully", notification);
     }
 
     @PostMapping("/read")

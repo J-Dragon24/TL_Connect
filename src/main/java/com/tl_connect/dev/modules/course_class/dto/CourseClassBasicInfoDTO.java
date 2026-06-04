@@ -16,6 +16,7 @@ public class CourseClassBasicInfoDTO {
     private String classCode;
     private String className;
     private Integer capacity;
+    private Integer enrolledCount;
     private String lecturerCode;
     private String subjectCode;
     private String semesterCode;

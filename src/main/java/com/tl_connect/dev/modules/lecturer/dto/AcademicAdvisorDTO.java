@@ -1,5 +1,7 @@
 package com.tl_connect.dev.modules.lecturer.dto;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,10 +12,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AcademicAdvisorDTO {
-    private Long id;
     private String lecturerCode;
     private String lecturerName;
     private String lecturerEmail;
     private String lecturerPhoneNumber;
-    private String studentClassCode;
+    private List<String> studentClassCodes;
 }

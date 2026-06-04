@@ -16,7 +16,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "notification_template")
+@Table(name = "notification_templates")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

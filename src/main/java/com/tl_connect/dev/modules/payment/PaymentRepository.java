@@ -6,8 +6,8 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.tl_connect.dev.core.common.enums.PaymentStatus;
 import com.tl_connect.dev.modules.payment.entity.Payment;
+import com.tl_connect.dev.shared.common.enums.PaymentStatus;
 
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Long> {

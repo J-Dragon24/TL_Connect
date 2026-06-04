@@ -1,5 +1,7 @@
 package com.tl_connect.dev.modules.lecturer.dto;
 
+import com.tl_connect.dev.shared.common.enums.LecturerStatus;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,5 +18,6 @@ public class LecturerAdmInfoDTO {
     private String email;
     private String phoneNumber;
     private String departmentName;
-    private String status;
+    private Boolean isAcademicAdvisor;
+    private LecturerStatus status;
 }

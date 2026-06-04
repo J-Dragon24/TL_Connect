@@ -32,6 +32,14 @@
 24. [Payment - Thanh toán](#24-payment---thanh-toán)
 25. [Application Type - Loại đơn từ](#25-application-type---loại-đơn)
 26. [Chatbot - Chatbot](#26-chatbot)
+27. [Tuition Fee Config - Quản lý học phí](#27-tuition-fee-config---quản-lý-học-phí)
+28. [Document - Quản lý tài liệu phục vụ RAG](#28-document---quản-lý-tài-liệu-phục-vụ-rag)
+29. [Enrollment - Đăng ký học](#29-enrollment---đăng-ký-học)
+30. [Feedback - Góp ý / Báo lỗi](#30-feedback---góp-ý-báo-lỗi)
+31. [Feedback Category - Danh mục phản hồi / góp ý](#31-feedback-category---danh-mục-phản-hồi-góp-ý)
+32. [Attendance - Điểm danh](#32-attendance---điểm-danh)
+33. [AI Context - Ngữ cảnh AI Chatbot](#33-ai-context---ngữ-cảnh-ai-chatbot)
+34. [Chat - Chat giữa người dùng](#34-chat---chat-giữa-người-dùng)
 
 ## 1. Response Format chung
 Tất cả response đều theo cấu trúc JSON thống nhất:
@@ -92,9 +100,11 @@ JWT token được cấp sau khi đăng nhập thành công qua /api/v1/oauth2/l
 | Field | Type | Required | Description |
 |------|-----|-----|-----|
 | accessToken | string | ✅ | Microsoft OAuth2 Access Token từ Microsoft Azure AD |
-| deviceId | string | ✅ | Device ID |
+| deviceId | string | ❌ | Device ID |
 | platform | string | ❌ | Platform (android, ios, web) |
-| fcmToken | string | ✅ | FCM Token |
+| fcmToken | string | ❌ | FCM Token |
+
+**Lưu ý**: đối với sinh viên thì deviceId và fcmToken là bắt buộc
 
 **Response – Đăng nhập thành công (code 0):**:
 
@@ -106,7 +116,8 @@ JWT token được cấp sau khi đăng nhập thành công qua /api/v1/oauth2/l
     "email": "abc@gmail.com",
     "name": "John Doe",
     "avatar": "https://graph.microsoft.com/...",
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
   },
   "message": "Login successful"
 }
@@ -137,6 +148,31 @@ JWT token được cấp sau khi đăng nhập thành công qua /api/v1/oauth2/l
 - ❌ idToken hợp lệ, user chưa tồn tại → code -2
 - ❌ idToken rỗng / thiếu → code -1, HTTP 400
 - ❌ idToken invalid / hết hạn → code -3, HTTP 401
+---
+### 4.2. POST /api/v1/oauth2/refresh
+Refresh token.
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: application/json
+
+**Request body:**
+```json
+{
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "data": {
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  },
+  "message": "Refresh token successfully"
+}
+```
 ---
 ## 5. Student – Quản lý thông tin
 ### 5.1. GET /api/v1/students/me
@@ -689,14 +725,16 @@ Lấy thông tin chương trình đào tạo của các ngành sinh viên đang 
             "study_program_code": "CTDT-KHMT-2024",
             "study_program_name": "Chương trình đào tạo KHMT 2024",
             "is_primary": true,
-            "start_year": 2022
+            "start_year": 2022,
+            "total_credits": 130
         },
         {
             "student_code": "SV2021001",
             "study_program_code": "CTDT-HTTT-2024",
             "study_program_name": "Chương trình đào tạo HTTT 2024",
             "is_primary": false,
-            "start_year": 2022
+            "start_year": 2022,
+            "total_credits": 130
         }
     ]
 }
@@ -1297,7 +1335,6 @@ Tạo mới lịch học cho lớp học phần.
 
 | Field | Type | Required | Description |
 |------|-----|-----|-----|
-| id | long | ✅ | ID schedule |
 | dayOfWeek | int | ✅ | Thứ trong tuần (1-7) |
 | startPeriod | int | ✅ | Tiết bắt đầu |
 | endPeriod | int | ✅ | Tiết kết thúc |
@@ -1691,9 +1728,39 @@ GET /api/v1/student/marks?ctdt=CTDT-KHMT-2021
 - ✅ token hợp lệ + chương trình đào tạo hợp lệ → code 0 + thông tin kết quả học tập
 - ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
 - ❌ không tồn tại chương trình đào tạo thích hợp trong db → code -2, HTTP 404
----  
+--- 
+### 9.2. GET /api/v1/student/marks/export
 
-### 9.2. POST /api/v1/admin/academic-results/create
+Xuất kết quả học tập của sinh viên ra file Excel (.xlsx).
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: Không áp dụng
+- **Response Content-Type**: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+- **Response Type**: File download (.xlsx)
+**Query param:**
+| Field | Type | Required | Description |
+| ----- | ---- | -------- | ----------- |
+| ctdt | string | ✅ | Mã chương trình đào tạo |
+
+Server trả về file Excel với tên dạng: Ket_Qua_Hoc_Tap_20260513.xlsx
+
+**Response – User chưa đăng nhập (code -3):**
+
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```
+
+**Test cases:**
+- ✅ token hợp lệ + chương trình đào tạo hợp lệ → tải file Excel thành công
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+- ❌ không tồn tại chương trình đào tạo thích hợp trong db → code -2, HTTP 404
+
+---
+### 9.3. POST /api/v1/admin/academic-results/create
 Tạo kết quả học tập cho sinh viên.
 
 - **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
@@ -1752,7 +1819,7 @@ Response thành công (code 0):
 }
 ```
 ---  
-### 9.3. POST /api/v1/admin/academic-results/import
+### 9.4. POST /api/v1/admin/academic-results/import
 Import kết quả học tập từ file.
 
 - **Auth**: Bắt buộc
@@ -1793,7 +1860,7 @@ Import kết quả học tập từ file.
 ```
 ---  
 
-### 9.4. POST /api/v1/admin/academic-results/update/`{id}`
+### 9.5. POST /api/v1/admin/academic-results/update/`{id}`
 Cập nhật kết quả học tập.
 
 - **Auth**: Bắt buộc
@@ -1828,7 +1895,7 @@ Cập nhật kết quả học tập.
 ```
 ---
 
-### 9.5. POST /api/v1/admin/academic-results/delete/`{id}`
+### 9.6. POST /api/v1/admin/academic-results/delete/`{id}`
 Xóa kết quả học tập.
 
 - **Auth**: Bắt buộc
@@ -1847,7 +1914,127 @@ Xóa kết quả học tập.
 }
 ```
 ---
+### 9.7. GET /api/v1/admin/academic-results/all
+Lấy danh sách kết quả học tập của sinh viên (dành cho admin).
 
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: Không áp dụng
+
+**Query params (optional):**
+
+| Field | Type | Required | Description |
+|------|------|----------|-------------|
+| page | int | ❌ | Số trang (mặc định: 0) |
+| size | int | ❌ | Số phần tử mỗi trang (mặc định: 10) |
+
+---
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Academic result retrieved successfully",
+  "data": {
+    "content": [
+      {
+        "studentId": 1,
+        "studentCode": "SV2021001",
+        "studentName": "Nguyễn Văn A",
+        "startYear": 2021,
+        "studyPrograms": [
+          {
+            "majorName": "Khoa học máy tính",
+            "studyProgramCode": "CTDT-KHMT-2021",
+            "studyProgramName": "Chương trình KHMT",
+            "semesterResults": [
+              {
+                "semester": "HK1 2025-2026",
+                "subjectResults": [
+                  {
+                    "id": 1,
+                    "subjectCode": "INT1001",
+                    "subjectName": "Nhập môn lập trình",
+                    "credits": 3,
+                    "attendanceScore": 10.0,
+                    "midtermScore": 7.0,
+                    "finalScore": 8.0,
+                    "score10": 8.0,
+                    "score4": 3.2,
+                    "letterGrade": "B+",
+                    "isPass": true
+                  }
+                ],
+                "semesterSummary": {
+                  "creditsRegistered": 15,
+                  "creditsPassed": 15,
+                  "semesterGpa": 3.2,
+                  "cumulativeGpa": 3.0
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "page": 0,
+    "size": 10,
+    "total_elements": 100,
+    "total_pages": 10,
+    "first": true,
+    "last": false
+  }
+}
+```
+**Response – User chưa đăng nhập (code -3):**
+
+```json
+{
+  "code": -3,
+  "message": "Authentication required",
+  "data": null
+}
+```
+**Test cases:**
+
+- ✅ token hợp lệ → trả về danh sách kết quả học tập
+- ❌ token không hợp lệ → code -3
+- ❌ không có dữ liệu → trả list rỗng []
+---
+### 9.8. POST /api/v1/admin/academic-results/calc-summary
+Tính toán tổng kết học kỳ của sinh viên theo học kỳ.
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: Không áp dụng
+
+**Query params:**
+
+| Field | Type | Required | Description |
+|------|-----|-----|-----|
+| semesterId | long | ✅ | ID học kỳ cần tính tổng kết |
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Student semester summary calculated successfully",
+  "data": null
+}
+```
+**Response – User chưa đăng nhập (code -3):**
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```
+**Test cases:**
+
+- ✅ token hợp lệ + semesterId tồn tại → tính tổng kết thành công
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+- ❌ semesterId không tồn tại → code -2, HTTP 404 (nếu service xử lý)
+- ❌ semesterId rỗng → code -1, HTTP 400
+---
 ## 10. Notification - Thông báo
 ### 10.1. GET /api/v1/notification/prepare
 
@@ -1900,15 +2087,23 @@ Lấy tất cả thông tin thông báo của sinh viên.
     "content": [
       {
         "id": 1,
-        "title": "Thông báo học phí",
-        "isRead": false,
-        "createdAt": "2026-04-01T10:00:00"
+        "title": "Thông báo hệ thống",
+        "content": "Bảo trì hệ thống",
+        "createdBy": "Admin",
+        "targetType": "GLOBAL",
+        "isImportant": true,
+        "referenceType": "TUITION",
+        "deadLine": "2026-05-10",
+        "createdAt": "2026-05-01T08:30:00",
+        "isRead": false
       }
     ],
     "page": 0,
     "size": 10,
-    "totalElements": 100,
-    "totalPages": 10
+    "totalElements": 1,
+    "totalPages": 1,
+    "first": true,
+    "last": true
   }
 }
 ```  
@@ -1927,7 +2122,7 @@ Lấy tất cả thông tin thông báo của sinh viên.
 - ✅ token hợp lệ → code 0 + thông tin thông báo
 - ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
 
-### 10.3. GET /api/v1/notification/id
+### 10.3. GET /api/v1/notification/detail/id
 Lấy thông tin chi tiết thông báo.
 - **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
 - **Content-Type**: Không áp dụng
@@ -1947,7 +2142,6 @@ Lấy thông tin chi tiết thông báo.
         "createdBy": "Admin",
         "targetType": "GLOBAL",
         "deadLine": null,
-        "referenceId": null,
         "createdAt": "2026-04-02T14:10:36.333465"
     }
 }
@@ -2023,9 +2217,10 @@ Lấy danh sách tất cả notification (admin).
         "content": "Đóng học phí trước ngày...",
         "createdBy": "Admin",
         "targetType": "STUDENT",
-        "targetId": 1001,
+        "targetIds": [1001],
         "deadLine": "2026-04-10",
-        "isImportant": true
+        "isImportant": true,
+        "referenceType": "TUITION"
       }
     ],
     "page": 0,
@@ -2052,13 +2247,14 @@ Gửi notification.
   "targetIds": [1001, 1002],
   "createdBy": "Admin",
   "deadLine": "2026-04-10",
-  "isImportant": true
+  "isImportant": true,
+  "referenceType": "TUITION"
 }
 **Response thành công (code 0):**
 ```json
 {
   "code": 0,
-  "message": "Create notification successfully",
+  "message": "Create notification successfully", 
   "data": null
 } 
 ```
@@ -2076,9 +2272,10 @@ Cập nhật notification.
   "content": "Nội dung cập nhật",
   "createdBy": "Admin",
   "targetType": "STUDENT",
-  "targetId": 1001,
+  "targetIds": [1001, 1002],
   "isImportant": false,
-  "deadLine": "2026-04-15"
+  "deadLine": "2026-04-15",
+  "referenceType": "TUITION"
 }
 ```
 **Response thành công (code 0):**
@@ -2288,7 +2485,103 @@ Nộp đơn.
 - ❌ file rỗng / sai định dạng / quá lớn → code -1, HTTP 400
 - ❌ loại đơn rỗng → code -1, HTTP 400
 ---
-### 11.3. GET /api/v1/admin/application/all
+### 11.3. GET /api/v1/applications/history
+Lấy lịch sử đơn từ của sinh viên đang đăng nhập.
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: Không áp dụng
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "List of applications",
+  "data": [
+    {
+      "id": 1,
+      "typeName": "Đơn xin nghỉ học",
+      "status": "PENDING",
+      "createdAt": "2026-05-12T10:30:00"
+    },
+    {
+      "id": 2,
+      "typeName": "Đơn xác nhận sinh viên",
+      "status": "APPROVED",
+      "createdAt": "2026-05-10T08:15:00"
+    }
+  ]
+}
+```
+
+**Response – User chưa đăng nhập (code -3):**
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```
+**Test cases:**
+- ✅ token hợp lệ → code 0 + danh sách lịch sử đơn
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+---
+### 11.4. GET /api/v1/applications/history/`{id}`
+
+Lấy chi tiết đơn từ.
+
+**Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+**Content-Type**: Không áp dụng
+
+**Path param:**
+|Field|Type|Required|Description|
+|------|-----|-----|-----|
+id|number|✅|ID đơn|
+
+**Lưu ý**: tạo url xem file từ fileKey: `https://res.cloudinary.com/dm5ev1isi/raw/upload/${fileKey}`
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Application detail",
+  "data": {
+    "typeName": "Đơn xin nghỉ học",
+    "status": "PENDING",
+    "content": "Em xin nghỉ học vì lý do sức khỏe",
+    "attachments": [
+      {
+        "id": 1,
+        "fileKey": "271326-don_nghi_hoc.pdf",
+        "originalFilename": "don_nghi_hoc.pdf",
+        "fileSize": 123456
+      }
+    ],
+    "createdAt": "2026-05-12T10:30:00"
+  }
+}
+```
+**Response – User chưa đăng nhập (code -3):**
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```
+**Response – Không tìm thấy đơn (code -2):**
+```json
+{
+  "code": -2,
+  "data": null,
+  "message": "Application not found"
+}
+```
+**Test cases:**
+- ✅ token hợp lệ + id tồn tại → code 0 + chi tiết đơn
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+- ❌ id không tồn tại → code -2, HTTP 404
+---
+### 11.5. GET /api/v1/admin/application/all
 
 Lấy danh sách tất cả đơn (admin).
 
@@ -2327,7 +2620,7 @@ Lấy danh sách tất cả đơn (admin).
 }
 ```
 ---
-### 11.4. GET /api/v1/admin/application/`{id}`
+### 11.6. GET /api/v1/admin/application/`{id}`
 
 Lấy chi tiết đơn.
 
@@ -2363,7 +2656,7 @@ Lấy chi tiết đơn.
 }
 ```
 ---
-### 11.5. POST /api/v1/admin/application/delete/`{id}`
+### 11.7. POST /api/v1/admin/application/delete/`{id}`
 
 Xoá đơn.
 
@@ -2378,7 +2671,7 @@ Xoá đơn.
 }
 ```
 ---
-### 11.6. POST /api/v1/admin/application/update-status/`{id}`
+### 11.8. POST /api/v1/admin/application/update-status/`{id}`
 
 Cập nhật trạng thái đơn.
 
@@ -2788,6 +3081,8 @@ Lấy thông tin tất cả lớp học phần.
 | ----- | ------ | -------- | --------------------------------- |
 | page  | number | ❌        | trang (default = 0)               |
 | size  | number | ❌        | số lượng mỗi trang (default = 10) |
+| khoa  | string | ❌        | mã khoa |
+| HocKy | string | ❌        | mã học kỳ |
 
 **Response thành công (code 0):**:
 ```json
@@ -2801,6 +3096,7 @@ Lấy thông tin tất cả lớp học phần.
                 "classCode": "INT1001-01",
                 "className": "Nhập môn lập trình - Lớp 1",
                 "capacity": 50,
+                "enrolledCount": 45,
                 "lecturerCode": "GV001",
                 "subjectCode": "INT1001",
                 "semesterCode": "HK1-2025",
@@ -2838,6 +3134,7 @@ Lấy chi tiết lớp học phần.
         "classCode": "INT1001-01",
         "className": "Nhập môn lập trình - Lớp 1",
         "capacity": 50,
+        "enrolledCount": 45,
         "isActive": true,
         "lecturerCode": "GV001",
         "lecturerName": "Nguyen Van A",
@@ -3304,7 +3601,8 @@ Lấy danh sách giảng viên (phân trang).
         "fullName": "Nguyen Van A",
         "email": "a@university.edu.vn",
         "phoneNumber": "0901234567",
-        "departmentCode": "CNTT",
+        "departmentName": "Toán tin",
+        "isAcademicAdvisor": true,
         "status": "ACTIVE"
       }
     ],
@@ -3455,7 +3753,7 @@ Lấy danh sách cố vấn học tập (phân trang).
         "lecturerName": "Nguyen Van A",
         "lecturerEmail": "a@university.edu.vn",
         "lecturerPhoneNumber": "0901234567",
-        "studentClassCode": "KHMT2021"
+        "studentClassCodes": ["KHMT2021"]
       }
     ],
     "page": 0,
@@ -3468,7 +3766,7 @@ Lấy danh sách cố vấn học tập (phân trang).
 }
 ```
 ---
-### 18.2. GET /api/v1/admin/academic-advisors/`{id}`
+### 18.2. GET /api/v1/admin/academic-advisors/`{lecturerId}`
 
 Lấy chi tiết cố vấn học tập.
 
@@ -3478,7 +3776,7 @@ Lấy chi tiết cố vấn học tập.
 
 | Field | Type | Required | Description |
 |------|-----|-----|-----|
-| id | long | ✅ | ID |
+| lecturerId | long | ✅ | ID giảng viên |
 
 **Response thành công (code 0):**
 
@@ -3490,9 +3788,18 @@ Lấy chi tiết cố vấn học tập.
     "id": 1,
     "lecturerCode": "GV001",
     "lecturerName": "Nguyen Van A",
-    "lecturerEmail": "a@university.edu.vn",
+    "lecturerEmail": "a.nguyen@uni.edu.vn",
     "lecturerPhoneNumber": "0901234567",
-    "studentClassCode": "KHMT2021"
+    "departmentCode": "CNTT",
+    "lecturerStatus": "ACTIVE",
+    "classInfo": [
+      {
+        "academicAdvisorId": 1,
+        "classCode": "CNTT2021",
+        "majorCode": "CNTT",
+        "startYear": 2021
+      }
+    ]
   }
 }
 ```
@@ -3679,6 +3986,7 @@ Lấy danh sách lớp sinh viên (có phân trang)
 |------|-----|-----|-----|
 | page | int | ❌ | Số trang (default: 0) |
 | size | int | ❌ | Số lượng mỗi trang (default: 10) |
+| khoa | string | ❌ | Mã khoa |
 
 **Response:**
 ```json
@@ -3994,9 +4302,8 @@ Lấy chi tiết hóa đơn học phí.
           "credits": 3,
           "pricePerCredit": 500000.00,
           "coefficient": 1.00,
-          "amount": 1500000.00,
-          "retake": false
-      },
+          "amount": 1500000.00
+      }
     ],
     "total_amount": 5000000,
     "final_amount": 4500000,
@@ -4077,8 +4384,7 @@ Lấy chi tiết hóa đơn học phí.
             "credits": 3,
             "pricePerCredit": 500000.00,
             "coefficient": 1.00,
-            "amount": 1500000.00,
-            "retake": false
+            "amount": 1500000.00
         }
     ]
   }
@@ -4251,7 +4557,8 @@ Lấy danh sách template (có phân trang)
       {
         "id": 1,
         "code": "WELCOME",
-        "name": "Thông báo chào mừng"
+        "name": "Thông báo chào mừng",
+        "content": "Chào mừng bạn đến với hệ thống"
       }
     ],
     "page": 0,
@@ -4288,7 +4595,6 @@ Tạo đơn thanh toán học phí
   "invoiceId": 1,
   "provider": "vnpay",
   "language": "vn",
-  "bankCode": "NCB",
   "ipAddress": "127.0.0.1"
 }
 ```
@@ -4297,7 +4603,6 @@ Tạo đơn thanh toán học phí
 | invoiceId | long | ✅ | ID hóa đơn học phí
 | provider | string | ✅ | Nhà cung cấp thanh toán (vnpay, zalopay)
 | language | string | ❌ | Ngôn ngữ (vn, en) (chỉ áp dụng với vnpay)
-| bankCode | string | ❌ | Mã ngân hàng (chỉ áp dụng với vnpay)
 | ipAddress | string | ❌ | Địa chỉ IP của người dùng (chỉ áp dụng với vnpay)
 
 **Response thành công (code 0):**
@@ -4307,9 +4612,10 @@ Tạo đơn thanh toán học phí
   "code": 0,
   "message": "Tạo đơn thanh toán thành công",
   "data": {
-    "orderUrl": "https://sandbox.zalopay.vn/...",
-    "appTransId": "240402_123456",
-    "amount": 500000
+    "orderUrl": "https://...",
+    "transactionCode": "TXN123456",
+    "amount": 1000000,
+    "invoiceStatus": "PENDING"
   }
 } 
 ```
@@ -4332,12 +4638,13 @@ Hoàn tiền giao dịch
 **Request body:**
 ```json
 {
-  "transCode": "240402_123456",
+  "transactionCode": "TXN123456",
   "orderInfo": "Hoàn tiền học phí",
-  "createBy": "user1",
-  "ipAddress": "[IP_ADDRESS]",
+  "createBy": "admin",
+  "ipAddress": "127.0.0.1",
   "type": "FULL"
 }
+```
 
 | Field | Type | Required | Description
 |---|---|---|---|
@@ -4354,8 +4661,14 @@ Hoàn tiền giao dịch
   "code": 0,
   "message": "Hoàn tiền thành công",
   "data": {
-    "returnCode": 1,
-    "returnMessage": "Refund success"
+    "provider": "ZALOPAY",
+    "responseCode": 1,
+    "refundId": "REF123456",
+    "message": "Refund successful",
+    "status": "SUCCESS",
+    "rawData": {
+      "vd": "data từ cổng thanh toán"
+    }
   }
 }
 ```
@@ -4364,7 +4677,7 @@ Hoàn tiền giao dịch
 ```json
 {
   "code": -10,
-  "message": "Refund failed",
+  "message": "Hoàn tiền thất bại",
   "data": null
 }
 ```
@@ -4377,6 +4690,158 @@ Hoàn tiền giao dịch
 - ✅ refund thành công → code 0
 - ❌ transCode không tồn tại → code -2
 ---
+### 24.3. POST /api/v1/payments/callback/zalopay
+
+Callback từ ZaloPay sau khi thanh toán.
+
+- **Auth**: Không yêu cầu
+- **Content-Type**: application/json
+
+**Request body:**
+```json
+{
+  "data": "vd",
+  "mac": "vd"
+}
+```
+**Response thành công:**
+```json
+{
+  "code": 0,
+  "message": "Thanh toán thành công",
+  "data": null
+}
+```
+**Response thất bại:**
+```json
+{
+  "code": -10,
+  "message": "Thanh toán thất bại",
+  "data": null
+}
+```
+---
+### 24.4. GET /api/v1/payments/callback/vnpay
+
+Callback từ VNPay.
+
+- **Auth**: Không yêu cầu
+- **Content-Type**: query params
+
+**Ví dụ request:**
+
+GET /api/v1/payments/callback/vnpay?vnp_Amount=1000000&vnp_TxnRef=123456
+
+**Response thành công:**
+```json
+{
+  "code": 0,
+  "message": "Thanh toán thành công",
+  "data": null
+}
+```
+**Response thất bại:**
+```json
+{
+  "code": -10,
+  "message": "Thanh toán thất bại",
+  "data": null
+}
+```
+---
+### 24.5. POST /api/v1/payments/get-status
+
+Tra cứu trạng thái giao dịch thanh toán qua VNPAY.
+
+**Auth**: Không bắt buộc (theo controller hiện tại)
+**Content-Type**: application/json
+
+Request body:
+```json
+{
+  "transactionCode": "79822956"
+}
+```
+|Field|Type|Required|Description
+:---:|:---:|:---:|:---:
+transactionCode|string|✅|Mã giao dịch cần tra cứu (Lấy từ create order)
+
+**Response thành công (code 0):**
+
+```json
+{
+  "code": 0,
+  "message": "Query payment status success",
+  "data": {
+      "responseCode": 0,
+      "message": "QueryDR success",
+      "transactionId": "79822956",
+      "providerTransactionId": "15533287",
+      "amount": 4500000
+  }
+}
+```
+**Response thất bại (code -10):**
+```json
+{
+  "code": -10,
+  "message": "Query payment status failed",
+  "data": null
+}
+```
+
+**Lưu ý:**
+- Nếu responseCode = 0 là thành công
+- Nếu responseCode = 1 là đang xử lý
+- Nếu responseCode = -1 là thất bại
+---
+### 24.6. POST /api/v1/payments/payment-return
+
+Xử lý redirect sau khi người dùng hoàn tất thanh toán và cập nhật trạng thái pending cho học phí.
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: application/json
+
+**Request body:**
+
+```json
+{
+  "tuitionId": 1
+}
+```
+
+| Field | Type | Required | Description
+|---|---|---|---|
+| tuitionId | long | ✅ | ID học phí cần cập nhật trạng thái
+
+**Response thành công (code 0):**
+
+```json
+{
+  "code": 0,
+  "message": "Payment return success",
+  "data": null
+}
+```
+
+**Response – User chưa đăng nhập (code -3):**
+
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```
+
+**Test cases:**
+
+- ✅ Token hợp lệ + tuitionId tồn tại thuộc sinh viên → code 0
+- ❌ Token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+- ❌ tuitionId không tồn tại → code -2, HTTP 404 (nếu service xử lý)
+- ❌ tuitionId không thuộc sinh viên hiện tại → code -4, HTTP 403 (nếu service xử lý)
+---
+
 ## 25. Application Type - Loại đơn
 ### 25.1. GET /api/v1/admin/application-types/all
 
@@ -4476,20 +4941,85 @@ Xoá loại đơn.
 ```
 ---
 ## 26. Chatbot
-### 26.1. POST /api/v1/chatbot
+
+**BaseUrl**: https://tl-chatbot.nhokthanh3211.workers.dev
+
+### 26.1. POST /api/v1/agent-chat-stream
 **Streaming Chat (Không có session id)**
 - **Content-Type**: application/json
 - **Response**: text/event-stream (SSE)
 **Request Body**
 ```json
 {
-  "prompt": "Xin chào"
+  "prompt": "Xin chào",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Xin chào"
+    },
+    {
+      "role": "assistant",
+      "content": "Xin chào"
+    }
+  ],
+  "context": {
+      "studentName": "Lê Việt Hoàng",
+      "studentCode": "A45033",
+      "dateOfBirth": "2003-05-10",
+      "gender": "NAM",
+      "semesters": [
+          {
+              "id": 4,
+              "semesterName": "Học kỳ 1 2025-2026",
+              "semesterCode": "HK1-2025-2026",
+              "academicYears": "2025-2026",
+              "semesterNumber": 1,
+              "startDate": "2025-09-08",
+              "endDate": "2025-12-28",
+              "isActive": true
+          },
+          {
+              "id": 5,
+              "semesterName": "Học kỳ 2 2025-2026",
+              "semesterCode": "HK2-2025-2026",
+              "academicYears": "2025-2026",
+              "semesterNumber": 2,
+              "startDate": "2026-01-05",
+              "endDate": "2026-04-26",
+              "isActive": true
+          },
+          {
+              "id": 6,
+              "semesterName": "Học kỳ tăng cường 2025-2026",
+              "semesterCode": "HKTC-2025-2026",
+              "academicYears": "2025-2026",
+              "semesterNumber": 3,
+              "startDate": "2026-05-04",
+              "endDate": "2026-08-23",
+              "isActive": true
+          }
+      ],
+      "academicInfo": [
+          {
+              "startYear": 2022,
+              "endYear": 2026,
+              "majorCode": "TI",
+              "majorName": "Khoa học máy tính",
+              "facultyCode": "CNTT",
+              "studyProgramCode": "DHCQK35TI"
+          }
+      ]
+  }
 }
 ```
 
 | Field | Type | Required | Description
 |---|---|---|---
 prompt | string | ✅ | Nội dung người dùng gửi tới chatbot  
+messages | array | ❌ | Lịch sử trò chuyện
+  - role: string | ✅ | Vai trò (user, assistant, system)
+  - content: string | ✅ | Nội dung
+context | string | ✅ | 1 số thông tin về user
 
 **Response**
 Trả về dạng Server-Sent Events (SSE)
@@ -4510,36 +5040,1448 @@ data: bạn
 - Client cần xử lý stream liên tục
 - Thường dùng với EventSource (web) hoặc OkHttp/Retrofit streaming (Android)
 ---
-### 26.2. POST /api/v1/chatbot/`{id}`
-**Streaming Chat (Có session id)**
-- **Content-Type**: application/json
-- **Response**: text/event-stream (SSE)
-**Request Body**
-```json
-{
-  "prompt": "Bạn tên gì?"
-}
-```
-| Field | Type | Required | Description
-|---|---|---|---
-prompt | string | ✅ | Nội dung người dùng gửi tới chatbot  
-
-**Response**
-Trả về dạng Server-Sent Events (SSE)
-Lưu ý: Nếu chưa có session, server sẽ tự tạo mới và trả về session id trong response
-
-Ví dụ:
-
-data: Tôi tên là AI
-data: Tôi có thể giúp gì cho bạn?
-
-data: session_id: 123456789
-
-**Notes**
-- Connection không timeout (SseEmitter(0L))
-- Client cần xử lý stream liên tục
-- Thường dùng với EventSource (web) hoặc OkHttp/Retrofit streaming (Android)
----
 ### 26.3. WEBSOCKET /agents/ChatAgent
 agent chatbot
-`{"type":"cf_agent_use_chat_request","id":"2","init":{"method":"POST","body":"{\"messages\":[{\"role\":\"user\",\"content\":\"chức năng của PHÒNG TÀI CHÍNH – KẾ TOÁN\"}]}"}}`
+`{"type":"cf_agent_use_chat_request","id":"2","init":{"method":"POST","body":"{\"messages\":[{\"role\":\"user\",\"content\":\"chức năng của PHÒNG TÀI CHÍNH – KẾ TOÁN\"}]}"}}`  
+
+---
+## 26.4. POST /api/v1/agent-chat-speak
+Ai nói chuyện
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: application/json
+**Request body:**
+```json
+{
+  "messages": [{
+    "role": "user",
+    "content": "Bạn tên gì?"
+  },
+  {
+    "role": "assistant",
+    "content": "Tôi tên là AI"
+  }],
+  "prompt": "Bạn tên gì?",
+  "gender": "female"
+}
+```
+
+| Field | Type | Required | Description
+|---|---|---|---
+| messages | array | ❌ | Lịch sử trò chuyện (tùy chọn)
+  - role: string | ✅ | Vai trò (user, assistant, tool, system)
+  - content: string | ✅ | Nội dung
+| prompt | string | ✅ | Nội dung người dùng gửi tới chatbot  
+| gender | string | ❌ | Giới tính (male, female)
+
+**Response:**
+```json
+{
+  "code": 0,
+  "success": true,
+  "data": {
+    "audio": "SUQzBAAAAA...",
+    "emotion": "happy",
+    "text": "Học phí kỳ này của bạn là 4.500.000 VNĐ và đã được thanh toán",
+  }
+}
+```
+---
+## 27. Tuition Fee Config - Quản lý học phí
+### 27.1. GET /api/v1/admin/tuition-fee-configs
+Lấy danh sách học phí (có phân trang).
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: Không áp dụng
+
+**Query params (Pageable):**
+
+| Field | Type | Required | Description
+|------|-----|-----|-----|
+| page | int | ❌ | Số trang (default = 0)
+| size | int | ❌ | Số phần tử/trang (default = 10)
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Get tuition fee configs successfully",
+  "data": {
+    "content": [
+      {
+        "id": 1,
+        "basePricePerCredit": 1200000,
+        "academicYear": "2025-2026",
+        "cohort": 2022,
+        "createdAt": "2026-04-22T10:00:00",
+        "updatedAt": "2026-04-22T10:00:00"
+      }
+    ],
+    "page": 0,
+    "size": 10,
+    "total_elements": 1,
+    "total_pages": 1
+  }
+}
+```
+---
+### 27.2. POST /api/v1/admin/tuition-fee-configs/create
+Tạo học phí cấu hình
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: application/json
+
+**Request body:**
+```json
+{
+  "basePricePerCredit": 1200000,
+  "academicYear": "2025-2026",
+  "cohort": 2022
+}
+```
+
+**Fields:**
+
+| Field | Type | Required | Description
+|------|-----|-----|-----|
+| basePricePerCredit | BigDecimal | ✅ | Giá học phí 1 tín chỉ
+| academicYear | String | ✅ | Năm học
+| cohort | int | ✅ | Niên khóa
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Create tuition fee config successfully",
+  "data": 1
+}
+```
+---
+### 27.3. POST /api/v1/admin/tuition-fee-configs/update/`{id}`
+Cập nhật học phí cấu hình
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: application/json
+
+**Path param:**
+
+| Field | Type | Required | Description |
+|------|-----|-----|-----|
+| id | long | ✅ | ID học phí cấu hình |
+
+**Request body:**
+```json
+{
+  "basePricePerCredit": 1500000,
+  "academicYear": "2025-2026",
+  "cohort": 2022
+}
+```
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Update tuition fee config successfully",
+  "data": null
+}
+```
+---
+### 27.4. POST /api/v1/admin/tuition-fee-configs/delete/`{id}`
+Xóa cấu hình học phí.
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: Không áp dụng
+
+**Path param:**
+
+| Field | Type | Required | Description
+|------|-----|-----|-----|
+| id | long | ✅ | ID học phí cấu hình |
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Delete tuition fee config successfully",
+  "data": null
+}
+```
+---
+## 28. Document - Quản lý tài liệu phục vụ RAG
+**BaseUrl**: https://tl-chatbot.nhokthanh3211.workers.dev
+### 28.1. POST /api/v1/upload
+Upload tài liệu phục vụ RAG.
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: application/json
+
+**Form data:**
+
+| Field | Type | Required | Description
+|------|-----|-----|-----|
+| file | File | ✅ | File cần upload
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "data": {
+    "processedFiles": 5,
+    "totalChunks": 10
+  },
+  "message": "Operation completed successfully",
+}
+```
+---
+### 28.2. POST /api/v1/delete-document
+Xóa tài liệu.
+
+- **Auth**: Bắt buộc (Authorization: Bearer &lt;JWT&gt;)
+- **Content-Type**: application/json
+
+**Request body:**
+```json
+{
+  "source": ["source1", "source2", "source3"]
+}
+```
+
+**Fields:**
+
+| Field | Type | Required | Description
+|------|-----|-----|-----|
+| source | array | ✅ | Danh sách tên liệu cần xóa |
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Document deleted successfully",
+  "data": null
+}
+```
+---
+## 29. Enrollment - Đăng ký học
+### 29.1. POST /api/v1/admin/enrollment/periods/create
+
+Tạo đợt đăng ký học mới.
+
+- **Auth**: Bắt buộc (Admin JWT)
+- **Content-Type**: application/json
+
+**Request body:**
+```json
+{
+  "semesterId": 1,
+  "startTime": "2026-05-10T08:00:00",
+  "endTime": "2026-05-15T23:59:59",
+  "maxCredits": 24
+}
+```
+
+**Fields:**
+
+| Field | Type | Required | Description
+|------|-----|-----|-----|
+| semesterId | long | ✅ | ID học kỳ
+| startTime | datetime | ✅ | Thời gian bắt đầu đăng ký
+| endTime | datetime | ✅ | Thời gian kết thúc đăng ký
+| maxCredits | int | ✅ | Số tín chỉ tối đa
+
+**Response thành công (code 0):**
+
+```json
+{
+  "code": 0,
+  "message": "Period created successfully",
+  "data": 1
+}
+```
+---
+### 29.2. GET /api/v1/admin/enrollment/periods
+
+Lấy danh sách đợt đăng ký học.
+
+- **Auth**: Bắt buộc (Admin JWT)
+- **Content-Type**: Không áp dụng
+
+**Query params (optional):**
+
+| Field | Type | Required | Description
+|------|-----|-----|-----|
+| HocKy | string | ❌ | Mã học kỳ để filter
+| page | int | ❌ | Trang hiện tại (mặc định 0)
+| size | int | ❌ | Số phần tử/trang (mặc định 10)
+
+**Response thành công (code 0):**
+
+```json
+{
+  "code": 0,
+  "message": "Periods retrieved successfully",
+  "data": {
+    "content": [
+      {
+        "id": 1,
+        "semesterId": 1,
+        "startTime": "2026-05-10T08:00:00",
+        "endTime": "2026-05-15T23:59:59",
+        "maxCredits": 24,
+        "createdAt": "2026-05-01T10:00:00"
+      }
+    ],
+    "page": 0,
+    "size": 10,
+    "totalElements": 1,
+    "totalPages": 1,
+    "first": true,
+    "last": true
+  }
+}
+```
+---
+### 29.3. POST /api/v1/admin/enrollment/periods/update/`{id}`
+
+Cập nhật đợt đăng ký học.
+
+- **Auth**: Bắt buộc (Admin JWT)
+- **Content-Type**: application/json
+
+**Path param:**
+
+| Field | Type | Required | Description
+|------|-----|-----|-----|
+id	long	✅	ID đợt đăng ký
+
+**Request body:**
+```json
+{
+  "semesterId": 1,
+  "startTime": "2026-05-11T08:00:00",
+  "endTime": "2026-05-16T23:59:59",
+  "maxCredits": 25
+}
+```
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Period updated successfully",
+  "data": 1
+}
+```
+---
+### 29.4. POST /api/v1/admin/enrollment/periods/delete/`{id}`
+
+- **Auth**: Bắt buộc (Admin JWT)
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Period deleted successfully",
+  "data": null
+}
+```
+---  
+### 29.5. POST /api/v1/admin/enrollment/periods/clear-cache/`{semesterId}`
+
+Xóa cache đợt đăng ký của học kỳ.
+
+- **Auth**: Bắt buộc (Admin JWT)
+
+**Response thành công (code 0):**
+```json
+
+{
+  "code": 0,
+  "message": "Period cache invalidated successfully",
+  "data": null
+}
+```
+---
+### 29.6. POST /api/v1/admin/enrollment/schedule/clear-cache/`{semesterId}`
+
+Xóa cache lịch học của sinh viên theo học kỳ.
+
+- **Auth**: Bắt buộc (Admin JWT)
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Schedule cache invalidated successfully",
+  "data": null
+}
+```
+---
+### 29.7. POST /api/v1/admin/enrollment/prerequisite/clear-cache
+
+Xóa cache DAG môn tiên quyết.
+
+- **Auth**: Bắt buộc (Admin JWT)
+
+Response thành công:
+```json
+{
+  "code": 0,
+  "message": "Prerequisite cache invalidated successfully",
+  "data": null
+}
+```
+---
+### 29.8. GET /api/v1/admin/enrollment/all
+
+Lấy danh sách đăng ký học của sinh viên.
+
+- **Auth**: Bắt buộc (Admin JWT)
+- **Content-Type**: Không áp dụng
+
+**Query params (optional):**
+
+| Field | Type | Required | Description |
+|------|-----|-----|-----|
+| facultyId | long | ❌ | ID khoa |
+| semesterId | long | ❌ | ID học kỳ |
+| studentId | long | ❌ | ID sinh viên |
+| page | int | ❌ | Số trang |
+| size | int | ❌ | Kích thước trang |
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Student enrollments retrieved successfully",
+  "data": {
+    "content": [
+      {
+        "id": 1,
+        "studentCode": "SV001",
+        "studentName": "Nguyen Van A",
+        "classCode": "INT2204-01",
+        "className": "Lập trình Java",
+        "subjectCode": "INT2204",
+        "subjectName": "Lập trình Java",
+        "semesterCode": "HK1-2026",
+        "semesterName": "Học kỳ 1 năm 2026",
+        "status": "PENDING",
+        "isRetake": false,
+        "createdAt": "2026-05-01T10:00:00",
+        "updatedAt": "2026-05-01T10:00:00"
+      }
+    ]
+  }
+}
+```
+---
+### 29.9. POST /api/v1/admin/enrollment/confirm
+
+Xác nhận toàn bộ đăng ký học của học kỳ.
+
+- **Auth**: Bắt buộc (Admin JWT)
+- **Content-Type**: application/json
+
+**Request body:**
+```json
+{
+  "semesterId": 1
+}
+```
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Confirmed successfully",
+  "data": null
+}
+```
+---
+### 29.10. POST /api/v1/admin/enrollment/cancel/`{id}`
+
+Hủy một đăng ký học của sinh viên.
+
+- **Auth**: Bắt buộc (Admin JWT)
+
+**Path param:**
+
+| Field | Type | Required | Description
+|------|-----|-----|----|
+| id | long | ✅ | ID bản ghi đăng ký học
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Cancelled successfully",
+  "data": null
+}
+```
+---
+
+### 29.11. GET /api/v1/student/enrollment/all
+
+Lấy danh sách môn học có thể đăng ký theo chương trình đào tạo.
+
+- **Auth**: Bắt buộc (Authorization: Bearer JWT)
+- **Content-Type**: Không áp dụng
+
+**Query params:**
+
+| Field | Type | Required | Description
+|------|-----|-----|----|
+| studyProgramCode | string | ✅ | Mã chương trình đào tạo
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Available course classes retrieved successfully",
+  "data": {
+    "studyProgramId": 1,
+    "studyProgramCode": "CTDT-KTPM-2024",
+    "studyProgramName": "Chương trình đào tạo KTPM 2024",
+    "semesterId": 5,
+    "subjects": [
+      {
+        "id": 101,
+        "facultyName": "Công nghệ thông tin",
+        "facultyCode": "CNTT",
+        "departmentName": "Kỹ thuật phần mềm",
+        "departmentCode": "KTPM",
+        "subjectCode": "INT2204",
+        "subjectName": "Lập trình Java",
+        "credits": 3,
+        "isRequired": true,
+        "electiveGroup": null,
+        "coefficient": 1.0,
+        "lectureHours": 30,
+        "practiceHours": 15
+      }
+    ]
+  }
+}
+```
+
+
+---
+### 29.12. POST /api/v1/student/enrollment/course-classes
+
+Lấy danh sách lớp học phần khả dụng của một môn học trong học kỳ.
+
+- **Auth**: Bắt buộc (Authorization: Bearer JWT)
+- **Content-Type**: application/json
+
+**Request body:**
+```json
+{
+  "subjectId": 101,
+  "semesterId": 5
+}
+```
+
+**Fields:**
+
+| Field | Type | Required | Description
+|------|-----|-----|----|
+| subjectId | long | ✅ | ID môn học
+| semesterId | long | ✅ | ID học kỳ
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Available course classes retrieved successfully",
+  "data": [
+    {
+      "id": 11,
+      "lecturerCode": "GV001",
+      "lecturerName": "Nguyen Van A",
+      "classCode": "INT2204-01",
+      "className": "Lập trình Java - Nhóm 1",
+      "capacity": 60,
+      "enrolledCount": 45,
+      "schedules": [
+        {
+          "dayOfWeek": 2,
+          "startPeriod": 1,
+          "endPeriod": 3,
+          "room": "A101"
+        }
+      ]
+    }
+  ]
+}
+```
+---
+### 29.13. POST /api/v1/student/enrollment/schedule
+
+Lấy thời khóa biểu tạm thời của sinh viên trong quá trình đăng ký học.
+
+- **Auth**: Bắt buộc (Authorization: Bearer JWT)
+- **Content-Type**: application/json
+
+**Request body:**
+```json
+{
+  "semesterId": 5
+}
+```
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Available course classes retrieved successfully",
+  "data": [
+    {
+      "classCode": "INT2204-01",
+      "dayOfWeek": 2,
+      "subjectName": "Lập trình Java",
+      "subjectCode": "INT2204",
+      "startPeriod": 1,
+      "endPeriod": 3,
+      "credits": 3,
+      "startTime": "07:00:00",
+      "endTime": "09:30:00",
+      "room": "A101",
+      "lecturer": {
+        "lecturerCode": "GV001",
+        "fullName": "Nguyen Van A"
+      }
+    }
+  ]
+}
+```
+---
+### 29.14. POST /api/v1/student/enrollment/enroll
+
+Đăng ký lớp học phần.
+
+- **Auth**: Bắt buộc (Authorization: Bearer JWT)
+- **Content-Type**: application/json
+
+**Request body:**
+```json
+{
+  "studyProgramId": 1,
+  "courseClassId": 11
+}
+```
+
+**Fields:**
+
+| Field | Type | Required | Description
+|------|-----|-----|----|
+| studyProgramId | long | ✅ | ID chương trình đào tạo
+| courseClassId | long | ✅ | ID lớp học phần
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Đăng ký thành công",
+  "data": null
+}
+```
+
+**Lỗi vi phạm ràng buộc database**
+
+```json
+{
+  "code": -27,
+  "message": "Database violation",
+  "data": null
+}
+```
+
+**Không có quyền đăng ký môn học**
+
+```json
+{
+  "code": -108,
+  "message": "You don't have permission to enroll in this subject",
+  "data": null
+}
+```
+
+**Đã đăng ký lớp học phần này trước đó**
+
+```json
+{
+  "code": -105,
+  "message": "You have already enrolled in this course class",
+  "data": null
+}
+```
+
+**Lớp học phần đã đầy**
+
+```json
+{
+  "code": -107,
+  "message": "Course class is full",
+  "data": null
+}
+```
+
+**Đã dăng ký môn học này**
+
+```json
+{
+  "code": -104,
+  "message": "You already enrolled this subject",
+  "data": null
+}
+```
+
+**Chưa học đủ môn tiên quyết**
+
+```json
+{
+  "code": -102,
+  "message": "You have not met the prerequisite condition",
+  "data": [
+    {
+      "groupId": 1,
+      "needMore": 1,
+      "missingSubjectCodes": ["INT2204"]
+    }
+  ]
+}
+```
+
+**Chưa đủ điều kiện gpa, tín chỉ**
+
+```json
+{
+  "code": -100,
+  "message": "You haven't met the prerequisite conditions for this course.",
+  "data": [
+    "GPA tối thiểu phải từ 2.5",
+    "Cần hoàn thành ít nhất 60 tín chỉ"
+  ]
+}
+```
+
+**Vượt quá số tín chỉ đăng ký**
+
+```json
+{
+  "code": -103,
+  "message": "You have exceeded the maximum number of credits",
+  "data": null
+}
+```
+
+**Trùng lịch học**
+
+Ví dụ: Tiết 1-3 thứ 3 bị trùng với lớp INT2204-01
+Lưu ý: dayOfWeek + 1 = thứ trong tuần
+
+```json
+{
+  "code": -101,
+  "message": "Conflict schedule",
+  "data": {
+    "dayOfWeek": 2,
+    "startPeriod": 1,
+    "endPeriod": 3,
+    "classOverlapCode": "INT2204-01"
+  }
+}
+```
+---
+### 29.15. POST /api/v1/student/enrollment/drop
+
+Hủy đăng ký lớp học phần.
+
+- **Auth**: Bắt buộc (Authorization: Bearer JWT)
+- **Content-Type**: application/json
+
+Request body:
+```json
+{
+  "courseClassId": 11
+}
+```
+
+**Fields:**
+
+| Field | Type | Required | Description
+|------|-----|-----|----|
+| courseClassId | long | ✅ | ID lớp học phần cần hủy
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Hủy đăng ký thành công",
+  "data": null
+}
+```
+---
+## 30. Feedback - Góp ý / Báo lỗi
+### 30.1. GET /api/v1/feedback/category
+
+Lấy danh sách danh mục phản hồi/góp ý.
+
+**Auth**: Bắt buộc (Authorization: Bearer JWT)
+**Content-Type**: Không áp dụng
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "get All feedback category success",
+  "data": [
+    {
+      "id": 1,
+      "name": "Bug",
+      "description": "Lỗi hệ thống"
+    },
+    {
+      "id": 2,
+      "name": "Feature",
+      "description": "Đề xuất tính năng"
+    }
+  ]
+}
+```
+
+**Test cases:**
+✅ gọi API thành công → code 0 + danh sách danh mục feedback
+
+---
+### 30.2. POST /api/v1/feedback/send
+
+Gửi feedback / báo lỗi từ người dùng.
+
+**Auth**: Bắt buộc (Authorization: Bearer JWT)
+**Content-Type**: multipart/form-data
+
+**Form data fields:**
+
+| Field | Type | Required | Description
+|------|-----|-----|----|
+| files | File[] | ❌ | Danh sách file đính kèm
+title | string | ✅ | Tiêu đề feedback
+categoryId | long | ✅ | ID danh mục feedback
+content | string | ✅ | Nội dung feedback
+appVersion | string | ❌ | Phiên bản ứng dụng
+deviceInfo | string | ❌ | Thông tin thiết bị
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "send feedback success",
+  "data": null
+}
+```
+**Response – User chưa đăng nhập (code -3):**
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```
+
+**Test cases:**
+
+- ✅ token hợp lệ + dữ liệu hợp lệ → gửi feedback thành công
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+- ❌ categoryId không tồn tại → code -2, HTTP 404
+- ❌ thiếu title hoặc content → code -1, HTTP 400
+---
+### 30.3. GET /api/v1/admin/feedback/all
+
+Lấy danh sách tất cả feedback của người dùng.
+
+**Auth**: Bắt buộc (Authorization: Bearer JWT)
+**Content-Type**: Không áp dụng
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "get all feedback success",
+  "data": [
+    {
+      "id": 1,
+      "email": "student@thanglong.edu.vn",
+      "title": "Lỗi đăng nhập",
+      "content": "Không thể đăng nhập bằng Microsoft",
+      "categoryName": "Bug",
+      "appVersion": "1.0.0",
+      "deviceInfo": "Android 14 - Samsung S23",
+      "feedbackImages": [
+        "image1"
+      ],
+      "status": "PENDING",
+      "createdAt": "2026-05-13T10:30:00"
+    }
+  ]
+}
+```
+
+**Lưu ý:**
+
+- Hiển thị ảnh bằng: `https://res.cloudinary.com/dm5ev1isi/raw/feedback/${fileKey}`
+- Status: 
+  - PENDING
+  - RESOLVED
+  - REJECT
+  - IN_PROGRESS
+
+**Test cases:**
+
+- ✅ token hợp lệ → code 0 + danh sách feedback
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+---
+### 30.4. POST /api/v1/admin/feedback/update-status/`{id}`
+
+Cập nhật trạng thái feedback.
+
+**Auth**: Bắt buộc (Authorization: Bearer JWT)
+**Content-Type**: application/json
+Path param:
+
+| Field | Type | Required | Description
+|------|-----|-----|----|
+id | long | ✅ | ID feedback
+
+Request body:
+```json
+{
+  "status": "RESOLVED"
+}
+
+| Field | Type | Required | Description
+|------|-----|-----|----|
+status | string | ✅ | Trạng thái feedback
+```
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "update status success",
+  "data": null
+}
+```
+
+**Response – Thiếu status (code -1):**
+```json
+{
+  "code": -1,
+  "data": null,
+  "message": "Status is required"
+}
+```
+
+**Test cases:**
+
+- ✅ id hợp lệ + status hợp lệ → cập nhật thành công
+- ❌ thiếu status → code -1, HTTP 400
+- ❌ feedback không tồn tại → code -2, HTTP 404
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+---
+
+## 31. Feedback Category - Danh mục phản hồi / góp ý
+### 31.1. GET /api/v1/admin/feedback-category/all
+
+Lấy tất cả danh mục feedback dành cho admin.
+
+**Auth**: Bắt buộc (Authorization: Bearer JWT)
+**Content-Type**: Không áp dụng
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "get all feedback category success",
+  "data": [
+    {
+      "id": 1,
+      "name": "Bug",
+      "description": "Lỗi hệ thống"
+    }
+  ]
+}
+```
+
+**Test cases:**
+
+- ✅ token hợp lệ → code 0 + danh sách category
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+---
+### 31.2. POST /api/v1/admin/feedback-category/create
+
+Tạo danh mục feedback mới.
+
+**Auth**: Bắt buộc (Authorization: Bearer JWT)
+**Content-Type**: application/json
+Request body:
+```json
+{
+  "name": "Bug",
+  "description": "Lỗi hệ thống"
+}
+```
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "create feedback category success",
+  "data": null
+}
+```
+
+**Test cases:**
+
+- ✅ dữ liệu hợp lệ → tạo category thành công
+- ❌ tên category bị trống → code -1, HTTP 400
+- ❌ category đã tồn tại → code -25, HTTP 409
+- ❌ token không hợp lệ → code -3, HTTP 401
+---
+### 31.3. POST /api/v1/admin/feedback-category/update/`{id}`
+
+Cập nhật danh mục feedback.
+
+**Auth**: Bắt buộc (Authorization: Bearer JWT)
+**Content-Type**: application/json
+
+**Path param**:
+```json
+{
+  "id": 1
+}
+```
+
+**Request body**:
+```json
+{
+  "name": "Feature",
+  "description": "Đề xuất tính năng"
+}
+```
+
+**Response thành công:**
+```json
+{
+  "code": 0,
+  "message": "update feedback category success",
+  "data": null
+}
+```
+
+### 31.4. POST /api/v1/admin/feedback-category/delete/`{id}`
+
+Xóa danh mục feedback.
+
+**Auth**: Bắt buộc (Authorization: Bearer JWT)
+**Content-Type**: application/json
+
+**Path param**:
+```json
+{
+  "id": 1
+}
+```
+
+**Response thành công:**
+```json
+{
+  "code": 0,
+  "message": "delete feedback category success",
+  "data": null
+}
+```
+
+**Test cases:**
+
+- ✅ id hợp lệ → update/delete thành công
+- ❌ category không tồn tại → code -2, HTTP 404
+- ❌ dữ liệu không hợp lệ → code -1, HTTP 400
+- ❌ token không hợp lệ → code -3, HTTP 401
+---
+## 32. Attendance - Điểm danh
+### 32.1. GET /api/v1/admin/attendance/session/`{classId}`
+
+Mở phiên điểm danh cho lớp học.
+
+**Auth**: Bắt buộc (Authorization: Bearer JWT)
+**Content-Type**: Không áp dụng
+
+**Path param**:
+| Field | Type | Required | Description |
+|-----|-----|-----|-----|
+| classId | number | ✅ | ID lớp học phần |
+
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Session opened successfully",
+  "data": "classId=1&sessionId=c85e9b83-df68-4d51-99c6-1475bae1a40e&exp=1779081158668.24e7d0c0114f0b29e24f5b44332c80dbb73822aaa116915a5dfb1204b4e88616"
+}
+```
+**Response – User chưa đăng nhập (code -3):**
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```
+
+**Response – Không tìm thấy lớp học (code -2):**
+```json
+{
+  "code": -2,
+  "data": null,
+  "message": "Class not found"
+}
+```
+
+**Test cases:**
+
+- ✅ token hợp lệ + classId hợp lệ → code 0 + token phiên điểm danh
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+- ❌ classId không tồn tại → code -2, HTTP 404
+---  
+### 32.2. GET /api/v1/admin/attendance/statistics/`{classId}`
+
+Lấy thống kê điểm danh của lớp học phần.
+
+**Auth**: Bắt buộc (Authorization: Bearer JWT)
+**Content-Type**: Không áp dụng
+
+**Path param:**
+
+| Field | Type | Required | Description |
+|-----|-----|-----|-----|
+| classId | number | ✅ | ID lớp học phần |
+
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Get statistics successfully",
+  "data": {
+    "classCode": "INT1001-01",
+    "className": "Nhập môn lập trình - Nhóm 01",
+    "totalSessions": 15,
+    "students": [
+      {
+        "studentCode": "SV2021001",
+        "studentName": "Nguyen Van A",
+        "presentCount": 14,
+        "absentCount": 1,
+        "attendanceRate": 93.33
+      },
+      {
+        "studentCode": "SV2021002",
+        "studentName": "Tran Thi B",
+        "presentCount": 12,
+        "absentCount": 3,
+        "attendanceRate": 80.0
+      }
+    ]
+  }
+}
+```
+**Cấu trúc dữ liệu ClassAttendanceSummaryResponse**
+| Field | Type | Description |
+|-----|-----|-----|
+|presentCount | number | Số buổi có mặt|
+|absentCount | number | Số buổi vắng mặt|
+|attendanceRate | number | Tỷ lệ chuyên cần (%)
+
+**Response – User chưa đăng nhập (code -3):**
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```
+**Response – Không tìm thấy dữ liệu điểm danh lớp học (code -2):**
+```json
+{
+  "code": -2,
+  "data": null,
+  "message": "Attendance not found"
+}
+```
+
+**Test cases:**
+
+- ✅ token hợp lệ + classId hợp lệ → code 0 + thống kê điểm danh
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+- ❌ classId không tồn tại → code -2, HTTP 404
+---
+### 32.3. POST /api/v1/attendance/checkin
+
+Sinh viên thực hiện điểm danh bằng QR code.
+
+**Auth**: Bắt buộc (Authorization: Bearer JWT)
+**Content-Type**: application/json
+
+**Request body**:
+
+```json
+{
+  "qrToken": "f4a8c2f9-7e6c-4f0f-b3c2-9d1a6e7f1234",
+  "latitude": 21.028511,
+  "longitude": 105.804817
+}
+```
+**Cấu trúc dữ liệu AttendanceRequest**
+| Field | Type | Required | Description |
+|-----|-----|-----|-----|
+| qrToken | string | ✅ | Token QR của phiên điểm danh |
+| latitude | number | ✅ | Vĩ độ vị trí sinh viên |
+| longitude | number | ✅ | Kinh độ vị trí sinh viên |
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Checked in successfully",
+  "data": null
+}
+```
+**Response – User chưa đăng nhập (code -3):**
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```
+
+**Response – QR token không hợp lệ hoặc đã hết hạn (code -28):**
+```json
+{
+  "code": -28,
+  "data": null,
+  "message": "Invalid or expired QR token"
+}
+```
+**Response – Sinh viên ngoài phạm vi cho phép (code -26):**
+```json
+{
+  "code": -26,
+  "data": null,
+  "message": "You are outside the allowed attendance area"
+}
+```
+**Response – Sinh viên đã điểm danh trước đó (code -25):**
+```json
+{
+  "code": -25,
+  "data": null,
+  "message": "Attendance already checked in"
+}
+```
+**Test cases:**
+
+- ✅ token hợp lệ + qrToken hợp lệ + vị trí hợp lệ → code 0
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+- ❌ qrToken không hợp lệ / hết hạn → code -1, HTTP 400
+- ❌ vị trí ngoài phạm vi cho phép → code -4, HTTP 403
+- ❌ đã điểm danh trước đó → code -25, HTTP 409
+---  
+## 33. AI Context - Ngữ cảnh AI Chatbot
+### 33.1. GET /api/v1/student/ai-context
+
+Lấy toàn bộ ngữ cảnh học tập của sinh viên để cung cấp cho AI Chatbot.
+
+**Auth**: Bắt buộc (Authorization: Bearer JWT)
+**Content-Type**: Không áp dụng
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Get user AI context successfully",
+  "data": {
+    "studentName": "Nguyen Van A",
+    "studentCode": "A46049",
+    "dateOfBirth": "2004-01-20",
+    "gender": "NAM",
+    "semesters": [
+      {
+        "id": 1,
+        "semesterName": "HK1 2025-2026",
+        "academicYears": "2025-2026",
+        "semesterNumber": 1,
+        "startDate": "2025-09-01",
+        "endDate": "2026-01-15"
+      }
+    ],
+    "academicInfo": [
+      {
+        "startYear": 2022,
+        "endYear": 2026,
+        "majorCode": "KTPM",
+        "majorName": "Ky thuat phan mem",
+        "facultyCode": "CNTT",
+        "studyProgramCode": "CTDT-KTPM-2022"
+      }
+    ]
+  }
+}
+```
+
+**Response – User chưa đăng nhập (code -3):**
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```
+**Test cases:**
+
+- ✅ token hợp lệ → code 0 + AI context của sinh viên
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+- ❌ student id không tồn tại trong db → code -2, HTTP 404
+---
+## 34. Chat - Chat giữa người dùng
+### 34.1. GET /api/v1/chat/list-students
+Lấy danh sách sinh viên dạng thông tin rút gọn, hỗ trợ tìm kiếm và phân trang.
+
+**Auth**: Bắt buộc (Authorization: Bearer JWT)
+**Content-Type**: Không áp dụng
+
+**Query params (optional)**
+
+| Field | Type | Required | Description |
+|------|-----|-----|-----|
+| name | string | ❌ | Tìm kiếm theo tên sinh viên |
+| studentCode | string | ❌ | Tìm kiếm theo mã sinh viên |
+| page | int | ❌ | Số trang (mặc định: 0) |
+| size | int | ❌ | Kích thước trang (mặc định: 10) |
+| sort | string | ❌ | Sắp xếp dữ liệu |
+
+**Response thành công (code 0):**
+
+```json
+{
+  "code": 0,
+  "message": "List students retrieved successfully",
+  "data": {
+    "content": [
+      {
+        "studentCode": "SV2021001",
+        "fullName": "Nguyen Van A"
+      }
+    ],
+    "page": 0,
+    "size": 10,
+    "totalElements": 100,
+    "totalPages": 10,
+    "first": true,
+    "last": false
+  }
+}
+```
+
+**Response – User chưa đăng nhập (code -3):**
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```
+**Test cases:**
+
+- ✅ token hợp lệ → code 0 + danh sách sinh viên
+- ✅ tìm kiếm theo tên hoặc mã sinh viên → trả dữ liệu phù hợp
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+---
+### 34.2. GET /api/v1/chat/student
+Lấy thông tin sinh viên phục vụ tính năng chat.
+
+- **Auth**: Bắt buộc (`Authorization: Bearer <JWT>`)
+- **Content-Type**: Không áp dụng
+
+### Query param
+
+| Field | Type | Required | Description |
+|------|-----|-----|-----|
+| code | string | ✅ | Mã sinh viên |
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Student chat info retrieved successfully",
+  "data": {
+    "studentCode": "SV2021001",
+    "fullName": "Nguyen Van A",
+    "classCode": "KHMT2021",
+    "majorName": "Khoa học máy tính",
+    "position": "Lớp trưởng"
+  }
+}
+```
+
+**Response – User chưa đăng nhập (code -3):**
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```
+**Test cases:**
+
+- ✅ token hợp lệ + mã sinh viên tồn tại → code 0 + thông tin chat sinh viên
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+- ❌ mã sinh viên không tồn tại → code -2, HTTP 404
+---
+### 34.3. POST /api/v1/chat/upload
+Gửi tệp trong cuộc trò chuyện.
+
+- **Auth**: Bắt buộc (`Authorization: Bearer <JWT>`)
+- **Content-Type**: `multipart/form-data`
+
+---
+
+## Form data fields
+
+| Field | Type | Required | Description |
+|------|-----|-----|-----|
+| file | File | ✅ | File cần upload |
+
+**Response thành công (code 0)**
+```json
+{
+  "code": 0,
+  "message": "File uploaded successfully",
+  "data": {
+    "url": "https://cdn.example.com/chat/files/document.pdf"
+  }
+}
+```
+
+**Response – User chưa đăng nhập (code -3):**
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```
+**Test cases:**
+
+- ✅ token hợp lệ + file hợp lệ → code 0 + url file
+- ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+- ❌ thiếu file → code -1, HTTP 400
+- ❌ upload thất bại → code -10, HTTP 500
+---

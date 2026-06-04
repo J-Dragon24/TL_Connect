@@ -13,8 +13,6 @@ CREATE INDEX IF NOT EXISTS idx_oauth_users_user_uuid ON oauth_users(user_uuid);
 CREATE INDEX IF NOT EXISTS idx_exam_schedules_semester_id ON exam_schedules(semester_id);
 CREATE INDEX IF NOT EXISTS idx_exam_schedules_subject_id ON exam_schedules(subject_id);
 
-/*Notifications indexes*/
-CREATE INDEX IF NOT EXISTS idx_notifications_type_target ON notifications(target_type, target_id);
 
 /*Class Schedules indexes*/
 CREATE INDEX IF NOT EXISTS idx_class_schedules_course_class_day ON class_schedules(course_class_id, day_of_week);
@@ -75,6 +73,9 @@ CREATE INDEX IF NOT EXISTS idx_study_program_subjects_subject_id ON study_progra
 /*Student Course Classes indexes*/
 CREATE INDEX IF NOT EXISTS idx_student_course_classes_course_class_id ON student_course_classes(course_class_id);
 
+CREATE INDEX IF NOT EXISTS idx_student_course_classes_student_id ON student_course_classes(student_id);
+
+
 /*Tuition Invoices indexes*/
 CREATE INDEX IF NOT EXISTS idx_tuition_invoices_student_id ON tuition_invoices(student_id);
 CREATE INDEX IF NOT EXISTS idx_tuition_invoices_semester_id ON tuition_invoices(semester_id);
@@ -95,6 +96,32 @@ CREATE INDEX IF NOT EXISTS idx_user_devices_oauth_user_id ON user_devices(oauth_
 CREATE INDEX IF NOT EXISTS idx_notifications_created
 ON notifications(created_at DESC);
 
+CREATE INDEX IF NOT EXISTS idx_notifications_target_type ON notifications(target_type);
+
 /*News indexes*/
 CREATE INDEX IF NOT EXISTS idx_news_publish_date
 ON news(publish_date DESC);
+
+/* Notification Targets indexes*/
+CREATE INDEX IF NOT EXISTS idx_notification_targets_notification_id 
+ON notification_targets(notification_id);
+
+CREATE INDEX IF NOT EXISTS idx_notification_targets_target_notification
+ON notification_targets(target_id, notification_id);
+
+/* Notification Read indexes*/
+CREATE INDEX IF NOT EXISTS idx_notification_read_user_notification
+ON notification_read(oauth_user_id, notification_id);
+
+/* feedback */
+CREATE INDEX IF NOT EXISTS idx_feedback_category_id ON feedback(category_id);
+
+/* feedback attachments */
+CREATE INDEX IF NOT EXISTS idx_feedback_attachments_feedback_id ON feedback_attachments(feedback_id);
+
+/* attendance */
+CREATE INDEX IF NOT EXISTS idx_attendance_student_id ON attendances(student_id);
+CREATE INDEX IF NOT EXISTS idx_attendance_course_class_id ON attendances(course_class_id);
+CREATE INDEX IF NOT EXISTS idx_attendance_session_id ON attendances(session_id);
+
+

@@ -15,7 +15,5 @@ public class CreateTuitionPaymentReqDTO {
 
     String language;
 
-    String bankCode;
-
     String ipAddress;
 }

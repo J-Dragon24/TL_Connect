@@ -17,14 +17,16 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tl_connect.dev.core.common.enums.RefundType;
-import com.tl_connect.dev.core.common.exception.ExternalException;
-import com.tl_connect.dev.core.config.VNPayConfig;
 import com.tl_connect.dev.modules.payment.dto.CallbackPaymentDTO;
 import com.tl_connect.dev.modules.payment.dto.PaymentRequestDTO;
 import com.tl_connect.dev.modules.payment.dto.PaymentResponseDTO;
+import com.tl_connect.dev.modules.payment.dto.QueryPaymentRequestDTO;
+import com.tl_connect.dev.modules.payment.dto.QueryPaymentResponseRawDTO;
 import com.tl_connect.dev.modules.payment.dto.RefundInfoDTO;
 import com.tl_connect.dev.modules.payment.dto.RefundResponseDTO;
+import com.tl_connect.dev.shared.common.enums.RefundType;
+import com.tl_connect.dev.shared.common.exception.ExternalException;
+import com.tl_connect.dev.shared.config.VNPayConfig;
 
 import lombok.RequiredArgsConstructor;
 import okhttp3.MediaType;
@@ -33,32 +35,32 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
 @RequiredArgsConstructor
-public class VnPayProvider implements ProviderPayment{
+@Slf4j
+public class VnPayProvider implements ProviderPayment {
 
     private final VNPayConfig config;
     private final ObjectMapper objectMapper;
     private final OkHttpClient okHttpClient;
 
+    @Override
     public PaymentResponseDTO createPaymentUrl(PaymentRequestDTO request) throws Exception {
         String orderType = "other";
-        long amount = request.getAmount() *100;
-        
+        long amount = request.getAmount() * 100;
+
         String vnp_TxnRef = config.getRandomNumber(8);
-        
+
         Map<String, String> vnp_Params = new HashMap<>();
         vnp_Params.put("vnp_Version", config.getVnp_Version());
         vnp_Params.put("vnp_Command", config.getVnp_Command());
         vnp_Params.put("vnp_TmnCode", config.getVnp_TmnCode());
         vnp_Params.put("vnp_Amount", String.valueOf(amount));
         vnp_Params.put("vnp_CurrCode", "VND");
-        
-        if (request.getBankCode() != null && !request.getBankCode().isEmpty()) {
-            vnp_Params.put("vnp_BankCode", request.getBankCode());
-        }
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
-        vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang:" + vnp_TxnRef);
+        vnp_Params.put("vnp_OrderInfo", request.getDescription() != null ? request.getDescription() : "Thanh toan don hang:" + vnp_TxnRef);
         vnp_Params.put("vnp_OrderType", orderType);
 
         String locate = request.getLanguage();
@@ -74,18 +76,18 @@ public class VnPayProvider implements ProviderPayment{
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
         String vnp_CreateDate = formatter.format(cld.getTime());
         vnp_Params.put("vnp_CreateDate", vnp_CreateDate);
-        
+
         cld.add(Calendar.MINUTE, 15);
         String vnp_ExpireDate = formatter.format(cld.getTime());
         vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
-        
+
         List<String> fieldNames = new ArrayList<>(vnp_Params.keySet());
         Collections.sort(fieldNames);
 
         StringBuilder hashData = new StringBuilder();
         StringBuilder query = new StringBuilder();
         boolean first = true;
-        for(String fieldName : fieldNames){
+        for (String fieldName : fieldNames) {
             String fieldValue = vnp_Params.get(fieldName);
             if ((fieldValue != null) && !fieldValue.isEmpty()) {
 
@@ -93,11 +95,11 @@ public class VnPayProvider implements ProviderPayment{
                     hashData.append("&");
                     query.append("&");
                 }
-                //Build hash data
+                // Build hash data
                 hashData.append(fieldName);
                 hashData.append('=');
                 hashData.append(URLEncoder.encode(fieldValue, StandardCharsets.UTF_8));
-                //Build query
+                // Build query
                 query.append(URLEncoder.encode(fieldName, StandardCharsets.UTF_8));
                 query.append('=');
                 query.append(URLEncoder.encode(fieldValue, StandardCharsets.UTF_8));
@@ -110,17 +112,17 @@ public class VnPayProvider implements ProviderPayment{
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
         String paymentUrl = config.getVnp_PayUrl() + "?" + queryUrl;
         return PaymentResponseDTO.builder()
-        .provider("VNPAY")
-        .transactionId(vnp_TxnRef)
-        .paymentUrl(paymentUrl)
-        .build();
+                .provider("VNPAY")
+                .transactionId(vnp_TxnRef)
+                .paymentUrl(paymentUrl)
+                .build();
     }
 
     public CallbackPaymentDTO callback(Map<String, String> params) throws Exception {
         String vnpSecureHash = params.get("vnp_SecureHash");
         params.remove("vnp_SecureHash");
         params.remove("vnp_SecureHashType");
-        
+
         List<String> fieldNames = new ArrayList<>(params.keySet());
         Collections.sort(fieldNames);
 
@@ -141,9 +143,9 @@ public class VnPayProvider implements ProviderPayment{
             }
         }
         String checkHash = config.hmacSHA512(config.getSecretKey(), hashData.toString());
-        
+
         if (!checkHash.equals(vnpSecureHash)) {
-            throw new SecurityException("Invalid MAC");
+            throw new ExternalException("Invalid MAC");
         }
 
         String responseCode = params.get("vnp_ResponseCode");
@@ -167,7 +169,7 @@ public class VnPayProvider implements ProviderPayment{
 
     public RefundResponseDTO refund(RefundInfoDTO req) throws Exception {
         try {
-            String requestId = UUID.randomUUID().toString().replace("-", "").substring(0, 16);
+            String requestId = UUID.randomUUID().toString().replace("-", "");
 
             String createDate = new SimpleDateFormat("yyyyMMddHHmmss")
                     .format(new Date());
@@ -176,9 +178,9 @@ public class VnPayProvider implements ProviderPayment{
 
             String type = "02";
 
-            if(req.getType() == RefundType.FULL) {
+            if (req.getType() == RefundType.FULL) {
                 type = "02";
-            } else if(req.getType() == RefundType.PARTIAL) {
+            } else if (req.getType() == RefundType.PARTIAL) {
                 type = "03";
             }
 
@@ -195,8 +197,7 @@ public class VnPayProvider implements ProviderPayment{
                     req.getCreateBy(),
                     createDate,
                     req.getIpAddress(),
-                    req.getOrderInfo()
-            );
+                    req.getOrderInfo());
 
             String secureHash = config.hmacSHA512(config.getSecretKey(), data);
 
@@ -228,45 +229,106 @@ public class VnPayProvider implements ProviderPayment{
                 String resBody = response.body().string();
                 Map<String, Object> result = objectMapper.readValue(resBody, Map.class);
 
-                String vnpSecureHash = (String) result.get("vnp_SecureHash");
-
-                String verifyData = String.join("|",
-                        (String) result.get("vnp_ResponseId"),
-                        (String) result.get("vnp_Command"),
-                        (String) result.get("vnp_ResponseCode"),
-                        (String) result.get("vnp_Message"),
-                        (String) result.get("vnp_TmnCode"),
-                        (String) result.get("vnp_TxnRef"),
-                        String.valueOf(result.get("vnp_Amount")),
-                        (String) result.get("vnp_BankCode"),
-                        (String) result.get("vnp_PayDate"),
-                        String.valueOf(result.get("vnp_TransactionNo")),
-                        (String) result.get("vnp_TransactionType"),
-                        (String) result.get("vnp_TransactionStatus"),
-                        (String) result.get("vnp_OrderInfo")
-                );
-
-                String checkHash = config.hmacSHA512(config.getSecretKey(), verifyData);
-
-                if (!checkHash.equals(vnpSecureHash)) {
-                    throw new RuntimeException("Invalid VNPay refund signature");
-                }
-
                 if (!"00".equals(result.get("vnp_ResponseCode"))) {
-                    throw new RuntimeException("VNPay refund failed: " + result.get("vnp_Message"));
+                    throw new ExternalException("VNPay refund failed: " + result.get("vnp_Message"));
                 }
 
                 return RefundResponseDTO.builder()
-                    .responseCode(0)
-                    .message((String) result.get("vnp_Message"))
-                    .refundId((String) result.get("vnp_ResponseId"))
-                    .status((String) result.get("vnp_TransactionStatus"))
-                    .rawData(result)
-                    .build();
+                        .responseCode(0)
+                        .message((String) result.get("vnp_Message"))
+                        .refundId((String) result.get("vnp_ResponseId"))
+                        .status((String) result.get("vnp_TransactionStatus"))
+                        .rawData(result)
+                        .build();
             }
 
         } catch (Exception e) {
             throw new ExternalException("Refund failed" + e.getMessage());
-        }    
-    }  
+        }
+    }
+
+    @Override
+    public QueryPaymentResponseRawDTO queryPaymentResult(QueryPaymentRequestDTO req, String ipAddress, String transactionDate)
+            throws Exception {
+        try {
+            String vnp_RequestId = config.getRandomNumber(8);
+            String vnp_Version = config.getVnp_Version();
+            String vnp_Command = "querydr";
+            String vnp_TmnCode = config.getVnp_TmnCode();
+            String vnp_TxnRef = req.getTransactionCode();
+            String vnp_OrderInfo = "Kiem tra ket qua GD OrderId:" + req.getTransactionCode();
+            String vnp_TransDate = transactionDate;
+            String vnp_IpAddr = ipAddress;
+
+            Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+            String vnp_CreateDate = formatter.format(cld.getTime());
+
+
+            Map<String, Object> body = new LinkedHashMap<>();
+            body.put("vnp_RequestId", vnp_RequestId);
+            body.put("vnp_Version", vnp_Version);
+            body.put("vnp_Command", vnp_Command);
+            body.put("vnp_TmnCode", vnp_TmnCode);
+            body.put("vnp_TxnRef", vnp_TxnRef);
+            body.put("vnp_OrderInfo", vnp_OrderInfo);
+            body.put("vnp_TransactionDate", vnp_TransDate);
+            body.put("vnp_CreateDate", vnp_CreateDate);
+            body.put("vnp_IpAddr", vnp_IpAddr);
+
+            String hash_Data= String.join("|", vnp_RequestId, vnp_Version, vnp_Command, vnp_TmnCode, vnp_TxnRef, vnp_TransDate, vnp_CreateDate, vnp_IpAddr, vnp_OrderInfo);
+
+            log.info("Query payment result - Data: {}", hash_Data);
+
+            String vnp_SecureHash = config.hmacSHA512(config.getSecretKey(), hash_Data.toString());
+
+            log.info("Query payment result - Secure Hash: {}", vnp_SecureHash);
+
+            body.put("vnp_SecureHash", vnp_SecureHash);
+
+            String json = objectMapper.writeValueAsString(body);
+
+            Request request = new Request.Builder()
+                    .url(config.getVnp_ApiUrl())
+                    .post(RequestBody.create(json, MediaType.parse("application/json")))
+                    .build();
+
+            try (Response response = okHttpClient.newCall(request).execute()) {
+                String resBody = response.body().string();
+                Map<String, Object> result = objectMapper.readValue(resBody, Map.class);
+
+                if ("00".equals(result.get("vnp_ResponseCode"))) {
+                    throw new ExternalException("VNPay query failed: " + result.get("vnp_Message"));
+                }
+
+                String transactionStatus = (String) result.get("vnp_TransactionStatus");
+                Integer responseCode;
+
+                switch (transactionStatus) {
+                    case "00":
+                        responseCode = 0;
+                        break;
+                    case "01":
+                        responseCode = 1;
+                        break;
+                    default:
+                        responseCode = -1;
+                        break;
+                }
+
+                return QueryPaymentResponseRawDTO.builder()
+                        .responseCode(responseCode)
+                        .message((String) result.get("vnp_Message"))
+                        .transactionId((String) result.get("vnp_TxnRef"))
+                        .providerTransactionId(String.valueOf(result.get("vnp_TransactionNo")))
+                        .amount(result.get("vnp_Amount") != null
+                                ? Long.parseLong(String.valueOf(result.get("vnp_Amount"))) / 100
+                                : 0)
+                        .rawData(result)
+                        .build();
+            }
+        } catch (Exception e) {
+            throw new ExternalException("Query payment failed: " + e.getMessage());
+        }
+    }
 }

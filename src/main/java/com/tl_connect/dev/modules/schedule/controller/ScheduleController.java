@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.core.Authentication;
 
-import com.tl_connect.dev.core.common.exception.InvalidInputException;
-import com.tl_connect.dev.core.common.exception.UnauthorizeException;
-import com.tl_connect.dev.core.common.types.JwtUserInfo;
-import com.tl_connect.dev.core.common.ultility.ResponseHelper;
-import com.tl_connect.dev.modules.schedule.ScheduleService;
 import com.tl_connect.dev.modules.schedule.dto.DayOfWeekScheduleDTO;
 import com.tl_connect.dev.modules.schedule.dto.SemesterScheduleDTO;
 import com.tl_connect.dev.modules.schedule.dto.WeeklyScheduleDTO;
+import com.tl_connect.dev.modules.schedule.service.interfaces.ScheduleService;
+import com.tl_connect.dev.shared.common.exception.InvalidInputException;
+import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
+import com.tl_connect.dev.shared.common.types.JwtUserInfo;
+import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 
 import lombok.RequiredArgsConstructor;
 

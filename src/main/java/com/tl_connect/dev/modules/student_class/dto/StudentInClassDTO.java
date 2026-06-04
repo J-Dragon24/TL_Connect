@@ -1,6 +1,6 @@
 package com.tl_connect.dev.modules.student_class.dto;
 
-import com.tl_connect.dev.core.common.enums.Gender;
+import com.tl_connect.dev.shared.common.enums.Gender;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

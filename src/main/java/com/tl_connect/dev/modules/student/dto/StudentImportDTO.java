@@ -2,10 +2,9 @@ package com.tl_connect.dev.modules.student.dto;
 
 import java.time.LocalDate;
 
-import com.tl_connect.dev.core.common.enums.Gender;
-import com.tl_connect.dev.core.common.enums.TrainingType;
-
-import com.tl_connect.dev.core.common.ultility.importer.annotation.ImportColumn;
+import com.tl_connect.dev.shared.common.enums.Gender;
+import com.tl_connect.dev.shared.common.enums.TrainingType;
+import com.tl_connect.dev.shared.common.ultility.FileProcess.annotation.ExcelColumn;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -24,41 +23,41 @@ import lombok.Setter;
 @AllArgsConstructor
 public class StudentImportDTO {
 
-    @ImportColumn("Mã sinh viên")
+    @ExcelColumn(header = "Mã sinh viên")
     @NotBlank(message = "Mã sinh viên không được để trống")
     private String studentCode;
 
-    @ImportColumn("Họ tên")
+    @ExcelColumn(header = "Họ tên")
     @NotBlank(message = "Họ tên không được để trống")
     private String fullName;
 
     @NotNull(message = "Ngày sinh không được để trống")
     @Past(message = "Ngày sinh không hợp lệ")
-    @ImportColumn("Ngày sinh")
+    @ExcelColumn(header = "Ngày sinh")
     private LocalDate dateOfBirth;
 
     @NotNull(message = "Giới tính không được để trống")
-    @ImportColumn("Giới tính")
+    @ExcelColumn(header = "Giới tính")
     private Gender gender;
 
     @NotBlank(message = "Mã lớp không được để trống")
-    @ImportColumn("Mã lớp")
+    @ExcelColumn(header = "Mã lớp")
     private String studentClassCode;
 
     @NotBlank(message = "Mã ngành không được để trống")
-    @ImportColumn("Mã ngành")
+    @ExcelColumn(header = "Mã ngành")
     private String majorCode;
 
     @NotNull(message = "Năm nhập học không được để trống")
-    @ImportColumn("Năm nhập học")
+    @ExcelColumn(header = "Năm nhập học")
     private Integer startYear;
 
     @NotNull(message = "Năm tốt nghiệp dự kiến không được để trống")
-    @ImportColumn("Năm tốt nghiệp dự kiến")
+    @ExcelColumn(header = "Năm tốt nghiệp dự kiến")
     private Integer endYear;
 
     @NotNull(message = "Hình thức đào tạo không được để trống")
-    @ImportColumn("Hình thức đào tạo")
+    @ExcelColumn(header = "Hình thức đào tạo")
     private TrainingType trainingType;
 
     @Valid @NotNull

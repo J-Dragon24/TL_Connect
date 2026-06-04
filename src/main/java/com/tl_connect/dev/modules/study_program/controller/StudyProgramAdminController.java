@@ -11,17 +11,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tl_connect.dev.core.common.dto.PagedResponse;
-import com.tl_connect.dev.core.common.ultility.ResponseHelper;
 import com.tl_connect.dev.modules.study_program.dto.CreateStudyProgramDTO;
 import com.tl_connect.dev.modules.study_program.dto.CreateStudyProgramSubDTO;
 import com.tl_connect.dev.modules.study_program.dto.StudyProgramAdmDTO;
 import com.tl_connect.dev.modules.study_program.dto.StudyProgramDTO;
 import com.tl_connect.dev.modules.study_program.dto.UpdateStudyProgramDTO;
 import com.tl_connect.dev.modules.study_program.dto.UpdateStudyProgramSubDTO;
-import com.tl_connect.dev.modules.study_program.service.StudyProgramModifyService;
-import com.tl_connect.dev.modules.study_program.service.StudyProgramService;
-import com.tl_connect.dev.modules.study_program.service.StudyProgramSubjectService;
+import com.tl_connect.dev.modules.study_program.service.interfaces.StudyProgramModifyService;
+import com.tl_connect.dev.modules.study_program.service.interfaces.StudyProgramService;
+import com.tl_connect.dev.modules.study_program.service.interfaces.StudyProgramSubjectService;
+import com.tl_connect.dev.shared.common.dto.PagedResponse;
+import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +44,7 @@ public class StudyProgramAdminController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getStudyProgram(@PathVariable Long id) {
-        StudyProgramDTO result = studyProgramService.getDetailedStudyProgram(id);
+        StudyProgramDTO result = studyProgramService.getDetailedAdminStudyProgram(id);
         return ResponseHelper.success("Study program retrieved successfully", result);
     }
 

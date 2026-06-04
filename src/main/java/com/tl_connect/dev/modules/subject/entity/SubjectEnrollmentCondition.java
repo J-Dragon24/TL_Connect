@@ -6,8 +6,8 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.tl_connect.dev.core.common.enums.ConditionEnrollmentType;
-import com.tl_connect.dev.core.common.exception.InvalidInputException;
+import com.tl_connect.dev.shared.common.enums.SubjectConditionType;
+import com.tl_connect.dev.shared.common.exception.InvalidInputException;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -34,7 +34,7 @@ public class SubjectEnrollmentCondition {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "condition_type", nullable = false)
-    private ConditionEnrollmentType conditionType;
+    private SubjectConditionType conditionType;
 
     @Column(name = "condition_value", nullable = false)
     private BigDecimal conditionValue;
@@ -53,7 +53,7 @@ public class SubjectEnrollmentCondition {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    public static SubjectEnrollmentCondition create(Long subjectId, ConditionEnrollmentType conditionType, BigDecimal conditionValue, String conditionOperator, String description) {
+    public static SubjectEnrollmentCondition create(Long subjectId, SubjectConditionType conditionType, BigDecimal conditionValue, String conditionOperator, String description) {
         if(conditionValue.compareTo(BigDecimal.ZERO) <= 0){
             throw new InvalidInputException("Invalid condition value");
         }

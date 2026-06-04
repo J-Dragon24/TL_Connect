@@ -3,8 +3,9 @@ package com.tl_connect.dev.modules.notification.dto;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.tl_connect.dev.core.common.enums.NotificationCreatedBy;
-import com.tl_connect.dev.core.common.enums.NotificationType;
+import com.tl_connect.dev.shared.common.enums.NotificationCreatedBy;
+import com.tl_connect.dev.shared.common.enums.NotificationType;
+import com.tl_connect.dev.shared.common.enums.ReferenceTypeNotification;
 
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotNull;
@@ -20,7 +21,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateNotificationReqDTO {
-    private Long templateId;
     @NotNull(message = "Title is required")
     private String title;
     private String content;
@@ -31,20 +31,13 @@ public class CreateNotificationReqDTO {
     private LocalDate deadLine;
     @NotNull(message = "Is important is required")
     private Boolean isImportant;
+    private ReferenceTypeNotification referenceType;
 
-    @AssertTrue(message = "Target id is required")
-    public boolean isTargetIdValid() {
+    @AssertTrue(message = "Target ids is required")
+    public boolean isTargetIdsValid() {
         if (targetType == NotificationType.GLOBAL) {
             return true;
         }
         return targetIds != null && !targetIds.isEmpty();
-    }
-
-    @AssertTrue(message = "Content is required")
-    public boolean isContentValid() {
-        if (templateId != null) {
-            return true;
-        }
-        return content != null && !content.isEmpty();
     }
 }

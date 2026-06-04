@@ -3,7 +3,7 @@ package com.tl_connect.dev.modules.tuition.dto;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import com.tl_connect.dev.core.common.enums.TuitionStatus;
+import com.tl_connect.dev.shared.common.enums.TuitionStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

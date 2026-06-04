@@ -15,6 +15,7 @@ public class StudyProgramListItemDTO {
     private String studentCode;
     private String studyProgramCode;
     private String studyProgramName;
+    private Integer totalCredits;
     private Boolean isPrimary;
     private Integer startYear;
 }

@@ -8,10 +8,13 @@ import java.util.Set;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.tl_connect.dev.modules.chat.projection.StudentChatInfoView;
+import com.tl_connect.dev.modules.chatbot.projection.AIContextView;
 import com.tl_connect.dev.modules.student.entity.Student;
 import com.tl_connect.dev.modules.student.projection.HealthInsuranceView;
 import com.tl_connect.dev.modules.student.projection.StudentInfoView;
@@ -20,7 +23,7 @@ import com.tl_connect.dev.modules.student.projection.StudyYearView;
 import com.tl_connect.dev.modules.student_class.projection.ClassHeaderView;
 
 @Repository
-public interface StudentRepository extends JpaRepository<Student, Long> {
+public interface StudentRepository extends JpaRepository<Student, Long>, JpaSpecificationExecutor<Student> {
 
     boolean existsByStudentCode(String studentCode);
 
@@ -109,7 +112,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             LEFT JOIN student_contacts sc ON s.id = sc.student_id
             LEFT JOIN academic_infos ai ON sm.id = ai.student_major_id
             LEFT JOIN emergency_contacts ec ON s.id = ec.student_id
-            WHERE f.faculty_code = :facultyCode OR :facultyCode = ''
+            WHERE (:facultyCode IS NULL OR f.faculty_code = :facultyCode)
             ORDER BY s.student_code DESC
             """, countQuery = """
                 SELECT COUNT(s.id)
@@ -123,7 +126,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
                 LEFT JOIN student_contacts sc ON s.id = sc.student_id
                 LEFT JOIN academic_infos ai ON sm.id = ai.student_major_id
                 LEFT JOIN emergency_contacts ec ON s.id = ec.student_id
-                WHERE f.faculty_code = :facultyCode OR :facultyCode = ''
+                WHERE (:facultyCode IS NULL OR f.faculty_code = :facultyCode)
             """, nativeQuery = true)
     Page<StudentRow> findAllStudent(Pageable pageable, @Param("facultyCode") String facultyCode);
 
@@ -178,7 +181,44 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             WHERE s.id = :studentId
             """, nativeQuery = true)
     Optional<StudyYearView> findYearStudy(@Param("studentId") Long studentId);
-
+ 
     @Query("SELECT s.studentCode FROM Student s WHERE s.studentCode IN :codes")
     Set<String> findExistingStudentCodes(@Param("codes") Collection<String> codes);
+
+    @Query(value ="""
+        SELECT
+            s.full_name AS studentName,
+            s.student_code AS studentCode,
+            s.date_of_birth AS dateOfBirth,
+            s.gender AS gender,
+            sm.start_year AS startYear,
+            sm.end_year AS endYear,
+            m.major_code AS majorCode,
+            m.major_name AS majorName,
+            f.faculty_code AS facultyCode,
+            sp.study_program_code AS studyProgramCode
+        FROM students s
+        LEFT JOIN student_majors sm ON s.id = sm.student_id
+        LEFT JOIN study_programs sp ON sm.study_program_id = sp.id
+        LEFT JOIN majors m ON sm.major_id = m.id
+        LEFT JOIN faculties f ON m.faculty_id = f.id
+        WHERE s.id = :studentId
+        """, nativeQuery = true)
+    List<AIContextView> findAiContext(@Param("studentId") Long studentId);
+
+    @Query(value = """
+            SELECT
+                s.student_code AS studentCode,
+                s.full_name AS fullName,
+                c.class_code AS classCode,
+                m.major_name AS majorName,
+                ai.position AS position
+            FROM students s
+            LEFT JOIN student_classes c ON s.student_class_id = c.id
+            LEFT JOIN student_majors sm ON s.id = sm.student_id AND sm.is_primary = true
+            LEFT JOIN majors m ON sm.major_id = m.id
+            LEFT JOIN academic_infos ai ON sm.id = ai.student_major_id
+            WHERE s.student_code = :studentCode
+            """, nativeQuery = true)
+    Optional<StudentChatInfoView> findStudentChatInfoByCode(@Param("studentCode") String studentCode);
 }

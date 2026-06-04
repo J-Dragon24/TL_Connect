@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 @Builder
 public class PaymentResponseDTO {
-    private String provider;        // VNPAY | ZALOPAY
+    private String provider;        // VNPAY | ZALOPAY | MOMO
     private String transactionId;
     private String paymentUrl; 
 

@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.tl_connect.dev.core.common.enums.TuitionStatus;
+import com.tl_connect.dev.shared.common.enums.TuitionStatus;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
