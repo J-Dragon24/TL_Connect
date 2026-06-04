@@ -71,10 +71,13 @@ public class StudentServiceImpl implements StudentService {
         public Page<Student> getAllStudentsBySearch(String search, Pageable pageable) {
                 Specification<Student> spec = (root, query, cb) -> {
                     List<Predicate> predicates = new ArrayList<>();
-                    if(search != null && !search.isEmpty()) {
+                    if(search != null && !search.isBlank()) {
+
+                        String keyword = "%" + search.toLowerCase().trim() + "%";
+
                         predicates.add(cb.or(
-                                cb.like(root.get("fullName"), "%" + search + "%"),
-                                cb.like(root.get("studentCode"), "%" + search + "%")
+                                cb.like(cb.lower(root.get("fullName")), keyword),
+                                cb.like(cb.lower(root.get("studentCode")), keyword)
                             ));
                     }
 
