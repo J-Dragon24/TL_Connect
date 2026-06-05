@@ -11,7 +11,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.tl_connect.dev.modules.academic_result.entity.StudentSubjectResult;
 import com.tl_connect.dev.modules.academic_result.service.interfaces.AcademicResultService;
 import com.tl_connect.dev.modules.enroll.dto.StudentEnrollmentProfile;
-import com.tl_connect.dev.shared.common.ultility.CacheHelper;
+import com.tl_connect.dev.shared.ultility.CacheHelper;
 
 import lombok.RequiredArgsConstructor;
 

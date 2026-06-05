@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class SimpleProfileStudentDTO {
+    private String avatarUrl;
     private String studentCode;
     private String fullName;
 }

@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import com.tl_connect.dev.shared.common.ultility.FileProcess.annotation.ExcelColumn;
+import com.tl_connect.dev.shared.ultility.FileProcess.annotation.ExcelColumn;
 
 import jakarta.validation.constraints.Pattern;
 

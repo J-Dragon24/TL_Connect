@@ -30,7 +30,7 @@ import com.tl_connect.dev.modules.student.service.interfaces.StudentService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.enums.NotificationType;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
-import com.tl_connect.dev.shared.common.ultility.NotificationHelper;
+import com.tl_connect.dev.shared.ultility.NotificationHelper;
 import com.tl_connect.dev.modules.notification.service.interfaces.NotificationService;
 
 @Service

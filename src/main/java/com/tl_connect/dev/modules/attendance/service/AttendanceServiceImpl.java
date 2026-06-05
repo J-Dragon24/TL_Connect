@@ -15,7 +15,7 @@ import com.tl_connect.dev.modules.attendance.service.interfaces.AttendanceServic
 import com.tl_connect.dev.modules.attendance.service.interfaces.QrTokenService;
 import com.tl_connect.dev.shared.common.exception.BadRequestException;
 import com.tl_connect.dev.shared.common.exception.ConflictException;
-import com.tl_connect.dev.shared.common.ultility.GeoUtil;
+import com.tl_connect.dev.shared.ultility.GeoUtil;
 
 import lombok.RequiredArgsConstructor;
 

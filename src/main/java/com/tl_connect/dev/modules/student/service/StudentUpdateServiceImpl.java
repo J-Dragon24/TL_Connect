@@ -4,6 +4,7 @@ package com.tl_connect.dev.modules.student.service;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.tl_connect.dev.modules.major.entity.Major;
 import com.tl_connect.dev.modules.major.entity.StudentMajor;
@@ -17,16 +18,20 @@ import com.tl_connect.dev.modules.student_class.entity.StudentClass;
 import com.tl_connect.dev.modules.student_class.service.interfaces.StudentClassService;
 import com.tl_connect.dev.modules.study_program.entity.StudyProgram;
 import com.tl_connect.dev.modules.study_program.service.interfaces.StudyProgramService;
+import com.tl_connect.dev.shared.common.dto.UploadResult;
 import com.tl_connect.dev.shared.common.enums.TrainingType;
 import com.tl_connect.dev.shared.common.exception.ConflictException;
+import com.tl_connect.dev.shared.common.exception.ExternalException;
 import com.tl_connect.dev.shared.common.exception.InvalidInputException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
-import com.tl_connect.dev.shared.common.ultility.CacheHelper;
+import com.tl_connect.dev.shared.ultility.CacheHelper;
+import com.tl_connect.dev.shared.ultility.FileHelper;
 import com.tl_connect.dev.modules.student.repository.AcademicInfoRepository;
 import com.tl_connect.dev.modules.student.repository.StudentContactRepository;
 import com.tl_connect.dev.modules.student.repository.EmergencyContactRepository;
 import com.tl_connect.dev.modules.student.repository.IdentityCardRepository;
 import com.tl_connect.dev.modules.major.service.interfaces.MajorService;
+import com.tl_connect.dev.modules.student.dto.SelfUpdateRequestDTO;
 import com.tl_connect.dev.modules.student.dto.UpdateBasicInfoDTO;
 import com.tl_connect.dev.modules.student.dto.UpdateStudentAcademicDTO;
 import com.tl_connect.dev.modules.student.service.interfaces.StudentCacheService;
@@ -49,6 +54,7 @@ public class StudentUpdateServiceImpl implements StudentUpdateService {
     private final StudyProgramService studyProgramService;
     private final StudentCacheService studentCacheService;
     private final CacheHelper cacheHelper;
+    private final FileHelper fileHelper;
 
     @Transactional
     public void updateBasicInfo(Long studentId, UpdateBasicInfoDTO dto) {
@@ -57,11 +63,36 @@ public class StudentUpdateServiceImpl implements StudentUpdateService {
 
         updateStudent(student, dto);
 
-        updateContact(studentId, dto);
+        updateContact(studentId, dto.getPhoneNumber(), dto.getAddress(), dto.getEmail());
 
-        updateEmergencyContact(studentId, dto);
+        updateEmergencyContact(studentId, dto.getEmergencyContactName(), dto.getEmergencyContactPhoneNumber(), dto.getEmergencyContactAddress(), dto.getEmergencyContactRelationship());
 
         updateIdentityCard(studentId, dto);
+
+        cacheHelper.evictAfterCommit(() -> studentCacheService.evict(studentId));
+    }
+
+    @Transactional
+    public void updateSelfInfo(Long studentId, SelfUpdateRequestDTO dto) {
+
+        updateContact(studentId, dto.getPhoneNumber(), dto.getAddress(), dto.getEmail());
+
+        updateEmergencyContact(studentId, dto.getEmergencyContactName(), dto.getEmergencyContactPhoneNumber(), dto.getEmergencyContactAddress(), dto.getEmergencyContactRelationship());
+
+        cacheHelper.evictAfterCommit(() -> studentCacheService.evict(studentId));
+    }
+
+    @Override
+    @Transactional
+    public void updateAvatar(Long studentId, MultipartFile file) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new NotFoundException("Student not found"));
+        try {
+            UploadResult uploadResult = fileHelper.uploadFile("avatars", file);
+            student.setAvatarUrl(uploadResult.getUrl());
+        } catch (Exception e) {
+            throw new ExternalException("Upload file thất bại");
+        }
 
         cacheHelper.evictAfterCommit(() -> studentCacheService.evict(studentId));
     }
@@ -88,49 +119,49 @@ public class StudentUpdateServiceImpl implements StudentUpdateService {
         }
     }
 
-    private void updateContact(Long studentId, UpdateBasicInfoDTO dto) {
-        if (dto.getPhoneNumber() == null &&
-                dto.getAddress() == null &&
-                dto.getEmail() == null)
+    private void updateContact(Long studentId, String phoneNumber, String address, String email) {
+        if (phoneNumber == null &&
+                address == null &&
+                email == null)
             return;
 
         StudentContact contact = studentContactRepository
                 .findByStudentId(studentId)
                 .orElseThrow(() -> new NotFoundException("Contact not found"));
 
-        if (dto.getPhoneNumber() != null) {
-            contact.setPhoneNumber(dto.getPhoneNumber());
+        if (phoneNumber != null) {
+            contact.setPhoneNumber(phoneNumber);
         }
-        if (dto.getAddress() != null) {
-            contact.setAddress(dto.getAddress());
+        if (address != null) {
+            contact.setAddress(address);
         }
-        if (dto.getEmail() != null) {
-            contact.setEmailPersonal(dto.getEmail());
+        if (email != null) {
+            contact.setEmailPersonal(email);
         }
     }
 
-    private void updateEmergencyContact(Long studentId, UpdateBasicInfoDTO dto) {
-        if (dto.getEmergencyContactName() == null &&
-                dto.getEmergencyContactPhoneNumber() == null &&
-                dto.getEmergencyContactAddress() == null &&
-                dto.getEmergencyContactRelationship() == null)
+    private void updateEmergencyContact(Long studentId, String fullName, String phoneNumber, String address, String relationship) {
+        if (fullName == null &&
+                phoneNumber == null &&
+                address == null &&
+                relationship == null)
             return;
 
         EmergencyContact emergency = emergencyContactRepository
                 .findByStudentId(studentId)
                 .orElseThrow(() -> new NotFoundException("Emergency contact not found"));
 
-        if (dto.getEmergencyContactName() != null) {
-            emergency.setFullName(dto.getEmergencyContactName());
+        if (fullName != null) {
+            emergency.setFullName(fullName);
         }
-        if (dto.getEmergencyContactPhoneNumber() != null) {
-            emergency.setPhoneNumber(dto.getEmergencyContactPhoneNumber());
+        if (phoneNumber != null) {
+            emergency.setPhoneNumber(phoneNumber);
         }
-        if (dto.getEmergencyContactAddress() != null) {
-            emergency.setAddress(dto.getEmergencyContactAddress());
+        if (address != null) {
+            emergency.setAddress(address);
         }
-        if (dto.getEmergencyContactRelationship() != null) {
-            emergency.setRelationship(dto.getEmergencyContactRelationship());
+        if (relationship != null) {
+            emergency.setRelationship(relationship);
         }
     }
 

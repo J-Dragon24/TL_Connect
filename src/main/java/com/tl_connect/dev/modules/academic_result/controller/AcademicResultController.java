@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tl_connect.dev.modules.academic_result.dto.AcademicResultDTO;
 import com.tl_connect.dev.modules.academic_result.service.interfaces.AcademicResultService;
 import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
-import com.tl_connect.dev.shared.common.types.JwtUserInfo;
-import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
+import com.tl_connect.dev.shared.types.JwtUserInfo;
+import com.tl_connect.dev.shared.ultility.ResponseHelper;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

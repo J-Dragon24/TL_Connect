@@ -1,4 +1,4 @@
-package com.tl_connect.dev.shared.common.ultility.FileProcess.accessor;
+package com.tl_connect.dev.shared.ultility.FileProcess.accessor;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

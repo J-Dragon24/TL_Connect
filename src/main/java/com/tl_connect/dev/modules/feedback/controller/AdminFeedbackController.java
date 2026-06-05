@@ -15,8 +15,8 @@ import com.tl_connect.dev.modules.feedback.dto.FeedbackDTO;
 import com.tl_connect.dev.modules.feedback.dto.UpdateStatusFeedbackDTO;
 import com.tl_connect.dev.modules.feedback.service.interfaces.FeedbackService;
 import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
-import com.tl_connect.dev.shared.common.types.JwtUserInfo;
-import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
+import com.tl_connect.dev.shared.types.JwtUserInfo;
+import com.tl_connect.dev.shared.ultility.ResponseHelper;
 
 import lombok.RequiredArgsConstructor;
 

@@ -11,8 +11,8 @@ import com.tl_connect.dev.modules.attendance.dto.ClassAttendanceSummaryResponse;
 import com.tl_connect.dev.modules.attendance.service.interfaces.AttendanceSessionService;
 import com.tl_connect.dev.modules.attendance.service.interfaces.AttendanceStatisticsService;
 import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
-import com.tl_connect.dev.shared.common.types.JwtUserInfo;
-import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
+import com.tl_connect.dev.shared.types.JwtUserInfo;
+import com.tl_connect.dev.shared.ultility.ResponseHelper;
 
 import lombok.RequiredArgsConstructor;
 

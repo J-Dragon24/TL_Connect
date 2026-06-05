@@ -10,7 +10,7 @@ import com.tl_connect.dev.modules.tuition.dto.UpdateTuitionFeeConfig;
 import com.tl_connect.dev.modules.tuition.entity.TuitionFeeConfig;
 import com.tl_connect.dev.modules.tuition.service.interfaces.TuitionFeeConfigService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
-import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
+import com.tl_connect.dev.shared.ultility.ResponseHelper;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -2,7 +2,7 @@ package com.tl_connect.dev.modules.academic_result.dto;
 
 import java.math.BigDecimal;
 
-import com.tl_connect.dev.shared.common.ultility.FileProcess.annotation.ExcelColumn;
+import com.tl_connect.dev.shared.ultility.FileProcess.annotation.ExcelColumn;
 
 import lombok.Builder;
 import lombok.Data;

@@ -34,7 +34,7 @@ import com.tl_connect.dev.shared.common.exception.ConflictException;
 import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.InvalidInputException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
-import com.tl_connect.dev.shared.common.ultility.CacheHelper;
+import com.tl_connect.dev.shared.ultility.CacheHelper;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -65,6 +65,8 @@ public class ScheduleServiceImpl implements ScheduleService{
                     });
                     
                     result.setWeek(getWeekOfSemester(semester.getStartDate(), startDate));
+                    result.setStartDate(startDate);
+                    result.setEndDate(endDate);
 
                     return result;
                 }

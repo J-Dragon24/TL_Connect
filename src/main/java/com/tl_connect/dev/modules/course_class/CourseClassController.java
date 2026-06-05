@@ -10,8 +10,8 @@ import com.tl_connect.dev.modules.course_class.dto.CreateCourseClassDTO;
 import com.tl_connect.dev.modules.course_class.dto.UpdateCourseClassDTO;
 import com.tl_connect.dev.modules.course_class.service.interfaces.CourseClassService;
 import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
-import com.tl_connect.dev.shared.common.types.JwtUserInfo;
-import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
+import com.tl_connect.dev.shared.types.JwtUserInfo;
+import com.tl_connect.dev.shared.ultility.ResponseHelper;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -13,8 +13,8 @@ import com.tl_connect.dev.modules.tuition.dto.TuitionInvoiceDTO;
 import com.tl_connect.dev.modules.tuition.dto.TuitionInvoiceDetailDTO;
 import com.tl_connect.dev.modules.tuition.service.interfaces.TuitionService;
 import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
-import com.tl_connect.dev.shared.common.types.JwtUserInfo;
-import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
+import com.tl_connect.dev.shared.types.JwtUserInfo;
+import com.tl_connect.dev.shared.ultility.ResponseHelper;
 
 import lombok.RequiredArgsConstructor;
 

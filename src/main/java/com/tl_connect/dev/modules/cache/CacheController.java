@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
+import com.tl_connect.dev.shared.ultility.CacheHelper;
+import com.tl_connect.dev.shared.ultility.ResponseHelper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -14,14 +15,14 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/admin/cache")
 @RequiredArgsConstructor
 public class CacheController {
-    private final CacheService cacheService;
+    private final CacheHelper cacheHelper;
 
     @PostMapping("/evict")
     public ResponseEntity<?> evictByPrefix(@RequestParam String prefix) {
         if (prefix == null || prefix.isBlank()) {
             return ResponseHelper.invalidInput("Prefix must not be empty");
         } 
-        cacheService.evictByPrefix(prefix);
+        cacheHelper.evictByPrefix(prefix);
         return ResponseHelper.success("Prefix cache " + prefix + " evicted successfully", null);
     }
 }

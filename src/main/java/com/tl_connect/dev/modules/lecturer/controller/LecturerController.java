@@ -10,7 +10,7 @@ import com.tl_connect.dev.modules.lecturer.dto.LecturerAdmInfoDTO;
 import com.tl_connect.dev.modules.lecturer.dto.UpdateLecturerDTO;
 import com.tl_connect.dev.modules.lecturer.service.interfaces.LecturerService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
-import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
+import com.tl_connect.dev.shared.ultility.ResponseHelper;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

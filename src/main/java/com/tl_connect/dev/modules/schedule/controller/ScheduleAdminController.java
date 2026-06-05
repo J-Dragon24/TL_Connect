@@ -9,7 +9,7 @@ import com.tl_connect.dev.modules.schedule.dto.ClassScheduleAdminDTO;
 import com.tl_connect.dev.modules.schedule.dto.ClassScheduleDTO;
 import com.tl_connect.dev.modules.schedule.dto.UpdateScheduleDTO;
 import com.tl_connect.dev.modules.schedule.service.interfaces.ScheduleService;
-import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
+import com.tl_connect.dev.shared.ultility.ResponseHelper;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

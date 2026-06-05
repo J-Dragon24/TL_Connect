@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.tl_connect.dev.modules.oauth.dto.RefreshResponseDTO;
 import com.tl_connect.dev.shared.common.exception.InvalidInputException;
-import com.tl_connect.dev.shared.common.types.JwtUserInfo;
-import com.tl_connect.dev.shared.common.ultility.TokenHelper;
+import com.tl_connect.dev.shared.types.JwtUserInfo;
+import com.tl_connect.dev.shared.ultility.TokenHelper;
 import com.tl_connect.dev.modules.oauth.service.interfaces.JWTService;
 import com.tl_connect.dev.modules.oauth.service.interfaces.RefreshTokenService;
 

@@ -20,6 +20,7 @@ import lombok.Setter;
 public class StudentInfoDTO implements Serializable {
     private String studentCode;
     private String fullName;
+    private String avatarUrl;
     private LocalDate dateOfBirth;
     private Gender gender;
     private String classCode;

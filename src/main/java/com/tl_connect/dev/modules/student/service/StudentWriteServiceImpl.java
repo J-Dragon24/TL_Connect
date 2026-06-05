@@ -36,7 +36,7 @@ import com.tl_connect.dev.shared.common.exception.ConflictException;
 import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.InvalidInputException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
-import com.tl_connect.dev.shared.common.ultility.FileProcess.FileParseHelper;
+import com.tl_connect.dev.shared.ultility.FileProcess.FileParseHelper;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

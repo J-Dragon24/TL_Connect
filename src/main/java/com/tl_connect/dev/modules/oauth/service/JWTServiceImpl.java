@@ -13,8 +13,8 @@ import org.springframework.beans.factory.annotation.Value;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tl_connect.dev.shared.common.exception.InvalidInputException;
 import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
-import com.tl_connect.dev.shared.common.types.JwtPayload;
-import com.tl_connect.dev.shared.common.types.JwtUserInfo;
+import com.tl_connect.dev.shared.types.JwtPayload;
+import com.tl_connect.dev.shared.types.JwtUserInfo;
 import com.tl_connect.dev.modules.oauth.service.interfaces.JWTService;
 
 import java.util.Base64;

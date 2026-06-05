@@ -3,6 +3,8 @@ package com.tl_connect.dev.modules.exam.dto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import com.tl_connect.dev.shared.common.enums.ExamType;
+
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -24,7 +26,7 @@ public class CreateExamScheduleDTO {
     private String examRoom;
     private String examLocation;
     private String examFormat;
-    private String examType;
+    private ExamType examType;
     private String note;
 
     @AssertTrue(message = "End time must be greater than start time")

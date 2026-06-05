@@ -334,8 +334,8 @@ INSERT INTO health_insurances (student_id, insurance_number, provider, valid_fro
 -- semesters
 INSERT INTO semesters (id, semester_name, semester_code, academic_years, semester_number, start_date, end_date)
 VALUES
-(1,'Học kỳ 1 2024-2025','HK1-2024-2025','2024-2025',1,'2024-09-02','2024-12-15'),
-(2,'Học kỳ 2 2024-2025','HK2-2024-2025','2024-2025',2,'2025-01-02','2025-04-27'),
+(1,'Học kỳ 1 2024-2025','HK1-2024-2025','2024-2025',1,'2024-09-02','2024-12-22'),
+(2,'Học kỳ 2 2024-2025','HK2-2024-2025','2024-2025',2,'2024-12-30','2025-04-27'),
 (3,'Học kỳ tăng cường 2024-2025','HKTC-2024-2025','2024-2025',3,'2025-05-05','2025-08-24'),
 (4,'Học kỳ 1 2025-2026','HK1-2025-2026','2025-2026',1,'2025-09-08','2025-12-28'),
 (5,'Học kỳ 2 2025-2026','HK2-2025-2026','2025-2026',2,'2026-01-05','2026-04-26'),
@@ -462,7 +462,7 @@ VALUES
 (28, 1 ,1,'MA111','Giải tích 2',3,1.2,27,36),
 (29, 1 ,null,'MI201','Toán rời rạc',3,1.2,45,null),
 (30, 9 ,null,'ML115','Chủ nghĩa xã hội khoa học',2, 1.2,30,null),
-(31, 1 ,null,'CS111','Kỹ thuật số',2, 1.5,18,24),
+(31, 1 ,null,'CS110','Kỹ thuật số',2, 1.5,18,24),
 (32, 1 ,1,'CF213','Cấu trúc dữ liệu và giải thuật',4,1.6,45,36),
 (33, 4 ,8,'GE222','Tiếng Anh sơ trung cấp 2',2,1.2,54,null),
 (34, 1 ,null,'IS222','Cơ sở dữ liệu',3,1.2,45,null),
@@ -477,7 +477,8 @@ VALUES
 (43,1,null, 'CF301', 'Ngôn ngữ hình thức và Otomat', 3, 1.5, 45, null),
 (44,1,null, 'IS332', 'Phân tích thiết kế hướng đối tượng', 3, 1.5, 45, null),
 (45,1,null, 'MI312', 'Đồ họa', 2, 1.2, 18, 24),
-(46,1,null, 'MI322', 'Trí tuệ nhân tạo và công nghệ tri thức', 3, 1.2, 45, null);
+(46,1,null, 'MI322', 'Trí tuệ nhân tạo và công nghệ tri thức', 3, 1.2, 45, null),
+(47,1,null, 'SE302', 'Công nghệ phần mềm', 2, 1.2, 18, 24);
 
 -- study_program_subjects
 INSERT INTO study_program_subjects (study_program_id, subject_id, semester_id, is_required, elective_group)
@@ -1158,32 +1159,32 @@ VALUES
 INSERT INTO exam_schedules
 (id, subject_id, semester_id, exam_date, start_time, end_time, exam_room, exam_format, exam_location, exam_type)
 VALUES
-(1,32,4,'2025-12-29','08:00','10:00','A101','OFFLINE','Cơ sở 1','Final'),
-(2,7,4,'2025-12-29','13:00','15:00','A102','OFFLINE','Cơ sở 1','Final'),
-(3,8,4,'2025-12-30','09:00','11:00','B201','OFFLINE','Cơ sở 1','Final'),
-(4,9,4,'2025-12-30','13:00','15:00','A103','OFFLINE','Cơ sở 1','Final'),
-(5,10,4,'2026-01-02','13:00','15:00','B203','OFFLINE','Cơ sở 1','Final'),
-(6,11,4,'2026-01-02','16:00','18:00','A701','OFFLINE','Cơ sở 1','Final'),
-(7,12,4,'2026-01-03','08:00','10:30','B601','OFFLINE','Cơ sở 1','Final'),
-(8,13,4,'2026-01-03','13:00','15:00','A702','OFFLINE','Cơ sở 1','Final'),
-(9,14,4,'2026-01-04','13:00','15:00','B203','OFFLINE','Cơ sở 1','Final'),
+(1,32,4,'2025-12-29','08:00','10:00','A101','OFFLINE','Cơ sở 1','FINAL'),
+(2,7,4,'2025-12-29','13:00','15:00','A102','OFFLINE','Cơ sở 1','FINAL'),
+(3,8,4,'2025-12-30','09:00','11:00','B201','OFFLINE','Cơ sở 1','FINAL'),
+(4,9,4,'2025-12-30','13:00','15:00','A103','OFFLINE','Cơ sở 1','FINAL'),
+(5,10,4,'2026-01-02','13:00','15:00','B203','OFFLINE','Cơ sở 1','FINAL'),
+(6,11,4,'2026-01-02','16:00','18:00','A701','OFFLINE','Cơ sở 1','FINAL'),
+(7,12,4,'2026-01-03','08:00','10:30','B601','OFFLINE','Cơ sở 1','FINAL'),
+(8,13,4,'2026-01-03','13:00','15:00','A702','OFFLINE','Cơ sở 1','FINAL'),
+(9,14,4,'2026-01-04','13:00','15:00','B203','OFFLINE','Cơ sở 1','FINAL'),
 
-(10,18,5,'2026-04-26','08:00','10:00','A302','OFFLINE','Cơ sở 1','Final'),
-(11,19,5,'2026-04-27','13:00','15:00','A303','OFFLINE','Cơ sở 1','Final'),
-(12,20,5,'2026-03-27','09:00','11:00','B501','OFFLINE','Cơ sở 1','Midterm'),
-(13,21,5,'2026-04-28','08:00','10:00','A401','OFFLINE','Cơ sở 1','Final'),
-(14,22,5,'2026-04-29','13:00','15:00','A502','OFFLINE','Cơ sở 1','Final'),
-(15,23,5,'2026-04-30','13:00','15:00','B503','OFFLINE','Cơ sở 1','Final'),
-(16,24,5,'2026-05-01','08:00','10:00','A501','OFFLINE','Cơ sở 1','Final'),
-(17,25,5,'2026-05-02','13:00','15:00','A702','OFFLINE','Cơ sở 1','Final'),
-(18,26,5,'2026-05-03','13:00','15:00','B702','OFFLINE','Cơ sở 1','Final'),
+(10,18,5,'2026-04-26','08:00','10:00','A302','OFFLINE','Cơ sở 1','FINAL'),
+(11,19,5,'2026-04-27','13:00','15:00','A303','OFFLINE','Cơ sở 1','FINAL'),
+(12,20,5,'2026-03-27','09:00','11:00','B501','OFFLINE','Cơ sở 1','MIDTERM'),
+(13,21,5,'2026-04-28','08:00','10:00','A401','OFFLINE','Cơ sở 1','FINAL'),
+(14,22,5,'2026-04-29','13:00','15:00','A502','OFFLINE','Cơ sở 1','FINAL'),
+(15,23,5,'2026-04-30','13:00','15:00','B503','OFFLINE','Cơ sở 1','FINAL'),
+(16,24,5,'2026-05-01','08:00','10:00','A501','OFFLINE','Cơ sở 1','FINAL'),
+(17,25,5,'2026-05-02','13:00','15:00','A702','OFFLINE','Cơ sở 1','FINAL'),
+(18,26,5,'2026-05-03','13:00','15:00','B702','OFFLINE','Cơ sở 1','FINAL'),
 
-(19,30,6,'2026-08-24','08:00','10:00','A101','OFFLINE','Cơ sở 1','Final'),
-(20,31,6,'2026-08-25','13:00','15:00','A102','OFFLINE','Cơ sở 1','Final'),
-(21,32,6,'2026-08-26','09:00','11:00','B504','OFFLINE','Cơ sở 1','Final'),
-(22,33,6,'2026-08-27','08:00','10:00','B504','OFFLINE','Cơ sở 1','Final'),
-(23,34,6,'2026-08-28','13:00','15:00','A708','OFFLINE','Cơ sở 1','Final'),
-(24,35,6,'2026-08-29','08:00','10:00','A706','OFFLINE','Cơ sở 1','Final');
+(19,30,6,'2026-08-24','08:00','10:00','A101','OFFLINE','Cơ sở 1','FINAL'),
+(20,31,6,'2026-08-25','13:00','15:00','A102','OFFLINE','Cơ sở 1','FINAL'),
+(21,32,6,'2026-08-26','09:00','11:00','B504','OFFLINE','Cơ sở 1','FINAL'),
+(22,33,6,'2026-08-27','08:00','10:00','B504','OFFLINE','Cơ sở 1','FINAL'),
+(23,34,6,'2026-08-28','13:00','15:00','A708','OFFLINE','Cơ sở 1','FINAL'),
+(24,35,6,'2026-08-29','08:00','10:00','A706','OFFLINE','Cơ sở 1','FINAL');
 
 -- student_exam_registrations
 INSERT INTO student_exam_registrations
@@ -1340,18 +1341,19 @@ VALUES
 -- application_types
 INSERT INTO application_types (code, name)
 VALUES
-('LEAVE','Xin nghi hoc'),
-('GRADE_REVIEW','Phuc khao diem'),
-('CERT','Xin giay xac nhan');
+('LEAVE','Xin nghỉ học'),
+('GRADE_REVIEW','Phúc khảo điểm'),
+('ENROLL','Xin ép cứng môn học'),
+('CERT','Xin giấy xác nhận');
 
 -- student_applications
 INSERT INTO student_applications
 (student_id, application_type_id, content, status)
 VALUES
-(1,1,'Xin nghi vi om','PENDING'),
-(2,2,'Phuc khao mon Java','APPROVED'),
-(3,3,'Xin giay xac nhan sinh vien','PENDING'),
-(5,1,'Xin nghi viec gia dinh','REJECTED');
+(1,1,'Xin nghỉ ốm','PENDING'),
+(2,2,'Phúc khảo môn Java','APPROVED'),
+(3,3,'Xin giấy xác nhận sinh viên','PENDING'),
+(5,1,'Xin nghỉ việc gia đình','REJECTED');
 
 -- application_attachments
 INSERT INTO application_attachments
@@ -1363,12 +1365,12 @@ VALUES
 
 -- notification_templates
 INSERT INTO notification_templates (code, name, content) VALUES
-('GENERAL', 'Thong bao chung', '{{content}}'),
-('EXAM', 'Thong bao lich thi', 'Lich thi: {{content}}'),
-('FEE', 'Nhac nop hoc phi', 'Sinh vien can nop hoc phi truoc {{deadline}}'),
-('SCHOLARSHIP', 'Thong bao hoc bong', '{{content}}'),
-('ACADEMIC_WARNING', 'Canh bao hoc vu', '{{content}}'),
-('DEFENSE', 'Thong bao bao ve do an', '{{content}}');
+('GENERAL', 'Thông báo chung', '{{content}}'),
+('EXAM', 'Thông báo lịch thi', 'Lich thi: {{content}}'),
+('FEE', 'Nhắc nộp học phí', 'Sinh viên cần nộp học phí trước {{deadline}}'),
+('SCHOLARSHIP', 'Thông báo học bổng', '{{content}}'),
+('ACADEMIC_WARNING', 'Cảnh báo học vụ', '{{content}}'),
+('DEFENSE', 'Thông báo bảo vệ đồ án', '{{content}}');
 
 -- notifications
 INSERT INTO notifications
@@ -1376,30 +1378,30 @@ INSERT INTO notifications
 VALUES
 
 -- GLOBAL
-(1,'Thong bao he thong','He thong se bao tri vao 23:00 toi nay','SYSTEM','GLOBAL',NULL, false, null),
-(2,'Cap nhat cong thong tin','Da cap nhat giao dien moi','SYSTEM','GLOBAL',NULL, false, null),
-(3,'Thong bao nghi le','Sinh vien nghi le quoc khanh','SYSTEM','GLOBAL',NULL, false, null),
-(4,'Lich thi HK1','Lich thi da duoc cap nhat tren portal','SYSTEM','GLOBAL','2024-01-05', true, 'EXAM_SCHEDULE'),
-(5,'Ket qua hoc bong','Danh sach hoc bong HK1 da duoc cong bo','SYSTEM','GLOBAL',NULL, false, null),
+(1,'Thông báo hệ thống','Hệ thống sẽ bảo trì vào 23:00 tối nay','SYSTEM','GLOBAL',NULL, false, null),
+(2,'Cập nhật cổng thông tin','Đã cập nhật giao diện mới','SYSTEM','GLOBAL',NULL, false, null),
+(3,'Thông báo nghỉ lễ','Sinh viên nghỉ lễ quốc khánh','SYSTEM','GLOBAL',NULL, false, null),
+(4,'Lịch thi HK1','Lịch thi đã được cập nhật trên portal','SYSTEM','GLOBAL','2024-01-05', true, 'EXAM_SCHEDULE'),
+(5,'Kết quả học bổng','Danh sách học bổng HK1 đã được công bố','SYSTEM','GLOBAL',NULL, false, null),
 
 -- STUDENT_CLASS
-(6,'Canh bao hoc vu','Ket qua hoc tap duoi muc yeu cau','SYSTEM','STUDENT_CLASS','2024-03-01', true, null),
-(7,'Canh bao hoc vu lan 2','Sinh vien can gap co van hoc tap','SYSTEM','STUDENT_CLASS','2024-03-10', true, null),
-(8,'Thong bao rieng','Sinh vien duoc chon tham gia workshop','SYSTEM','STUDENT_CLASS','2024-03-10', false, null),
-(9,'Thong bao rieng','Sinh vien duoc cap tai khoan lab','SYSTEM','STUDENT_CLASS','2024-03-10', false, null),
-(10,'Thong bao rieng','Sinh vien cap nhat thong tin ca nhan','SYSTEM','STUDENT_CLASS','2024-03-10', false, null),
+(6,'Cảnh báo học vụ','Kết quả học tập dưới mức yêu cầu','SYSTEM','STUDENT_CLASS','2024-03-01', true, null),
+(7,'Cảnh báo học vụ lần 2','Sinh viên cần gặp cố vấn học tập','SYSTEM','STUDENT_CLASS','2024-03-10', true, null),
+(8,'Thông báo riêng','Sinh viên được chọn tham gia workshop','SYSTEM','STUDENT_CLASS','2024-03-10', false, null),
+(9,'Thông báo riêng','Sinh viên được cấp tài khoản lab','SYSTEM','STUDENT_CLASS','2024-03-10', false, null),
+(10,'Thông báo riêng','Sinh viên cập nhật thông tin cá nhân','SYSTEM','STUDENT_CLASS','2024-03-10', false, null),
 
 -- COURSE_CLASS
-(11,'Thong bao mon hoc','Lop lap trinh web thay doi phong hoc','LECTURER','COURSE_CLASS','2024-03-10', false, null),
-(12,'Thong bao mon hoc','Buoi hoc toi se hoc online','LECTURER','COURSE_CLASS','2024-03-10', false, null),
-(13,'Thong bao mon hoc','Deadline project duoc gia han','LECTURER','COURSE_CLASS','2024-04-10', false, null),
+(11,'Thông báo lớp lập trình web','Lớp lập trình web thay đổi phòng học','LECTURER','COURSE_CLASS','2024-03-10', false, null),
+(12,'Thông báo lớp cấu trúc dữ liệu','Buổi học tối sẽ học online','LECTURER','COURSE_CLASS','2024-03-10', false, null),
+(13,'Thông báo lớp nhập môn lập trình','Deadline project được gia hạn','LECTURER','COURSE_CLASS','2024-04-10', false, null),
 
 -- FACULTY
-(14,'Thong bao khoa CNTT','Sinh vien tham gia hoi thao AI','FACULTY','FACULTY',NULL, false, null),
-(15,'Thong bao khoa CNTT','Cuoc thi lap trinh sap dien ra','FACULTY','FACULTY',NULL, false, null),
-(16,'Thong bao khoa CNTT','Mo dang ky CLB AI','FACULTY','FACULTY',NULL, false, null),
-(17,'Thong bao khoa CNTT','Workshop Cloud Computing','FACULTY','FACULTY',NULL, false, null),
-(18,'Thong bao khoa CNTT','Sinh vien dang ky thuc tap he','FACULTY','FACULTY',NULL, false, null);
+(14,'Thông báo khoa CNTT','Sinh viên tham gia hội thảo AI','FACULTY','FACULTY',NULL, false, null),
+(15,'Thông báo khoa CNTT','Cuộc thi lập trình sắp diễn ra','FACULTY','FACULTY',NULL, false, null),
+(16,'Thông báo khoa CNTT','Mở đăng ký CLB AI','FACULTY','FACULTY',NULL, false, null),
+(17,'Thông báo khoa CNTT','Workshop Cloud Computing','FACULTY','FACULTY',NULL, false, null),
+(18,'Thông báo khoa CNTT','Sinh viên đăng ký thực tập hè','FACULTY','FACULTY',NULL, false, null);
 
 -- notification_targets
 INSERT INTO notification_targets (notification_id, target_id) VALUES
@@ -1487,70 +1489,158 @@ INSERT INTO tuition_invoices
 (id, student_id, semester_id, due_date, total_amount, final_amount, status, created_at, updated_at)
 VALUES
 
-(1, 1, 4, '2026-01-10', 4500000, 4500000, 'UNPAID', '2025-12-01', '2025-12-05'),
+(1, 1, 4, '2025-09-27', 10528000, 10528000, 'PAID', '2025-09-01', '2025-09-10'),
 
-(2, 2, 1, '2026-01-05', 4200000, 4200000, 'OVERDUE', '2025-12-01', '2026-01-06'),
+(2, 2, 4, '2025-09-27', 10528000, 10528000, 'PAID', '2025-09-01', '2025-09-10'),
 
--- chưa thanh toán (còn hạn)
-(3, 1, 1, '2026-01-15', 4300000, 4300000, 'UNPAID', '2025-12-01', '2025-12-01'),
+(3, 3, 4, '2025-09-27', 10528000, 10528000, 'OVERDUE', '2025-09-01', '2026-01-06'),
+
+(4, 4, 4, '2026-09-27', 10528000, 10528000, 'UNPAID', '2025-12-01', '2025-12-01'),
 
 -- học kỳ sau
-(4, 4, 2, '2026-05-01', 5000000, 5000000, 'UNPAID', '2026-03-01', '2026-03-01'),
+(5, 1, 5, '2026-01-27', 16296000, 16296000, 'PAID', '2025-12-01', '2026-01-10'),
 
--- đã thanh toán học kỳ sau
-(5, 5, 2, '2026-05-01', 5200000, 5200000, 'PAID', '2026-03-01', '2026-03-10'),
+(6, 2, 5, '2026-01-27', 16296000, 16296000, 'PAID', '2025-12-01', '2026-01-10'),
 
--- bị hủy
-(6, 6, 1, '2026-01-10', 4000000, 4000000, 'CANCELLED', '2025-12-01', '2025-12-20');
+(7, 3, 5, '2026-01-27', 16296000, 16296000, 'PAID', '2025-12-01', '2026-01-06'),
+
+(8, 4, 5, '2026-01-27', 16296000, 16296000, 'PAID', '2025-12-01', '2026-01-06'),
+
+-- học kỳ sau
+(9, 1, 6, '2026-05-30', 11424000, 11424000, 'UNPAID', '2026-05-01', '2026-05-01'),
+
+(10, 2, 6, '2026-05-30', 11424000, 11424000, 'PAID', '2026-05-01', '2026-05-01'),
+
+(11, 3, 6, '2026-05-30', 11424000, 11424000, 'PAID', '2026-05-01', '2026-05-01'),
+
+(12, 4, 6, '2026-05-30', 11424000, 11424000, 'PAID', '2026-05-01', '2026-05-01'),
 
 -- tuition_invoice_items
 INSERT INTO tuition_invoice_items
 (invoice_id, course_class_id, price_per_credit, credits, coefficient, amount, created_at, updated_at)
 VALUES
--- invoice 1 (đã paid)
-(1, 1, 500000, 3, 1.0, 1500000, '2025-12-01', '2025-12-01'),
-(1, 2, 520000, 3, 1.0, 1560000, '2025-12-01', '2025-12-01'),
-(1, 3, 480000, 3, 1.0, 1440000, '2025-12-01', '2025-12-01'),
 
--- invoice 2 (overdue)
-(2, 1, 500000, 3, 1.0, 1500000, '2025-12-01', '2025-12-01'),
-(2, 2, 520000, 3, 1.0, 1560000, '2025-12-01', '2025-12-01'),
+(1, 2, 560000, 3, 1.0, 1680000, '2025-12-01', '2025-12-01'),
+(1, 3, 560000, 2, 1.0, 1120000, '2025-12-01', '2025-12-01'),
+(1, 4, 560000, 2, 1.0, 1120000, '2025-12-01', '2025-12-01'),
+(1, 5, 560000, 1, 1.0, 560000, '2025-12-01', '2025-12-01'),
+(1, 6, 560000, 2, 1.5, 1680000, '2025-12-01', '2025-12-01'),
+(1, 7, 560000, 2, 1.5, 1680000, '2025-12-01', '2025-12-01'),
+(1, 8, 560000, 2, 1.2, 1344000, '2025-12-01', '2025-12-01'),
+(1, 9, 560000, 2, 1.2, 1344000, '2025-12-01', '2025-12-01'),
 
--- invoice 3 (unpaid)
-(3, 4, 700000, 3, 1.0, 2100000, '2025-12-01', '2025-12-01'),
-(3, 5, 750000, 3, 1.0, 2250000, '2025-12-01', '2025-12-01'),
+(2, 2, 560000, 3, 1.0, 1680000, '2025-12-01', '2025-12-01'),
+(2, 3, 560000, 2, 1.0, 1120000, '2025-12-01', '2025-12-01'),
+(2, 4, 560000, 2, 1.0, 1120000, '2025-12-01', '2025-12-01'),
+(2, 5, 560000, 1, 1.0, 560000, '2025-12-01', '2025-12-01'),
+(2, 6, 560000, 2, 1.5, 1680000, '2025-12-01', '2025-12-01'),
+(2, 7, 560000, 2, 1.5, 1680000, '2025-12-01', '2025-12-01'),
+(2, 8, 560000, 2, 1.2, 1344000, '2025-12-01', '2025-12-01'),
+(2, 9, 560000, 2, 1.2, 1344000, '2025-12-01', '2025-12-01'),
 
--- invoice 4 (future semester)
-(4, 6, 450000, 3, 1.0, 1350000, '2026-03-01', '2026-03-01'),
+(3, 2, 560000, 3, 1.0, 1680000, '2025-12-01', '2025-12-01'),
+(3, 3, 560000, 2, 1.0, 1120000, '2025-12-01', '2025-12-01'),
+(3, 4, 560000, 2, 1.0, 1120000, '2025-12-01', '2025-12-01'),
+(3, 5, 560000, 1, 1.0, 560000, '2025-12-01', '2025-12-01'),
+(3, 6, 560000, 2, 1.5, 1680000, '2025-12-01', '2025-12-01'),
+(3, 7, 560000, 2, 1.5, 1680000, '2025-12-01', '2025-12-01'),
+(3, 8, 560000, 2, 1.2, 1344000, '2025-12-01', '2025-12-01'),
+(3, 9, 560000, 2, 1.2, 1344000, '2025-12-01', '2025-12-01'),
 
--- invoice 5 (paid future)
-(5, 4, 700000, 3, 1.0, 2100000, '2026-03-01', '2026-03-01'),
-(5, 5, 750000, 3, 1.0, 2250000, '2026-03-01', '2026-03-01'),
+(4, 2, 560000, 3, 1.0, 1680000, '2025-12-01', '2025-12-01'),
+(4, 3, 560000, 2, 1.0, 1120000, '2025-12-01', '2025-12-01'),
+(4, 4, 560000, 2, 1.0, 1120000, '2025-12-01', '2025-12-01'),
+(4, 5, 560000, 1, 1.0, 560000, '2025-12-01', '2025-12-01'),
+(4, 6, 560000, 2, 1.5, 1680000, '2025-12-01', '2025-12-01'),
+(4, 7, 560000, 2, 1.5, 1680000, '2025-12-01', '2025-12-01'),
+(4, 8, 560000, 2, 1.2, 1344000, '2025-12-01', '2025-12-01'),
+(4, 9, 560000, 2, 1.2, 1344000, '2025-12-01', '2025-12-01'),
 
--- invoice 6 (cancelled)
-(6, 1, 500000, 3, 1.0, 1500000, '2025-12-01', '2025-12-01');
+(5, 13, 560000, 2, 1.2, 1344000, '2026-01-10', '2026-01-10'),
+(5, 14, 560000, 2, 1.2, 1344000, '2026-01-10', '2026-01-10'),
+(5, 15, 560000, 3, 1.5, 2520000, '2026-01-10', '2026-01-10'),
+(5, 16, 560000, 3, 1.5, 2520000, '2026-01-10', '2026-01-10'),
+(5, 17, 560000, 3, 1.5, 2520000, '2026-01-10', '2026-01-10'),
+(5, 18, 560000, 2, 1.2, 1344000, '2026-01-10', '2026-01-10'),
+(5, 19, 560000, 3, 1.2, 2016000, '2026-01-10', '2026-01-10'),
+(5, 20, 560000, 2, 1.2, 1344000, '2026-01-10', '2026-01-10'),
+(5, 21, 560000, 2, 1.2, 1344000, '2026-01-10', '2026-01-10'),
+
+(6, 13, 560000, 2, 1.2, 1344000, '2026-01-10', '2026-01-10'),
+(6, 14, 560000, 2, 1.2, 1344000, '2026-01-10', '2026-01-10'),
+(6, 15, 560000, 3, 1.5, 2520000, '2026-01-10', '2026-01-10'),
+(6, 16, 560000, 3, 1.5, 2520000, '2026-01-10', '2026-01-10'),
+(6, 17, 560000, 3, 1.5, 2520000, '2026-01-10', '2026-01-10'),
+(6, 18, 560000, 2, 1.2, 1344000, '2026-01-10', '2026-01-10'),
+(6, 19, 560000, 3, 1.2, 2016000, '2026-01-10', '2026-01-10'),
+(6, 20, 560000, 2, 1.2, 1344000, '2026-01-10', '2026-01-10'),
+(6, 21, 560000, 2, 1.2, 1344000, '2026-01-10', '2026-01-10'),
+
+(7, 13, 560000, 2, 1.2, 1344000, '2026-01-10', '2026-01-10'),
+(7, 14, 560000, 2, 1.2, 1344000, '2026-01-10', '2026-01-10'),
+(7, 15, 560000, 3, 1.5, 2520000, '2026-01-10', '2026-01-10'),
+(7, 16, 560000, 3, 1.5, 2520000, '2026-01-10', '2026-01-10'),
+(7, 17, 560000, 3, 1.5, 2520000, '2026-01-10', '2026-01-10'),
+(7, 18, 560000, 2, 1.2, 1344000, '2026-01-10', '2026-01-10'),
+(7, 19, 560000, 3, 1.2, 2016000, '2026-01-10', '2026-01-10'),
+(7, 20, 560000, 2, 1.2, 1344000, '2026-01-10', '2026-01-10'),
+(7, 21, 560000, 2, 1.2, 1344000, '2026-01-10', '2026-01-10'),
+
+(8, 13, 560000, 2, 1.2, 1344000, '2026-01-10', '2026-01-10'),
+(8, 14, 560000, 2, 1.2, 1344000, '2026-01-10', '2026-01-10'),
+(8, 15, 560000, 3, 1.5, 2520000, '2026-01-10', '2026-01-10'),
+(8, 16, 560000, 3, 1.5, 2520000, '2026-01-10', '2026-01-10'),
+(8, 17, 560000, 3, 1.5, 2520000, '2026-01-10', '2026-01-10'),
+(8, 18, 560000, 2, 1.2, 1344000, '2026-01-10', '2026-01-10'),
+(8, 19, 560000, 3, 1.2, 2016000, '2026-01-10', '2026-01-10'),
+(8, 20, 560000, 2, 1.2, 1344000, '2026-01-10', '2026-01-10'),
+(8, 21, 560000, 2, 1.2, 1344000, '2026-01-10', '2026-01-10'),
+
+(9, 25, 560000, 2, 1.2, 1344000, '2026-05-10', '2026-05-10'),
+(9, 26, 560000, 3, 1.2, 2016000, '2026-05-10', '2026-05-10'),
+(9, 27, 560000, 3, 1.2, 2016000, '2026-05-10', '2026-05-10'),
+(9, 28, 560000, 3, 1.2, 2016000, '2026-05-10', '2026-05-10'),
+(9, 29, 560000, 3, 1.2, 2016000, '2026-05-10', '2026-05-10'),
+(9, 30, 560000, 3, 1.2, 2016000, '2026-05-10', '2026-05-10'),
+
+(10, 25, 560000, 2, 1.2, 1344000, '2026-05-10', '2026-05-10'),
+(10, 26, 560000, 3, 1.2, 2016000, '2026-05-10', '2026-05-10'),
+(10, 27, 560000, 3, 1.2, 2016000, '2026-05-10', '2026-05-10'),
+(10, 28, 560000, 3, 1.2, 2016000, '2026-05-10', '2026-05-10'),
+(10, 29, 560000, 3, 1.2, 2016000, '2026-05-10', '2026-05-10'),
+(10, 30, 560000, 3, 1.2, 2016000, '2026-05-10', '2026-05-10'),
+
+(11, 25, 560000, 2, 1.2, 1344000, '2026-05-10', '2026-05-10'),
+(11, 26, 560000, 3, 1.2, 2016000, '2026-05-10', '2026-05-10'),
+(11, 27, 560000, 3, 1.2, 2016000, '2026-05-10', '2026-05-10'),
+(11, 28, 560000, 3, 1.2, 2016000, '2026-05-10', '2026-05-10'),
+(11, 29, 560000, 3, 1.2, 2016000, '2026-05-10', '2026-05-10'),
+(11, 30, 560000, 3, 1.2, 2016000, '2026-05-10', '2026-05-10'),
+
+(12, 25, 560000, 2, 1.2, 1344000, '2026-05-10', '2026-05-10'),
+(12, 26, 560000, 3, 1.2, 2016000, '2026-05-10', '2026-05-10'),
+(12, 27, 560000, 3, 1.2, 2016000, '2026-05-10', '2026-05-10'),
+(12, 28, 560000, 3, 1.2, 2016000, '2026-05-10', '2026-05-10'),
+(12, 29, 560000, 3, 1.2, 2016000, '2026-05-10', '2026-05-10'),
+(12, 30, 560000, 3, 1.2, 2016000, '2026-05-10', '2026-05-10');
 
 -- payment
 INSERT INTO payment
 (invoice_id, amount, provider, transaction_code, status, created_at, updated_at)
 VALUES
--- invoice 1: thanh toán thành công
-(1, 4500000, 'ZALOPAY', 'TXN_001_SUCCESS', 'SUCCESS', '2025-12-05', '2025-12-05'),
 
--- invoice 2: thanh toán thất bại
-(2, 4200000, 'ZALOPAY', 'TXN_002_FAIL', 'FAILED', '2025-12-07', '2025-12-07'),
-
--- retry nhưng vẫn pending
-(2, 4200000, 'ZALOPAY', 'TXN_002_PENDING', 'PENDING', '2025-12-08', '2025-12-08'),
-
--- invoice 3: user vừa tạo thanh toán (chưa xong)
-(3, 4300000, 'VNPAY', 'TXN_003_PENDING', 'PENDING', '2025-12-09', '2025-12-09'),
-
--- invoice 5: thanh toán thành công (future semester)
-(5, 5200000, 'VNPAY', 'TXN_005_SUCCESS', 'SUCCESS', '2026-03-10', '2026-03-10'),
-
--- invoice 6: đã từng thanh toán nhưng bị hủy/refund sau
-(6, 4000000, 'ZALOPAY', 'TXN_006_SUCCESS', 'SUCCESS', '2025-12-10', '2025-12-10');
+(1, 10528000, 'ZALOPAY', 'TXN_001_SUCCESS', 'SUCCESS', '2025-09-26', '2025-09-26'),
+(2, 10528000, 'ZALOPAY', 'TXN_002_SUCCESS', 'FAILED', '2025-09-26', '2025-09-26'),
+(2, 10528000, 'ZALOPAY', 'TXN_003_SUCCESS', 'PENDING', '2025-09-26', '2025-09-26'),
+(3, 10528000, 'VNPAY', 'TXN_004_SUCCESS', 'PENDING', '2025-09-26', '2025-09-26'),
+(5, 16296000, 'VNPAY', 'TXN_005_SUCCESS', 'SUCCESS', '2026-01-10', '2026-01-10'),
+(6, 16296000, 'ZALOPAY', 'TXN_006_SUCCESS', 'SUCCESS', '2026-01-10', '2026-01-10'),
+(7, 16296000, 'ZALOPAY', 'TXN_007_SUCCESS', 'SUCCESS', '2026-01-10', '2026-01-10'),
+(8, 16296000, 'VNPAY', 'TXN_008_SUCCESS', 'SUCCESS', '2026-01-10', '2026-01-10'),
+(9, 11424000, 'VNPAY', 'TXN_009_SUCCESS', 'SUCCESS', '2026-05-01', '2026-05-01'),
+(10, 11424000, 'VNPAY', 'TXN_010_SUCCESS', 'SUCCESS', '2026-05-01', '2026-05-01'),
+(11, 11424000, 'VNPAY', 'TXN_011_SUCCESS', 'SUCCESS', '2026-05-01', '2026-05-01'),
+(12, 11424000, 'VNPAY', 'TXN_012_SUCCESS', 'SUCCESS', '2026-05-01', '2026-05-01'),
 
 -- tuition_transactions
 INSERT INTO tuition_transactions
@@ -1558,36 +1648,36 @@ INSERT INTO tuition_transactions
 VALUES
 -- ===== INVOICE 1 =====
 -- phát sinh học phí
-(1, 1, 4500000, 'TUITION', 1, 'INVOICE', 'Tao hoa don hoc phi HK1', '2025-12-01'),
+(1, 1, 10528000, 'TUITION', 1, 'INVOICE', 'Tao hoa don hoc phi HK1', '2025-12-01'),
 
 -- thanh toán
-(1, 1, 4500000, 'PAYMENT', 1, 'PAYMENT', 'Thanh toan qua ZaloPay', '2025-12-05'),
+(1, 1, 10528000, 'PAYMENT', 1, 'PAYMENT', 'Thanh toan qua ZaloPay', '2025-12-05'),
 
 -- ===== INVOICE 2 =====
-(2, 2, 4200000, 'TUITION', 2, 'INVOICE', 'Hoc phi HK1', '2025-12-01'),
+(2, 2, 10528000, 'TUITION', 2, 'INVOICE', 'Hoc phi HK1', '2025-12-01'),
 
 -- failed payment
-(2, 2, 4200000, 'PAYMENT', 2, 'PAYMENT', 'Thanh toan that bai', '2025-12-07'),
+(2, 2, 10528000, 'PAYMENT', 2, 'PAYMENT', 'Thanh toan that bai', '2025-12-07'),
 
 -- ===== INVOICE 3 =====
-(3, 3, 4300000, 'TUITION', 3, 'INVOICE', 'Hoc phi HK1', '2025-12-01'),
+(3, 3, 10528000, 'TUITION', 3, 'INVOICE', 'Hoc phi HK1', '2025-12-01'),
 
 -- pending payment (chưa ghi nhận success)
-(3, 3, 4300000, 'PAYMENT', 4, 'PAYMENT', 'Dang xu ly thanh toan', '2025-12-09'),
+(3, 3, 10528000, 'PAYMENT', 4, 'PAYMENT', 'Dang xu ly thanh toan', '2025-12-09'),
 
 -- ===== INVOICE 5 =====
-(5, 5, 5200000, 'TUITION', 5, 'INVOICE', 'Hoc phi HK2', '2026-03-01'),
+(5, 5, 16296000, 'TUITION', 5, 'INVOICE', 'Hoc phi HK2', '2026-03-01'),
 
-(5, 5, 5200000, 'PAYMENT', 5, 'PAYMENT', 'Thanh toan ngan hang', '2026-03-10'),
+(5, 5, 16296000, 'PAYMENT', 5, 'PAYMENT', 'Thanh toan ngan hang', '2026-03-10'),
 
 -- ===== INVOICE 6 (cancel + refund) =====
-(6, 6, 4000000, 'TUITION', 6, 'INVOICE', 'Hoc phi HK1', '2025-12-01'),
+(6, 6, 16296000, 'TUITION', 6, 'INVOICE', 'Hoc phi HK1', '2025-12-01'),
 
 -- đã thanh toán
-(6, 6, 4000000, 'PAYMENT', 6, 'PAYMENT', 'Thanh toan thanh cong', '2025-12-10'),
+(6, 6, 16296000, 'PAYMENT', 6, 'PAYMENT', 'Thanh toan thanh cong', '2025-12-10'),
 
 -- refund
-(6, 6, -4000000, 'REFUND', 6, 'PAYMENT', 'Hoan tien do huy hoa don', '2025-12-20');
+(6, 6, -16296000, 'REFUND', 6, 'PAYMENT', 'Hoan tien do huy hoa don', '2025-12-20');
 
 INSERT INTO subject_prerequisite_groups
 (id, subject_id, min_subjects_required, description)
@@ -1597,9 +1687,29 @@ VALUES
 (2, 9, 1, 'Cần học học phần mã GF101'),
 (3, 20, 1, 'Cần học học phần mã CS100'),
 (4, 21, 1, 'Cần học học phần mã CS121'),
-(5, 22, 1, 'Cần học học phần mã CS122'),
+(5, 22, 1, 'Cần học học phần mã SE302'),
 (6, 23, 1, 'Cần học học phần mã GE111'),
-(7, 24, 1, 'Cần học học phần mã MA101');
+(7, 24, 1, 'Cần học học phần mã MA101'),
+(8, 26, 1, 'Cần học học phần mã GE112'),
+(9, 27, 1, 'Cần học học phần mã MA120'),
+(10, 28, 1, 'Cần học học phần mã MA110'),
+(11, 29, 1, 'Cần học học phần mã CS122'),
+(12, 31, 1, 'Cần học học phần mã MA101'),
+(13, 32, 1, 'Cần học học phần mã CS122'),
+(14, 33, 1, 'Cần học học phần mã GE121'),
+(15, 34, 2, 'Cần học 2 học phần mã CS121, MA101'),
+(16, 35, 1, 'Cần học học phần mã MA120'),
+(17, 37, 1, 'Cần học học phần mã NW212'),
+(18, 38, 1, 'Cần học học phần mã IS222'),
+(19, 39, 1, 'Cần học học phần mã IS222'),
+(20, 40, 1, 'Cần học học phần mã CS121'),
+(21, 41, 1, 'Cần học học phần mã MA239'),
+(22, 42, 1, 'Cần học học phần mã CS212'),
+(23, 43, 1, 'Cần học học phần mã MI201'),
+(24, 44, 2, 'Cần học 2 học phần mã CS122, IS222'),
+(25, 45, 2, 'Cần học 2 học phần mã CS122, MA120'),
+(26, 46, 1, 'Cần học học phần mã MI201'),
+(27, 47, 1, 'Cần học học phần mã IS332');
 
 INSERT INTO subject_prerequisite_group_items
 (group_id, prerequisite_subject_id)
@@ -1609,9 +1719,32 @@ VALUES
 (2, 8),
 (3, 11),
 (4, 20),
-(5,40),
+(5, 47),
 (6, 14),
-(7, 15);
+(7, 15),
+(8, 23),
+(9, 24),
+(10, 27),
+(11, 40),
+(12, 15),
+(13, 40),
+(14, 26),
+(15, 20),
+(15, 15),
+(16, 24),
+(17, 42),
+(18, 34),
+(19, 34),
+(20, 20),
+(21, 35),
+(22, 21),
+(23, 29),
+(24, 34),
+(24, 40),
+(25, 40),
+(25, 24),
+(26, 29),
+(27, 44);
 
 INSERT INTO subject_enrollment_conditions
 (subject_id, condition_type, condition_value, condition_operator, description, created_at, updated_at)

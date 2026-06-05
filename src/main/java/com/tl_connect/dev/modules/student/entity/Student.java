@@ -48,6 +48,9 @@ public class Student {
     @Column(name = "date_of_birth", nullable = false)
     private LocalDate dateOfBirth;
 
+    @Column(name = "avatar_url")
+    private String avatarUrl;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private StudentStatus status;

@@ -14,8 +14,8 @@ import com.tl_connect.dev.modules.application.dto.CreateApplicationTypeDTO;
 import com.tl_connect.dev.modules.application.dto.UpdateApplicationTypeDTO;
 import com.tl_connect.dev.modules.application.service.interfaces.ApplicationTypeService;
 import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
-import com.tl_connect.dev.shared.common.types.JwtUserInfo;
-import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
+import com.tl_connect.dev.shared.types.JwtUserInfo;
+import com.tl_connect.dev.shared.ultility.ResponseHelper;
 
 import java.util.List;
 

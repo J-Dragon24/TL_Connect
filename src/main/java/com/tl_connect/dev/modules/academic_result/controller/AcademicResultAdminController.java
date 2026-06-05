@@ -24,9 +24,9 @@ import com.tl_connect.dev.shared.common.dto.ImportResultDTO;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.exception.InvalidInputException;
 import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
-import com.tl_connect.dev.shared.common.types.JwtUserInfo;
-import com.tl_connect.dev.shared.common.ultility.FileHelper;
-import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
+import com.tl_connect.dev.shared.types.JwtUserInfo;
+import com.tl_connect.dev.shared.ultility.FileHelper;
+import com.tl_connect.dev.shared.ultility.ResponseHelper;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

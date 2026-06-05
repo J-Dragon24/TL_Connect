@@ -10,7 +10,7 @@ import com.tl_connect.dev.modules.enroll.dto.dag.PrerequisiteGroup;
 import com.tl_connect.dev.modules.subject.projection.PrerequisiteRow;
 import com.tl_connect.dev.modules.enroll.dto.dag.SubjectNode;
 import com.tl_connect.dev.modules.subject.service.interfaces.SubjectService;
-import com.tl_connect.dev.shared.common.ultility.CacheHelper;
+import com.tl_connect.dev.shared.ultility.CacheHelper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

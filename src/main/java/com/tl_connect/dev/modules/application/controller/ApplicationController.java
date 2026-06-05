@@ -18,9 +18,9 @@ import com.tl_connect.dev.modules.application.service.interfaces.ApplicationServ
 import com.tl_connect.dev.modules.application.service.interfaces.ApplicationTypeService;
 import com.tl_connect.dev.shared.common.exception.InvalidInputException;
 import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
-import com.tl_connect.dev.shared.common.types.JwtUserInfo;
-import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
-import com.tl_connect.dev.shared.common.ultility.provider.BackBlazeProvider;
+import com.tl_connect.dev.shared.types.JwtUserInfo;
+import com.tl_connect.dev.shared.ultility.ResponseHelper;
+import com.tl_connect.dev.shared.ultility.provider.BackBlazeProvider;
 
 import java.util.List;
 

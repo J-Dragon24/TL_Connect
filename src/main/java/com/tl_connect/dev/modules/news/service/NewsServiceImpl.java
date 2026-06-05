@@ -19,13 +19,13 @@ import com.tl_connect.dev.modules.news.service.interfaces.NewsService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.dto.UploadResult;
 import com.tl_connect.dev.shared.common.exception.ExternalException;
-import com.tl_connect.dev.shared.common.ultility.FileHelper;
+import com.tl_connect.dev.shared.ultility.FileHelper;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class NewsServiceImpl implements NewsService{
+public class NewsServiceImpl implements NewsService {
     private final NewsRepository newsRepository;
     private final FileHelper fileHelper;
 
@@ -60,7 +60,8 @@ public class NewsServiceImpl implements NewsService{
 
     @Transactional
     public Long createNews(CreateNewsDTO newsDTO, MultipartFile file) throws IOException {
-        News news = News.create(newsDTO.getTitle(), newsDTO.getExcerpt(), newsDTO.getSource(), newsDTO.getPublishDate(), newsDTO.getNewsUrl());
+        News news = News.create(newsDTO.getTitle(), newsDTO.getExcerpt(), newsDTO.getSource(), newsDTO.getPublishDate(),
+                newsDTO.getNewsUrl());
 
         if (file != null && !file.isEmpty()) {
             UploadResult uploadResult = fileHelper.uploadFile("news", file);
@@ -68,9 +69,9 @@ public class NewsServiceImpl implements NewsService{
             news.setImageKey(uploadResult.getKey());
         }
 
-        try{
+        try {
             news = newsRepository.save(news);
-        }catch(Exception e){
+        } catch (Exception e) {
             fileHelper.deleteFile(news.getImageKey());
             throw new ExternalException("Failed to create news");
         }
@@ -80,15 +81,16 @@ public class NewsServiceImpl implements NewsService{
     @Transactional
     public void updateNews(Long id, UpdateNewsDTO newsDTO, MultipartFile file) throws IOException {
         News news = newsRepository.findById(id).orElseThrow(() -> new RuntimeException("News not found"));
-        news.update(newsDTO.getTitle(), newsDTO.getExcerpt(), newsDTO.getSource(), newsDTO.getPublishDate(), newsDTO.getNewsUrl());
+        news.update(newsDTO.getTitle(), newsDTO.getExcerpt(), newsDTO.getSource(), newsDTO.getPublishDate(),
+                newsDTO.getNewsUrl());
         if (file != null && !file.isEmpty()) {
             UploadResult uploadResult = fileHelper.uploadFile("news", file);
             news.setImageUrl(uploadResult.getUrl());
             news.setImageKey(uploadResult.getKey());
         }
-        try{
+        try {
             newsRepository.save(news);
-        }catch(Exception e){
+        } catch (Exception e) {
             throw new ExternalException("Failed to update news");
         }
     }
@@ -96,9 +98,9 @@ public class NewsServiceImpl implements NewsService{
     @Transactional
     public void deleteNews(Long id) {
         News news = newsRepository.findById(id).orElseThrow(() -> new RuntimeException("News not found"));
-        try{
+        try {
             newsRepository.delete(news);
-        }catch(Exception e){
+        } catch (Exception e) {
             throw new ExternalException("Failed to delete news");
         }
     }
@@ -107,7 +109,8 @@ public class NewsServiceImpl implements NewsService{
         return NewsDTO.builder()
                 .title(news.getTitle())
                 .excerpt(news.getExcerpt())
-                .imageUrl(news.getImageUrl())
+                .imageUrl(news.getImageUrl() != null ? news.getImageUrl()
+                        : "https://res.cloudinary.com/dm5ev1isi/image/upload/v1780633731/logo_kxdjjg.jpg")
                 .newsUrl(news.getNewsUrl())
                 .source(news.getSource())
                 .publishDate(news.getPublishDate())

@@ -1,4 +1,4 @@
-package com.tl_connect.dev.shared.common.ultility;
+package com.tl_connect.dev.shared.ultility;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
-import com.tl_connect.dev.shared.common.types.UserInfo;
+import com.tl_connect.dev.shared.types.UserInfo;
 
 import jakarta.annotation.PostConstruct;
 import okhttp3.FormBody;

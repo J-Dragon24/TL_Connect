@@ -27,8 +27,8 @@ import com.tl_connect.dev.modules.student.service.interfaces.StudentWriteService
 import com.tl_connect.dev.shared.common.dto.ImportResultDTO;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.exception.InvalidInputException;
-import com.tl_connect.dev.shared.common.ultility.FileHelper;
-import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
+import com.tl_connect.dev.shared.ultility.FileHelper;
+import com.tl_connect.dev.shared.ultility.ResponseHelper;
 
 import lombok.RequiredArgsConstructor;
 

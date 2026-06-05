@@ -1,4 +1,4 @@
-package com.tl_connect.dev.shared.common.types;
+package com.tl_connect.dev.shared.types;
 
 import java.util.List;
 

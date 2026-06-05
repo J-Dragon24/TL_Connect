@@ -1,7 +1,7 @@
 package com.tl_connect.dev.modules.oauth.service.interfaces;
 
-import com.tl_connect.dev.shared.common.types.JwtPayload;
-import com.tl_connect.dev.shared.common.types.JwtUserInfo;
+import com.tl_connect.dev.shared.types.JwtPayload;
+import com.tl_connect.dev.shared.types.JwtUserInfo;
 
 public interface JWTService {
 

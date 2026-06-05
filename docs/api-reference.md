@@ -187,38 +187,39 @@ Sinh viên lấy thông tin cá nhân.
     "code": 0,
     "message": "Student info retrieved successfully",
     "data": {
-        "student_code": "SV2021001",
-        "full_name": "Pham Minh Duc",
-        "date_of_birth": "2003-05-10",
+        "avatarUrl": "https://example.com/avatar.jpg",
+        "studentCode": "SV2021001",
+        "fullName": "Pham Minh Duc",
+        "dateOfBirth": "2003-05-10",
         "gender": "NAM",
-        "class_code": "KHMT2021",
-        "academic_advisor": "Nguyen Van An",
-        "start_year": 2021,
-        "end_year": 2026,
+        "classCode": "KHMT2021",
+        "academicAdvisor": "Nguyen Van An",
+        "startYear": 2021,
+        "endYear": 2026,
         "major": {
-            "major_code": "KHMT",
-            "major_name": "Khoa học máy tính",
+            "majorCode": "KHMT",
+            "majorName": "Khoa học máy tính",
             "faculty": "Công nghệ thông tin"
         },
-        "training_type": "CHINH_QUY",
-        "identity_card": {
-            "card_number": "079203001111",
-            "card_type": "CCCD",
-            "issued_date": "2021-01-10",
-            "issued_place": "Cục CS QLHC về TTXH - HCM"
+        "trainingType": "CHINH_QUY",
+        "identityCard": {
+            "cardNumber": "079203001111",
+            "cardType": "CCCD",
+            "issuedDate": "2021-01-10",
+            "issuedPlace": "Cục CS QLHC về TTXH - HCM"
         },
         "contact": {
-            "phone_number": "0911111111",
+            "phoneNumber": "0911111111",
             "address": "12 Nguyen Trai, HCM",
             "email": "duc.personal@gmail.com"
         },
-        "academic_info": {
+        "academicInfo": {
             "cohort": "K2021",
             "position": "Lớp trưởng"
         },
-        "emergency_contact": {
+        "emergencyContact": {
             "name": "Pham Van Bo",
-            "phone_number": "0981111111",
+            "phoneNumber": "0981111111",
             "address": "12 Nguyen Trai, HCM",
             "relationship": null
         }
@@ -705,6 +706,105 @@ Xóa sinh viên.
 
 - ✅ token hợp lệ → code 0 + id sinh viên
 - ❌ token rỗng / thiếu / invalid / hết hạn → code -3, HTTP 401
+---
+
+### 5.9. POST /api/v1/students/me/update
+Sinh viên tự cập nhật thông tin của chính mình.
+
+- **Auth**: Bắt buộc (`Authorization: Bearer <JWT>`)
+- **Content-Type**: `application/json`
+
+**Request body:**
+```json
+{
+  "phoneNumber": "0912345678",
+  "address": "123 Nguyen Trai, Ha Noi",
+  "email": "student@example.com",
+  "emergencyContactName": "Nguyen Van A",
+  "emergencyContactPhoneNumber": "0987654321",
+  "emergencyContactAddress": "Ha Noi",
+  "emergencyContactRelationship": "Bố"
+}
+```
+
+**Request body thực tế phụ thuộc vào SelfUpdateRequestDTO.**
+
+| Field | Type | Required | Description |
+| :--- | :--- | :--- | :--- |
+| phoneNumber | string | ❌ | Số điện thoại |
+| address | string | ❌ | Địa chỉ |
+| email | string | ❌ | Email cá nhân |
+| emergencyContactName | string | ❌ | Tên người liên hệ khẩn cấp |
+| emergencyContactPhoneNumber | string | ❌ | SĐT liên hệ khẩn cấp |
+| emergencyContactAddress | string | ❌ | Địa chỉ liên hệ khẩn cấp |
+| emergencyContactRelationship | string | ❌ | Quan hệ với sinh viên |
+
+**Response thành công (code 0):**
+
+```json
+{
+  "code": 0,
+  "message": "Basic info updated successfully",
+  "data": null
+}
+```
+
+**Response – User chưa đăng nhập (code -3):**
+
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```
+
+**Test cases:**
+
+- ✅ Token hợp lệ + dữ liệu hợp lệ → cập nhật thành công
+- ❌ Token thiếu / invalid / hết hạn → code -3, HTTP 401
+- ❌ Request body không hợp lệ → code -5, HTTP 400
+---
+
+### 5.10. POST /api/v1/students/me/avatar
+
+Cập nhật avatar của sinh viên hiện tại.
+
+- **Auth**: Bắt buộc (`Authorization: Bearer <JWT>`)
+- **Content-Type**: `multipart/form-data`
+
+**Form-data fields:**
+
+| Field | Type | Required | Description |
+| :--- | :--- | :--- | :--- |
+| file | File | ✅ | Ảnh avatar |
+
+**Response thành công (code 0):**
+
+```json
+{
+  "code": 0,
+  "message": "Avatar updated successfully",
+  "data": null
+}
+```
+
+**Response – User chưa đăng nhập (code -3):**
+
+```json
+{
+  "code": -3,
+  "data": null,
+  "message": "Authentication required"
+}
+```
+
+**Test cases:**
+
+- ✅ Token hợp lệ + file hợp lệ → cập nhật avatar thành công
+- ❌ Token thiếu / invalid / hết hạn → code -3, HTTP 401
+- ❌ Không gửi file → code -1, HTTP 400
+- ❌ File không hợp lệ → code -1 hoặc -5, HTTP 400
 ---
 
 ## 6. Study Program - Chương trình đào tạo
@@ -1456,10 +1556,10 @@ GET /api/v1/student/exams?HocKy=HK1 2022-2023
                 "exam_date": "2022-01-10",
                 "start_time": "07:30:00",
                 "end_time": "09:30:00",
-                "exam_room": "P101",
+                "exam_room": "A101",
                 "exam_location": "Co so 1",
-                "exam_format": "TRAC_NGHIEM",
-                "exam_type": "GIUA_KY",
+                "exam_format": "ONLINE",
+                "exam_type": "MIDTERM",
                 "exam_attempt": 1,
                 "attendance_status": "ATTENDED"
             }
@@ -1506,10 +1606,10 @@ GET /api/v1/admin/exam?semesterId=1&facultyId=1&page=0&size=10
                 "exam_date": "2022-01-10",
                 "start_time": "07:30:00",
                 "end_time": "09:30:00",
-                "exam_room": "P101",
+                "exam_room": "A101",
                 "exam_location": "Co so 1",
-                "exam_format": "TRAC_NGHIEM",
-                "exam_type": "GIUA_KY",
+                "exam_format": "ONLINE",
+                "exam_type": "MIDTERM",
                 "exam_attempt": 1,
                 "attendance_status": "ATTENDED"
             }
@@ -1559,7 +1659,7 @@ Lấy danh sách lịch thi (phân trang + filter).
         "examRoom": "A101",
         "examLocation": "Cơ sở 1",
         "examFormat": "Offline",
-        "examType": "Final",
+        "examType": "FINAL",
         "note": ""
       }
     ],
@@ -1588,8 +1688,8 @@ Tạo lịch thi.
   "endTime": "10:00:00",
   "examRoom": "A101",
   "examLocation": "Cơ sở 1",
-  "examFormat": "Offline",
-  "examType": "Final",
+  "examFormat": "ONLINE",
+  "examType": "FINAL",
   "note": "Thi tập trung"
 }
 ```
@@ -1603,7 +1703,7 @@ Tạo lịch thi.
 | examRoom | string | ✅ | Phòng thi |
 | examLocation | string | ❌ | Địa điểm |
 | examFormat | string | ❌ | Hình thức (Online/Offline) |
-| examType | string | ❌ | Loại thi |
+| examType | enum(MIDTERM, FINAL) | ❌ | Loại thi |
 | note | string | ❌ | Ghi chú |
 
 **Response:**
@@ -5061,7 +5161,55 @@ Ai nói chuyện
     "content": "Tôi tên là AI"
   }],
   "prompt": "Bạn tên gì?",
-  "gender": "female"
+  "gender": "female",
+    "context": {
+      "studentName": "Lê Việt Hoàng",
+      "studentCode": "A45033",
+      "dateOfBirth": "2003-05-10",
+      "gender": "NAM",
+      "semesters": [
+          {
+              "id": 4,
+              "semesterName": "Học kỳ 1 2025-2026",
+              "semesterCode": "HK1-2025-2026",
+              "academicYears": "2025-2026",
+              "semesterNumber": 1,
+              "startDate": "2025-09-08",
+              "endDate": "2025-12-28",
+              "isActive": true
+          },
+          {
+              "id": 5,
+              "semesterName": "Học kỳ 2 2025-2026",
+              "semesterCode": "HK2-2025-2026",
+              "academicYears": "2025-2026",
+              "semesterNumber": 2,
+              "startDate": "2026-01-05",
+              "endDate": "2026-04-26",
+              "isActive": true
+          },
+          {
+              "id": 6,
+              "semesterName": "Học kỳ tăng cường 2025-2026",
+              "semesterCode": "HKTC-2025-2026",
+              "academicYears": "2025-2026",
+              "semesterNumber": 3,
+              "startDate": "2026-05-04",
+              "endDate": "2026-08-23",
+              "isActive": true
+          }
+      ],
+      "academicInfo": [
+          {
+              "startYear": 2022,
+              "endYear": 2026,
+              "majorCode": "TI",
+              "majorName": "Khoa học máy tính",
+              "facultyCode": "CNTT",
+              "studyProgramCode": "DHCQK35TI"
+          }
+      ]
+  }
 }
 ```
 
@@ -6361,8 +6509,7 @@ Lấy danh sách sinh viên dạng thông tin rút gọn, hỗ trợ tìm kiếm
 
 | Field | Type | Required | Description |
 |------|-----|-----|-----|
-| name | string | ❌ | Tìm kiếm theo tên sinh viên |
-| studentCode | string | ❌ | Tìm kiếm theo mã sinh viên |
+| search | string | ❌ | Tìm kiếm theo tên và mã sinh viên |
 | page | int | ❌ | Số trang (mặc định: 0) |
 | size | int | ❌ | Kích thước trang (mặc định: 10) |
 | sort | string | ❌ | Sắp xếp dữ liệu |
@@ -6376,6 +6523,7 @@ Lấy danh sách sinh viên dạng thông tin rút gọn, hỗ trợ tìm kiếm
   "data": {
     "content": [
       {
+        "avatarUrl": "https://example.com/avatar.jpg",
         "studentCode": "SV2021001",
         "fullName": "Nguyen Van A"
       }
@@ -6422,6 +6570,7 @@ Lấy thông tin sinh viên phục vụ tính năng chat.
   "code": 0,
   "message": "Student chat info retrieved successfully",
   "data": {
+    "avatarUrl": "https://example.com/avatar.jpg",
     "studentCode": "SV2021001",
     "fullName": "Nguyen Van A",
     "classCode": "KHMT2021",

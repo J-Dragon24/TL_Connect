@@ -15,7 +15,7 @@ import com.tl_connect.dev.modules.semester.dto.SemesterDTO;
 import com.tl_connect.dev.modules.semester.dto.UpdateSemesterDTO;
 import com.tl_connect.dev.modules.semester.service.interfaces.SemesterService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
-import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
+import com.tl_connect.dev.shared.ultility.ResponseHelper;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

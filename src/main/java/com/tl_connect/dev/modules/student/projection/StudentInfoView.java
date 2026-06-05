@@ -9,6 +9,7 @@ import com.tl_connect.dev.shared.common.enums.TrainingType;
 public interface StudentInfoView {
     String getStudentCode();
     String getFullName();
+    String getAvatarUrl();
     Gender getGender();
     LocalDate getDateOfBirth();
     String getClassCode();

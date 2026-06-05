@@ -13,7 +13,7 @@ import com.tl_connect.dev.modules.oauth.dto.RefreshResponseDTO;
 import com.tl_connect.dev.modules.oauth.service.interfaces.OAuthService;
 import com.tl_connect.dev.modules.oauth.service.interfaces.RefreshTokenService;
 import com.tl_connect.dev.shared.common.exception.InvalidInputException;
-import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
+import com.tl_connect.dev.shared.ultility.ResponseHelper;
 
 import lombok.RequiredArgsConstructor;
 

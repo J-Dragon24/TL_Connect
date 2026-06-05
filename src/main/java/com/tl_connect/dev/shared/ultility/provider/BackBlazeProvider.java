@@ -1,4 +1,4 @@
-package com.tl_connect.dev.shared.common.ultility.provider;
+package com.tl_connect.dev.shared.ultility.provider;
 
 import java.io.IOException;
 
@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.tl_connect.dev.shared.common.dto.UploadResult;
 import com.tl_connect.dev.shared.common.exception.ExternalException;
-import com.tl_connect.dev.shared.common.ultility.FileHelper;
+import com.tl_connect.dev.shared.ultility.FileHelper;
 
 import lombok.RequiredArgsConstructor;
 import software.amazon.awssdk.core.sync.RequestBody;

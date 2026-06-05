@@ -20,8 +20,8 @@ import com.tl_connect.dev.modules.chat.service.interfaces.ChatService;
 import com.tl_connect.dev.modules.chat.service.interfaces.UserInfoService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
-import com.tl_connect.dev.shared.common.types.JwtUserInfo;
-import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
+import com.tl_connect.dev.shared.types.JwtUserInfo;
+import com.tl_connect.dev.shared.ultility.ResponseHelper;
 
 import lombok.RequiredArgsConstructor;
 

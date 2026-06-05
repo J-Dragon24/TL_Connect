@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import com.tl_connect.dev.shared.common.enums.Gender;
 import com.tl_connect.dev.shared.common.enums.TrainingType;
-import com.tl_connect.dev.shared.common.ultility.FileProcess.annotation.ExcelColumn;
+import com.tl_connect.dev.shared.ultility.FileProcess.annotation.ExcelColumn;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;

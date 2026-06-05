@@ -16,7 +16,7 @@ import com.tl_connect.dev.modules.tuition.dto.TuitionInvoiceDetailAdmDTO;
 import com.tl_connect.dev.modules.tuition.service.interfaces.TuitionModifyService;
 import com.tl_connect.dev.modules.tuition.service.interfaces.TuitionService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
-import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
+import com.tl_connect.dev.shared.ultility.ResponseHelper;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

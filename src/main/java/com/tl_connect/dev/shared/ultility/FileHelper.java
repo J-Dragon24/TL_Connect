@@ -1,4 +1,4 @@
-package com.tl_connect.dev.shared.common.ultility;
+package com.tl_connect.dev.shared.ultility;
 
 import java.io.IOException;
 import java.io.InputStream;

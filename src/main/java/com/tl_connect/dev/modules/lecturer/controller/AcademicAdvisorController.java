@@ -9,7 +9,7 @@ import com.tl_connect.dev.modules.lecturer.dto.AcademicAdvisorDTO;
 import com.tl_connect.dev.modules.lecturer.dto.CreateAcademicAdvisorDTO;
 import com.tl_connect.dev.modules.lecturer.service.interfaces.AcademicAdvisorService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
-import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
+import com.tl_connect.dev.shared.ultility.ResponseHelper;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

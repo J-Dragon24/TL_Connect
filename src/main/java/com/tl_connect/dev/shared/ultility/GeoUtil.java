@@ -1,4 +1,4 @@
-package com.tl_connect.dev.shared.common.ultility;
+package com.tl_connect.dev.shared.ultility;
 
 public class GeoUtil {
     private static final double EARTH_RADIUS = 6371000;

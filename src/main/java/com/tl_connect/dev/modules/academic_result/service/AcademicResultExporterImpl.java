@@ -9,7 +9,7 @@ import com.tl_connect.dev.modules.academic_result.dto.AcademicResultDTO;
 import com.tl_connect.dev.modules.academic_result.dto.SemesterResultDTO;
 import com.tl_connect.dev.modules.academic_result.dto.SubjectResultDTO;
 import com.tl_connect.dev.modules.academic_result.service.interfaces.AcademicResultExporter;
-import com.tl_connect.dev.shared.common.ultility.FileProcess.FileParseHelper;
+import com.tl_connect.dev.shared.ultility.FileProcess.FileParseHelper;
 
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;

@@ -11,6 +11,7 @@ import lombok.Builder;
 @Builder
 public class StudentChatInfoDTO {
     private String studentCode;
+    private String avatarUrl;
     private String fullName;
     private String classCode;
     private String majorName;

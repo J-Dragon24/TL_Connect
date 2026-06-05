@@ -18,9 +18,9 @@ import com.tl_connect.dev.modules.payment.service.interfaces.PaymentService;
 import com.tl_connect.dev.modules.tuition.service.interfaces.TuitionModifyService;
 import com.tl_connect.dev.shared.common.enums.TuitionStatus;
 import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
-import com.tl_connect.dev.shared.common.types.JwtUserInfo;
-import com.tl_connect.dev.shared.common.ultility.ResponseHelper;
 import com.tl_connect.dev.shared.config.VNPayConfig;
+import com.tl_connect.dev.shared.types.JwtUserInfo;
+import com.tl_connect.dev.shared.ultility.ResponseHelper;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;

@@ -40,6 +40,7 @@ public class UserInfoServiceImpl implements UserInfoService{
 
     private SimpleProfileStudentDTO toSimpleDTO(Student student) {
         return SimpleProfileStudentDTO.builder()
+                .avatarUrl(student.getAvatarUrl())
                 .studentCode(student.getStudentCode())
                 .fullName(student.getFullName())
                 .build();

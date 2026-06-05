@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.tl_connect.dev.modules.enroll.cache.StudentScheduleCache;
 import com.tl_connect.dev.modules.enroll.service.interfaces.StudentCourseClassService;
-import com.tl_connect.dev.shared.common.ultility.CacheHelper;
 import com.tl_connect.dev.shared.datastructure.intervaltree.ScheduleInterval;
+import com.tl_connect.dev.shared.ultility.CacheHelper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

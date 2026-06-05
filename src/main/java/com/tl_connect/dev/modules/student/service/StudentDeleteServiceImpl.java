@@ -12,7 +12,7 @@ import com.tl_connect.dev.shared.common.enums.StudentStatus;
 import com.tl_connect.dev.shared.common.enums.UserStatus;
 import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
-import com.tl_connect.dev.shared.common.ultility.CacheHelper;
+import com.tl_connect.dev.shared.ultility.CacheHelper;
 import com.tl_connect.dev.modules.student.service.interfaces.StudentCacheService;
 import com.tl_connect.dev.modules.student.service.interfaces.StudentDeleteService;
 

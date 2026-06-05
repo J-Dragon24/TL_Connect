@@ -37,6 +37,7 @@ public interface StudentRepository extends JpaRepository<Student, Long>, JpaSpec
             SELECT
                 s.student_code AS studentCode,
                 s.full_name AS fullName,
+                s.avatar_url AS avatarUrl,
                 s.gender AS gender,
                 s.date_of_birth AS dateOfBirth,
                 c.class_code AS classCode,
@@ -208,6 +209,7 @@ public interface StudentRepository extends JpaRepository<Student, Long>, JpaSpec
 
     @Query(value = """
             SELECT
+                s.avatar_url AS avatarUrl,
                 s.student_code AS studentCode,
                 s.full_name AS fullName,
                 c.class_code AS classCode,

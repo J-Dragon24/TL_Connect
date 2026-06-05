@@ -16,7 +16,7 @@ import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.InvalidInputException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
-import com.tl_connect.dev.shared.common.ultility.CacheHelper;
+import com.tl_connect.dev.shared.ultility.CacheHelper;
 import com.tl_connect.dev.modules.study_program.service.interfaces.StudyProgramCacheService;
 import com.tl_connect.dev.modules.study_program.service.interfaces.StudyProgramSubjectService;
 

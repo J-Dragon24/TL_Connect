@@ -1,6 +1,7 @@
-package com.tl_connect.dev.shared.common.ultility.provider;
+package com.tl_connect.dev.shared.ultility.provider;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.context.annotation.Primary;
@@ -12,7 +13,7 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.tl_connect.dev.shared.common.dto.UploadResult;
 import com.tl_connect.dev.shared.common.exception.ExternalException;
-import com.tl_connect.dev.shared.common.ultility.FileHelper;
+import com.tl_connect.dev.shared.ultility.FileHelper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,7 +35,15 @@ public class CloudinaryProvider extends FileHelper {
             ext = ext != null ? ext.toLowerCase() : "";
 
             String key = System.currentTimeMillis() + "_" + fileName;
-            String resourceType = ext.equals("pdf") ? "raw" : "image";
+            String resourceType;
+
+            if (List.of("png", "jpg", "jpeg", "webp", "pdf").contains(ext)) {
+                resourceType = "image";
+            } else if (ext.equals("mp4")) {
+                resourceType = "video";
+            } else {
+                resourceType = "raw";
+            }
 
             Map<?, ?> result = cloudinary.uploader().upload(
                 file.getBytes(),
