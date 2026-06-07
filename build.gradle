@@ -46,6 +46,7 @@ dependencies {
 	implementation 'com.google.firebase:firebase-admin:9.2.0'
 	implementation 'com.cloudinary:cloudinary-http44:1.38.0'
 	implementation 'org.springframework.boot:spring-boot-docker-compose'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 }
 
 tasks.named('test') {
