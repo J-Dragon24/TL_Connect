@@ -57,7 +57,7 @@ VALUES
 ('1deb00a9-835c-4ab7-a50f-57c12a56c7bd', 'Lê Việt Hoàng', 'nhokthanh3211@gmail.com'),
 ('a65d03d4-6a2a-426f-963d-8dca24399b83', 'Nguyễn Ngọc Anh', 'a45045@thanglong.edu.vn'),
 ('4a43cbd4-f3c6-4f5e-8db3-5b3aa1ef7369', 'Phùng Thanh Độ', 'a45044@thanglong.edu.vn'),
-('uuid-4','Phạm Quang Huy','a45123@thanglong.edu.vn'),
+('6befa50a-4dee-49a1-8279-cef09446ea51','Nguyễn Trần Bảo Long','a46049@thanglong.edu.vn'),
 ('uuid-5','Hoàng Thu Hà','a45124@thanglong.edu.vn'),
 ('uuid-6','Đỗ Minh Tuấn','a45125@thanglong.edu.vn'),
 ('uuid-7','Nguyễn Thị Lan Anh','a45126@thanglong.edu.vn'),

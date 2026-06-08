@@ -44,36 +44,36 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor{
 
             try{
 
-                JwtUserInfo userInfo = JwtUserInfo.builder()
-                        .userId(1L)
-                        .oauthUserId(1L)
-                        .roles(new ArrayList<>(List.of("ADMIN")))
-                        .build();
-
-                List<GrantedAuthority> authorities = userInfo.roles() == null 
-                    ? List.of()
-                    : userInfo.roles().stream()
-                        .map(r -> (GrantedAuthority) new SimpleGrantedAuthority("ROLE_" + r))
-                        .toList();
-
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userInfo, null,
-                        authorities);
-
-                // JwtPayload jwtPayload = jwtService.verifyToken(token);
-
                 // JwtUserInfo userInfo = JwtUserInfo.builder()
-                // .userId(jwtPayload.getUserId())
-                // .oauthUserId(jwtPayload.getOauthUserId())
-                // .roles(jwtPayload.getRoles())
-                // .build();
+                //         .userId(1L)
+                //         .oauthUserId(1L)
+                //         .roles(new ArrayList<>(List.of("ADMIN")))
+                //         .build();
 
-                // List<GrantedAuthority> authorities = jwtPayload.getRoles() == null
-                //     ?List.of()
-                //     :jwtPayload.getRoles().stream().map(
-                //         r -> (GrantedAuthority) new SimpleGrantedAuthority("ROLE_" + r)
-                //     ).toList();
+                // List<GrantedAuthority> authorities = userInfo.roles() == null 
+                //     ? List.of()
+                //     : userInfo.roles().stream()
+                //         .map(r -> (GrantedAuthority) new SimpleGrantedAuthority("ROLE_" + r))
+                //         .toList();
 
-                // Authentication auth = new UsernamePasswordAuthenticationToken(userInfo, null, authorities);
+                // UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userInfo, null,
+                //         authorities);
+
+                JwtPayload jwtPayload = jwtService.verifyToken(token);
+
+                JwtUserInfo userInfo = JwtUserInfo.builder()
+                .userId(jwtPayload.getUserId())
+                .oauthUserId(jwtPayload.getOauthUserId())
+                .roles(jwtPayload.getRoles())
+                .build();
+
+                List<GrantedAuthority> authorities = jwtPayload.getRoles() == null
+                    ?List.of()
+                    :jwtPayload.getRoles().stream().map(
+                        r -> (GrantedAuthority) new SimpleGrantedAuthority("ROLE_" + r)
+                    ).toList();
+
+                Authentication auth = new UsernamePasswordAuthenticationToken(userInfo, null, authorities);
 
 
                 accessor.setUser(auth);
