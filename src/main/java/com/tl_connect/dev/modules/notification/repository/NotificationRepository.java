@@ -78,8 +78,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
             LEFT JOIN notification_read nr 
                 ON n.id = nr.notification_id 
                 AND nr.oauth_user_id = :oauthUserId
-            WHERE
-
+            WHERE (
                 n.target_type = 'GLOBAL'
 
             OR (n.target_type = 'STUDENT'
@@ -93,21 +92,41 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
             OR (n.target_type = 'COURSE_CLASS'
                 AND nt.target_id IN (:courseClassIds))
+                )
 
+            AND (
+                :search IS NULL
+                OR LOWER(n.created_by) LIKE LOWER(CONCAT('%', :search, '%'))
+            )
             ORDER BY n.created_at DESC
             """,
             countQuery = """
                     SELECT COUNT(*)
                     FROM notifications n
                     LEFT JOIN notification_targets nt ON n.id = nt.notification_id
-                    WHERE n.target_type = 'GLOBAL'
-                    OR (n.target_type = 'STUDENT' AND nt.target_id = :studentId)
-                    OR (n.target_type = 'STUDENT_CLASS' AND nt.target_id = :classId)
-                    OR (n.target_type = 'FACULTY' AND nt.target_id = :facultyId)
-                    OR (n.target_type = 'COURSE_CLASS' AND nt.target_id IN (:courseClassIds))
+                    WHERE (
+                        n.target_type = 'GLOBAL'
+
+                    OR (n.target_type = 'STUDENT'
+                        AND nt.target_id = :studentId)
+
+                    OR (n.target_type = 'STUDENT_CLASS'
+                        AND nt.target_id = :classId)
+
+                    OR (n.target_type = 'FACULTY'
+                        AND nt.target_id = :facultyId)
+
+                    OR (n.target_type = 'COURSE_CLASS'
+                        AND nt.target_id IN (:courseClassIds))
+                    )
+
+                    AND (
+                        :search IS NULL
+                        OR LOWER(n.created_by) LIKE LOWER(CONCAT('%', :search, '%'))
+                    )
                     """,
             nativeQuery = true)
-    Page<NotificationRow> findAllNotificationByStudent(@Param("studentId") Long studentId, @Param("oauthUserId") Long oauthUserId, @Param("classId") Long classId, @Param("facultyId") Long facultyId, @Param("courseClassIds") List<Long> courseClassIds, Pageable pageable);
+    Page<NotificationRow> findAllNotificationByStudent(@Param("studentId") Long studentId, @Param("oauthUserId") Long oauthUserId, @Param("classId") Long classId, @Param("facultyId") Long facultyId, @Param("courseClassIds") List<Long> courseClassIds, Pageable pageable, String search);
 
     Optional<Notification> findById(Long id);
 

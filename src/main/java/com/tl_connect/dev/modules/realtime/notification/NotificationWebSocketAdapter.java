@@ -20,6 +20,7 @@ public class NotificationWebSocketAdapter {
             List<Long> targetIds
     ) {
 
+        
         switch (dto.getTargetType()) {
 
             case GLOBAL ->

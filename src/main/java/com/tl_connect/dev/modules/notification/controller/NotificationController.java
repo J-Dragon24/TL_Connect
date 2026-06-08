@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tl_connect.dev.modules.notification.dto.DetailNotifyDTO;
@@ -43,12 +44,16 @@ public class NotificationController {
     }
 
     @PostMapping
-    public ResponseEntity<?> getAllNotification(Authentication authentication, @RequestBody NotificationReqDTO notificationReqDTO, @PageableDefault(page = 0, size = 10) Pageable pageable) {
+    public ResponseEntity<?> getAllNotification(Authentication authentication,
+            @RequestParam(required = false) String search,
+            @RequestBody NotificationReqDTO notificationReqDTO,
+            @PageableDefault(page = 0, size = 10) Pageable pageable) {
         if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo userInfo)) {
             throw new UnauthorizeException("Authentication is required");
         }
         Long studentId = userInfo.userId();
-        PagedResponse<SummaryNotifyDTO> notifications = notificationService.getAllNotification(studentId, notificationReqDTO, pageable);
+        PagedResponse<SummaryNotifyDTO> notifications = notificationService.getAllNotification(studentId,
+                notificationReqDTO, search, pageable);
         return ResponseHelper.success("Get all notification successfully", notifications);
     }
 

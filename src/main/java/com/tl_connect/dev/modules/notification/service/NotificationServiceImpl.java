@@ -69,13 +69,13 @@ public class NotificationServiceImpl implements NotificationService {
                 .build();
     }
 
-    public PagedResponse<SummaryNotifyDTO> getAllNotification(Long studentId, NotificationReqDTO notificationReqDTO, Pageable pageable) {
+    public PagedResponse<SummaryNotifyDTO> getAllNotification(Long studentId, NotificationReqDTO notificationReqDTO, String search, Pageable pageable) {
 
         if (notificationReqDTO.getCourseClassIds() == null || notificationReqDTO.getCourseClassIds().isEmpty()) {
             notificationReqDTO.setCourseClassIds(List.of(-1L));
         }
 
-        Page<NotificationRow> notificationRows = notificationRepository.findAllNotificationByStudent(studentId, notificationReqDTO.getOauthUserId(), notificationReqDTO.getStudentClassId(), notificationReqDTO.getFacultyId(), notificationReqDTO.getCourseClassIds(), pageable);
+        Page<NotificationRow> notificationRows = notificationRepository.findAllNotificationByStudent(studentId, notificationReqDTO.getOauthUserId(), notificationReqDTO.getStudentClassId(), notificationReqDTO.getFacultyId(), notificationReqDTO.getCourseClassIds(), pageable, search);
 
         List<SummaryNotifyDTO> notificationList = notificationRows.stream()
                 .map(notificationRow -> SummaryNotifyDTO.builder()

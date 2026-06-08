@@ -16,7 +16,7 @@ public interface NotificationService {
 
     PrepareNotificationDTO prepareNotification(Long studentId);
 
-    PagedResponse<SummaryNotifyDTO> getAllNotification(Long studentId, NotificationReqDTO notificationReqDTO, Pageable pageable);
+    PagedResponse<SummaryNotifyDTO> getAllNotification(Long studentId, NotificationReqDTO notificationReqDTO, String search, Pageable pageable);
 
     DetailNotifyDTO getDetailNotification(Long id);
 
