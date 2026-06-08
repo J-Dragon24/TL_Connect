@@ -184,6 +184,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         publisher.publishEvent(
                 PaymentSuccessEvent.builder()
+                        .userId(invoice.getStudentId())
                         .tuitionId(invoice.getId())
                         .transactionCode(payment.getTransactionCode())
                         .build()

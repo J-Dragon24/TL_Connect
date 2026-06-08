@@ -12,6 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class PaymentSuccessEvent {
+    private Long userId;
     private Long tuitionId;
     private String transactionCode;
 }

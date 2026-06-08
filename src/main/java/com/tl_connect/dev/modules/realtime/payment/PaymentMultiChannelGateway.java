@@ -14,6 +14,6 @@ public class PaymentMultiChannelGateway implements PaymentGateway {
 
     @Override
     public void send(PaymentStatusDTO dto) {
-        websocketAdapter.sendPaymentUpdate(dto.getTransactionCode(), dto);
+        websocketAdapter.sendPrivatePayment(dto.getUserId(), dto);
     }
 }

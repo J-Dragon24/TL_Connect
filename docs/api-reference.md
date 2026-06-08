@@ -2637,7 +2637,7 @@ Lấy chi tiết đơn từ.
 |------|-----|-----|-----|
 id|number|✅|ID đơn|
 
-**Lưu ý**: tạo url xem file từ fileKey: `https://res.cloudinary.com/dm5ev1isi/raw/upload/${fileKey}`
+**Lưu ý**: tạo url xem file từ fileKey: `https://res.cloudinary.com/dm5ev1isi/image/upload/${fileKey}`
 
 **Response thành công (code 0):**
 ```json

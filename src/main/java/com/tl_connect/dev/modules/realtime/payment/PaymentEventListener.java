@@ -20,6 +20,7 @@ public class PaymentEventListener {
     public void handlePaymentSuccess(PaymentSuccessEvent event) {
 
         PaymentStatusDTO dto = PaymentStatusDTO.builder()
+                .userId(event.getUserId())
                 .tuitionId(event.getTuitionId())
                 .transactionCode(event.getTransactionCode())
                 .status(PaymentStatus.SUCCESS)

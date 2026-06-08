@@ -32,10 +32,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String path = request.getServletPath();
-        if (path.startsWith("/api/v1/oauth2/login") || path.startsWith("/api/v1/payments/callback")) {
+        if (path.startsWith("/api/v1/oauth2/login") || path.startsWith("/api/v1/payments/callback") || path.startsWith("/ws")) {
             filterChain.doFilter(request, response);
             return;
         }
+
 
         String header = request.getHeader("Authorization");
         if (header != null && header.startsWith("Bearer ")) {

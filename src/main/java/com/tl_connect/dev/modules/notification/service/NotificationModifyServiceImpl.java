@@ -22,7 +22,6 @@ import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
 import com.tl_connect.dev.modules.notification.service.interfaces.NotificationModifyService;
-import com.tl_connect.dev.modules.notification.service.interfaces.NotificationPushService;
 import com.tl_connect.dev.modules.realtime.notification.dto.NotificationCreatedEvent;
 
 import lombok.RequiredArgsConstructor;
@@ -32,7 +31,6 @@ import lombok.RequiredArgsConstructor;
 public class NotificationModifyServiceImpl implements NotificationModifyService {
 
     private final NotificationRepository notificationRepository;
-    private final NotificationPushService notificationPushService;
     private final NotificationTargetRepository notificationTargetRepository;
     private final ApplicationEventPublisher publisher;
 
@@ -44,7 +42,20 @@ public class NotificationModifyServiceImpl implements NotificationModifyService 
         if(type == NotificationType.GLOBAL) {
             Notification notification = buildNotification(req);
             notificationRepository.save(notification);
-            notificationPushService.pushNotifications(notification, null);
+            publisher.publishEvent(
+                NotificationCreatedEvent.builder()
+                        .id(notification.getId())
+                        .title(notification.getTitle())
+                        .content(notification.getContent())
+                        .createdBy(notification.getCreatedBy())
+                        .targetType(req.getTargetType())
+                        .isImportant(notification.getIsImportant())
+                        .referenceType(notification.getReferenceType())
+                        .deadLine(notification.getDeadLine())
+                        .createdAt(notification.getCreatedAt())
+                        .targetIds(null)
+                        .build()
+            );
             return;
         }
     
