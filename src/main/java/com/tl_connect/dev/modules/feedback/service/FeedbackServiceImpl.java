@@ -19,6 +19,7 @@ import com.tl_connect.dev.modules.feedback.entity.FeedbackAttachment;
 import com.tl_connect.dev.modules.feedback.projection.FeedbackRow;
 import com.tl_connect.dev.modules.feedback.repository.FeedbackAttachmentRepository;
 import com.tl_connect.dev.modules.feedback.repository.FeedbackRepository;
+import com.tl_connect.dev.shared.common.dto.UploadResult;
 import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.exception.ErrorException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
@@ -37,7 +38,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Transactional
     public void sendFeedback(List<MultipartFile> files, Long oauthUserId, SendFeedbackRequestDTO feedbackRequest) throws IOException {
 
-        List<String> fileKeys = new ArrayList<>();
+        List<UploadResult> results = new ArrayList<>();
 
         if(files != null && !files.isEmpty()) {
             try {
@@ -45,10 +46,10 @@ public class FeedbackServiceImpl implements FeedbackService {
                     if (file == null || file.isEmpty()) {
                         continue;
                     }
-                    fileKeys.add(fileHelper.uploadFile("feedback", file).getKey());
+                    results.add(fileHelper.uploadFile("feedback", file));
                 }
             } catch (Exception e) {
-                fileKeys.forEach(fileHelper::deleteFile);
+                results.forEach(result -> fileHelper.deleteFile(result.getKey()));
                 throw new RuntimeException("Upload file failed: " + e.getMessage(), e);
             }
         }
@@ -58,8 +59,8 @@ public class FeedbackServiceImpl implements FeedbackService {
         List<FeedbackAttachment> attachments = new ArrayList<>();
         if(files != null && !files.isEmpty()){
             for (int i = 0; i < files.size(); i++) {
-                attachments.add(FeedbackAttachment.create(feedback.getId(), fileKeys.get(i),
-                        files.get(i).getOriginalFilename(), files.get(i).getSize()));
+                UploadResult result = results.get(i);
+                attachments.add(FeedbackAttachment.create(feedback.getId(), result.getKey(), files.get(i).getOriginalFilename(), files.get(i).getSize(), result.getResourceType()));
             }
         }
 
@@ -67,7 +68,7 @@ public class FeedbackServiceImpl implements FeedbackService {
             feedbackRepository.save(feedback);
             feedbackAttachmentRepository.saveAll(attachments);
         } catch (DataIntegrityViolationException e) {
-            fileKeys.forEach(fileHelper::deleteFile);
+            results.forEach(result -> fileHelper.deleteFile(result.getKey()));
             throw new ErrorException(ResponseStatus.DATABASE_ERROR, "Save feedback attachments failed");
         }
     }
@@ -85,6 +86,9 @@ public class FeedbackServiceImpl implements FeedbackService {
             .feedbackImages(f.getFeedbackImages() == null
                 ? List.of()
                 : Arrays.asList(f.getFeedbackImages().split(",")))
+            .resourceTypes(f.getResourceTypes() == null
+                ? List.of()
+                : Arrays.asList(f.getResourceTypes().split(",")))
             .status(f.getStatus())
             .createdAt(f.getCreatedAt())
             .build()).collect(Collectors.toList());

@@ -26,11 +26,13 @@ import com.tl_connect.dev.modules.application.service.interfaces.ApplicationServ
 import com.tl_connect.dev.modules.notification.dto.CreateNotificationReqDTO;
 import com.tl_connect.dev.modules.notification.service.interfaces.NotificationModifyService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
+import com.tl_connect.dev.shared.common.dto.UploadResult;
 import com.tl_connect.dev.shared.common.enums.ApplicationStatus;
 import com.tl_connect.dev.shared.common.enums.NotificationCreatedBy;
 import com.tl_connect.dev.shared.common.enums.NotificationType;
 import com.tl_connect.dev.shared.common.enums.ResponseStatus;
 import com.tl_connect.dev.shared.common.exception.ErrorException;
+import com.tl_connect.dev.shared.common.exception.ExternalException;
 import com.tl_connect.dev.shared.common.exception.NotFoundException;
 import com.tl_connect.dev.shared.ultility.FileHelper;
 
@@ -117,16 +119,16 @@ public class ApplicationServiceImpl implements ApplicationService {
             Long studentId)
             throws IOException {
 
-        List<String> fileKeys = new ArrayList<>();
+        List<UploadResult> results = new ArrayList<>();
 
         try {
             System.out.println("Uploading files...");
             for (MultipartFile file : files) {
-                fileKeys.add(fileHelper.uploadFile("application", file).getKey());
+                results.add(fileHelper.uploadFile("application", file));
             }
         } catch (Exception e) {
-            fileKeys.forEach(fileHelper::deleteFile);
-            throw new RuntimeException("Upload file thất bại" + e.getMessage(), e);
+            results.forEach(result -> fileHelper.deleteFile(result.getKey()));
+            throw new ExternalException("Failed to upload file");
         }
 
         StudentApplication application = applicationRepository.save(
@@ -134,15 +136,15 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         List<ApplicationAttachment> attachments = new ArrayList<>();
         for (int i = 0; i < files.size(); i++) {
-            attachments.add(ApplicationAttachment.create(application.getId(), fileKeys.get(i),
-                    files.get(i).getOriginalFilename(), files.get(i).getSize()));
+            attachments.add(ApplicationAttachment.create(application.getId(), results.get(i).getKey(),
+                    files.get(i).getOriginalFilename(), files.get(i).getSize(), results.get(i).getResourceType()));
         }
 
         try {
             applicationRepository.save(application);
             applicationAttachmentRepository.saveAll(attachments);
         } catch (DataIntegrityViolationException e) {
-            fileKeys.forEach(fileHelper::deleteFile);
+            results.forEach(result -> fileHelper.deleteFile(result.getKey()));
             throw new ErrorException(ResponseStatus.DATABASE_ERROR, "Save application attachments failed");
         }
 
@@ -168,6 +170,7 @@ public class ApplicationServiceImpl implements ApplicationService {
                 .fileKey(attachment.getFileKey())
                 .originalFilename(attachment.getOriginalFilename())
                 .fileSize(attachment.getFileSize())
+                .resourceType(attachment.getResourceType())
                 .build();
     }
 

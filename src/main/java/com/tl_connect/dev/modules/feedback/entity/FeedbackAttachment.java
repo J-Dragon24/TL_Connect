@@ -33,10 +33,13 @@ public class FeedbackAttachment {
     @Column(name = "file_size")
     private Long fileSize;
 
+    @Column(name = "resource_type")
+    private String resourceType;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    public static FeedbackAttachment create(Long feedbackId, String fileKey, String fileName, Long fileSize) {
+    public static FeedbackAttachment create(Long feedbackId, String fileKey, String fileName, Long fileSize, String resourceType) {
         return FeedbackAttachment.builder()
                 .feedbackId(feedbackId)
                 .fileKey(fileKey)

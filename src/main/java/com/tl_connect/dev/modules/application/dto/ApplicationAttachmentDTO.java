@@ -10,4 +10,5 @@ public class ApplicationAttachmentDTO {
     private String fileKey;
     private String originalFilename;
     private Long fileSize;
+    private String resourceType;
 }

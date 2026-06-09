@@ -38,6 +38,9 @@ public class ApplicationAttachment {
     @Column(name = "original_filename")
     private String originalFilename;
 
+    @Column(name = "resource_type")
+    private String resourceType;
+
     @Column(name = "file_size")
     private Long fileSize;
 
@@ -45,12 +48,13 @@ public class ApplicationAttachment {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    public static ApplicationAttachment create(Long applicationId, String fileKey, String originalFilename, Long fileSize) {
+    public static ApplicationAttachment create(Long applicationId, String fileKey, String originalFilename, Long fileSize, String resourceType) {
         return ApplicationAttachment.builder()
                 .applicationId(applicationId)
                 .fileKey(fileKey)
                 .originalFilename(originalFilename)
                 .fileSize(fileSize)
+                .resourceType(resourceType)
                 .build();
     }
 }

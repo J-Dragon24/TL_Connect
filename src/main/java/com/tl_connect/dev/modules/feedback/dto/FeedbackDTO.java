@@ -23,6 +23,7 @@ public class FeedbackDTO {
     String appVersion;
     String deviceInfo;
     List<String> feedbackImages;
+    List<String> resourceTypes;
     FeedbackStatus status;
     LocalDateTime createdAt;
 }

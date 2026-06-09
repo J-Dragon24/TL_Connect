@@ -13,6 +13,7 @@ public interface FeedbackRow {
     String getAppVersion();
     String getDeviceInfo();
     String getFeedbackImages();
+    String getResourceTypes();
     FeedbackStatus getStatus();
     LocalDateTime getCreatedAt();
 }

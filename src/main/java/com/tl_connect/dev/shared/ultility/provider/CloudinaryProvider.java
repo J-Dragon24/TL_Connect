@@ -1,7 +1,6 @@
 package com.tl_connect.dev.shared.ultility.provider;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.context.annotation.Primary;
@@ -34,28 +33,18 @@ public class CloudinaryProvider extends FileHelper {
             fileName = fileName.replaceAll("[^a-zA-Z0-9_-]", "_");
             ext = ext != null ? ext.toLowerCase() : "";
 
-            String key = System.currentTimeMillis() + "_" + fileName;
-            String resourceType;
-
-            if (List.of("png", "jpg", "jpeg", "webp", "pdf").contains(ext)) {
-                resourceType = "image";
-            } else if (ext.equals("mp4")) {
-                resourceType = "video";
-            } else {
-                resourceType = "raw";
-            }
+            String key = System.currentTimeMillis() + "_" + fileName + "." + ext;
 
             Map<?, ?> result = cloudinary.uploader().upload(
                 file.getBytes(),
                 ObjectUtils.asMap(
                     "folder", type,
-                    "resource_type", resourceType,
+                    "resource_type", "auto",
                     "public_id", key,
-                    "type", "upload",
-                    "format", ext
+                    "type", "upload"
                 )
             );
-            return new UploadResult(result.get("public_id").toString(), result.get("secure_url").toString());
+            return new UploadResult(result.get("public_id").toString(), result.get("secure_url").toString(), result.get("resource_type").toString());
         } catch (Exception e) {
             throw new ExternalException("Upload file failed" + e.getMessage());
         }

@@ -25,7 +25,8 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
             f.status,
             f.created_at AS createdAt,
             fc.name AS categoryName,
-            STRING_AGG(fa.file_key, ',') AS feedbackImages
+            STRING_AGG(fa.file_key, ',') AS feedbackImages,
+            STRING_AGG(fa.resource_type, ',') AS resourceType
         FROM feedback f
         LEFT JOIN feedback_category fc ON f.category_id = fc.id
         LEFT JOIN oauth_users ou ON f.oauth_user_id = ou.id

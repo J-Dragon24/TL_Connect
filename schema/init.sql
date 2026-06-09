@@ -575,6 +575,7 @@ CREATE TABLE application_attachments (
   file_key VARCHAR(255) NOT NULL,
   original_filename VARCHAR(255),
   file_size BIGINT,
+  resource_type VARCHAR(20),
   created_at TIMESTAMP DEFAULT now(),
 
   FOREIGN KEY (application_id) REFERENCES student_applications(id) ON DELETE CASCADE
@@ -703,6 +704,7 @@ CREATE TABLE feedback_attachments (
   file_key VARCHAR(255) NOT NULL,
   original_filename VARCHAR(255),
   file_size BIGINT,
+  resource_type VARCHAR(20),
   created_at TIMESTAMP DEFAULT now(),
   FOREIGN KEY (feedback_id) REFERENCES feedback(id) ON DELETE CASCADE
 );

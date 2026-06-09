@@ -37,7 +37,7 @@ public class BackBlazeProvider extends FileHelper {
                 .contentType(file.getContentType())
                 .build();
             s3Client.putObject(request, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
-            return new UploadResult(key, endPoint + "/" + key);
+            return new UploadResult(key, endPoint + "/" + key, "file");
         }catch(Exception e){
             throw new ExternalException("Upload file failed");
         }
