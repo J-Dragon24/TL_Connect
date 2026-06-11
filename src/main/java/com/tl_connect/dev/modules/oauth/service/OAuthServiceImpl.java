@@ -52,7 +52,6 @@ public class OAuthServiceImpl implements OAuthService {
         String email = userInfo.email();
         String name = userInfo.name();
         List<String> roles = userInfo.roles();
-        String avatar = userInfo.avatar();
 
         // String microsoftId = "1deb00a9-835c-4ab7-a50f-57c12a56c7bd";
         // String email = "nhokthanh3211@gmail.com";
@@ -96,14 +95,10 @@ public class OAuthServiceImpl implements OAuthService {
                 .name(name)
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .avatar(avatar)
                 .build();
     }
 
     private JwtUserInfo processStudentLogin(String microsoftId, String email, String name, List<String> roles, String deviceId, String fcmToken, String platform) {
-        System.out.println("deviceId: " + deviceId);
-        System.out.println("fcmToken: " + fcmToken);
-        System.out.println("platform: " + platform);
 
         if(deviceId == null || deviceId.isEmpty() || fcmToken == null || fcmToken.isEmpty()) {
             throw new InvalidInputException("Device ID and FCM token are required");
@@ -135,10 +130,9 @@ public class OAuthServiceImpl implements OAuthService {
                     .build();
         }
 
-
         String devicePlatform = platform != null ? platform.toLowerCase() : "unknown";
 
-        userDeviceService.registerDevice(jwtUserInfoView.get().getOauthUserId(), deviceId, fcmToken, devicePlatform);
+        userDeviceService.registerDevice(jwtUserInfo.oauthUserId(), deviceId, fcmToken, devicePlatform);
 
         return jwtUserInfo;
     }

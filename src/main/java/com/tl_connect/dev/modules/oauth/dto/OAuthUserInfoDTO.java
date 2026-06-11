@@ -16,6 +16,4 @@ public class OAuthUserInfoDTO {
     private String email;
     private String name;
     private String accessToken;
-    private String refreshToken;
-    private String avatar;
-}
+    private String refreshToken;}

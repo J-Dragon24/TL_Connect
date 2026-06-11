@@ -79,7 +79,7 @@ public class AuthHelper {
 
     public UserInfo extractUserInfo(String accessToken) {
         Jwt jwt = verify(accessToken);
-        System.out.println(jwt.getClaims());
+
         List<String> roles = Optional.ofNullable(jwt.getClaimAsStringList("roles"))
             .orElse(List.of())
             .stream()
@@ -91,7 +91,6 @@ public class AuthHelper {
             .email(jwt.getClaimAsString("preferred_username"))
             .name(jwt.getClaimAsString("name"))
             .roles(roles)
-            .avatar(fetchAvatar(accessToken))
             .build();
     }
 

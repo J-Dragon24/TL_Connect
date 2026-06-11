@@ -9,8 +9,7 @@ public record UserInfo (
     String oid,
     String email,
     String name,
-    List<String> roles,
-    String avatar
+    List<String> roles
 ){
 
 }
