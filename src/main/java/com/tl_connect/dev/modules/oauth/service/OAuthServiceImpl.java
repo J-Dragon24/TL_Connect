@@ -1,5 +1,6 @@
 package com.tl_connect.dev.modules.oauth.service;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +58,6 @@ public class OAuthServiceImpl implements OAuthService {
         // String email = "nhokthanh3211@gmail.com";
         // String name = "Nguyen Van A";
         // List<String> roles = Arrays.asList("ADMIN");
-        // String avatar = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
         if (microsoftId == null || microsoftId.isEmpty()) {
             throw new InvalidInputException("Oid not found in ID token");
@@ -65,11 +65,6 @@ public class OAuthServiceImpl implements OAuthService {
         if (email == null || email.isEmpty()) {
             throw new InvalidInputException("Email not found in ID token");
         }
-
-        System.out.println("microsoftId: " + microsoftId);
-        System.out.println("email: " + email);
-        System.out.println("name: " + name);
-        System.out.println("roles: " + roles);
 
         JwtUserInfo jwtUserInfo;
         if(roles.contains("STUDENT")) {
@@ -111,6 +106,7 @@ public class OAuthServiceImpl implements OAuthService {
         if (jwtUserInfoView.isPresent()) {
             jwtUserInfo = JwtUserInfo.builder()
                     .userId(jwtUserInfoView.get().getStudentId())
+                    .oauthUserId(jwtUserInfoView.get().getOauthUserId())
                     .roles(roles)
                     .build();
         } else {
