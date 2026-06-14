@@ -3,6 +3,7 @@ package com.tl_connect.dev.shared.ultility;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -43,9 +44,18 @@ public class CacheHelper {
     public <T> T getOrSet(String key, Duration ttl, TypeReference<T> type, Supplier<T> loader) {
         Object cached = redisTemplate.opsForValue().get(key);
         if (cached != null) {
-            return objectMapper.convertValue(cached, type);
-        }
+            
+            T value = objectMapper.convertValue(cached, type);
 
+            if (value instanceof Collection<?> collection && !collection.isEmpty()) {
+                return value;
+            }
+
+            if (!(value instanceof Collection<?>)) {
+                return value;
+            }
+        }
+        
         T result = loader.get();
         try{
             redisTemplate.opsForValue().set(key, result, ttl);
@@ -58,9 +68,18 @@ public class CacheHelper {
     public <T> T getOrSet(String key, TypeReference<T> type, Supplier<T> loader) {
         Object cached = redisTemplate.opsForValue().get(key);
         if (cached != null) {
-            return objectMapper.convertValue(cached, type);
-        }
+            
+            T value = objectMapper.convertValue(cached, type);
 
+            if (value instanceof Collection<?> collection && !collection.isEmpty()) {
+                return value;
+            }
+
+            if (!(value instanceof Collection<?>)) {
+                return value;
+            }
+        }
+        
         T result = loader.get();
         try{
             redisTemplate.opsForValue().set(key, result);

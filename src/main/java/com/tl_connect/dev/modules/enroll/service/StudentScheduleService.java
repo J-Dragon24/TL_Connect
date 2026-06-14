@@ -46,6 +46,7 @@ public class StudentScheduleService {
             List<ScheduleInterval> intervals = studentCourseClassService.findCurrentSchedule(studentId, semesterId);
             return intervals;
         });
+
     }
 
     public void addToCache(Long studentId, Long semesterId, List<ScheduleInterval> newSchedules) {

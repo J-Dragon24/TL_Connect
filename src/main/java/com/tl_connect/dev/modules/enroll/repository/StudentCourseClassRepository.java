@@ -13,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.tl_connect.dev.modules.enroll.entity.StudentCourseClass;
+import com.tl_connect.dev.modules.enroll.projection.ScheduleIntervalRow;
 import com.tl_connect.dev.modules.enroll.projection.StudentCourseClassRow;
 import com.tl_connect.dev.shared.common.enums.StudentCourseClassStatus;
 import com.tl_connect.dev.shared.datastructure.intervaltree.ScheduleInterval;
@@ -94,7 +95,7 @@ public interface StudentCourseClassRepository extends JpaRepository<StudentCours
         AND scc.semester_id = :semesterId
         AND scc.status IN ('PENDING', 'ENROLLED')
         """, nativeQuery = true)
-    List<ScheduleInterval> findCurrentSchedule(
+    List<ScheduleIntervalRow> findCurrentSchedule(
         @Param("studentId") Long studentId,
         @Param("semesterId") Long semesterId
     );

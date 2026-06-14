@@ -5967,6 +5967,38 @@ Request body:
 }
 ```
 ---
+### 29.16. GET /api/v1/student/enrollment/period
+
+Lấy thời gian đăng ký học phần theo chương trình đào tạo.
+
+**Auth**: Bắt buộc (Bearer JWT)
+**Content-Type**: Không áp dụng
+**Query params**:
+
+| Field | Type | Required | Description
+|------|-----|-----|----|
+| studyProgramCode | string | ✅ | Mã chương trình đào tạo
+
+**Response thành công (code 0):**
+```json
+{
+  "code": 0,
+  "message": "Enrollment period retrieved successfully",
+  "data": {
+    "semesterId": 1,
+    "semesterName": "Học kỳ 1",
+    "semesterCode": "HK1",
+    "startTime": "2026-01-10T08:00:00",
+    "endTime": "2026-01-20T17:00:00"
+  }
+}
+```
+
+**Test cases:**
+- ✅ Token hợp lệ + studyProgramCode hợp lệ → trả về thời gian đăng ký học phần
+- ❌ Thiếu token / hết hạn → code -3 (401)
+- ❌ studyProgramCode không tồn tại → code -2 (404)
+---
 ## 30. Feedback - Góp ý / Báo lỗi
 ### 30.1. GET /api/v1/feedback/category
 

@@ -275,4 +275,11 @@ public class StudentServiceImpl implements StudentService {
             }
             return aiContext;
         }
+
+        public Page<Student> findStudentByFacultyCode(Pageable pageable, String facultyCode){
+            if(facultyCode == null || facultyCode.isBlank()) {
+                facultyCode = null;
+            }
+            return studentRepository.findByFacultyCode(pageable, facultyCode);
+        }
 }

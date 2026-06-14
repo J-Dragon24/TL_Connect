@@ -84,13 +84,13 @@ public class StudentSubjectResult {
     }
 
     public void update(Long semesterId, BigDecimal attendanceScore, BigDecimal midtermScore, BigDecimal finalScore, BigDecimal score10, BigDecimal score4, String letterGrade, Boolean isPass) {
-        if(this.semesterId != semesterId) this.semesterId = semesterId;
-        if(this.attendanceScore != attendanceScore) this.attendanceScore = attendanceScore;
-        if(this.midtermScore != midtermScore) this.midtermScore = midtermScore;
-        if(this.finalScore != finalScore) this.finalScore = finalScore;
-        if(this.score10 != score10) this.score10 = score10;
-        if(this.score4 != score4) this.score4 = score4;
-        if(this.letterGrade != letterGrade) this.letterGrade = letterGrade;
-        if(this.isPass != isPass) this.isPass = isPass;
+        if(semesterId != null) this.semesterId = semesterId;
+        if(attendanceScore != null) this.attendanceScore = attendanceScore;
+        if(midtermScore != null) this.midtermScore = midtermScore;
+        if(finalScore != null) this.finalScore = finalScore;
+        if(score10 != null) this.score10 = score10;
+        if(score4 != null) this.score4 = score4;
+        if(letterGrade != null) this.letterGrade = letterGrade;
+        if(isPass != null) this.isPass = isPass;
     }
 }

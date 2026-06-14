@@ -1,8 +1,5 @@
 package com.tl_connect.dev.modules.academic_result.repository;
 
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -69,7 +66,7 @@ public interface StudentSubjectResultRepository extends JpaRepository<StudentSub
         JOIN majors m ON m.id = sm.major_id
         JOIN faculties f ON f.id = m.faculty_id
         JOIN study_programs sp ON sp.id = sm.study_program_id
-        WHERE (:facultyCode IS NULL OR f.faculty_code = :facultyCode)
+        WHERE s.id IN (:studentIds)
         ORDER BY s.student_code
         """,
         countQuery = """
@@ -82,10 +79,10 @@ public interface StudentSubjectResultRepository extends JpaRepository<StudentSub
             JOIN majors m ON m.id = sm.major_id
             JOIN study_programs sp ON sp.id = sm.study_program_id
             JOIN faculties f ON f.id = m.faculty_id
-            WHERE (:facultyCode IS NULL OR f.faculty_code = :facultyCode)
+            WHERE s.id IN (:studentIds)
         """,
         nativeQuery = true)
-    Page<SubjectResultAdmRow> findSubjectResult(Pageable pageable, String facultyCode);
+    List<SubjectResultAdmRow> findSubjectResultByStudentIds(List<Long> studentIds);
 
     @Query(value = """
         SELECT ssr.is_pass

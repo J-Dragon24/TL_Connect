@@ -43,4 +43,6 @@ public interface StudentService {
     Page<Student> getAllStudentsBySearch(String search, Pageable pageable);
     
     StudentChatInfoDTO getStudentChatInfo(String code);
+
+    Page<Student> findStudentByFacultyCode(Pageable pageable, String facultyCode);
 }

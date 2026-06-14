@@ -14,7 +14,7 @@ public class StudentScheduleCache {
 
     public void addSchedule(int dayOfWeek, ScheduleInterval interval) {
         treeByDay.computeIfAbsent(dayOfWeek, d -> new IntervalTree())
-                 .insert(interval);
+                .insert(interval);
     }
 
     public ScheduleInterval findConflict(int dayOfWeek, int start, int end) {

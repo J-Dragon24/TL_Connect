@@ -77,6 +77,7 @@ public class CourseClassServiceImpl implements CourseClassService {
                 .subjectCode(courseClass.getSubjectCode())
                 .subjectName(courseClass.getSubjectName())
                 .semester(SemesterDTO.builder()
+                        .id(courseClass.getSemesterId())
                         .semesterCode(courseClass.getSemesterCode())
                         .semesterName(courseClass.getSemesterName())
                         .academicYears(courseClass.getAcademicYears())
@@ -209,5 +210,17 @@ public class CourseClassServiceImpl implements CourseClassService {
     @Override
     public List<Long> findIdsByStudentIdAndSemesterId(Long studentId, LocalDate now) {
         return courseClassRepository.findIdsByStudentIdAndSemesterId(studentId, now);
+    }
+
+    @Override
+    @Transactional
+    public int increaseEnrolledCount(Long id) {
+        return courseClassRepository.incrementEnrolledCount(id);
+    }
+
+    @Override
+    @Transactional
+    public void decreaseEnrolledCount(Long id) {
+        courseClassRepository.decrementEnrolledCount(id);
     }
 }

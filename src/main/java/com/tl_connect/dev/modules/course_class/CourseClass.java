@@ -51,11 +51,6 @@ public class CourseClass {
     @Builder.Default
     private Boolean isActive = true;
 
-    @Version
-    @Column(name = "version")
-    @Builder.Default
-    private Long version = 0L;
-
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;

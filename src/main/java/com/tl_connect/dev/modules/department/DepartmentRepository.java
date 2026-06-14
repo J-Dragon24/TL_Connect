@@ -23,10 +23,13 @@ public interface DepartmentRepository extends JpaRepository<Department, Long> {
                 d.is_active as isActive
             FROM departments d
             JOIN faculties f ON d.faculty_id = f.id
+            WHERE d.is_active = true
+            ORDER BY d.department_code ASC
             """,
             countQuery = """
                     SELECT COUNT(d.id) FROM departments d
                     JOIN faculties f ON d.faculty_id = f.id
+                    WHERE d.is_active = true
                     """,
             nativeQuery = true)
     Page<DepartmentRow> findAllDepartment(Pageable pageable);

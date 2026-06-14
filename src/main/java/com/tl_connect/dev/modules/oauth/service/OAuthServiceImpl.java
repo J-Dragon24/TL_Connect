@@ -47,6 +47,7 @@ public class OAuthServiceImpl implements OAuthService {
     
     @Transactional
     public OAuthUserInfoDTO loginWithMicrosoft(LoginRequestDTO request) {
+        System.out.println("Token: " + request.getAccessToken());
         UserInfo userInfo = authHelper.extractUserInfo(request.getAccessToken());
 
         String microsoftId = userInfo.oid();

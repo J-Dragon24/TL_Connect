@@ -15,6 +15,8 @@ public class IntervalNode {
     }
 
     public boolean intersects(int start, int end) {
+        System.out.println("interval: " + this.interval.getStartPeriod() + " to " + this.interval.getEndPeriod());
+        System.out.println("start: " + start + " to " + end);
         return this.interval.getStartPeriod() <= end
                 && this.interval.getEndPeriod() >= start;
     }

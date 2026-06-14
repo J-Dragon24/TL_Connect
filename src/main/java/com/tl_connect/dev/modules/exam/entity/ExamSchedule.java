@@ -54,7 +54,8 @@ public class ExamSchedule {
     @Column(name = "exam_format")
     private String examFormat;
 
-    @Column(name = "exam_type")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "exam_type", nullable = false)
     private ExamType examType;
 
     @Column(name = "note")

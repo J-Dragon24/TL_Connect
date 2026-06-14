@@ -12,6 +12,7 @@ import com.tl_connect.dev.modules.enroll.dto.CourseClassRequest;
 import com.tl_connect.dev.modules.enroll.dto.DropRequestDTO;
 import com.tl_connect.dev.modules.enroll.dto.EnrollRequestDTO;
 import com.tl_connect.dev.modules.enroll.dto.EnrollViewDTO;
+import com.tl_connect.dev.modules.enroll.dto.EnrollmentHeaderDTO;
 import com.tl_connect.dev.modules.enroll.service.interfaces.EnrollService;
 import com.tl_connect.dev.modules.schedule.dto.ScheduleCourseClassDTO;
 import com.tl_connect.dev.shared.common.exception.InvalidInputException;
@@ -28,6 +29,15 @@ import lombok.RequiredArgsConstructor;
 public class EnrollController {
     private final EnrollService enrollService;
 
+    @GetMapping("/period")
+    public ResponseEntity<?> getEnrollmentPeriods(Authentication authentication, @RequestParam String studyProgramCode) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof JwtUserInfo userInfo)) {
+            throw new UnauthorizeException("Authentication required");
+        }
+        Long studentId = userInfo.userId();
+        EnrollmentHeaderDTO enrollmentHeaderDTO = enrollService.getEnrollmentPeriods(studentId, studyProgramCode);
+        return ResponseHelper.success("Available course classes retrieved successfully", enrollmentHeaderDTO);
+    }
 
     @GetMapping("/all")
     public ResponseEntity<?> getAvailableSubjects(Authentication authentication, @RequestParam String studyProgramCode) {
@@ -71,7 +81,7 @@ public class EnrollController {
         }
         Long studentId = userInfo.userId();
         enrollService.enroll(studentId, request.getCourseClassId(), request.getStudyProgramId());
-        return ResponseHelper.success("Đăng ký thành công", null);
+        return ResponseHelper.success("Enrollment successful", null);
     }
 
     @PostMapping("/drop")
@@ -82,6 +92,6 @@ public class EnrollController {
         }
         Long studentId = userInfo.userId();
         enrollService.drop(studentId, request.getCourseClassId());
-        return ResponseHelper.success("Hủy đăng ký thành công", null);
+        return ResponseHelper.success("Drop successful", null);
     }
 }

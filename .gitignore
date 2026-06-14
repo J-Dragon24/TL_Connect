@@ -38,3 +38,6 @@ out/
 
 src/main/resources/application-local.yml
 src/main/resources/application.yml
+
+# Firebase
+src/main/resources/*firebase-adminsdk*.json

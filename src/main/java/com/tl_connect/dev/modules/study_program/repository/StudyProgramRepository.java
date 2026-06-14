@@ -35,7 +35,7 @@ public interface StudyProgramRepository extends JpaRepository<StudyProgram, Long
             FROM students s
             JOIN student_majors sm ON s.id = sm.student_id
             JOIN study_programs sp ON sp.id = sm.study_program_id
-            WHERE s.id = :studentId
+            WHERE s.id = :studentId AND sp.is_active = true
             """, nativeQuery = true)
     List<StudyProgramRow> findAllStudyProgram(@Param("studentId") Long studentId);
 

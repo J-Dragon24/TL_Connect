@@ -8,6 +8,7 @@ public interface CourseClassRow {
     String getLecturerName();
     String getSubjectCode();
     String getSubjectName();
+    Long getSemesterId();
     String getSemesterName();
     String getSemesterCode();
     String getAcademicYears();

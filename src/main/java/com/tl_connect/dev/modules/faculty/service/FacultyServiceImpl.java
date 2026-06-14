@@ -27,7 +27,7 @@ public class FacultyServiceImpl implements FacultyService{
     private final FacultyRepository facultyRepository;
 
     public PagedResponse<FacultyDTO> getAllFaculties(Pageable pageable) {
-        Page<Faculty> faculties = facultyRepository.findAll(pageable);
+        Page<Faculty> faculties = facultyRepository.findAllActive(pageable);
         return new PagedResponse<>(
                 faculties.getContent().stream().map(this::toDTO).toList(),
                 faculties.getNumber(),

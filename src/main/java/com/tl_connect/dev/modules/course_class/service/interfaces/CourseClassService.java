@@ -32,4 +32,8 @@ public interface CourseClassService {
     List<DetailsForCheckEnrollRow> findDetailForEnrollmentById(Long courseClassId);
 
     List<Long> findIdsByStudentIdAndSemesterId(Long studentId, LocalDate now);
+
+    int increaseEnrolledCount(Long id);
+
+    void decreaseEnrolledCount(Long id);
 }

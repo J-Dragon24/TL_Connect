@@ -25,7 +25,7 @@ public class FeedbackCategoryServiceImpl implements FeedbackCategoryService {
     private final FeedbackCategoryRepository feedbackCategoryRepository;
 
     public List<FeedbackCategoryDTO> getAllFeedbackCategory() {
-        List<FeedbackCategory> feedbackCategories = feedbackCategoryRepository.findAll();
+        List<FeedbackCategory> feedbackCategories = feedbackCategoryRepository.findAllByIsActiveTrue();
         List<FeedbackCategoryDTO> feedbackCategoryDTOs = new ArrayList<>();
         for (FeedbackCategory feedbackCategory : feedbackCategories) {
             feedbackCategoryDTOs.add(FeedbackCategoryDTO.builder()
@@ -38,7 +38,7 @@ public class FeedbackCategoryServiceImpl implements FeedbackCategoryService {
     }
 
     public List<FeedbackCategory> getAdminFeedbackCategory() {
-        List<FeedbackCategory> feedbackCategories = feedbackCategoryRepository.findAll();
+        List<FeedbackCategory> feedbackCategories = feedbackCategoryRepository.findAllByIsActiveTrue();
         return feedbackCategories;
     }
 
@@ -63,7 +63,7 @@ public class FeedbackCategoryServiceImpl implements FeedbackCategoryService {
     @Transactional
     public void deleteFeedbackCategory(Long id) {
         FeedbackCategory feedbackCategory = feedbackCategoryRepository.findById(id)
-        .orElseThrow(() -> new NotFoundException("Feedback category not found"));
+            .orElseThrow(() -> new NotFoundException("Feedback category not found"));
         feedbackCategory.deactive();
         feedbackCategoryRepository.save(feedbackCategory);
     }

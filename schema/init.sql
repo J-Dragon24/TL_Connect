@@ -348,7 +348,6 @@ CREATE TABLE course_classes (
   capacity INT NOT NULL,
   enrolled_count INT NOT NULL DEFAULT 0,
   is_active BOOLEAN NOT NULL DEFAULT TRUE,
-  version BIGINT NOT NULL DEFAULT 0,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
   FOREIGN KEY (lecturer_id) REFERENCES lecturers(id) ON DELETE SET NULL,

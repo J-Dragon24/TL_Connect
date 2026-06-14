@@ -4,6 +4,7 @@ package com.tl_connect.dev.modules.course_class;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 
 import com.tl_connect.dev.modules.course_class.projection.CourseClassBasicInfoRow;
@@ -45,6 +46,7 @@ public interface CourseClassRepository extends JpaRepository<CourseClass, Long> 
                 l.full_name as lecturerName,
                 s.subject_code as subjectCode,
                 s.subject_name as subjectName,
+                sem.id as semesterId,
                 sem.semester_code as semesterCode,
                 sem.semester_name as semesterName,
                 sem.academic_years as academicYears,
@@ -83,6 +85,7 @@ public interface CourseClassRepository extends JpaRepository<CourseClass, Long> 
         JOIN faculties f ON s.faculty_id = f.id
         WHERE (:facultyCode IS NULL OR :facultyCode = '' OR f.faculty_code = :facultyCode)
         AND (:semesterCode IS NULL OR :semesterCode = '' OR sem.semester_code = :semesterCode)
+        AND cc.is_active = true
         ORDER BY cc.class_code ASC, cc.class_name ASC
         """,
         countQuery = """
@@ -131,4 +134,22 @@ public interface CourseClassRepository extends JpaRepository<CourseClass, Long> 
             AND cc.is_active = true
             """, nativeQuery = true)
     List<CourseClassForEnrollRow> findCourseClassForEnrollment(@Param("subjectId") Long subjectId, @Param("semesterId") Long semesterId);
+
+    @Modifying
+    @Query(value = """
+            UPDATE course_classes cc
+            SET enrolled_count = enrolled_count + 1
+            WHERE cc.id = :id
+            AND cc.enrolled_count < cc.capacity
+            """, nativeQuery = true)
+    int incrementEnrolledCount(@Param("id") Long id);
+
+    @Modifying
+    @Query(value = """
+            UPDATE course_classes cc
+            SET enrolled_count = enrolled_count - 1
+            WHERE cc.id = :id
+            AND cc.enrolled_count > 0
+            """, nativeQuery = true)
+    int decrementEnrolledCount(@Param("id") Long id);
 }

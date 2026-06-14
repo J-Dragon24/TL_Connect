@@ -18,6 +18,7 @@ public interface SemesterRepository extends JpaRepository<Semester, Long> {
     @Query(value = """
             SELECT *
             FROM semesters
+            WHERE is_active = true
             ORDER BY academic_years DESC, semester_number DESC
             """,
             countQuery = """
@@ -40,6 +41,7 @@ public interface SemesterRepository extends JpaRepository<Semester, Long> {
         AND 
             (EXTRACT(YEAR FROM s.start_date) < :endYear
             OR (EXTRACT(YEAR FROM s.start_date) = :endYear AND s.semester_number <= 3))
+        AND s.is_active = true
     """, nativeQuery = true)
     List<Semester> findAllStudentSemester(@Param("startYear") int startYear, @Param("endYear") int endYear);
 

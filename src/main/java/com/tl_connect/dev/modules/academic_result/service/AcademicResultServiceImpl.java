@@ -21,6 +21,8 @@ import com.tl_connect.dev.modules.academic_result.repository.StudentSemesterSumm
 import com.tl_connect.dev.modules.academic_result.repository.StudentSubjectResultRepository;
 import com.tl_connect.dev.modules.academic_result.service.interfaces.AcademicResultExporter;
 import com.tl_connect.dev.modules.academic_result.service.interfaces.AcademicResultService;
+import com.tl_connect.dev.modules.student.entity.Student;
+import com.tl_connect.dev.modules.student.service.interfaces.StudentService;
 import com.tl_connect.dev.shared.common.dto.PagedResponse;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -40,16 +42,17 @@ public class AcademicResultServiceImpl implements AcademicResultService {
         private final StudentSubjectResultRepository resultRepository;
         private final StudentSemesterSummaryRepository semesterSummaryRepository;
         private final AcademicResultExporter excelExporter;
+        private final StudentService studentService;
 
         @Override
         public PagedResponse<AcademicResultAdmDTO> getAllAcademicResult(Pageable pageable, String facultyCode) {
-                if(facultyCode == null || facultyCode.isBlank()){
-                        facultyCode = null;
-                }
-                
-                Page<SubjectResultAdmRow> subjectResultsRows = resultRepository.findSubjectResult(pageable, facultyCode);
 
-                List<Long> studentIds = subjectResultsRows.stream().map(SubjectResultAdmRow::getStudentId).collect(Collectors.toList());
+                Page<Student> students = studentService.findStudentByFacultyCode(pageable, facultyCode);
+                
+                List<Long> studentIds = students.getContent().stream().map(Student::getId).collect(Collectors.toList());
+
+                List<SubjectResultAdmRow> subjectResultsRows = resultRepository.findSubjectResultByStudentIds(studentIds);
+
                 List<SemesterSummaryRow> semesterSummaries = semesterSummaryRepository.findSemesterSummaryByStudentIds(studentIds);
 
                 Map<Long, Map<String, Map<String, List<SubjectResultAdmRow>>>> grouped =
@@ -65,7 +68,7 @@ public class AcademicResultServiceImpl implements AcademicResultService {
                                 ));
                 Map<String, SemesterSummaryRow> summaryMap = semesterSummaries.stream()
                 .collect(Collectors.toMap(
-                        s -> (String) (s.getStudentId() + "_" + s.getStudyProgramCode() + "_" + s.getSemester()),
+                        s -> String.format("%d_%s_%s", s.getStudentId(), s.getStudyProgramCode(), s.getSemester()),
                         s -> s
                 ));
 
@@ -119,7 +122,7 @@ public class AcademicResultServiceImpl implements AcademicResultService {
 
                                         semester.setSubjectResults(subjectResultDTOs);
 
-                                        String key = (String) (studentId + "_" + studyProgramCode + "_" + semesterName);
+                                        String key = String.format("%d_%s_%s", studentId, studyProgramCode, semester);
                                         SemesterSummaryRow summary = summaryMap.get(key);
 
                                         if (summary != null) {
@@ -139,18 +142,17 @@ public class AcademicResultServiceImpl implements AcademicResultService {
                                 }
 
                         student.setStudyPrograms(programs);
-                        
                         result.add(student);
                         }
 
                 return new PagedResponse<>(
                 result,
-                subjectResultsRows.getNumber(),
-                subjectResultsRows.getSize(),
-                subjectResultsRows.getTotalElements(),
-                subjectResultsRows.getTotalPages(),
-                subjectResultsRows.isFirst(),
-                subjectResultsRows.isLast());
+                students.getNumber(),
+                students.getSize(),
+                students.getTotalElements(),
+                students.getTotalPages(),
+                students.isFirst(),
+                students.isLast());
         }
 
         @Override

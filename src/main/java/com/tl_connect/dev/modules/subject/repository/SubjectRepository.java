@@ -21,10 +21,11 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
     @Query(value = """
             SELECT * 
             FROM subjects
+            WHERE is_active = true
             ORDER BY subject_name ASC
             """,
             countQuery = """
-                SELECT COUNT(*) FROM subjects
+                SELECT COUNT(*) FROM subjects WHERE is_active = true
                 """,
             nativeQuery = true)
     Page<Subject> findAllSubjects(Pageable pageable);

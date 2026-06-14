@@ -60,6 +60,14 @@ public class NotificationModifyServiceImpl implements NotificationModifyService 
         }
     
         Notification notification = buildNotification(req);
+
+        try{
+            notification = notificationRepository.save(notification);
+        }
+        catch(DataIntegrityViolationException e){
+            throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to create notification" + e.getMessage());
+        }
+
         List<NotificationTarget> notificationTargets = new ArrayList<>();
 
         for(Long targetId : req.getTargetIds()){
@@ -68,12 +76,12 @@ public class NotificationModifyServiceImpl implements NotificationModifyService 
         }
 
         try{
-            notificationRepository.save(notification);
             notificationTargetRepository.saveAll(notificationTargets);
         }
         catch(DataIntegrityViolationException e){
             throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to create notification" + e.getMessage());
         }
+
 
         publisher.publishEvent(
                 NotificationCreatedEvent.builder()

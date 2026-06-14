@@ -23,6 +23,7 @@ import lombok.Setter;
 public class CreateNotificationReqDTO {
     @NotNull(message = "Title is required")
     private String title;
+    @NotNull(message = "Content is required")
     private String content;
     @NotNull(message = "Target type is required")
     private NotificationType targetType;

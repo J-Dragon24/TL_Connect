@@ -104,6 +104,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         if(status.getStatus() == ApplicationStatus.APPROVED){
             CreateNotificationReqDTO req = CreateNotificationReqDTO.builder()
                 .title("Đơn của bạn đã được duyệt")
+                .content("Đơn của bạn đã được phê duyệt, vui lòng kiểm tra lại thông tin")
                 .createdBy(NotificationCreatedBy.SYSTEM)
                 .targetType(NotificationType.STUDENT)
                 .targetIds(List.of(application.getStudentId()))

@@ -21,7 +21,10 @@ public class StudentCourseClassServiceImpl implements StudentCourseClassService 
     private final StudentCourseClassRepository studentCourseClassRepository;
 
     public List<ScheduleInterval> findCurrentSchedule(Long studentId, Long semesterId){
-        return studentCourseClassRepository.findCurrentSchedule(studentId, semesterId);
+        return studentCourseClassRepository.findCurrentSchedule(studentId, semesterId)
+            .stream()
+            .map(ScheduleInterval::from)
+            .toList();
     }
 
     public boolean isSubjectAllowedForEnrollment(Long studentId, Long courseClassId){
