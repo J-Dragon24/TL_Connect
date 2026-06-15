@@ -42,7 +42,14 @@ public class CacheHelper {
     }
 
     public <T> T getOrSet(String key, Duration ttl, TypeReference<T> type, Supplier<T> loader) {
-        Object cached = redisTemplate.opsForValue().get(key);
+        Object cached;
+        try{
+            cached = redisTemplate.opsForValue().get(key);
+        }
+        catch(Exception e){
+            log.error("Redis failed key={}", key, e);
+            throw e;
+        }
         if (cached != null) {
             
             T value = objectMapper.convertValue(cached, type);
@@ -66,7 +73,14 @@ public class CacheHelper {
     }
 
     public <T> T getOrSet(String key, TypeReference<T> type, Supplier<T> loader) {
-        Object cached = redisTemplate.opsForValue().get(key);
+        Object cached;
+        try{
+            cached = redisTemplate.opsForValue().get(key);
+        }
+        catch(Exception e){
+            log.error("Redis failed key={}", key, e);
+            throw e;
+        }
         if (cached != null) {
             
             T value = objectMapper.convertValue(cached, type);
@@ -117,6 +131,35 @@ public class CacheHelper {
             }
         } catch (Exception e) {
             log.warn("Error when evicting by prefix", e);
+        }
+    }
+
+    public void set(String key, Object value, Duration ttl) {
+        try {
+            redisTemplate.opsForValue().set(key, value, ttl);
+        } catch (Exception e) {
+            log.warn("Error when caching key={}", key, e);
+        }
+    }
+
+    public void evictByPattern(String pattern) {
+        ScanOptions options = ScanOptions.scanOptions()
+                .match(pattern)
+                .count(1000)
+                .build();
+
+        RedisConnection connection = redisTemplate.getConnectionFactory().getConnection();
+
+        try (Cursor<byte[]> cursor = connection.scan(options)) {
+            List<String> keys = new ArrayList<>();
+            while (cursor.hasNext()) {
+                keys.add(new String(cursor.next(), StandardCharsets.UTF_8));
+            }
+            if (!keys.isEmpty()) {
+                redisTemplate.delete(keys);
+            }
+        } catch (Exception e) {
+            log.warn("Error when evicting by pattern={}", pattern, e);
         }
     }
 

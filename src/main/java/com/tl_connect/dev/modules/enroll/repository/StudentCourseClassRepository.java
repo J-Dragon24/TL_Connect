@@ -16,7 +16,6 @@ import com.tl_connect.dev.modules.enroll.entity.StudentCourseClass;
 import com.tl_connect.dev.modules.enroll.projection.ScheduleIntervalRow;
 import com.tl_connect.dev.modules.enroll.projection.StudentCourseClassRow;
 import com.tl_connect.dev.shared.common.enums.StudentCourseClassStatus;
-import com.tl_connect.dev.shared.datastructure.intervaltree.ScheduleInterval;
 
 
 @Repository
@@ -101,12 +100,8 @@ public interface StudentCourseClassRepository extends JpaRepository<StudentCours
     );
 
     @Modifying
-    @Query("UPDATE StudentCourseClass scc SET scc.status = :toStatus WHERE scc.semesterId = :semesterId AND scc.status = :fromStatus")
-    void updateStatusBySemesterId(
-        @Param("semesterId") Long semesterId,
-        @Param("fromStatus") StudentCourseClassStatus fromStatus,
-        @Param("toStatus") StudentCourseClassStatus toStatus
-    );
+    @Query("UPDATE StudentCourseClass scc SET scc.status = 'ENROLLED' WHERE scc.semesterId = :semesterId AND scc.status = 'PENDING'")
+    void updateStatusEnrolledBySemesterId(@Param("semesterId") Long semesterId);
 
     @Query(value = """
             SELECT 

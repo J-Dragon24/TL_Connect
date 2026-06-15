@@ -147,6 +147,8 @@ public class EnrollServiceImpl implements EnrollService {
                     "The registration period has not started yet or has ended");
         }
 
+        System.out.println("period : " + period.toString());
+
         EnrollmentValidationResult validation = preCheckService.validate(
                 studentId, courseClassId, studyProgramId, period);
 

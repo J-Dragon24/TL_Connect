@@ -383,27 +383,27 @@ INSERT INTO study_programs (major_id, study_program_code, study_program_name, to
 
 -- student_majors
 INSERT INTO student_majors (student_id, major_id, study_program_id, start_year, end_year) VALUES
-(1,2,2,2023,2027),
-(2,5,5,2023,2027),
-(3,5,5,2023,2027),
-(4,1,2,2023,2027),
-(5,1,2,2023,2027),
-(6,5,2,2023,2027),
-(7,2,2,2023,2027),
-(8,1,2,2023,2027),
-(9,1,5,2023,2027),
-(10,4,1,2023,2027),
-(11,4,1,2023,2027),
-(12,5,2,2023,2027),
-(13,5,5,2023,2027),
-(14,5,5,2023,2027),
-(15,1,5,2023,2027),
-(16,1,5,2023,2027),
-(17,3,3,2023,2027),
-(18,3,3,2023,2027),
-(19,4,4,2023,2027),
-(20,4,4,2023,2027),
-(21,5,5,2023,2027);
+(1,2,2,2023,2028),
+(2,5,5,2023,2028),
+(3,5,5,2023,2028),
+(4,1,2,2023,2028),
+(5,1,2,2023,2028),
+(6,5,2,2023,2028),
+(7,2,2,2023,2028),
+(8,1,2,2023,2028),
+(9,1,5,2023,2028),
+(10,4,1,2023,2028),
+(11,4,1,2023,2028),
+(12,5,2,2023,2028),
+(13,5,5,2023,2028),
+(14,5,5,2023,2028),
+(15,1,5,2023,2028),
+(16,1,5,2023,2028),
+(17,3,3,2023,2028),
+(18,3,3,2023,2028),
+(19,4,4,2023,2028),
+(20,4,4,2023,2028),
+(21,5,5,2023,2028);
 
 -- academic_infos
 INSERT INTO academic_infos (student_major_id, cohort, position) VALUES
@@ -1361,89 +1361,139 @@ VALUES
 -- application_types
 INSERT INTO application_types (code, name)
 VALUES
+--1--
 ('LEAVE','Xin nghỉ học'),
-('GRADE_REVIEW','Phúc khảo điểm'),
-('ENROLL','Xin ép cứng môn học'),
-('CERT','Xin giấy xác nhận');
+--2--
+('RESUME', 'Xin học lại'),
+--3--
+('TRANSFER', 'Xin chuyển ngành/chuyên ngành'),
+--4--
+('TRANSFER_SCHOOL', 'Xin chuyển trường'),
+--5--
+('TUITION_DEFER', 'Xin gia hạn đóng học phí'),
+--6--
+('TUITION_EXEMPT', 'Xin miễn giảm học phí'),
+--7--
+('DORM', 'Xin ở ký túc xá'),
+--8--
+('CERT_STUDY', 'Xin xác nhận sinh viên'),
+--9--
+('CERT_GRAD', 'Xin xác nhận tốt nghiệp'),
+--10--
+('TRANSCRIPT', 'Xin cấp bảng điểm'),
+--11--
+('DIPLOMA_COPY', 'Xin cấp bản sao bằng tốt nghiệp'),
+--12--
+('RETAKE', 'Xin học lại môn học'),
+--13--
+('MAKEUP_EXAM', 'Xin thi lại/thi bù'),
+--14--
+('GRADE_REVIEW', 'Xin phúc khảo điểm thi'),
+--15--
+('COURSE_REG', 'Xin đăng ký môn học ngoài thời hạn'),
+--16--
+('PERSONAL_INFO', 'Xin chỉnh sửa thông tin cá nhân'),
+--17--
+('INTERNSHIP', 'Xin xác nhận thực tập');
 
 -- student_applications
 INSERT INTO student_applications
 (student_id, application_type_id, content, status)
 VALUES
-(1,1,'Xin nghỉ ốm','PENDING'),
-(2,2,'Phúc khảo môn Java','APPROVED'),
-(3,3,'Xin giấy xác nhận sinh viên','PENDING'),
-(5,1,'Xin nghỉ việc gia đình','REJECTED');
+(3, 8,'Xin giấy xác nhận sinh viên','PENDING'),
+(1, 1,  'Em xin phép nghỉ học từ ngày 16/06/2026 đến 20/06/2026 do bị ốm, có giấy xác nhận của bệnh viện đính kèm.', 'PENDING'),
+(2, 9,  'Em xin cấp giấy xác nhận tốt nghiệp để nộp cho công ty khi đi làm.', 'APPROVED'),
+(3, 10, 'Em xin cấp bảng điểm toàn khóa để nộp hồ sơ xin học bổng sau đại học.', 'PENDING'),
+(1, 14, 'Em xin phúc khảo bài thi môn Toán cao cấp học kỳ 2 năm học 2025-2026, mã môn MATH102.', 'REJECTED'),
+(1, 8,  'Em xin xác nhận đang là sinh viên trường để làm thủ tục vay vốn ngân hàng.', 'APPROVED'),
+(3, 6,  'Em xin miễn giảm học phí học kỳ 1 năm học 2026-2027 theo diện hộ nghèo.', 'PENDING'),
+(2, 13, 'Em xin thi lại môn Vật lý đại cương do bị ốm đúng ngày thi, có giấy phép của bác sĩ.', 'APPROVED');
 
 -- application_attachments
 INSERT INTO application_attachments
-(application_id, file_key, original_filename, file_size)
+(application_id, file_key, original_filename, file_size, resource_type)
 VALUES
-(1,'file1.pdf','don_xin_nghi.pdf',123456),
-(2,'file2.pdf','phuc_khao.pdf',223456),
-(3,'file3.pdf','giay_xac_nhan.pdf',323456);
+(1,'don_xac_nhan_sv_A45044.pdf','don_xac_nhan_sv_A45044.pdf',143360,'image'),
+(2,'giay_xac_nhan_benh_vien_A45033.pdf','giay_xac_nhan_benh_vien_A45035.pdf',245760,'image'),
+(3,'don_xac_nhan_tot_nghiep_A45035.pdf','don_xac_nhan_tot_nghiep_A45035.pdf',163840,'image'),
+(4,'don_xin_bang_diem_A45044.pdf','don_xin_bang_diem_A45044.pdf',172032,'image'),
+(5,'don_phuc_khao_diem_thi.pdf','don_phuc_khao_diem_thi.pdf',153600,'image'),
+(6,'don_xac_nhan_sv_A45044.pdf','don_xac_nhan_sv_A45044.pdf',143360,'image'),
+(7,'don_mien_giam_hoc_phi.pdf','don_mien_giam_hoc_phi.pdf',196608,'image'),
+(8,'don_xin_thi_lai.pdf','don_xin_thi_lai.pdf',153600,'image');
 
 -- notification_templates
 INSERT INTO notification_templates (code, name, content) VALUES
-('GENERAL', 'Thông báo chung', '{{content}}'),
-('EXAM', 'Thông báo lịch thi', 'Lich thi: {{content}}'),
-('FEE', 'Nhắc nộp học phí', 'Sinh viên cần nộp học phí trước {{deadline}}'),
-('SCHOLARSHIP', 'Thông báo học bổng', '{{content}}'),
-('ACADEMIC_WARNING', 'Cảnh báo học vụ', '{{content}}'),
-('DEFENSE', 'Thông báo bảo vệ đồ án', '{{content}}');
+
+('APP_APPROVED', 'Đơn được duyệt', 'Đơn {{application_type}} mã #{{application_id}} của bạn đã được phê duyệt. Vui lòng đến phòng Công tác Sinh viên để hoàn tất thủ tục.'),
+('APP_REJECTED', 'Đơn bị từ chối', 'Đơn {{application_type}} mã #{{application_id}} của bạn đã bị từ chối. Lý do: {{reason}}. Vui lòng liên hệ phòng Công tác Sinh viên để biết thêm chi tiết.'),
+('APP_ADDITIONAL_DOCS', 'Yêu cầu bổ sung hồ sơ', 'Đơn {{application_type}} mã #{{application_id}} của bạn cần bổ sung thêm giấy tờ: {{required_docs}}. Vui lòng nộp bổ sung trước ngày {{deadline}}.'),
+
+('TUITION_REMINDER', 'Nhắc nhở đóng học phí', 'Học kỳ {{semester}} sắp đến hạn đóng học phí. Số tiền cần đóng: {{amount}} VNĐ. Hạn chót: {{deadline}}. Vui lòng đóng đúng hạn để tránh bị khóa tài khoản học vụ.'),
+('TUITION_OVERDUE', 'Quá hạn đóng học phí', 'Tài khoản của bạn hiện có học phí chưa thanh toán cho học kỳ {{semester}}. Vui lòng đến phòng Tài vụ hoặc thanh toán online trước ngày {{deadline}} để tránh bị đình chỉ học.'),
+('COURSE_REG_OPEN', 'Mở đăng ký môn học', 'Hệ thống đăng ký môn học học kỳ {{semester}} sẽ mở từ {{start_date}} đến {{end_date}}. Vui lòng đăng nhập và đăng ký đúng thời hạn.'),
+
+
+('EXAM_SCHEDULE', 'Lịch thi', 'Lịch thi học kỳ {{semester}} đã được cập nhật. Môn thi gần nhất: {{subject}} vào lúc {{time}} ngày {{date}} tại phòng {{room}}.'),
+('EXAM_ROOM_CHANGE', 'Thay đổi phòng thi', 'Phòng thi môn {{subject}} ngày {{date}} đã được thay đổi từ phòng {{old_room}} sang phòng {{new_room}}. Vui lòng lưu ý.'),
+('GRADE_PUBLISHED', 'Điểm thi đã có', 'Điểm thi học kỳ {{semester}} đã được công bố. Vui lòng đăng nhập hệ thống để xem điểm.'),
+
+('SCHOLARSHIP_OPEN', 'Mở xét học bổng', 'Chương trình học bổng {{scholarship_name}} học kỳ {{semester}} đã mở nhận hồ sơ từ {{start_date}} đến {{end_date}}. Vui lòng nộp hồ sơ đúng hạn.'),
+('SCHOLARSHIP_RESULT', 'Kết quả xét học bổng', 'Kết quả xét học bổng {{scholarship_name}} đã được công bố. {{result}}. Vui lòng kiểm tra chi tiết trên cổng thông tin sinh viên.');
 
 -- notifications
-INSERT INTO notifications
-(title, content, created_by, target_type, deadline, is_important, reference_type)
+INSERT INTO notifications (title, content, created_by, target_type, reference_type, is_important, deadline)
 VALUES
 
 -- GLOBAL
-('Thông báo hệ thống','Hệ thống sẽ bảo trì vào 23:00 tối nay','SYSTEM','GLOBAL',NULL, false, null),
-('Cập nhật cổng thông tin','Đã cập nhật giao diện mới','SYSTEM','GLOBAL',NULL, false, null),
-('Thông báo nghỉ lễ','Sinh viên nghỉ lễ quốc khánh','SYSTEM','GLOBAL',NULL, false, null),
-('Lịch thi HK1','Lịch thi đã được cập nhật trên portal','SYSTEM','GLOBAL','2024-01-05', true, 'EXAM_SCHEDULE'),
-('Kết quả học bổng','Danh sách học bổng HK1 đã được công bố','SYSTEM','GLOBAL',NULL, false, null),
+('Lịch nghỉ lễ 30/4 - 1/5 năm 2026',
+ 'Nhà trường thông báo lịch nghỉ lễ 30/4 - 1/5 năm 2026 từ ngày 30/04/2026 đến hết ngày 01/05/2026. Sinh viên vui lòng sắp xếp việc học bù (nếu có) theo thông báo của giảng viên.',
+ 'SYSTEM', 'GLOBAL', NULL, TRUE, '2026-04-29'),
+('Mở đăng ký môn học học kỳ 1 năm học 2026-2027',
+ 'Hệ thống đăng ký môn học học kỳ 1 năm học 2026-2027 sẽ mở từ ngày 20/06/2026 đến ngày 30/06/2026. Sinh viên vui lòng đăng nhập cổng thông tin để đăng ký đúng thời hạn. Sau thời hạn trên hệ thống sẽ tự động đóng.',
+ 'SYSTEM', 'GLOBAL', NULL, TRUE, '2026-06-30'),
+('Hạn chót đóng học phí học kỳ 2 năm học 2025-2026',
+ 'Nhà trường thông báo hạn chót đóng học phí học kỳ 2 năm học 2025-2026 là ngày 25/06/2026. Sinh viên chưa hoàn thành học phí sẽ bị khóa tài khoản học vụ và không được thi cuối kỳ.',
+ 'SYSTEM', 'GLOBAL', 'TUITION', TRUE, '2026-06-25'),
 
--- STUDENT_CLASS
-('Cảnh báo học vụ','Kết quả học tập dưới mức yêu cầu','SYSTEM','STUDENT_CLASS','2024-03-01', true, null),
-('Cảnh báo học vụ lần 2','Sinh viên cần gặp cố vấn học tập','SYSTEM','STUDENT_CLASS','2024-03-10', true, null),
-('Thông báo riêng','Sinh viên được chọn tham gia workshop','SYSTEM','STUDENT_CLASS','2024-03-10', false, null),
-('Thông báo riêng','Sinh viên được cấp tài khoản lab','SYSTEM','STUDENT_CLASS','2024-03-10', false, null),
-('Thông báo riêng','Sinh viên cập nhật thông tin cá nhân','SYSTEM','STUDENT_CLASS','2024-03-10', false, null),
+-- Thông báo theo khoa
+('Họp sinh viên toàn khoa Công nghệ thông tin',
+ 'Khoa Công nghệ thông tin thông báo tổ chức buổi họp sinh viên toàn khoa vào lúc 14:00 ngày 18/06/2026 tại hội trường A. Nội dung: triển khai kế hoạch thực tập và khóa luận tốt nghiệp năm học 2026-2027. Sinh viên vắng mặt phải có lý do chính đáng.',
+ 'FACULTY', 'FACULTY', NULL, TRUE, '2026-06-18'),
 
--- COURSE_CLASS
-('Thông báo lớp lập trình web','Lớp lập trình web thay đổi phòng học','LECTURER','COURSE_CLASS','2024-03-10', false, null),
-('Thông báo lớp cấu trúc dữ liệu','Buổi học tối sẽ học online','LECTURER','COURSE_CLASS','2024-03-10', false, null),
-('Thông báo lớp nhập môn lập trình','Deadline project được gia hạn','LECTURER','COURSE_CLASS','2024-04-10', false, null),
+('Danh sách sinh viên đủ điều kiện dự thi cuối kỳ',
+ 'Khoa thông báo danh sách sinh viên đủ điều kiện dự thi cuối kỳ học kỳ 2 năm học 2025-2026 đã được đăng tải trên cổng thông tin. Sinh viên không có tên trong danh sách vui lòng liên hệ văn phòng khoa trước ngày 19/06/2026.',
+ 'FACULTY', 'FACULTY', NULL, FALSE, '2026-06-19'),
 
--- FACULTY
-('Thông báo khoa CNTT','Sinh viên tham gia hội thảo AI','FACULTY','FACULTY',NULL, false, null),
-('Thông báo khoa CNTT','Cuộc thi lập trình sắp diễn ra','FACULTY','FACULTY',NULL, false, null),
-('Thông báo khoa CNTT','Mở đăng ký CLB AI','FACULTY','FACULTY',NULL, false, null),
-('Thông báo khoa CNTT','Workshop Cloud Computing','FACULTY','FACULTY',NULL, false, null),
-('Thông báo khoa CNTT','Sinh viên đăng ký thực tập hè','FACULTY','FACULTY',NULL, false, null);
+-- Thông báo theo lớp học phần
+('Thay đổi phòng thi môn Cơ sở dữ liệu',
+ 'Thông báo thay đổi phòng thi cuối kỳ môn Cơ sở dữ liệu (CS201) từ phòng B202 sang phòng C101. Thời gian thi giữ nguyên: 7:30 ngày 22/06/2026. Sinh viên lưu ý cập nhật.',
+ 'FACULTY', 'COURSE_CLASS', NULL, TRUE, '2026-06-22'),
+('Nộp báo cáo đồ án môn Lập trình Web',
+ 'Giảng viên môn Lập trình Web (CS305) thông báo hạn nộp báo cáo đồ án cuối kỳ là 23:59 ngày 21/06/2026 qua hệ thống. Bài nộp trễ sẽ bị trừ 10 điểm/ngày.',
+ 'LECTURER', 'COURSE_CLASS', NULL, TRUE, '2026-06-21'),
+
+-- Thông báo cá nhân sinh viên
+('Đơn xin phúc khảo của bạn đã bị từ chối',
+ 'Đơn xin phúc khảo điểm thi môn Toán cao cấp (MATH102) mã #4 của bạn đã bị từ chối do không đủ điều kiện theo quy định. Vui lòng liên hệ phòng Công tác Sinh viên để biết thêm chi tiết.',
+ 'SYSTEM', 'STUDENT', NULL, FALSE, NULL),
+
+('Nhắc nhở: Học phí chưa thanh toán',
+ 'Tài khoản của bạn hiện còn học phí chưa thanh toán cho học kỳ 2 năm học 2025-2026. Vui lòng hoàn thành trước ngày 25/06/2026 để không ảnh hưởng đến việc dự thi.',
+ 'SYSTEM', 'STUDENT', 'TUITION', TRUE, '2026-06-25');
 
 -- notification_targets
 INSERT INTO notification_targets (notification_id, target_id) VALUES
 
--- STUDENT_CLASS (id 6 -> 10)
-(6, 2),
-(7, 2),
-(8, 3),
-(9, 4),
-(10, 5),
+(4, 1),
+(5, 1),
+(6, 29),
+(7, 8),
+(8, 1),
 
--- COURSE_CLASS (id 11 -> 13)
-(11, 10),
-(12, 10),
-(13, 10),
+(9, 1);
 
--- FACULTY (id 14 -> 18)
-(14, 1),
-(15, 1),
-(16, 1),
-(17, 1),
-(18, 1);
+
 
 -- notification_read
 INSERT INTO notification_read (notification_id, oauth_user_id, read_at) VALUES
@@ -1457,12 +1507,8 @@ INSERT INTO notification_read (notification_id, oauth_user_id, read_at) VALUES
 
 (5,3,now()),
 (6,3,now()),
-(7,3,now()),
+(7,3,now());
 
-(10,4,now()),
-(11,4,now()),
-
-(15,5,now());
 
 INSERT INTO grade_scale (min_score, max_score, letter_grade) VALUES
 (9.50, 10.00, 'A+'),
@@ -1527,13 +1573,13 @@ VALUES
 ( 4, 5, '2026-01-27', 16296000, 16296000, 'PAID', '2025-12-01', '2026-01-06'),
 
 -- học kỳ sau
-( 1, 6, '2026-05-30', 11424000, 11424000, 'UNPAID', '2026-05-01', '2026-05-01'),
+( 1, 6, '2026-06-30', 11424000, 11424000, 'UNPAID', '2026-05-01', '2026-05-01'),
 
-( 2, 6, '2026-05-30', 11424000, 11424000, 'UNPAID', '2026-05-01', '2026-05-01'),
+( 2, 6, '2026-06-30', 11424000, 11424000, 'UNPAID', '2026-05-01', '2026-05-01'),
 
-( 3, 6, '2026-05-30', 11424000, 11424000, 'UNPAID', '2026-05-01', '2026-05-01'),
+( 3, 6, '2026-06-30', 11424000, 11424000, 'UNPAID', '2026-05-01', '2026-05-01'),
 
-( 4, 6, '2026-05-30', 11424000, 11424000, 'UNPAID', '2026-05-01', '2026-05-01');
+( 4, 6, '2026-06-30', 11424000, 11424000, 'UNPAID', '2026-05-01', '2026-05-01');
 
 -- tuition_invoice_items
 INSERT INTO tuition_invoice_items
@@ -1770,15 +1816,15 @@ INSERT INTO subject_enrollment_conditions
 (subject_id, condition_type, condition_value, condition_operator, description, created_at, updated_at)
 VALUES
 
-(5, 'GPA', 2.50, '>=', 'Yeu cau GPA toi thieu 2.5', '2025-12-01', '2025-12-01'),
+(5, 'GPA', 2.50, '>=', 'Yêu cầu GPA tối thiểu 2.5', '2025-12-01', '2025-12-01'),
 
-(5, 'TOTAL_CREDITS', 30, '>=', 'Phai tich luy it nhat 30 tin chi', '2025-12-01', '2025-12-01'),
+(5, 'TOTAL_CREDITS', 30, '>=', 'Phải tích lũy ít nhất 30 tín chỉ', '2025-12-01', '2025-12-01'),
 
-(4, 'GPA', 2.00, '>', 'Yeu cau GPA > 2.0', '2025-12-01', '2025-12-01'),
+(4, 'GPA', 2.00, '>', 'Yêu cầu GPA > 2.0', '2025-12-01', '2025-12-01'),
 
-(6, 'TOTAL_CREDITS', 20, '>=', 'Yeu cau >= 20 tin chi', '2025-12-01', '2025-12-01'),
+(6, 'TOTAL_CREDITS', 20, '>=', 'Yêu cầu >= 20 tín chỉ', '2025-12-01', '2025-12-01'),
 
-(6, 'GPA', 2, '=', 'Yeu cau GPA toi thieu 2', '2025-12-01', '2025-12-01');
+(6, 'GPA', 2, '=', 'Yêu cầu GPA tối thiểu 2', '2025-12-01', '2025-12-01');
 
 INSERT INTO student_course_class_logs
 (student_id, course_class_id, action, from_status, to_status, created_at)
@@ -1817,31 +1863,15 @@ INSERT INTO feedback_category
 (name, description, is_active, created_at, updated_at)
 VALUES
 
--- ===== BUG REPORT =====
-(
-    'BUG',
-    'Phản hồi liên quan đến lỗi hệ thống hoặc chức năng ứng dụng',
-    TRUE,
-    '2026-01-01 08:00:00',
-    '2026-01-01 08:00:00'
-),
+('Chất lượng giảng dạy', 'Phản hồi về chất lượng giảng dạy của giảng viên, nội dung môn học, phương pháp giảng dạy.', TRUE, now(), now()),
+('Cơ sở vật chất', 'Phản hồi về phòng học, thiết bị, thư viện, khu vực học tập và các tiện ích trong trường.', TRUE, now(), now()),
+('Dịch vụ hành chính', 'Phản hồi về thủ tục hành chính, thái độ phục vụ của cán bộ, thời gian xử lý hồ sơ.', TRUE, now(), now()),
+('Dịch vụ căng tin', 'Phản hồi về chất lượng đồ ăn, vệ sinh an toàn thực phẩm, giá cả và thái độ phục vụ tại căng tin.', TRUE, now(), now()),
+('Lỗi ứng dụng', 'Báo cáo lỗi kỹ thuật, sự cố hệ thống, tính năng hoạt động không đúng trên ứng dụng.', TRUE, now(), now()),
+('Giao diện & trải nghiệm', 'Phản hồi về giao diện người dùng, độ thân thiện, tốc độ tải trang và trải nghiệm sử dụng ứng dụng.', TRUE, now(), now()),
+('Tính năng mới', 'Đề xuất thêm tính năng mới hoặc cải tiến tính năng hiện có trên ứng dụng.', TRUE, now(), now()),
+('Học bổng & hỗ trợ tài chính', 'Phản hồi về quy trình xét học bổng, hỗ trợ vay vốn và các chính sách tài chính dành cho sinh viên.', TRUE, now(), now()),
+('Hoạt động ngoại khóa', 'Phản hồi về các câu lạc bộ, sự kiện, hoạt động thể thao và phong trào sinh viên.', TRUE, now(), now()),
+('Khác', 'Các phản hồi không thuộc các danh mục trên.', TRUE, now(), now());
 
--- ===== UI/UX =====
-(
-    'UI_UX',
-    'Phản hồi liên quan đến giao diện và trải nghiệm người dùng',
-    TRUE,
-    '2026-01-01 08:10:00',
-    '2026-01-01 08:10:00'
-),
-
--- ===== ACCOUNT SUPPORT =====
-(
-    'ACCOUNT',
-    'Các vấn đề liên quan đến tài khoản người dùng',
-    TRUE,
-    '2026-01-01 08:15:00',
-    '2026-01-01 08:15:00'
-);
-
- COMMIT;
+COMMIT;

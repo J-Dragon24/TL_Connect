@@ -41,3 +41,5 @@ src/main/resources/application.yml
 
 # Firebase
 src/main/resources/*firebase-adminsdk*.json
+
+.env

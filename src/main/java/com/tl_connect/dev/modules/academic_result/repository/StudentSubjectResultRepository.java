@@ -1,6 +1,7 @@
 package com.tl_connect.dev.modules.academic_result.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -101,4 +102,26 @@ public interface StudentSubjectResultRepository extends JpaRepository<StudentSub
         WHERE student_id = :studentId
         """, nativeQuery = true)
     List<StudentSubjectResult> findAllByStudentId(@Param("studentId") Long studentId);
+
+    @Modifying
+    @Query(value = """
+        INSERT INTO student_subject_results (
+            student_id,
+            subject_id,
+            semester_id,
+            credits
+        )
+        SELECT
+            scc.student_id,
+            scc.subject_id,
+            scc.semester_id,
+            s.credits
+        FROM student_course_classes scc
+        JOIN subjects s ON s.id = scc.subject_id
+        WHERE scc.semester_id = :semesterId
+        AND scc.status = 'ENROLLED'
+        ON CONFLICT (student_id, subject_id, semester_id)
+        DO NOTHING
+    """, nativeQuery = true)
+    void createSubjectResultsForSemester(Long semesterId);
 }

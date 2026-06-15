@@ -29,6 +29,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -93,12 +94,33 @@ public abstract class FileParseHelper {
 
         for (int i = 1; i <= sheet.getLastRowNum(); i++) {
             Row row = sheet.getRow(i);
-            if (row == null)
+            if (isRowEmpty(row))
                 continue;
             result.add(mapToObject(new ExcelRowAccessor(row, headerIdx), clazz));
         }
         workbook.close();
         return result;
+    }
+
+    private boolean isRowEmpty(Row row) {
+        if (row == null) {
+            return true;
+        }
+
+        for (int cellNum = row.getFirstCellNum();
+            cellNum < row.getLastCellNum();
+            cellNum++) {
+
+            Cell cell = row.getCell(cellNum);
+
+            if (cell != null &&
+                cell.getCellType() != CellType.BLANK &&
+                !cell.toString().trim().isEmpty()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private <T> T mapToObject(RowAccessor row, Class<T> clazz) {

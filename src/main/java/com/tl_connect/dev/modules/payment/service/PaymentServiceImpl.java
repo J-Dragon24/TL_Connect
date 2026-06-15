@@ -174,6 +174,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         CreateNotificationReqDTO req = CreateNotificationReqDTO.builder()
                 .title("Thanh toán học phí thành công")
+                .content(String.format("Bạn đã thanh toán học phí thành công %s - %s", payment.getProvider(), payment.getTransactionCode()))
                 .createdBy(NotificationCreatedBy.SYSTEM)
                 .targetType(NotificationType.STUDENT)
                 .targetIds(List.of(invoice.getStudentId()))

@@ -27,7 +27,7 @@ public class EnrollManagementServiceImpl implements EnrollManagementService {
 
     @Transactional
     public void confirm(Long semesterId) {
-        studentCourseClassRepository.updateStatusBySemesterId(semesterId, StudentCourseClassStatus.PENDING, StudentCourseClassStatus.ENROLLED);
+        studentCourseClassRepository.updateStatusEnrolledBySemesterId(semesterId);
     }
 
     public PagedResponse<StudentCourseClassDTO> getAllStudentEnrollment(StudentCourseClassFilter filter, Pageable pageable) {

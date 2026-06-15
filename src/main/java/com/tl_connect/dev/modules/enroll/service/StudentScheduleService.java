@@ -2,9 +2,7 @@ package com.tl_connect.dev.modules.enroll.service;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -23,7 +21,6 @@ public class StudentScheduleService {
 
     private final StudentCourseClassService studentCourseClassService;
     private final CacheHelper cacheHelper;
-    private final StringRedisTemplate redisTemplate;
 
     private static final String CACHE_KEY_PREFIX = "schedule:student:";
 
@@ -52,42 +49,39 @@ public class StudentScheduleService {
     public void addToCache(Long studentId, Long semesterId, List<ScheduleInterval> newSchedules) {
         String cacheKey = CACHE_KEY_PREFIX + studentId + ":" + semesterId;
 
-        String cached = (String) redisTemplate.opsForValue().get(cacheKey);
-        if (cached == null) return;
-
-        List<ScheduleInterval> intervals = cacheHelper.fromJson(cached, new TypeReference<List<ScheduleInterval>>() {});
+        List<ScheduleInterval> intervals = cacheHelper.getOrSet(
+            cacheKey, 
+            Duration.ofDays(7),
+            new TypeReference<List<ScheduleInterval>>() {},
+            () -> studentCourseClassService.findCurrentSchedule(studentId, semesterId)
+        );
+        
         intervals.addAll(newSchedules);
 
-        try {
-            redisTemplate.opsForValue().set(cacheKey, cacheHelper.toJson(intervals), 7, TimeUnit.DAYS);
-        } catch (Exception e) {
-            log.warn("Failed to write schedule to cache", e);
-        }
+        cacheHelper.set(cacheKey, intervals, Duration.ofDays(7));
     }
 
     public void removeFromCache(Long studentId, Long semesterId, Long courseClassId) {
         String cacheKey = CACHE_KEY_PREFIX + studentId + ":" + semesterId;
 
-        String cached = (String) redisTemplate.opsForValue().get(cacheKey);
-        if (cached == null) return;
-
-        List<ScheduleInterval> intervals = cacheHelper.fromJson(cached, new TypeReference<List<ScheduleInterval>>() {});
+        List<ScheduleInterval> intervals = cacheHelper.getOrSet(
+            cacheKey, 
+            Duration.ofDays(7),
+            new TypeReference<List<ScheduleInterval>>() {},
+            () -> studentCourseClassService.findCurrentSchedule(studentId, semesterId)
+        );
+        
         intervals.removeIf(i -> i.getCourseClassId().equals(courseClassId));
 
-        try {
-            redisTemplate.opsForValue().set(cacheKey, cacheHelper.toJson(intervals), 7, TimeUnit.DAYS);
-        } catch (Exception e) {
-            log.warn("Failed to write schedule to cache", e);
-        }
+        cacheHelper.set(cacheKey, intervals, Duration.ofDays(7));
     }
 
     public void invalidate(Long studentId, Long semesterId) {
-        redisTemplate.delete(CACHE_KEY_PREFIX + studentId + ":" + semesterId);
+        cacheHelper.evict(CACHE_KEY_PREFIX + studentId + ":" + semesterId);
     }
 
     public void invalidateAll(Long semesterId) {
-        String pattern = CACHE_KEY_PREFIX + "*" + ":" + semesterId;
-        redisTemplate.delete(redisTemplate.keys(pattern));
+        cacheHelper.evictByPattern(CACHE_KEY_PREFIX + "*" + ":" + semesterId);
     }
 
 
