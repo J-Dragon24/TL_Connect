@@ -45,7 +45,10 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public abstract class FileParseHelper {
     public <T> List<T> parse(MultipartFile file, Class<T> clazz) throws IOException {
         String fileName = file.getOriginalFilename();
@@ -90,6 +93,7 @@ public abstract class FileParseHelper {
 
         for (Cell cell : headerRow) {
             headerIdx.put(cell.toString().trim().toLowerCase(), cell.getColumnIndex());
+            log.info("Header: '{}' -> index {}", cell.toString().trim(), cell.getColumnIndex());
         }
 
         for (int i = 1; i <= sheet.getLastRowNum(); i++) {
@@ -160,7 +164,13 @@ public abstract class FileParseHelper {
         if (type == Double.class)
             return Double.parseDouble(val);
         if (type == BigDecimal.class)
-            return new BigDecimal(val);
+            try {
+                String cleaned = val.trim();
+                return new BigDecimal(cleaned);
+            } catch (NumberFormatException e) {
+                log.warn("Cannot parse BigDecimal from value: '{}'", val);
+                return null; 
+            }
         if (type == Boolean.class)
             return Boolean.valueOf(val);
         if (type == LocalDate.class)

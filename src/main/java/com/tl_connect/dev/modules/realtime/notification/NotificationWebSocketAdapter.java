@@ -20,13 +20,15 @@ public class NotificationWebSocketAdapter {
             List<Long> targetIds
     ) {
 
-        
         switch (dto.getTargetType()) {
 
-            case GLOBAL ->
-                    gateway.send(NotificationDestination.GLOBAL, dto);
+            case GLOBAL -> {
+                System.out.println("GLOBAL");
+                gateway.send(NotificationDestination.GLOBAL, dto);
+            }
 
             case STUDENT_CLASS -> {
+                System.out.println("STUDENT_CLASS");
                 for (Long classId : targetIds) {
                     gateway.send(
                             NotificationDestination.classTopic(classId),
@@ -36,12 +38,14 @@ public class NotificationWebSocketAdapter {
             }
 
             case FACULTY -> {
+                System.out.println("FACULTY");
                 for (Long facultyId : targetIds) {
                     gateway.send(NotificationDestination.facultyTopic(facultyId), dto);
                 }
             }
 
             case COURSE_CLASS -> {
+                System.out.println("COURSE_CLASS");
                 for (Long courseClassId : targetIds) {
                     gateway.send(
                             NotificationDestination.courseTopic(courseClassId),
@@ -51,6 +55,7 @@ public class NotificationWebSocketAdapter {
             }
 
             case STUDENT -> {
+                System.out.println("STUDENT");
                 for (Long studentId : targetIds) {
                     gateway.sendToUser(
                             studentId,

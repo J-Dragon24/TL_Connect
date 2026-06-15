@@ -24,7 +24,7 @@ public class NotificationFirebaseAdapter {
     private final UserDeviceService userDeviceService;
     private final NotificationHelper notificationHelper;
     
-    @Async
+    @Async("taskExecutor")
     public void send(NotificationRealtimeDTO dto, List<Long> targetIds) {
         Set<String> sentTopics = new HashSet<>();
 

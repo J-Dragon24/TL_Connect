@@ -1,6 +1,5 @@
 package com.tl_connect.dev.modules.realtime.notification;
 
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
@@ -16,7 +15,6 @@ public class NotificationEvenetListener {
 
     private final NotificationGateway gateway;
 
-    @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onNotificationCreated(NotificationCreatedEvent event) {
 

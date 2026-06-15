@@ -41,7 +41,12 @@ public class NotificationModifyServiceImpl implements NotificationModifyService 
 
         if(type == NotificationType.GLOBAL) {
             Notification notification = buildNotification(req);
-            notificationRepository.save(notification);
+            try{
+                notificationRepository.save(notification);
+            }
+            catch(DataIntegrityViolationException e){
+                throw new ErrorException(ResponseStatus.DATABASE_ERROR,"Failed to create notification");
+            }
             publisher.publishEvent(
                 NotificationCreatedEvent.builder()
                         .id(notification.getId())

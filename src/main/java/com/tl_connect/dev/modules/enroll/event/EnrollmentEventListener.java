@@ -26,7 +26,7 @@ public class EnrollmentEventListener {
     // -------------------------------------------------------------------------
 
 
-    @Async
+    @Async("taskExecutor")
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onEnrollmentCreated_writeLog(EnrollmentCreatedEvent event) {
         try {
@@ -44,7 +44,7 @@ public class EnrollmentEventListener {
     }
 
 
-    @Async
+    @Async("taskExecutor")
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onEnrollmentCreated_updateCache(EnrollmentCreatedEvent event) {
         try {
@@ -62,7 +62,7 @@ public class EnrollmentEventListener {
     // Drop side effects
     // -------------------------------------------------------------------------
 
-    @Async
+    @Async("taskExecutor")
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onEnrollmentDropped_writeLog(EnrollmentDroppedEvent event) {
         try {
@@ -79,7 +79,7 @@ public class EnrollmentEventListener {
         }
     }
 
-    @Async
+    @Async("taskExecutor")
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onEnrollmentDropped_removeCache(EnrollmentDroppedEvent event) {
         try {

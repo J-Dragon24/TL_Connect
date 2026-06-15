@@ -50,6 +50,7 @@ public class AcademicResultModifyServiceImpl implements AcademicResultModifyServ
     private final FileParseHelper fileParseHelper;
     private final SemesterService semesterService;
     private final StudentSemesterSummaryRepository semesterSummaryRepository;
+    private final AcademicResultPersistService academicResultPersistService;
     private final Validator validator;
 
     @Transactional
@@ -116,18 +117,28 @@ public class AcademicResultModifyServiceImpl implements AcademicResultModifyServ
             throw new NotFoundException("Student code not found: " + String.join(", ", notFoundCodes));
         }
 
-        int successCount = 0;
-        int failedCount = 0;
+
+
+        Set<String> failedCodes = new HashSet<>();
+        List<StudentSubjectResult> validList = new ArrayList<>();
+        Set<String> seen = new HashSet<>();
 
         for (ImportAcademicResultDTO row : rows) {
             try {
+
+                String key = row.getStudentCode() + "|" + row.getSubjectCode() + "|" + row.getSemesterCode();
+                if (!seen.add(key)) {
+                    log.warn("Duplicate row in file: {}", key);
+                    failedCodes.add(row.getStudentCode());
+                    continue;
+                }
                 validateRow(row);
 
                 Student student = studentMap.get(row.getStudentCode());
                 Subject subject = subjectMap.get(row.getSubjectCode());
                 Long semesterId = semesterMap.get(row.getSemesterCode());
 
-                StudentSubjectResult entity = StudentSubjectResult.create(
+                validList.add(StudentSubjectResult.create(
                         student.getId(),
                         subject.getId(),
                         semesterId,
@@ -138,35 +149,32 @@ public class AcademicResultModifyServiceImpl implements AcademicResultModifyServ
                         row.getScore10(),
                         row.getScore4(),
                         row.getLetterGrade(),
-                        row.getIsPass());
-
-                toSave.add(entity);
+                        row.getIsPass()));
 
             } catch (Exception e) {
                 log.warn("Invalid row: {}", row.getStudentCode(), e);
-                failedCount++;
+                failedCodes.add(row.getStudentCode());
             }
         }
 
-        try {
-            subjectResultRepository.saveAll(toSave);
-            successCount = toSave.size();
-        } catch (DataIntegrityViolationException e) {
-            for (StudentSubjectResult rs : toSave) {
-                try {
-                    subjectResultRepository.save(rs);
-                    successCount++;
-                } catch (DataIntegrityViolationException ex) {
-                    log.warn("Invalid row: {}", rs.getStudentId(), ex);
-                    failedCount++;
-                }
+        int successCount = 0;
+        int batchSize = 50;
+
+        for (int i = 0; i < validList.size(); i += batchSize) {
+            List<StudentSubjectResult> chunk = validList.subList(i, Math.min(i + batchSize, validList.size()));
+            try {
+                academicResultPersistService.persistChunk(chunk);
+                successCount += chunk.size();
+            } catch (Exception e) {
+                log.error("Batch persist failed for chunk [{}-{}]: {}", i, i + chunk.size() - 1, e.getMessage());
+                chunk.forEach(rs -> failedCodes.add(rs.getStudentId().toString()));
             }
         }
 
         return ImportResultDTO.builder()
                 .total(rows.size())
                 .success(successCount)
-                .failed(failedCount)
+                .failed(failedCodes.size())
                 .build();
     }
 
