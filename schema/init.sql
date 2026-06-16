@@ -366,12 +366,15 @@ CREATE TABLE student_course_classes (
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
   UNIQUE (student_id, course_class_id),
-  UNIQUE (student_id, subject_id, semester_id),
   FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
   FOREIGN KEY (course_class_id) REFERENCES course_classes(id) ON DELETE CASCADE,
   FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE SET NULL,
   FOREIGN KEY (semester_id) REFERENCES semesters(id) ON DELETE RESTRICT
 );
+
+CREATE UNIQUE INDEX uq_student_subject_semester_active
+ON student_course_classes(student_id, subject_id, semester_id)
+WHERE status IN ('PENDING', 'ENROLLED');
 
 CREATE TABLE student_course_class_logs (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,

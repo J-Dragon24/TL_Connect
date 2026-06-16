@@ -79,7 +79,6 @@ public class AcademicResultModifyServiceImpl implements AcademicResultModifyServ
     @Transactional
     public ImportResultDTO importFile(MultipartFile file) throws IOException {
         List<ImportAcademicResultDTO> rows = fileParseHelper.parse(file, ImportAcademicResultDTO.class);
-        List<StudentSubjectResult> toSave = new ArrayList<>();
 
         if (rows.isEmpty()) {
             throw new InvalidInputException("File is empty");

@@ -24,40 +24,17 @@ import lombok.RequiredArgsConstructor;
 public class AttendanceServiceImpl implements AttendanceService {
 
     private final AttendanceRepository attendanceRepository;
-    private final QrTokenService qrTokenService;
+    @Override
+    public boolean existsBySessionIdAndStudentId(String sessionId, Long studentId) {
+        return attendanceRepository.existsBySessionIdAndStudentId(sessionId, studentId);
+    }
 
     @Override
-    @Transactional
-    public void checkIn(Long studentId, AttendanceRequest request) {
-
-        Map<String, String> claims = qrTokenService.verify(request.getQrToken());
-
-        Long classId = Long.parseLong(claims.get("classId"));
-        String sessionId = claims.get("sessionId");
-
-        validateGps(request.getLatitude(), request.getLongitude());
-
-        boolean existed = attendanceRepository.existsBySessionIdAndStudentId(sessionId, studentId);
-        if (existed) {
-            throw new ConflictException("Student already checked in");
-        }
-
-        Attendance attendance = Attendance.create(classId, sessionId, studentId, LocalDateTime.now());
+    public void save(Attendance attendance) {
         try {
             attendanceRepository.save(attendance);
         } catch (DataIntegrityViolationException e) {
             throw new DatabaseException("Failed to save attendance: " + e.getMessage());
-        }
-    }
-
-    private void validateGps(Double lat, Double lng) {
-        double schoolLat = 20.976006112646875;
-        double schoolLng = 105.81562568381663;
-
-        double distance = GeoUtil.calculateDistance(lat, lng, schoolLat, schoolLng);
-
-        if (distance > 200) {
-            throw new BadRequestException("You are outside the allowed attendance area");
         }
     }
 }

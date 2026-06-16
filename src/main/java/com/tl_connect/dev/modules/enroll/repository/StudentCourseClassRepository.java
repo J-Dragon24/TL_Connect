@@ -157,4 +157,13 @@ public interface StudentCourseClassRepository extends JpaRepository<StudentCours
     );
 
     List<StudentCourseClass> findByCourseClassId(Long courseClassId);
+
+    @Query(value = """
+            SELECT EXISTS (
+                SELECT 1
+                FROM student_course_classes scc
+                WHERE scc.student_id = :studentId AND scc.course_class_id = :courseClassId
+            )
+            """, nativeQuery = true)
+    boolean existedByStudentIdAndClassId(@Param("studentId") Long studentId, @Param("courseClassId") Long courseClassId);
 }

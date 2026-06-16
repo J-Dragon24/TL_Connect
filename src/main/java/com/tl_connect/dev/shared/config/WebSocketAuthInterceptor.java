@@ -9,6 +9,7 @@ import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
+import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,7 +30,9 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor{
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
 
-        StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
+        StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+
+        if (accessor == null) return message;
 
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
             String header= accessor.getFirstNativeHeader("Authorization");
@@ -75,10 +78,16 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor{
 
 
                 accessor.setUser(auth);
+                System.out.println("WS Principal set: " + accessor.getUser().getName());
                 
             } catch (Exception e) {
                 throw new MessagingException("Invalid token");
             }
+        }
+
+        if (StompCommand.SUBSCRIBE.equals(accessor.getCommand())) {
+            System.out.println("SUBSCRIBE from: " + accessor.getUser().getName() 
+                + " to: " + accessor.getDestination());
         }
 
         return message;

@@ -5,7 +5,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import com.tl_connect.dev.modules.attendance.dto.AttendanceRequest;
-import com.tl_connect.dev.modules.attendance.service.interfaces.AttendanceService;
+import com.tl_connect.dev.modules.attendance.service.interfaces.CheckInServcie;
 import com.tl_connect.dev.shared.common.exception.UnauthorizeException;
 import com.tl_connect.dev.shared.types.JwtUserInfo;
 import com.tl_connect.dev.shared.ultility.ResponseHelper;
@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AttendanceController {
 
-    private final AttendanceService attendanceService;
+    private final CheckInServcie checkInServcie;
 
     @PostMapping("/checkin")
     public ResponseEntity<?> checkin(Authentication authentication, @RequestBody AttendanceRequest request) {
@@ -25,7 +25,7 @@ public class AttendanceController {
             throw new UnauthorizeException("Authentication required");
         }
         Long studentId = userInfo.userId();
-        attendanceService.checkIn(studentId, request);
+        checkInServcie.checkIn(studentId, request);
         return ResponseHelper.success("Checked in successfully", null);
     }
 }

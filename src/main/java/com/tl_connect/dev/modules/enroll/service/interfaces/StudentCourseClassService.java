@@ -29,4 +29,6 @@ public interface StudentCourseClassService {
     Integer findCreditsRegistered(Long studentId, Long semesterId);
 
     List<StudentCourseClass> findByCourseClassId(Long courseClassId);
+
+    boolean existsByStudentIdAndCourseClassId(Long studentId, Long courseClassId);
 }

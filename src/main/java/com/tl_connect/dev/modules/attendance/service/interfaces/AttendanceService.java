@@ -1,7 +1,9 @@
 package com.tl_connect.dev.modules.attendance.service.interfaces;
 
-import com.tl_connect.dev.modules.attendance.dto.AttendanceRequest;
+import com.tl_connect.dev.modules.attendance.entity.Attendance;
 
 public interface AttendanceService {
-    void checkIn(Long studentId, AttendanceRequest request);
+    boolean existsBySessionIdAndStudentId(String sessionId, Long studentId);
+
+    void save(Attendance attendance);
 }

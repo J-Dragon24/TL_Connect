@@ -59,4 +59,8 @@ public class StudentCourseClassServiceImpl implements StudentCourseClassService 
     public List<StudentCourseClass> findByCourseClassId(Long courseClassId){
         return studentCourseClassRepository.findByCourseClassId(courseClassId);
     }
+
+    public boolean existsByStudentIdAndCourseClassId(Long studentId, Long courseClassId) {
+        return studentCourseClassRepository.existedByStudentIdAndClassId(studentId, courseClassId);
+    }
 }
