@@ -165,7 +165,7 @@ public abstract class FileParseHelper {
             return Double.parseDouble(val);
         if (type == BigDecimal.class)
             try {
-                String cleaned = val.trim();
+                String cleaned = val.trim().replace(",", ".");
                 return new BigDecimal(cleaned);
             } catch (NumberFormatException e) {
                 log.warn("Cannot parse BigDecimal from value: '{}'", val);
