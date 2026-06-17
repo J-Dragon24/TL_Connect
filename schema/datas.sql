@@ -265,7 +265,7 @@ INSERT INTO student_contacts (student_id, phone_number, address, email_personal)
 INSERT INTO emergency_contacts (student_id, full_name, phone_number, relationship, address) VALUES
 (1,'Nguyễn Văn Hùng','0911111111','Cha','Hà Nội'),
 (2,'Trần Thị Mai','0922222222','Mẹ','Hà Nội'),
-(3,'Phạm Văn Dũng','0933333333','Cha','Hà Nội'),
+(3,'Phùng Văn Dũng','0978594477','Cha','Hà Nội'),
 (4,'Lê Thị Hoa','0944444444','Mẹ','Hà Nội'),
 (5,'Hoàng Văn Sơn','0955555555','Cha','Đà Nẵng'),
 (6,'Đỗ Thị Lan','0966666666','Mẹ','Huế'),
@@ -289,7 +289,7 @@ INSERT INTO emergency_contacts (student_id, full_name, phone_number, relationshi
 INSERT INTO identity_cards (student_id, card_number, card_type, issued_date, issued_place) VALUES
 (1,'100000000008','CCCD','2021-08-08','Hải Phòng'),
 (2,'100000000009','CCCD','2022-09-09','Nam Định'),
-(3,'100000000010','CCCD','2021-10-10','Hà Nội'),
+(3,'00120304477','CCCD','2021-10-10','Hà Nội'),
 (4,'100000000011','CCCD','2022-11-11','Đà Nẵng'),
 (5,'100000000012','CCCD','2023-12-12','Huế'),
 (6,'100000000013','CCCD','2021-01-13','Hà Nội'),
@@ -1326,6 +1326,15 @@ VALUES
 (2, 25, 5, 2, 9.5, 8.8, 7.0, 7.8, 3.5, 'B+', true),
 (2, 26, 5, 2, 9.6, 7.5, 7.6, 7.8, 3.5, 'B+', true),
 
+(3, 33, 3, 3, 8.0, 7.5, 7.8, 7.8, 3.0, 'B', true),
+(3, 32, 3, 2, 6.5, 5.8, 6.2, 6.2, 1.5, 'C', true),
+(3, 31, 3, 2, 9.0, 8.5, 8.8, 8.8, 3.5, 'B+', true),
+(3, 29, 3, 1, 5.5, 6.0, 5.8, 5.8, 1.5, 'C', true),
+(3, 30, 3, 2, 7.0, 3.5, 4.0, 4.2, 0.0, 'F', false),
+(3, 6,  3, 2, 8.5, 9.0, 8.7, 8.7, 3.5, 'B+', true),
+(3, 28, 3, 2, 6.0, 5.5, 5.8, 5.8, 1.5, 'C', true),
+(3, 27, 3, 2, 9.5, 9.2, 9.4, 9.4, 4.0, 'A', true),
+
 (3, 7, 4, 3, 5.0, 5.2, 4.7, 4.9, 0.7, 'D', true),
 (3, 8, 4, 2, 7.4, 3.2, 2.9, 3.4, 0.0, 'F', false),
 (3, 9, 4, 2, 4.6, 3.4, 4.9, 4.4, 0.7,'D',true),
@@ -1355,6 +1364,7 @@ VALUES
 (1, 2, 5, 29, 29, 2.73, 'B', 81, 7.7, 'B', 6.7, 'C'),
 (2, 5, 4, 23, 23, 3.65, 'A', 91, 9.3, 'A', 9.4, 'A'),
 (2, 5, 5, 29, 29, 3.5, 'B+', 91, 8.7, 'A', 8.1, 'B'),
+(3, 1, 3, 16, 14, 2.47, 'C+', 75, 7.2, 'B', 7.0, 'B'),
 (3, 5, 4, 23, 17, 0.71, 'D', 59, 5.4, 'D', 6.0, 'C'),
 (3, 5, 5, 29, 23, 0.74, 'D', 60, 6.1, 'C', 5.8, 'C');
 
@@ -1476,11 +1486,7 @@ VALUES
 -- Thông báo cá nhân sinh viên
 ('Đơn xin phúc khảo của bạn đã bị từ chối',
  'Đơn xin phúc khảo điểm thi môn Toán cao cấp (MATH102) mã #4 của bạn đã bị từ chối do không đủ điều kiện theo quy định. Vui lòng liên hệ phòng Công tác Sinh viên để biết thêm chi tiết.',
- 'SYSTEM', 'STUDENT', NULL, FALSE, NULL),
-
-('Nhắc nhở: Học phí chưa thanh toán',
- 'Tài khoản của bạn hiện còn học phí chưa thanh toán cho học kỳ phụ năm học 2025-2026. Vui lòng hoàn thành trước ngày 20/06/2026 để không ảnh hưởng đến việc dự thi.',
- 'SYSTEM', 'STUDENT', 'TUITION', TRUE, '2026-06-20');
+ 'SYSTEM', 'STUDENT', NULL, FALSE, NULL);
 
 -- notification_targets
 INSERT INTO notification_targets (notification_id, target_id) VALUES
@@ -1489,9 +1495,7 @@ INSERT INTO notification_targets (notification_id, target_id) VALUES
 (5, 1),
 (6, 29),
 (7, 8),
-(8, 1),
-
-(9, 1);
+(8, 1);
 
 
 
@@ -1579,7 +1583,9 @@ VALUES
 
 ( 3, 6, '2026-06-30', 11424000, 11424000, 'UNPAID', '2026-05-01', '2026-05-01'),
 
-( 4, 6, '2026-06-30', 11424000, 11424000, 'UNPAID', '2026-05-01', '2026-05-01');
+( 4, 6, '2026-06-30', 11424000, 11424000, 'UNPAID', '2026-05-01', '2026-05-01'),
+
+( 3, 3, '2026-06-30', 10000, 10000, 'UNPAID', '2026-05-01', '2026-05-01');
 
 -- tuition_invoice_items
 INSERT INTO tuition_invoice_items
@@ -1688,7 +1694,16 @@ VALUES
 (12, 27, 560000, 3, 1.2, 2016000, '2026-05-10', '2026-05-10'),
 (12, 28, 560000, 3, 1.2, 2016000, '2026-05-10', '2026-05-10'),
 (12, 29, 560000, 3, 1.2, 2016000, '2026-05-10', '2026-05-10'),
-(12, 30, 560000, 3, 1.2, 2016000, '2026-05-10', '2026-05-10');
+(12, 30, 560000, 3, 1.2, 2016000, '2026-05-10', '2026-05-10'),
+
+(13, 31, 1000, 3, 1.0, 3000, '2025-12-01', '2025-12-01'),
+(13, 32, 1000, 2, 1.0, 2000, '2025-12-01', '2025-12-01'),
+(13, 33, 1000, 2, 1.0, 2000, '2025-12-01', '2025-12-01'),
+(13, 34, 1000, 1, 1.0, 1000, '2025-12-01', '2025-12-01'),
+(13, 35, 1000, 2, 1.0, 2000, '2025-12-01', '2025-12-01'),
+(13, 36, 1000, 2, 1.0, 2000, '2025-12-01', '2025-12-01'),
+(13, 37, 1000, 2, 1.0, 2000, '2025-12-01', '2025-12-01'),
+(13, 38, 1000, 2, 1.0, 2000, '2025-12-01', '2025-12-01');
 
 -- payment
 INSERT INTO payment
@@ -1703,10 +1718,8 @@ VALUES
 (6, 16296000, 'ZALOPAY', 'TXN_006_SUCCESS', 'SUCCESS', '2026-01-10', '2026-01-10'),
 (7, 16296000, 'ZALOPAY', 'TXN_007_SUCCESS', 'SUCCESS', '2026-01-10', '2026-01-10'),
 (8, 16296000, 'VNPAY', 'TXN_008_SUCCESS', 'SUCCESS', '2026-01-10', '2026-01-10'),
-(9, 11424000, 'VNPAY', 'TXN_009_SUCCESS', 'SUCCESS', '2026-05-01', '2026-05-01'),
-(10, 11424000, 'VNPAY', 'TXN_010_SUCCESS', 'SUCCESS', '2026-05-01', '2026-05-01'),
-(11, 11424000, 'VNPAY', 'TXN_011_SUCCESS', 'SUCCESS', '2026-05-01', '2026-05-01'),
-(12, 11424000, 'VNPAY', 'TXN_012_SUCCESS', 'SUCCESS', '2026-05-01', '2026-05-01');
+(9, 11424000, 'VNPAY', 'TXN_009_SUCCESS', 'SUCCESS', '2026-05-01', '2026-05-01');
+
 
 -- tuition_transactions
 INSERT INTO tuition_transactions

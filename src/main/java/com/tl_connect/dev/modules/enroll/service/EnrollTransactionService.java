@@ -59,7 +59,6 @@ public class EnrollTransactionService {
             scc = new StudentCourseClass();
             scc.setStudentId(studentId);
             scc.setCourseClassId(courseClassId);
-            // Dùng data đã load ở pre-check phase — không cần thêm DB call
             scc.setSubjectId(validation.getSubjectId());
             scc.setSemesterId(validation.getSemesterId());
         }

@@ -6,7 +6,6 @@ import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
-import com.tl_connect.dev.modules.course_class.CourseClass;
 import com.tl_connect.dev.modules.course_class.service.interfaces.CourseClassService;
 import com.tl_connect.dev.modules.enroll.dto.EnrollmentValidationResult;
 import com.tl_connect.dev.modules.enroll.dto.ScheduleForCheckDTO;
@@ -60,11 +59,8 @@ public class EnrollmentPreCheckService {
             throw new NotFoundException("Course class not found");
         }
 
-        // 2. Load CourseClass entity để lấy subjectId, semesterId, classCode — 1 query (cached by JPA L1)
-        CourseClass courseClass = courseClassService.findById(courseClassId);
-
         // 3. Kiểm tra subject có thuộc chương trình đào tạo không — 1 query
-        if (!studentCourseClassService.isSubjectAllowedForEnrollment(studentId, courseClass.getId())) {
+        if (!studentCourseClassService.isSubjectAllowedForEnrollment(studentId, details.get(0).getSubjectId())) {
             throw new ErrorException(ResponseStatus.SUBJECT_NOT_IN_PROGRAM,
                     "You don't have permission to enroll in this subject");
         }
@@ -90,8 +86,8 @@ public class EnrollmentPreCheckService {
         boolean alreadyEnrolledSameSubject = studentCourseClassService
                 .existsByStudentIdAndSubjectIdAndSemesterIdAndStatusIn(
                         studentId,
-                        courseClass.getSubjectId(),
-                        courseClass.getSemesterId(),
+                        details.get(0).getSubjectId(),
+                        details.get(0).getSemesterId(),
                         Set.of(StudentCourseClassStatus.PENDING, StudentCourseClassStatus.ENROLLED));
         if (alreadyEnrolledSameSubject) {
             throw new DuplicateRegistrationException(ResponseStatus.DUPLICATE_SUBJECT,
@@ -102,7 +98,7 @@ public class EnrollmentPreCheckService {
         StudentEnrollmentProfile profile = profileService.getProfile(studentId, studyProgramId);
 
         // 7. Kiểm tra đã qua môn chưa
-        if (profile.getPassedSubjectIds().contains(courseClass.getSubjectId())) {
+        if (profile.getPassedSubjectIds().contains(details.get(0).getSubjectId())) {
             throw new DuplicateRegistrationException(ResponseStatus.SUBJECT_ALREADY_PASSED,
                     "You have already passed this subject");
         }
@@ -111,14 +107,14 @@ public class EnrollmentPreCheckService {
                 .map(ScheduleForCheckDTO::from)
                 .toList();
 
-        scheduleConflictService.check(studentId, courseClass.getSemesterId(), newSchedules);
+        scheduleConflictService.check(studentId, details.get(0).getSemesterId(), newSchedules);
 
         // 9. Kiểm tra điều kiện môn học (prerequisite + GPA/credits condition) — tối đa 2 queries
-        prerequisiteCheckService.check(courseClass.getSubjectId(), profile.getPassedSubjectIds());
-        conditionService.check(courseClass.getSubjectId(), profile);
+        prerequisiteCheckService.check(details.get(0).getSubjectId(), profile.getPassedSubjectIds());
+        conditionService.check(details.get(0).getSubjectId(), profile);
 
         // 10. Kiểm tra tín chỉ tối đa — 1 query
-        int creditsRegistered = studentCourseClassService.findCreditsRegistered(studentId, courseClass.getSemesterId());
+        int creditsRegistered = studentCourseClassService.findCreditsRegistered(studentId, details.get(0).getSemesterId());
         int newCredits = details.get(0).getCredits();
         if (creditsRegistered + newCredits > period.getMaxCredits()) {
             throw new ErrorException(ResponseStatus.MAX_CREDIT_EXCEEDED,
@@ -130,22 +126,22 @@ public class EnrollmentPreCheckService {
                 .map(c -> ScheduleInterval.builder()
                         .classScheduleId(c.getClassScheduleId())
                         .courseClassId(courseClassId)
-                        .classCode(courseClass.getClassCode())
+                        .classCode(c.getClassCode())
                         .dayOfWeek(c.getDayOfWeek())
                         .startPeriod(c.getStartPeriod())
                         .endPeriod(c.getEndPeriod())
                         .build())
                 .toList();
 
-        boolean isRetake = profile.getFailedSubjectIds().contains(courseClass.getSubjectId());
+        boolean isRetake = profile.getFailedSubjectIds().contains(details.get(0).getSubjectId());
 
         return EnrollmentValidationResult.builder()
                 .existingScc(existingScc)
                 .oldStatus(oldStatus)
                 .isRetake(isRetake)
                 .credits(newCredits)
-                .subjectId(courseClass.getSubjectId())
-                .semesterId(courseClass.getSemesterId())
+                .subjectId(details.get(0).getSubjectId())
+                .semesterId(details.get(0).getSemesterId())
                 .details(details)
                 .scheduleIntervals(intervals)
                 .build();

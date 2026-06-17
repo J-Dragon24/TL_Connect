@@ -44,7 +44,7 @@ public class SecurityConfig {
                                 .requestMatchers("/ws/**").permitAll()
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 .dispatcherTypeMatchers(DispatcherType.ASYNC).permitAll()
-                                .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/api/v1/admin/**").hasAnyRole("ADMIN", "LECTURER", "STAFF")
                                 .requestMatchers("/api/v1/oauth2/**").permitAll()
                                 .requestMatchers("/api/v1/payments/callback/**").permitAll()
                                 .anyRequest().authenticated())

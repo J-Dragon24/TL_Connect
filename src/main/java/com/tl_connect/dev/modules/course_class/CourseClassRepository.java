@@ -26,6 +26,9 @@ public interface CourseClassRepository extends JpaRepository<CourseClass, Long> 
 
     @Query(value = """
             SELECT
+            cc.class_code as classCode,
+            cc.semester_id as semesterId,
+            cc.subject_id as subjectId,
             cs.id as classScheduleId,
             s.credits as credits,
             cs.day_of_week as dayOfWeek,
